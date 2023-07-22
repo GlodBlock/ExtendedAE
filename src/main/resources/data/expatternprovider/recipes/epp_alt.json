@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "expatternprovider:ex_pattern_provider_part"
+    }
+  ],
+  "result": {
+    "item": "expatternprovider:ex_pattern_provider"
+  }
+}

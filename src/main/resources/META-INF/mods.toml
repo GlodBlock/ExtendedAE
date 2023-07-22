@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="LGPL-3.0"
+[[mods]]
+modId="expatternprovider"
+version="0.0.1"
+displayName="Ex Pattern Provider"
+authors="GlodBlock"
+logoFile="logo.png"
+
+description='''
+Add a pattern provider with 36 pattern slots.
+'''
+[[dependencies.expatternprovider]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.expatternprovider]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.expatternprovider]]
+    modId="ae2"
+    mandatory=true
+    versionRange="[12.9.5,)"
+    ordering="AFTER"
+    side="BOTH"
