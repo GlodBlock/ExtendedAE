@@ -1,5 +1,6 @@
 package com.github.glodblock.epp.common.tileentities;
 
+import appeng.api.stacks.AEItemKey;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.core.definitions.AEBlocks;
 import appeng.helpers.iface.PatternProviderLogic;
@@ -38,6 +39,11 @@ public class TileExPatternProvider extends PatternProviderBlockEntity {
     @Override
     public ItemStack getMainMenuIcon() {
         return new ItemStack(EPPItemAndBlock.EX_PATTERN_PROVIDER);
+    }
+
+    @Override
+    public AEItemKey getTerminalIcon() {
+        return AEItemKey.of(EPPItemAndBlock.EX_PATTERN_PROVIDER);
     }
 
 }
