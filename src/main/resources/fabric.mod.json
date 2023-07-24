@@ -1,0 +1,42 @@
+{
+	"schemaVersion": 1,
+	"id": "expatternprovider",
+	"version": "${version}",
+	"name": "ExPatternProvider",
+	"description": "Add a pattern provider with 36 pattern slots.",
+	"authors": [
+		"GlodBlock"
+	],
+	"contact": {
+		"homepage": "https://github.com/GlodBlock",
+		"sources": "https://github.com/GlodBlock/ExPatternProvider",
+		"issues": "https://github.com/GlodBlock/ExPatternProvider/issues"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/expatternprovider/logo.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.glodblock.github.epp.EPPServer"
+		],
+		"client": [
+			"com.glodblock.github.epp.EPPClient"
+		],
+		"fabric-datagen": [
+			"com.glodblock.github.epp.EPPDataGenerator"
+		]
+	},
+	"mixins": [
+		"expatternprovider.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.19.2",
+		"java": ">=17",
+		"fabric-api": "*",
+		"ae2": ">=12.9.6"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

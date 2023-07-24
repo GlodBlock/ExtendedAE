@@ -1,0 +1,48 @@
+{
+  "variants": {
+    "omnidirectional=true,facing=east": {
+      "model": "expatternprovider:block/ex_pattern_provider_all"
+    },
+    "omnidirectional=true,facing=west": {
+      "model": "expatternprovider:block/ex_pattern_provider_all"
+    },
+    "omnidirectional=true,facing=south": {
+      "model": "expatternprovider:block/ex_pattern_provider_all"
+    },
+    "omnidirectional=true,facing=north": {
+      "model": "expatternprovider:block/ex_pattern_provider_all"
+    },
+    "omnidirectional=true,facing=up": {
+      "model": "expatternprovider:block/ex_pattern_provider_all"
+    },
+    "omnidirectional=true,facing=down": {
+      "model": "expatternprovider:block/ex_pattern_provider_all"
+    },
+    "omnidirectional=false,facing=east": {
+      "model": "expatternprovider:block/ex_pattern_provider_oriented",
+      "x": 90,
+      "y": 90
+    },
+    "omnidirectional=false,facing=west": {
+      "model": "expatternprovider:block/ex_pattern_provider_oriented",
+      "x": 90,
+      "y": 270
+    },
+    "omnidirectional=false,facing=south": {
+      "model": "expatternprovider:block/ex_pattern_provider_oriented",
+      "x": 270
+    },
+    "omnidirectional=false,facing=north": {
+      "model": "expatternprovider:block/ex_pattern_provider_oriented",
+      "x": 90
+    },
+    "omnidirectional=false,facing=up": {
+      "model": "expatternprovider:block/ex_pattern_provider_oriented",
+      "x": 0
+    },
+    "omnidirectional=false,facing=down": {
+      "model": "expatternprovider:block/ex_pattern_provider_oriented",
+      "x": 180
+    }
+  }
+}

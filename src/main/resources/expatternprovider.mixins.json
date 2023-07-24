@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "com.glodblock.github.epp.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}
