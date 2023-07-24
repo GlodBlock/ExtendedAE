@@ -3,7 +3,7 @@ loaderVersion="[43,)"
 license="LGPL-3.0"
 [[mods]]
 modId="expatternprovider"
-version="1.19-0.0.1-forge"
+version="1.19-0.0.2-forge"
 displayName="Ex Pattern Provider"
 authors="GlodBlock"
 logoFile="logo.png"

@@ -26,7 +26,7 @@ plugins {
 
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.19-0.0.1-forge'
+version = '1.19-0.0.2-forge'
 group = 'com.github.glodblock.epp'
 archivesBaseName = 'ExPatternProvider'
 
