@@ -14,14 +14,14 @@ public class ClientRegistryHandler {
 
     public void init() {
         this.registerGui();
+        this.registerModels();
     }
 
     public void registerGui() {
         InitScreens.register(ContainerExPatternProvider.TYPE, GuiExPatternProvider::new, "/screens/ex_pattern_provider.json");
     }
 
-    @SubscribeEvent
-    public void onRegisterModels(ModelEvent.RegisterGeometryLoaders event) {
+    public void registerModels() {
         PartModels.registerModels(PartExPatternProvider.MODELS);
     }
 
