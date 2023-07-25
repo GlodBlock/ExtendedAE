@@ -30,7 +30,7 @@ version = "${mod_version}"
 group = 'com.github.glodblock.epp'
 
 base {
-    archivesName = mod_id
+    archivesName = mod_name
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
