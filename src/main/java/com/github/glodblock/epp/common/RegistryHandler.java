@@ -1,12 +1,15 @@
 package com.github.glodblock.epp.common;
 
+import appeng.api.upgrades.Upgrades;
 import appeng.block.AEBaseBlockItem;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
+import appeng.core.definitions.AEItems;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.Registry;
@@ -91,6 +94,7 @@ public class RegistryHandler {
 
     private void onRegisterContainer() {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_pattern_provider"), ContainerExPatternProvider.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_interface"), ContainerExInterface.TYPE);
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -115,6 +119,12 @@ public class RegistryHandler {
                 );
             }
         }
+        this.registerAEUpgrade();
+    }
+
+    private void registerAEUpgrade() {
+        Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

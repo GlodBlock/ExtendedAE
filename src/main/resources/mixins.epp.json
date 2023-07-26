@@ -2,8 +2,10 @@
   "required": true,
   "package": "com.github.glodblock.epp.mixins",
   "refmap": "mixins.epp.refmap.json",
-  "compatibilityLevel": "JAVA_11",
-  "mixins": [],
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinInterfaceLogic"
+  ],
   "client": [],
   "server": []
 }

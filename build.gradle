@@ -53,10 +53,12 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            arg "-mixin.config=" + "mixins.epp.json"
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
+            arg "-mixin.config=" + "mixins.epp.json"
             args '--nogui'
         }
         gameTestServer {
@@ -136,6 +138,11 @@ tasks.named('jar', Jar).configure {
         ])
     }
     finalizedBy 'reobfJar'
+}
+
+mixin {
+    reobfSrgFile = file("${buildDir}/fixMcpToSrg/output.tsrg")
+    add sourceSets.main, "mixins.epp.refmap.json"
 }
 
 tasks.withType(JavaCompile).configureEach {
