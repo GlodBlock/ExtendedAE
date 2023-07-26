@@ -1,6 +1,5 @@
 package com.github.glodblock.epp.util;
 
-import com.github.glodblock.epp.EPP;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenCustomHashMap;
 import net.minecraft.world.level.block.Block;
@@ -20,6 +19,14 @@ public class FCUtil {
                 clazz,
                 k -> BlockEntityType.Builder.of(supplier, block).build(null)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends BlockEntity> BlockEntityType<T> getTileType(Class<T> clazz) {
+        if (!TILE_CACHE.containsKey(clazz)) {
+            throw new IllegalArgumentException(String.format("%s isn't an EPP tile entity!", clazz.getName()));
+        }
+        return (BlockEntityType<T>) TILE_CACHE.get(clazz);
     }
 
 }

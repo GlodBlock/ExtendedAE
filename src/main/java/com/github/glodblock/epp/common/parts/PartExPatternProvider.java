@@ -20,9 +20,12 @@ import appeng.util.SettingsFrom;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
+import com.github.glodblock.epp.util.Ae2Reflect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -73,6 +76,19 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     public void readFromNBT(CompoundTag data) {
         super.readFromNBT(data);
         this.logic.readFromNBT(data);
+    }
+
+    public void readFromNBT02(CompoundTag data) {
+        this.logic.readFromNBT(data);
+        if (data.contains("customName")) {
+            try {
+                Ae2Reflect.setPartCustomName(this, Component.Serializer.fromJson(data.getString("customName")));
+            } catch (Exception ignored) {
+            }
+        }
+        if (data.contains("visual", Tag.TAG_COMPOUND)) {
+            readVisualStateFromNBT(data.getCompound("visual"));
+        }
     }
 
     @Override
