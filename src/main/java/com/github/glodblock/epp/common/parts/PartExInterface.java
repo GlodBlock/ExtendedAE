@@ -21,8 +21,11 @@ import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.container.ContainerExInterface;
+import com.github.glodblock.epp.util.Ae2Reflect;
 import com.github.glodblock.epp.util.mixinutil.ExtendedInterfaceLogic;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -102,6 +105,19 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
     public void readFromNBT(CompoundTag data) {
         super.readFromNBT(data);
         this.logic.readFromNBT(data);
+    }
+
+    public void readFromNBT02(CompoundTag data) {
+        this.logic.readFromNBT(data);
+        if (data.contains("customName")) {
+            try {
+                Ae2Reflect.setPartCustomName(this, Component.Serializer.fromJson(data.getString("customName")));
+            } catch (Exception ignored) {
+            }
+        }
+        if (data.contains("visual", Tag.TAG_COMPOUND)) {
+            readVisualStateFromNBT(data.getCompound("visual"));
+        }
     }
 
     @Override

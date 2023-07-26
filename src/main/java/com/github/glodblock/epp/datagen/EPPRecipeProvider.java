@@ -67,5 +67,11 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .requires(EPPItemAndBlock.EX_INTERFACE_PART)
                 .unlockedBy(C, has(EPPItemAndBlock.EX_INTERFACE))
                 .save(c, EPP.id("ei_alt"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EPPItemAndBlock.INTERFACE_UPGRADE)
+                .requires(AEItems.CAPACITY_CARD, 2)
+                .requires(AEItems.LOGIC_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.INTERFACE_UPGRADE))
+                .save(c, EPP.id("ei_upgrade"));
     }
 }
