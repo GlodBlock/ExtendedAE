@@ -13,9 +13,11 @@ public class EPPDataGen {
         var pack = dataEvent.getGenerator().getVanillaPack(true);
         var file = dataEvent.getExistingFileHelper();
         var lookup = dataEvent.getLookupProvider();
+        var blockTagsProvider = pack
+                .addProvider(c -> new EPPBlockTagProvider(c, lookup, file));
         pack.addProvider(EPPRecipeProvider::new);
         pack.addProvider(EPPLootTableProvider::new);
-        pack.addProvider(c -> new EPPBlockTagProvider(c, lookup, file));
+        pack.addProvider(c -> new EPPItemTagsProvider(c, lookup, blockTagsProvider.contentsGetter(), file));
     }
 
 }

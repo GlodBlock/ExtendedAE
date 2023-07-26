@@ -3,6 +3,7 @@
   "block.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",
   "block.expatternprovider.ex_interface": "ME Extended Interface",
   "item.expatternprovider.ex_pattern_provider_part": "ME Extended Pattern Provider",
+  "item.expatternprovider.ex_interface_part": "ME Extended Interface",
   "item.expatternprovider.pattern_provider_upgrade": "Pattern Provider Upgrade",
   "epp.upgrade.tooltip": "Sneak + Right click on ME Pattern Provider to upgrade it into ME Extended Pattern Provider",
   "gui.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",

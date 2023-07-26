@@ -1,6 +1,5 @@
 package com.github.glodblock.epp.datagen;
 
-import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.datagen.providers.tags.ConventionTags;
 import com.github.glodblock.epp.EPP;
@@ -21,6 +20,7 @@ public class EPPRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> c) {
+        // Extended Parttern Provider
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_PATTERN_PROVIDER)
                 .pattern("PC")
@@ -46,5 +46,26 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .requires(AEItems.ENGINEERING_PROCESSOR)
                 .unlockedBy(C, has(EPPItemAndBlock.PATTERN_PROVIDER_UPGRADE))
                 .save(c, EPP.id("epp_upgrade"));
+
+        // Extended Interface
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_INTERFACE)
+                .pattern("PC")
+                .pattern("CZ")
+                .define('P', ConventionTags.INTERFACE)
+                .define('C', AEItems.CAPACITY_CARD)
+                .define('Z', AEItems.LOGIC_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_INTERFACE))
+                .save(c, EPP.id("ei"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EX_INTERFACE_PART)
+                .requires(EPPItemAndBlock.EX_INTERFACE)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_INTERFACE_PART))
+                .save(c, EPP.id("ei_part"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EX_INTERFACE)
+                .requires(EPPItemAndBlock.EX_INTERFACE_PART)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_INTERFACE))
+                .save(c, EPP.id("ei_alt"));
     }
 }

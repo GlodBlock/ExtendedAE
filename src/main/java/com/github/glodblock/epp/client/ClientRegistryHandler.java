@@ -5,6 +5,7 @@ import appeng.init.client.InitScreens;
 import appeng.menu.SlotSemantics;
 import com.github.glodblock.epp.client.gui.GuiExInterface;
 import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
+import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -33,6 +34,7 @@ public class ClientRegistryHandler {
 
     public void registerModels() {
         PartModels.registerModels(PartExPatternProvider.MODELS);
+        PartModels.registerModels(PartExInterface.MODELS);
     }
 
 }

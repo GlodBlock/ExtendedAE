@@ -30,6 +30,7 @@ public class EPPLootTableProvider extends LootTableProvider {
         @Override
         protected void generate() {
             add(EPPItemAndBlock.EX_PATTERN_PROVIDER, createSingleItemTable(EPPItemAndBlock.EX_PATTERN_PROVIDER));
+            add(EPPItemAndBlock.EX_INTERFACE, createSingleItemTable(EPPItemAndBlock.EX_INTERFACE));
         }
 
         public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> bi) {

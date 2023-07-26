@@ -20,8 +20,10 @@ public class EPPBlockTagProvider extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.@NotNull Provider p_256380_) {
+    protected void addTags(HolderLookup.@NotNull Provider provider) {
         TagKey<Block> pickaxe = BlockTags.MINEABLE_WITH_PICKAXE;
-        tag(pickaxe).add(EPPItemAndBlock.EX_PATTERN_PROVIDER);
+        tag(pickaxe)
+                .add(EPPItemAndBlock.EX_PATTERN_PROVIDER)
+                .add(EPPItemAndBlock.EX_INTERFACE);
     }
 }
