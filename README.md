@@ -4,5 +4,5 @@
 
 ## Features
 
-- A 36 slots pattern provider
-- A 18 slots interface
+- 36 slots pattern provider
+- 18 slots interface
