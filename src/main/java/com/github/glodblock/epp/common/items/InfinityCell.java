@@ -77,7 +77,7 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
                 upgrades.add(upgrade);
             }
         }
-        var content = Collections.singletonList(new GenericStack(this.getRecord(stack), Long.MAX_VALUE / 2));
+        var content = Collections.singletonList(new GenericStack(this.getRecord(stack), Integer.MAX_VALUE));
         return Optional.of(new StorageCellTooltipComponent(upgrades, content, false, true));
     }
 

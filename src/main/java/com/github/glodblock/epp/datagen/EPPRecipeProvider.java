@@ -1,11 +1,17 @@
 package com.github.glodblock.epp.datagen;
 
+import appeng.api.stacks.AEFluidKey;
+import appeng.api.stacks.AEItemKey;
+import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.datagen.providers.tags.ConventionTags;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -73,5 +79,30 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .requires(AEItems.LOGIC_PROCESSOR)
                 .unlockedBy(C, has(EPPItemAndBlock.INTERFACE_UPGRADE))
                 .save(c, EPP.id("ei_upgrade"));
+
+        // Infinity Cell
+        NBTRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.INFINITY_CELL.getRecordCell(AEFluidKey.of(Fluids.WATER)))
+                .pattern("CWC")
+                .pattern("WXW")
+                .pattern("III")
+                .define('C', AEBlocks.QUARTZ_GLASS)
+                .define('W', Items.WATER_BUCKET)
+                .define('X', AEItems.CELL_COMPONENT_16K)
+                .define('I', ConventionTags.DIAMOND)
+                .unlockedBy(C, has(EPPItemAndBlock.INFINITY_CELL))
+                .save(c, EPP.id("water_cell"));
+        NBTRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.INFINITY_CELL.getRecordCell(AEItemKey.of(Blocks.COBBLESTONE)))
+                .pattern("CLC")
+                .pattern("WXW")
+                .pattern("III")
+                .define('C', AEBlocks.QUARTZ_GLASS)
+                .define('L', Items.LAVA_BUCKET)
+                .define('W', Items.WATER_BUCKET)
+                .define('X', AEItems.CELL_COMPONENT_16K)
+                .define('I', ConventionTags.DIAMOND)
+                .unlockedBy(C, has(EPPItemAndBlock.INFINITY_CELL))
+                .save(c, EPP.id("cobblestone_cell"));
     }
 }

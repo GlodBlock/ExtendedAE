@@ -68,7 +68,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public void getAvailableStacks(KeyCounter out) {
-        out.add(this.record, Long.MAX_VALUE / 2);
+        out.add(this.record, Integer.MAX_VALUE);
     }
 
     @Override
