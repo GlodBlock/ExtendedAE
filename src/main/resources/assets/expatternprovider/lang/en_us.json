@@ -6,8 +6,11 @@
   "item.expatternprovider.ex_interface_part": "ME Extended Interface",
   "item.expatternprovider.pattern_provider_upgrade": "Pattern Provider Upgrade",
   "item.expatternprovider.interface_upgrade": "Interface Upgrade",
+  "item.expatternprovider.infinity_cell_name": "Infinity %s Cell",
+  "item.expatternprovider.infinity_cell": "Infinity Cell",
   "epp.upgrade.tooltip": "Sneak + Right click on ME Pattern Provider to upgrade it into ME Extended Pattern Provider",
   "ei.upgrade.tooltip": "Sneak + Right click on ME Interface to upgrade it into ME Extended Interface",
+  "infinity.tooltip": "It is an infinity source.",
   "gui.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",
   "gui.expatternprovider.ex_interface": "ME Extended Interface"
 }

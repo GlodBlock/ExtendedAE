@@ -1,5 +1,7 @@
 package com.github.glodblock.epp.common;
 
+import appeng.api.client.StorageCellModels;
+import appeng.api.storage.StorageCells;
 import appeng.api.upgrades.Upgrades;
 import appeng.block.AEBaseBlockItem;
 import appeng.block.AEBaseEntityBlock;
@@ -8,7 +10,9 @@ import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
+import appeng.items.AEBaseItem;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.util.FCUtil;
@@ -120,11 +124,18 @@ public class RegistryHandler {
             }
         }
         this.registerAEUpgrade();
+        this.registerStorageHandler();
     }
 
     private void registerAEUpgrade() {
         Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.VOID_CARD, EPPItemAndBlock.INFINITY_CELL, 1, "gui.expatternprovider.infinity_cell");
+    }
+
+    private void registerStorageHandler() {
+        StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
+        StorageCellModels.registerModel(EPPItemAndBlock.INFINITY_CELL, EPP.id("block/drive/infinity_cell"));
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {
@@ -133,7 +144,11 @@ public class RegistryHandler {
                 .title(Component.translatable("itemGroup.epp"))
                 .displayItems((__, o) -> {
                     for (Pair<String, Item> entry : items) {
-                        o.accept(entry.getRight());
+                        if (entry.getRight() instanceof AEBaseItem aeItem) {
+                            aeItem.addToMainCreativeTab(o);
+                        } else {
+                            o.accept(entry.getRight());
+                        }
                     }
                     for (Pair<String, Block> entry : blocks) {
                         o.accept(entry.getRight());

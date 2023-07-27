@@ -41,16 +41,9 @@ public class ItemPatternProviderUpgrade extends Item {
             if (tile.getClass() == PatternProviderBlockEntity.class) {
                 var state = EPPItemAndBlock.EX_PATTERN_PROVIDER.getStateForPlacement(ctx);
                 var tileType = FCUtil.getTileType(TileExPatternProvider.class);
-                var contents = tile.serializeNBT();
                 assert state != null;
-                world.removeBlockEntity(pos);
-                world.removeBlock(pos, false);
                 var te = tileType.create(pos, state);
-                world.setBlock(pos, state, 3);
-                assert te != null;
-                world.setBlockEntity(te);
-                te.deserializeNBT(contents);
-                te.markForUpdate();
+                FCUtil.replaceTile(world, pos, tile, te, state);
                 context.getItemInHand().shrink(1);
                 return InteractionResult.CONSUME;
             } else if (tile instanceof CableBusBlockEntity cable) {
@@ -60,7 +53,7 @@ public class ItemPatternProviderUpgrade extends Item {
                     part.writeToNBT(contents);
                     var p = cable.replacePart(EPPItemAndBlock.EX_PATTERN_PROVIDER_PART, side, context.getPlayer(), null);
                     if (p != null) {
-                        p.readFromNBT02(contents);
+                        p.reloadFromNBT(contents);
                     }
                 }
                 context.getItemInHand().shrink(1);
@@ -72,7 +65,7 @@ public class ItemPatternProviderUpgrade extends Item {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("epp.upgrade.tooltip").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        list.add(Component.translatable("epp.upgrade.tooltip").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, level, list, tooltipFlag);
     }
 

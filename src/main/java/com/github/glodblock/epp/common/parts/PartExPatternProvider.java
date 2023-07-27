@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-public class PartExPatternProvider extends AEBasePart implements PatternProviderLogicHost {
+public class PartExPatternProvider extends AEBasePart implements PatternProviderLogicHost, IReloadable {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
             new ResourceLocation(EPP.MODID, "part/ex_pattern_provider_base"),
@@ -78,7 +78,8 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
         this.logic.readFromNBT(data);
     }
 
-    public void readFromNBT02(CompoundTag data) {
+    @Override
+    public void reloadFromNBT(CompoundTag data) {
         this.logic.readFromNBT(data);
         if (data.contains("customName")) {
             try {

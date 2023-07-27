@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
+public class PartExInterface extends AEBasePart implements InterfaceLogicHost, IReloadable {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
             new ResourceLocation(EPP.MODID, "part/ex_interface"),
@@ -107,7 +107,8 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
         this.logic.readFromNBT(data);
     }
 
-    public void readFromNBT02(CompoundTag data) {
+    @Override
+    public void reloadFromNBT(CompoundTag data) {
         this.logic.readFromNBT(data);
         if (data.contains("customName")) {
             try {
