@@ -6,7 +6,9 @@ import appeng.core.AppEngBase;
 import appeng.parts.PartModel;
 import appeng.parts.automation.ImportBusPart;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.container.ContainerExIOBus;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +49,11 @@ public class PartExImportBus extends ImportBusPart {
     @Override
     protected int getUpgradeSlots() {
         return 8;
+    }
+
+    @Override
+    protected MenuType<?> getMenuType() {
+        return ContainerExIOBus.IMPORT_TYPE;
     }
 
 }

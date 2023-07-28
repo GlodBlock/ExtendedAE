@@ -15,5 +15,7 @@
   "infinity.tooltip": "It is an infinity source.",
   "gui.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",
   "gui.expatternprovider.ex_interface": "ME Extended Interface",
+  "gui.expatternprovider.ex_export_bus_part": "ME Extended Export Bus",
+  "gui.expatternprovider.ex_import_bus_part": "ME Extended Import Bus",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus"
 }
