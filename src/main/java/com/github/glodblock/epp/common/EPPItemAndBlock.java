@@ -12,6 +12,7 @@ public class EPPItemAndBlock {
     public static ItemPartExPatternProvider EX_PATTERN_PROVIDER_PART;
     public static ItemPatternProviderUpgrade PATTERN_PROVIDER_UPGRADE;
     public static ItemInterfaceUpgrade INTERFACE_UPGRADE;
+    public static ItemIOBusUpgrade IO_BUS_UPGRADE;
     public static BlockExInterface EX_INTERFACE;
     public static ItemPartExInterface EX_INTERFACE_PART;
     public static InfinityCell INFINITY_CELL;
@@ -28,12 +29,14 @@ public class EPPItemAndBlock {
         INFINITY_CELL = new InfinityCell();
         EX_EXPORT_BUS = new ItemPartExExportBus();
         EX_IMPORT_BUS = new ItemPartExImportBus();
+        IO_BUS_UPGRADE = new ItemIOBusUpgrade();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("pattern_provider_upgrade", PATTERN_PROVIDER_UPGRADE);
         regHandler.item("interface_upgrade", INTERFACE_UPGRADE);
+        regHandler.item("io_bus_upgrade", IO_BUS_UPGRADE);
         regHandler.item("infinity_cell", INFINITY_CELL);
         regHandler.item("ex_export_bus_part", EX_EXPORT_BUS);
         regHandler.item("ex_import_bus_part", EX_IMPORT_BUS);

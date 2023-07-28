@@ -1,20 +1,16 @@
 package com.github.glodblock.epp.common.items;
 
-import appeng.blockentity.misc.InterfaceBlockEntity;
 import appeng.blockentity.networking.CableBusBlockEntity;
-import appeng.parts.misc.InterfacePart;
+import appeng.parts.automation.ExportBusPart;
+import appeng.parts.automation.ImportBusPart;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
-import com.github.glodblock.epp.common.tileentities.TileExInterface;
-import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +19,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemInterfaceUpgrade extends Item {
+public class ItemIOBusUpgrade extends Item {
 
-
-    public ItemInterfaceUpgrade() {
+    public ItemIOBusUpgrade() {
         super(new Item.Properties());
     }
 
@@ -37,26 +32,23 @@ public class ItemInterfaceUpgrade extends Item {
         var pos = context.getClickedPos();
         var world = context.getLevel();
         var tile = world.getBlockEntity(pos);
-        if (tile != null) {
-            var ctx = new BlockPlaceContext(context);
-            if (tile.getClass() == InterfaceBlockEntity.class) {
-                var state = EPPItemAndBlock.EX_INTERFACE.getStateForPlacement(ctx);
-                var tileType = FCUtil.getTileType(TileExInterface.class);
-                assert state != null;
-                var te = tileType.create(pos, state);
-                FCUtil.replaceTile(world, pos, tile, te, state);
+        if (tile instanceof CableBusBlockEntity cable) {
+            var part = cable.getPart(side);
+            var contents = new CompoundTag();
+            contents.putBoolean("exae_reload", true);
+            if (part != null && part.getClass() == ExportBusPart.class) {
+                part.writeToNBT(contents);
+                var p = cable.replacePart(EPPItemAndBlock.EX_EXPORT_BUS, side, context.getPlayer(), null);
+                if (p != null) {
+                    p.readFromNBT(contents);
+                }
                 context.getItemInHand().shrink(1);
                 return InteractionResult.CONSUME;
-            } else if (tile instanceof CableBusBlockEntity cable) {
-                var part = cable.getPart(side);
-                var contents = new CompoundTag();
-                if (part != null && part.getClass() == InterfacePart.class) {
-                    part.writeToNBT(contents);
-                    contents.putBoolean("exae_reload", true);
-                    var p = cable.replacePart(EPPItemAndBlock.EX_INTERFACE_PART, side, context.getPlayer(), null);
-                    if (p != null) {
-                        p.readFromNBT(contents);
-                    }
+            } else if (part != null && part.getClass() == ImportBusPart.class) {
+                part.writeToNBT(contents);
+                var p = cable.replacePart(EPPItemAndBlock.EX_IMPORT_BUS, side, context.getPlayer(), null);
+                if (p != null) {
+                    p.readFromNBT(contents);
                 }
                 context.getItemInHand().shrink(1);
                 return InteractionResult.CONSUME;
@@ -67,9 +59,8 @@ public class ItemInterfaceUpgrade extends Item {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("ei.upgrade.tooltip").withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("ebus.upgrade.tooltip").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, level, list, tooltipFlag);
     }
-
 
 }

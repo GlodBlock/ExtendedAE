@@ -2,8 +2,6 @@ package com.github.glodblock.epp.util;
 
 import appeng.blockentity.misc.InterfaceBlockEntity;
 import appeng.helpers.InterfaceLogic;
-import appeng.parts.AEBasePart;
-import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,12 +9,10 @@ import java.util.Arrays;
 
 public class Ae2Reflect {
 
-    private static final Field fAEBasePart_customName;
     private static final Field fInterfaceBlockEntity_logic;
 
     static {
         try {
-            fAEBasePart_customName = reflectField(AEBasePart.class, "customName");
             fInterfaceBlockEntity_logic = reflectField(InterfaceBlockEntity.class, "logic");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
@@ -74,10 +70,6 @@ public class Ae2Reflect {
         } catch (Exception e) {
             throw new IllegalStateException("Failed to write field: " + field);
         }
-    }
-
-    public static void setPartCustomName(AEBasePart owner, Component name) {
-        writeField(owner, fAEBasePart_customName, name);
     }
 
     public static void setInterfaceLogic(InterfaceBlockEntity owner, InterfaceLogic logic) {

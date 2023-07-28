@@ -49,11 +49,12 @@ public class ItemPatternProviderUpgrade extends Item {
             } else if (tile instanceof CableBusBlockEntity cable) {
                 var part = cable.getPart(side);
                 var contents = new CompoundTag();
+                contents.putBoolean("exae_reload", true);
                 if (part != null && part.getClass() == PatternProviderPart.class) {
                     part.writeToNBT(contents);
                     var p = cable.replacePart(EPPItemAndBlock.EX_PATTERN_PROVIDER_PART, side, context.getPlayer(), null);
                     if (p != null) {
-                        p.reloadFromNBT(contents);
+                        p.readFromNBT(contents);
                     }
                 }
                 context.getItemInHand().shrink(1);
