@@ -4,6 +4,7 @@ import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
 import appeng.datagen.providers.tags.ConventionTags;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
@@ -104,5 +105,31 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('I', ConventionTags.DIAMOND)
                 .unlockedBy(C, has(EPPItemAndBlock.INFINITY_CELL))
                 .save(c, EPP.id("cobblestone_cell"));
+
+        // Extended IO Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_EXPORT_BUS)
+                .pattern("PS")
+                .pattern("SZ")
+                .define('P', AEParts.EXPORT_BUS)
+                .define('S', AEItems.SPEED_CARD)
+                .define('Z', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_EXPORT_BUS))
+                .save(c, EPP.id("ebus_out"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_IMPORT_BUS)
+                .pattern("PS")
+                .pattern("SZ")
+                .define('P', AEParts.IMPORT_BUS)
+                .define('S', AEItems.SPEED_CARD)
+                .define('Z', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_IMPORT_BUS))
+                .save(c, EPP.id("ebus_in"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EPPItemAndBlock.IO_BUS_UPGRADE)
+                .requires(AEItems.SPEED_CARD, 2)
+                .requires(AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.IO_BUS_UPGRADE))
+                .save(c, EPP.id("ebus_upgrade"));
     }
 }
