@@ -3,7 +3,7 @@ loaderVersion="[43,)"
 license="LGPL-3.0"
 [[mods]]
 modId="expatternprovider"
-version="1.19-0.1.0-forge"
+version="1.19-0.1.1-forge"
 displayName="ExtendedAE"
 authors="GlodBlock"
 logoFile="logo.png"
