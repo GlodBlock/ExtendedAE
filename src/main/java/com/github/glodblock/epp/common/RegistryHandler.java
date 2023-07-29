@@ -1,6 +1,7 @@
 package com.github.glodblock.epp.common;
 
 import appeng.api.client.StorageCellModels;
+import appeng.api.parts.PartModels;
 import appeng.api.storage.StorageCells;
 import appeng.api.upgrades.Upgrades;
 import appeng.block.AEBaseBlockItem;
@@ -12,6 +13,10 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
+import com.github.glodblock.epp.common.parts.PartExExportBus;
+import com.github.glodblock.epp.common.parts.PartExImportBus;
+import com.github.glodblock.epp.common.parts.PartExInterface;
+import com.github.glodblock.epp.common.parts.PartExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -64,6 +69,7 @@ public class RegistryHandler {
             this.onRegisterItems();
             this.onRegisterTileEntities();
             this.onRegisterContainer();
+            this.onRegisterModels();
         }
     }
 
@@ -146,6 +152,13 @@ public class RegistryHandler {
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
         StorageCellModels.registerModel(EPPItemAndBlock.INFINITY_CELL, EPP.id("block/drive/infinity_cell"));
+    }
+
+    private void onRegisterModels() {
+        PartModels.registerModels(PartExPatternProvider.MODELS);
+        PartModels.registerModels(PartExInterface.MODELS);
+        PartModels.registerModels(PartExExportBus.MODELS);
+        PartModels.registerModels(PartExImportBus.MODELS);
     }
 
 }

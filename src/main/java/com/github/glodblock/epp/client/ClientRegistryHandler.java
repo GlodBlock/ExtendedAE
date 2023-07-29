@@ -1,15 +1,10 @@
 package com.github.glodblock.epp.client;
 
-import appeng.api.parts.PartModels;
 import appeng.init.client.InitScreens;
 import appeng.menu.SlotSemantics;
 import com.github.glodblock.epp.client.gui.GuiExIOBus;
 import com.github.glodblock.epp.client.gui.GuiExInterface;
 import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
-import com.github.glodblock.epp.common.parts.PartExExportBus;
-import com.github.glodblock.epp.common.parts.PartExImportBus;
-import com.github.glodblock.epp.common.parts.PartExInterface;
-import com.github.glodblock.epp.common.parts.PartExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -21,7 +16,6 @@ public class ClientRegistryHandler {
     public void init() {
         this.registerSemantic();
         this.registerGui();
-        this.registerModels();
     }
 
     public void registerSemantic() {
@@ -36,13 +30,6 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExInterface.TYPE, GuiExInterface::new, "/screens/ex_interface.json");
         InitScreens.register(ContainerExIOBus.EXPORT_TYPE, GuiExIOBus::new, "/screens/ex_export_bus.json");
         InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
-    }
-
-    public void registerModels() {
-        PartModels.registerModels(PartExPatternProvider.MODELS);
-        PartModels.registerModels(PartExInterface.MODELS);
-        PartModels.registerModels(PartExExportBus.MODELS);
-        PartModels.registerModels(PartExImportBus.MODELS);
     }
 
 }
