@@ -3,7 +3,10 @@
   "package": "com.github.glodblock.epp.mixins",
   "refmap": "mixins.epp.refmap.json",
   "compatibilityLevel": "JAVA_11",
-  "mixins": [],
+  "mixins": [
+    "MixinAEBasePart",
+    "MixinInterfaceLogic"
+  ],
   "client": [],
   "server": []
 }

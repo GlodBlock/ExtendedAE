@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:item/export_bus",
+  "textures": {
+    "front": "expatternprovider:part/ex_export_bus"
+  }
+}

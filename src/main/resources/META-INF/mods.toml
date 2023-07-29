@@ -3,13 +3,13 @@ loaderVersion="[43,)"
 license="LGPL-3.0"
 [[mods]]
 modId="expatternprovider"
-version="1.19-0.0.3-forge"
-displayName="Ex Pattern Provider"
+version="1.19-0.1.0-forge"
+displayName="ExtendedAE"
 authors="GlodBlock"
 logoFile="logo.png"
 
 description='''
-Add a pattern provider with 36 pattern slots.
+Add some QoL extended contents for AE2
 '''
 [[dependencies.expatternprovider]]
     modId="forge"

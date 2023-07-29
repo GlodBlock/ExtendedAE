@@ -1,11 +1,17 @@
 package com.github.glodblock.epp.util;
 
-import com.github.glodblock.epp.EPP;
+import appeng.api.parts.IPart;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.networking.CableBusBlockEntity;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenCustomHashMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class FCUtil {
 
@@ -20,6 +26,36 @@ public class FCUtil {
                 clazz,
                 k -> BlockEntityType.Builder.of(supplier, block).build(null)
         );
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static <T extends BlockEntity> BlockEntityType<T> getTileType(Class<T> clazz) {
+        if (!TILE_CACHE.containsKey(clazz)) {
+            throw new IllegalArgumentException(String.format("%s isn't an EPP tile entity!", clazz.getName()));
+        }
+        return (BlockEntityType<T>) TILE_CACHE.get(clazz);
+    }
+
+    public static void replaceTile(Level world, BlockPos pos, BlockEntity oldTile, BlockEntity newTile, BlockState newBlock) {
+        var contents = oldTile.serializeNBT();
+        world.removeBlockEntity(pos);
+        world.removeBlock(pos, false);
+        world.setBlock(pos, newBlock, 3);
+        world.setBlockEntity(newTile);
+        newTile.deserializeNBT(contents);
+        if (newTile instanceof AEBaseBlockEntity aeTile) {
+            aeTile.markForUpdate();
+        } else {
+            newTile.setChanged();
+        }
+    }
+
+    public static IPart getPart(BlockEntity te, Direction face) {
+        if (te instanceof CableBusBlockEntity cable) {
+            return cable.getPart(face);
+        }
+        return null;
     }
 
 }

@@ -26,7 +26,7 @@ plugins {
 
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.19-0.0.3-forge'
+version = '1.19-0.1.0-forge'
 group = 'com.github.glodblock.epp'
 archivesBaseName = 'ExPatternProvider'
 
@@ -49,6 +49,7 @@ minecraft {
                     source sourceSets.main
                 }
             }
+            arg "-mixin.config=" + "mixins.epp.json"
         }
 
         server {
@@ -61,6 +62,7 @@ minecraft {
                     source sourceSets.main
                 }
             }
+            arg "-mixin.config=" + "mixins.epp.json"
         }
         gameTestServer {
             workingDirectory project.file('run')
