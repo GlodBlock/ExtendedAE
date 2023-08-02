@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "expatternprovider",
 	"version": "${version}",
-	"name": "ExPatternProvider",
-	"description": "Add a pattern provider with 36 pattern slots.",
+	"name": "ExtendedAE",
+	"description": "Add some QoL extended contents for AE2",
 	"authors": [
 		"GlodBlock"
 	],

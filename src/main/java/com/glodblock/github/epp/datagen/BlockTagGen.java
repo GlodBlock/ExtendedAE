@@ -16,6 +16,8 @@ public class BlockTagGen extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void generateTags() {
         TagKey<Block> pickaxe = BlockTags.PICKAXE_MINEABLE;
-        this.getOrCreateTagBuilder(pickaxe).add(EPPItemAndBlock.EX_PATTERN_PROVIDER);
+        this.getOrCreateTagBuilder(pickaxe)
+                .add(EPPItemAndBlock.EX_PATTERN_PROVIDER)
+                .add(EPPItemAndBlock.EX_INTERFACE);
     }
 }
