@@ -12,7 +12,6 @@ public abstract class MixinAEBasePart {
 
     @Redirect(
             method = "readFromNBT",
-            remap = false,
             at = @At(
                     value = "INVOKE",
                     target = "appeng/api/networking/IManagedGridNode.loadFromNBT(Lnet/minecraft/nbt/NbtCompound;)V"
