@@ -14,13 +14,11 @@ import appeng.core.definitions.AEItems;
 import appeng.items.AEBaseItem;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
-import com.github.glodblock.epp.common.parts.PartExExportBus;
-import com.github.glodblock.epp.common.parts.PartExImportBus;
-import com.github.glodblock.epp.common.parts.PartExInterface;
-import com.github.glodblock.epp.common.parts.PartExPatternProvider;
+import com.github.glodblock.epp.common.parts.*;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
+import com.github.glodblock.epp.container.ContainerExPatternTerminal;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -108,6 +106,7 @@ public class RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_interface"), ContainerExInterface.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_export_bus"), ContainerExIOBus.EXPORT_TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_import_bus"), ContainerExIOBus.IMPORT_TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_pattern_access_terminal"), ContainerExPatternTerminal.TYPE);
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -164,6 +163,7 @@ public class RegistryHandler {
         PartModels.registerModels(PartExInterface.MODELS);
         PartModels.registerModels(PartExExportBus.MODELS);
         PartModels.registerModels(PartExImportBus.MODELS);
+        PartModels.registerModels(PartExPatternAccessTerminal.MODELS);
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

@@ -11,6 +11,7 @@
   "item.expatternprovider.infinity_cell": "ME Infinity Cell",
   "item.expatternprovider.ex_export_bus_part": "ME Extended Export Bus",
   "item.expatternprovider.ex_import_bus_part": "ME Extended Import Bus",
+  "item.expatternprovider.ex_pattern_access_part": "ME Extended Pattern Access Terminal",
   "epp.upgrade.tooltip": "Sneak + Right click on ME Pattern Provider to upgrade it into ME Extended Pattern Provider",
   "ei.upgrade.tooltip": "Sneak + Right click on ME Interface to upgrade it into ME Extended Interface",
   "ebus.upgrade.tooltip": "Sneak + Right click on ME Import/Export Bus to upgrade it into ME Extended Import/Export Bus",
@@ -19,5 +20,8 @@
   "gui.expatternprovider.ex_interface": "ME Extended Interface",
   "gui.expatternprovider.ex_export_bus_part": "ME Extended Export Bus",
   "gui.expatternprovider.ex_import_bus_part": "ME Extended Import Bus",
+  "gui.expatternprovider.ex_pattern_access_terminal": "ME Extended Pattern A. Terminal",
+  "gui.expatternprovider.ex_pattern_access_terminal.tooltip.01": "Search by output or interface name.",
+  "gui.expatternprovider.ex_pattern_access_terminal.tooltip.02": "Search by input or interface name.",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus"
 }
