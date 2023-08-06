@@ -1,7 +1,6 @@
 package com.github.glodblock.epp.common.items;
 
-import appeng.parts.automation.ExportBusPart;
-import appeng.parts.automation.ImportBusPart;
+import appeng.parts.reporting.PatternAccessTerminalPart;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -14,17 +13,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemIOBusUpgrade extends ItemUpgrade {
+public class ItemPatternAccessTerminalUpgrade extends ItemUpgrade {
 
-    public ItemIOBusUpgrade() {
+    public ItemPatternAccessTerminalUpgrade() {
         super(new Item.Properties());
-        this.addPart(ExportBusPart.class, EPPItemAndBlock.EX_EXPORT_BUS);
-        this.addPart(ImportBusPart.class, EPPItemAndBlock.EX_IMPORT_BUS);
+        this.addPart(PatternAccessTerminalPart.class, EPPItemAndBlock.EX_PATTERN_TERMINAL);
     }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("ebus.upgrade.tooltip").withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("epa.upgrade.tooltip").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, level, list, tooltipFlag);
     }
 
