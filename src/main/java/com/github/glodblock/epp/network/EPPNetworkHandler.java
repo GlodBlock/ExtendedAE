@@ -15,6 +15,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.RunningOnDifferentThreadException;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -47,6 +49,7 @@ public class EPPNetworkHandler {
                 });
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void onClientPacketData(IMessage<?> packet) {
         if (packet.isClient()) {
             packet.onMessage(Minecraft.getInstance().player);
