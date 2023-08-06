@@ -8,12 +8,15 @@ import com.github.glodblock.epp.client.gui.GuiExIOBus;
 import com.github.glodblock.epp.client.gui.GuiExInterface;
 import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
 import com.github.glodblock.epp.client.gui.GuiExPatternTerminal;
+import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExPatternTerminal;
+import com.github.glodblock.epp.util.Ae2ReflectClient;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ClientRegistryHandler {
@@ -44,6 +47,12 @@ public class ClientRegistryHandler {
     public void registerColorHandler(RegisterColorHandlersEvent.Item event) {
         var color = event.getItemColors();
         color.register(new StaticItemColor(AEColor.TRANSPARENT), EPPItemAndBlock.EX_PATTERN_TERMINAL);
+    }
+
+    public void registerHighLightRender(RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+            HighlightRender.INSTANCE.tick(event.getPoseStack(), Ae2ReflectClient.getRenderBuffers(event.getLevelRenderer()).outlineBufferSource(), event.getCamera());
+        }
     }
 
 }

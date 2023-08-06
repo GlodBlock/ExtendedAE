@@ -23,5 +23,7 @@
   "gui.expatternprovider.ex_pattern_access_terminal": "ME Extended Pattern A. Terminal",
   "gui.expatternprovider.ex_pattern_access_terminal.tooltip.01": "Search by output or interface name.",
   "gui.expatternprovider.ex_pattern_access_terminal.tooltip.02": "Search by input or interface name.",
+  "gui.expatternprovider.ex_pattern_access_terminal.tooltip.03": "Highlight the pattern provider in world.",
+  "chat.ex_pattern_access_terminal.pos": "The interface is now highlighted at: %s, Dim: %s",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus"
 }

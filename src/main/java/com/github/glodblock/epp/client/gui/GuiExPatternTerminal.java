@@ -23,20 +23,28 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
+import com.github.glodblock.epp.client.button.HighlightButton;
 import com.github.glodblock.epp.container.ContainerExPatternTerminal;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.BlockPos;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,6 +108,8 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
             .comparing(group -> group.name().getString().toLowerCase(Locale.ROOT));
 
     private final HashMap<Long, PatternContainerRecord> byId = new HashMap<>();
+    private final HashMap<Integer, HighlightButton> highlightBtns = new HashMap<>();
+    private final HashMap<Long, PatternProviderInfo> infoMap = new HashMap<>();
     // Used to show multiple pattern providers with the same name under a single header
     private final HashMultimap<PatternContainerGroup, PatternContainerRecord> byGroup = HashMultimap.create();
     private final ArrayList<PatternContainerGroup> groups = new ArrayList<>();
@@ -153,6 +163,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
 
         super.init();
         this.setInitialFocus(this.searchOutField);
+        this.highlightBtns.forEach((k, v) -> {v.setVisibility(false); addRenderableWidget(v);});
 
         // numLines may have changed, recalculate scroll bar.
         this.resetScrollbar();
@@ -163,6 +174,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
                        int mouseY) {
 
         this.menu.slots.removeIf(slot -> slot instanceof PatternSlot);
+        this.highlightBtns.forEach((key, value) -> value.setVisibility(false));
 
         int textColor = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
 
@@ -171,6 +183,11 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
         for (; i < this.visibleRows; ++i) {
             if (scrollLevel + i < this.rows.size()) {
                 var row = this.rows.get(scrollLevel + i);
+                if (highlightBtns.containsKey(scrollLevel + i)) {
+                    var btn = highlightBtns.get(scrollLevel + i);
+                    btn.setPosition(this.leftPos + GUI_PADDING_X - SLOT_SIZE, this.topPos + (i + 1) * SLOT_SIZE + 34);
+                    btn.setVisibility(true);
+                }
                 if (row instanceof SlotsRow slotsRow) {
                     // Note: We have to shift everything after the header up by 1 to avoid black line duplication.
                     var container = slotsRow.container;
@@ -362,8 +379,14 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
 
     public void clear() {
         this.byId.clear();
+        this.infoMap.clear();
         // invalid caches on refresh
         this.cachedSearches.clear();
+        this.refreshList();
+    }
+
+    public void postTileInfo(long id, BlockPos pos, ResourceKey<Level> dim) {
+        this.infoMap.put(id, new PatternProviderInfo(pos, dim));
         this.refreshList();
     }
 
@@ -412,6 +435,8 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
      */
     private void refreshList() {
         this.byGroup.clear();
+        this.highlightBtns.forEach((k, v) -> this.removeWidget(v));
+        this.highlightBtns.clear();
 
         final String outputFilter = this.searchOutField.getValue().toLowerCase();
         final String inputFilter = this.searchInField.getValue().toLowerCase();
@@ -468,8 +493,14 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
             var containers = new ArrayList<>(this.byGroup.get(group));
             Collections.sort(containers);
             for (var container : containers) {
-                // Wrap the container inventory slots
                 var inventory = container.getInventory();
+                if (inventory.size() > 0) {
+                    var info = this.infoMap.get(container.getServerId());
+                    var btn = new HighlightButton(info, (float) this.playerToBlockDis(info.pos()), this.getPlayer());
+                    btn.setTooltip(Tooltip.create(Component.translatable("gui.expatternprovider.ex_pattern_access_terminal.tooltip.03")));
+                    btn.setVisibility(false);
+                    this.highlightBtns.put(this.rows.size(), this.addRenderableWidget(btn));
+                }
                 for (var offset = 0; offset < inventory.size(); offset += COLUMNS) {
                     var slots = Math.min(inventory.size() - offset, COLUMNS);
                     var containerRow = new SlotsRow(container, offset, slots);
@@ -480,6 +511,14 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
 
         // lines may have changed - recalculate scroll bar.
         this.resetScrollbar();
+    }
+
+    private double playerToBlockDis(BlockPos pos) {
+        if (pos == null) {
+            return 0;
+        }
+        var ps = this.getPlayer().getOnPos();
+        return pos.distSqr(ps);
     }
 
     /**
@@ -587,5 +626,9 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
      * A row containing slots for a subset of a pattern container inventory.
      */
     record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
+    }
+
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable ResourceKey<Level> playerWorld) {
+
     }
 }

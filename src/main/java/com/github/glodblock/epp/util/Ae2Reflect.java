@@ -2,6 +2,7 @@ package com.github.glodblock.epp.util;
 
 import appeng.blockentity.misc.InterfaceBlockEntity;
 import appeng.helpers.InterfaceLogic;
+import appeng.helpers.patternprovider.PatternContainer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,10 +11,14 @@ import java.util.Arrays;
 public class Ae2Reflect {
 
     private static final Field fInterfaceBlockEntity_logic;
+    private static final Field fContainerTracker_serverId;
+    private static final Field fContainerTracker_container;
 
     static {
         try {
             fInterfaceBlockEntity_logic = reflectField(InterfaceBlockEntity.class, "logic");
+            fContainerTracker_serverId = reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "serverId");
+            fContainerTracker_container = reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "container");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -74,6 +79,14 @@ public class Ae2Reflect {
 
     public static void setInterfaceLogic(InterfaceBlockEntity owner, InterfaceLogic logic) {
         writeField(owner, fInterfaceBlockEntity_logic, logic);
+    }
+
+    public static long getContainerID(Object owner) {
+        return readField(owner, fContainerTracker_serverId);
+    }
+
+    public static PatternContainer getContainer(Object owner) {
+        return readField(owner, fContainerTracker_container);
     }
 
 }
