@@ -131,5 +131,25 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .requires(AEItems.CALCULATION_PROCESSOR)
                 .unlockedBy(C, has(EPPItemAndBlock.IO_BUS_UPGRADE))
                 .save(c, EPP.id("ebus_upgrade"));
+
+        // Extended Pattern Access Terminal
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_PATTERN_TERMINAL)
+                .pattern(" L ")
+                .pattern("CPC")
+                .pattern(" C ")
+                .define('L', Blocks.REDSTONE_LAMP)
+                .define('P', AEParts.PATTERN_ACCESS_TERMINAL)
+                .define('C', AEItems.LOGIC_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_PATTERN_TERMINAL))
+                .save(c, EPP.id("epa"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.PATTERN_UPGRADE)
+                .pattern(" L ")
+                .pattern("CCC")
+                .define('L', Blocks.REDSTONE_LAMP)
+                .define('C', AEItems.LOGIC_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.PATTERN_UPGRADE))
+                .save(c, EPP.id("epa_upgrade"));
     }
 }
