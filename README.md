@@ -17,6 +17,11 @@
 <img alt="cell2" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/cell2.png?raw=true" width="180" height="60"/>
 <img alt="cell1" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/cell1.png?raw=true" width="200" height="60"/>
 
+- better pattern access terminal
+
+<img alt="cell2" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/pat.png?raw=true" width="270" height="304"/>
+<img alt="cell1" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/hl.png?raw=true" width="500" height="304"/>
+
 - 8x faster import/export bus
 
 <img alt="buss" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/buss.png?raw=true" width="200" height="90"/>
