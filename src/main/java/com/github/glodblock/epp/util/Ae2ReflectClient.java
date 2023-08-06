@@ -11,7 +11,7 @@ public class Ae2ReflectClient {
 
     static {
         try {
-            fLevelRenderer_renderBuffers = Ae2Reflect.reflectField(LevelRenderer.class, "renderBuffers");
+            fLevelRenderer_renderBuffers = Ae2Reflect.reflectField(LevelRenderer.class, "renderBuffers", "f_109464_");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
