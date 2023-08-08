@@ -22,7 +22,7 @@ public class HighlightButton extends IconButton {
     public HighlightButton(GuiExPatternTerminal.PatternProviderInfo container, float dis, Player player) {
         super(HighlightButton::press);
         this.container = container;
-        this.multiplier = Math.max(1f, dis);
+        this.multiplier = Math.min(Math.max(1f, dis), 25f);
         this.player = player;
     }
 

@@ -16,6 +16,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+
 public class HighlightRender extends RenderType {
     public static final HighlightRender INSTANCE = new HighlightRender();
     private static final float HALF_PI = (float) (Math.PI / 2f);
@@ -25,23 +27,32 @@ public class HighlightRender extends RenderType {
         if (world == null) {
             return;
         }
-        invalidate(world);
-        var pos = HighlightHandler.getPos();
-        if (pos == null) {
+        this.invalidate();
+        var drawList = HighlightHandler.getBlockData();
+        if (drawList.isEmpty()) {
             return;
         }
         // --- blinking ---
         if (((System.currentTimeMillis() / 500) & 1) == 0) {
             return;
         }
-        drawBlockOutline(pos, stack, camera, multiBuf);
+        for (var block : drawList) {
+            if (block.checkDim(world.dimension())) {
+                drawBlockOutline(block.pos(), stack, camera, multiBuf);
+            }
+        }
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
     }
 
-    private void invalidate(ClientLevel world) {
-        if (System.currentTimeMillis() > HighlightHandler.getTime() && HighlightHandler.checkDim(world.dimension())) {
-            HighlightHandler.expire();
+    private void invalidate() {
+        while (HighlightHandler.getFirst() != null) {
+            var info = HighlightHandler.getFirst();
+            if (System.currentTimeMillis() > info.time()) {
+                HighlightHandler.expire();
+            } else {
+                break;
+            }
         }
     }
 

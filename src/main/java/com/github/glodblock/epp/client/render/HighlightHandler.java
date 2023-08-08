@@ -1,40 +1,71 @@
 package com.github.glodblock.epp.client.render;
 
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.PriorityQueue;
+import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Objects;
+
 public class HighlightHandler {
 
-    private static BlockPos pos = null;
-    private static long expiredTime = -1;
-    private static ResourceKey<Level> dim = null;
+    private static final PriorityQueue<HighlightData> BLOCK_QUEUE = new ObjectHeapPriorityQueue<>(Comparator.comparingLong(o -> o.time));
+    private static final ObjectSet<HighlightData> BLOCKS = new ObjectOpenCustomHashSet<>(
+            new Hash.Strategy<>() {
+                @Override
+                public int hashCode(HighlightData o) {
+                    return o.dim.hashCode() ^ o.pos.hashCode();
+                }
+
+                @Override
+                public boolean equals(HighlightData a, HighlightData b) {
+                    return Objects.equals(a.dim, b.dim) && Objects.equals(a.pos, b.pos);
+                }
+            }
+    );
 
     public static void highlight(BlockPos pos, ResourceKey<Level> dim, long time) {
-        HighlightHandler.pos = pos;
-        HighlightHandler.expiredTime = time;
-        HighlightHandler.dim = dim;
-    }
-
-    public static boolean checkDim(ResourceKey<Level> dim) {
-        if (dim == null || HighlightHandler.dim == null) {
-            return false;
+        var r = new HighlightData(pos, time, dim);
+        if (!BLOCKS.contains(r)) {
+            BLOCK_QUEUE.enqueue(r);
+            BLOCKS.add(r);
         }
-        return dim.equals(HighlightHandler.dim);
     }
 
     public static void expire() {
-        HighlightHandler.pos = null;
-        HighlightHandler.expiredTime = -1;
-        HighlightHandler.dim = null;
+        if (BLOCK_QUEUE.isEmpty()) {
+            return;
+        }
+        BLOCKS.remove(BLOCK_QUEUE.first());
+        BLOCK_QUEUE.dequeue();
     }
 
-    public static BlockPos getPos() {
-        return pos;
+    public static HighlightData getFirst() {
+        if (BLOCK_QUEUE.isEmpty()) {
+            return null;
+        }
+        return BLOCK_QUEUE.first();
     }
 
-    public static long getTime() {
-        return expiredTime;
+    public static Collection<HighlightData> getBlockData() {
+        return BLOCKS;
+    }
+
+    public record HighlightData(BlockPos pos, long time, ResourceKey<Level> dim) {
+
+        public boolean checkDim(ResourceKey<Level> dim) {
+            if (dim == null || this.dim == null) {
+                return false;
+            }
+            return dim.equals(this.dim);
+        }
+
     }
 
 }
