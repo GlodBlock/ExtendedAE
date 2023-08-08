@@ -28,7 +28,9 @@ import com.github.glodblock.epp.container.ContainerExPatternTerminal;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
+import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.Rect2i;
@@ -116,6 +118,20 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
     private final ArrayList<Row> rows = new ArrayList<>();
 
     private final Map<String, Set<Object>> cachedSearches = new WeakHashMap<>();
+    private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
+        @Override
+        public int hashCode(ItemStack o) {
+            return o.getItem().hashCode()
+                    ^ o.getDamageValue()
+                    ^ (o.hasTag() ? o.getTag().hashCode() : 0xFFFFFFFF);
+        }
+
+        @Override
+        public boolean equals(ItemStack a, ItemStack b) {
+            return a == b || (a != null && b != null && ItemStack.isSameItemSameTags(a, b));
+        }
+    });
+    private final Set<PatternContainerRecord> matchedProvider = new HashSet<>();
     private final Scrollbar scrollbar;
     private final AETextField searchOutField;
     private final AETextField searchInField;
@@ -198,6 +214,13 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
                                 col * SLOT_SIZE + GUI_PADDING_X,
                                 (i + 1) * SLOT_SIZE + 34);
                         this.menu.slots.add(slot);
+                        if (!this.searchOutField.getValue().isEmpty() || !this.searchInField.getValue().isEmpty()) {
+                            if (this.matchedStack.contains(slot.getItem())) {
+                                fillRect(guiGraphics, new Rect2i(slot.x, slot.y, 16, 16), 0x8A00FF00);
+                            } else if (!this.matchedProvider.contains(container)) {
+                                fillRect(guiGraphics, new Rect2i(slot.x, slot.y, 16, 16), 0x6A000000);
+                            }
+                        }
                     }
                 } else if (row instanceof GroupHeaderRow headerRow) {
                     var group = headerRow.group;
@@ -437,6 +460,8 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
         this.byGroup.clear();
         this.highlightBtns.forEach((k, v) -> this.removeWidget(v));
         this.highlightBtns.clear();
+        this.matchedStack.clear();
+        this.matchedProvider.clear();
 
         final String outputFilter = this.searchOutField.getValue().toLowerCase();
         final String inputFilter = this.searchInField.getValue().toLowerCase();
@@ -474,6 +499,9 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
             if (found || (entry.getSearchName().contains(outputFilter) && entry.getSearchName().contains(inputFilter))) {
                 this.byGroup.put(entry.getGroup(), entry);
                 cachedSearch.add(entry);
+                if (entry.getSearchName().contains(outputFilter) && entry.getSearchName().contains(inputFilter)) {
+                    this.matchedProvider.add(entry);
+                }
             } else {
                 cachedSearch.remove(entry);
             }
@@ -550,6 +578,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
             if (item != null) {
                 var displayName = item.what().getDisplayName().getString().toLowerCase();
                 if (displayName.contains(searchTerm)) {
+                    this.matchedStack.add(itemStack);
                     return true;
                 }
             }
