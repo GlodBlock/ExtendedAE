@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.github.glodblock.eterminal.mixins",
+  "refmap": "mixins.epp.refmap.json",
+  "compatibilityLevel": "JAVA_11",
+  "mixins": [
+    "MixinPatternAccessTermMenu"
+  ],
+  "client": [
+    "MixinClearPatternAccessTerminalPacket",
+    "MixinPatternAccessTerminalPacket"
+  ],
+  "server": []
+}

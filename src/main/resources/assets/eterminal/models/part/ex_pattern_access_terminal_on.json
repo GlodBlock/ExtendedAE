@@ -1,0 +1,8 @@
+{
+  "parent": "ae2:part/pattern_access_terminal_on",
+  "textures": {
+    "lightsBright": "eterminal:part/ex_pattern_access_terminal_bright",
+    "lightsMedium": "eterminal:part/ex_pattern_access_terminal_medium",
+    "lightsDark": "eterminal:part/ex_pattern_access_terminal_dark"
+  }
+}
