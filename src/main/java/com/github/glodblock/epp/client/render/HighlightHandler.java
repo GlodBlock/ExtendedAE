@@ -25,7 +25,7 @@ public class HighlightHandler {
 
                 @Override
                 public boolean equals(HighlightData a, HighlightData b) {
-                    return Objects.equals(a.dim, b.dim) && Objects.equals(a.pos, b.pos);
+                    return (a == b) || (a != null && b != null && Objects.equals(a.dim, b.dim) && Objects.equals(a.pos, b.pos));
                 }
             }
     );

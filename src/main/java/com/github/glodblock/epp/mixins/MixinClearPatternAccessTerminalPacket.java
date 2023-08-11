@@ -1,6 +1,5 @@
 package com.github.glodblock.epp.mixins;
 
-import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
 import appeng.core.sync.packets.ClearPatternAccessTerminalPacket;
 import com.github.glodblock.epp.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.Minecraft;
