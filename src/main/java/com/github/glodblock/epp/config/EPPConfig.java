@@ -1,9 +1,6 @@
 package com.github.glodblock.epp.config;
 
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEParts;
 import com.github.glodblock.epp.EPP;
-import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.util.FCUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.resources.ResourceLocation;

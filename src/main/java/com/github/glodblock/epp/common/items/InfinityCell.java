@@ -78,7 +78,7 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
                 upgrades.add(upgrade);
             }
         }
-        var content = Collections.singletonList(new GenericStack(this.getRecord(stack), Integer.MAX_VALUE));
+        var content = Collections.singletonList(new GenericStack(this.getRecord(stack), getAsIntMax(this.getRecord(stack))));
         return Optional.of(new StorageCellTooltipComponent(upgrades, content, false, true));
     }
 
@@ -95,6 +95,13 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     @Override
     public void setFuzzyMode(ItemStack itemStack, FuzzyMode fuzzyMode) {
         // NO-OP
+    }
+
+    public static long getAsIntMax(AEKey key) {
+        if (key instanceof AEFluidKey) {
+            return (long) Integer.MAX_VALUE * AEFluidKey.AMOUNT_BUCKET;
+        }
+        return Integer.MAX_VALUE;
     }
 
 }
