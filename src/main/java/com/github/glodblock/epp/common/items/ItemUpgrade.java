@@ -56,7 +56,7 @@ public abstract class ItemUpgrade extends Item {
                     }
                 }
                 context.getItemInHand().shrink(1);
-                return InteractionResult.CONSUME;
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
         return InteractionResult.PASS;

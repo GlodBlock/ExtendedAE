@@ -19,6 +19,8 @@ public class EPPItemAndBlock {
     public static PartItem<PartExExportBus> EX_EXPORT_BUS;
     public static PartItem<PartExImportBus> EX_IMPORT_BUS;
     public static PartItem<PartExPatternAccessTerminal> EX_PATTERN_TERMINAL;
+    public static ItemMEPackingTape PACKING_TAPE;
+    public static ItemPackedDevice PACKAGE;
     public static ItemPatternProviderUpgrade PATTERN_PROVIDER_UPGRADE;
     public static ItemInterfaceUpgrade INTERFACE_UPGRADE;
     public static ItemIOBusUpgrade IO_BUS_UPGRADE;
@@ -37,6 +39,8 @@ public class EPPItemAndBlock {
         INTERFACE_UPGRADE = new ItemInterfaceUpgrade();
         IO_BUS_UPGRADE = new ItemIOBusUpgrade();
         PATTERN_UPGRADE = new ItemPatternAccessTerminalUpgrade();
+        PACKING_TAPE = new ItemMEPackingTape();
+        PACKAGE = new ItemPackedDevice();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
@@ -49,6 +53,8 @@ public class EPPItemAndBlock {
         regHandler.item("interface_upgrade", INTERFACE_UPGRADE);
         regHandler.item("io_bus_upgrade", IO_BUS_UPGRADE);
         regHandler.item("pattern_terminal_upgrade", PATTERN_UPGRADE);
+        regHandler.item("me_packing_tape", PACKING_TAPE);
+        regHandler.item("package", PACKAGE);
     }
 
 }

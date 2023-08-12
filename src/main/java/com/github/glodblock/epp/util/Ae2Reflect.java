@@ -3,6 +3,8 @@ package com.github.glodblock.epp.util;
 import appeng.blockentity.misc.InterfaceBlockEntity;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.patternprovider.PatternContainer;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,12 +15,14 @@ public class Ae2Reflect {
     private static final Field fInterfaceBlockEntity_logic;
     private static final Field fContainerTracker_serverId;
     private static final Field fContainerTracker_container;
+    private static final Field fUseOnContext_hitResult;
 
     static {
         try {
             fInterfaceBlockEntity_logic = reflectField(InterfaceBlockEntity.class, "logic");
             fContainerTracker_serverId = reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "serverId");
             fContainerTracker_container = reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "container");
+            fUseOnContext_hitResult = reflectField(UseOnContext.class, "hitResult", "f_43705_");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -87,6 +91,10 @@ public class Ae2Reflect {
 
     public static PatternContainer getContainer(Object owner) {
         return readField(owner, fContainerTracker_container);
+    }
+
+    public static BlockHitResult getHitResult(UseOnContext owner) {
+        return readField(owner, fUseOnContext_hitResult);
     }
 
 }
