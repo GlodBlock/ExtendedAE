@@ -10,14 +10,13 @@ import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
 import appeng.items.AEBaseItem;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
 import com.github.glodblock.epp.common.items.ItemMEPackingTape;
 import com.github.glodblock.epp.common.parts.*;
+import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -171,14 +170,7 @@ public class RegistryHandler {
     }
 
     private void initPackageList() {
-        ItemMEPackingTape.registerPackableDevice(EPPItemAndBlock.EX_INTERFACE_PART.getRegistryName());
-        ItemMEPackingTape.registerPackableDevice(EPPItemAndBlock.EX_PATTERN_PROVIDER_PART.getRegistryName());
-        ItemMEPackingTape.registerPackableDevice(EPPItemAndBlock.EX_INTERFACE.getRegistryName());
-        ItemMEPackingTape.registerPackableDevice(EPPItemAndBlock.EX_PATTERN_PROVIDER.getRegistryName());
-        ItemMEPackingTape.registerPackableDevice(AEParts.INTERFACE.id());
-        ItemMEPackingTape.registerPackableDevice(AEParts.PATTERN_PROVIDER.id());
-        ItemMEPackingTape.registerPackableDevice(AEBlocks.INTERFACE.id());
-        ItemMEPackingTape.registerPackableDevice(AEBlocks.PATTERN_PROVIDER.id());
+        EPPConfig.tapeWhitelist.forEach(ItemMEPackingTape::registerPackableDevice);
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

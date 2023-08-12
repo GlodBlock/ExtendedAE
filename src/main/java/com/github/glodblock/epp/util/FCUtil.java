@@ -7,11 +7,13 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenCustomHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class FCUtil {
 
@@ -55,6 +57,14 @@ public class FCUtil {
             return cable.getPart(face);
         }
         return null;
+    }
+
+    public static boolean checkInvalidRL(String rl, IForgeRegistry<?> registry) {
+        return checkInvalidRL(new ResourceLocation(rl), registry);
+    }
+
+    public static boolean checkInvalidRL(ResourceLocation rl, IForgeRegistry<?> registry) {
+        return registry.containsKey(rl);
     }
 
 }

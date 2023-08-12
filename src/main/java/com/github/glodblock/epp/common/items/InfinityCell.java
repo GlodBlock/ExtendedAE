@@ -12,6 +12,7 @@ import appeng.core.AEConfig;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
+import com.github.glodblock.epp.config.EPPConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -59,8 +60,8 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
 
     @Override
     public void addToMainCreativeTab(CreativeModeTab.Output output) {
-        output.accept(getRecordCell(AEFluidKey.of(Fluids.WATER)));
-        output.accept(getRecordCell(AEItemKey.of(Items.COBBLESTONE)));
+        EPPConfig.infCellFluid.forEach(f -> output.accept(getRecordCell(AEFluidKey.of(f))));
+        EPPConfig.infCellItem.forEach(i -> output.accept(getRecordCell(AEItemKey.of(i))));
     }
 
     @Override
