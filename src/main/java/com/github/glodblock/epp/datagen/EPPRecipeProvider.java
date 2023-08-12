@@ -151,5 +151,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('C', AEItems.LOGIC_PROCESSOR)
                 .unlockedBy(C, has(EPPItemAndBlock.PATTERN_UPGRADE))
                 .save(c, EPP.id("epa_upgrade"));
+
+        // ME Packing Tape
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.PACKING_TAPE)
+                .pattern("FG ")
+                .pattern("PIP")
+                .pattern(" GF")
+                .define('I', ConventionTags.IRON_INGOT)
+                .define('P', Items.PAPER)
+                .define('G', Items.SLIME_BALL)
+                .define('F', ConventionTags.FLUIX_DUST)
+                .unlockedBy(C, has(EPPItemAndBlock.PACKING_TAPE))
+                .save(c, EPP.id("tape"));
     }
 }
