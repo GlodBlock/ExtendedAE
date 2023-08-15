@@ -107,13 +107,21 @@ repositories {
     maven {
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+    maven {
+        url = "https://modmaven.dev/"
+        content {
+            includeGroup 'appeng'
+        }
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
     runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:11.6.0.1016")
-    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4548558")
+    // for some reason this deobf jar fails to load at file correctly
+    compileOnly fg.deobf("appeng:appliedenergistics2-forge:12.9.5")
+    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4548558")
 }
 
 jar {

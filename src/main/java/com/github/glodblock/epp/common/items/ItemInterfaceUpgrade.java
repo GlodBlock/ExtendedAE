@@ -25,7 +25,6 @@ import java.util.List;
 
 public class ItemInterfaceUpgrade extends Item {
 
-
     public ItemInterfaceUpgrade() {
         super(new Item.Properties().tab(EPPItemAndBlock.TAB));
     }
