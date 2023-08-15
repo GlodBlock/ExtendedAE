@@ -42,7 +42,8 @@ public class EPPConfig {
                     "ae2:cable_interface",
                     "ae2:cable_pattern_provider",
                     "ae2:interface",
-                    "ae2:pattern_provider"
+                    "ae2:pattern_provider",
+                    "ae2:drive"
             ), o -> true);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
