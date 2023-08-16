@@ -13,10 +13,12 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
+import com.github.glodblock.epp.common.items.ItemMEPackingTape;
 import com.github.glodblock.epp.common.parts.PartExExportBus;
 import com.github.glodblock.epp.common.parts.PartExImportBus;
 import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
+import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -129,6 +131,11 @@ public class RegistryHandler {
         }
         this.registerAEUpgrade();
         this.registerStorageHandler();
+        this.initPackageList();
+    }
+
+    private void initPackageList() {
+        EPPConfig.tapeWhitelist.forEach(ItemMEPackingTape::registerPackableDevice);
     }
 
     private void registerAEUpgrade() {

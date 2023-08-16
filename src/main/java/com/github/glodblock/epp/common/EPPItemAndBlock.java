@@ -3,10 +3,7 @@ package com.github.glodblock.epp.common;
 import appeng.items.parts.PartItem;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
-import com.github.glodblock.epp.common.items.InfinityCell;
-import com.github.glodblock.epp.common.items.ItemIOBusUpgrade;
-import com.github.glodblock.epp.common.items.ItemInterfaceUpgrade;
-import com.github.glodblock.epp.common.items.ItemPatternProviderUpgrade;
+import com.github.glodblock.epp.common.items.*;
 import com.github.glodblock.epp.common.parts.PartExExportBus;
 import com.github.glodblock.epp.common.parts.PartExImportBus;
 import com.github.glodblock.epp.common.parts.PartExInterface;
@@ -39,6 +36,8 @@ public class EPPItemAndBlock {
     public static ItemPatternProviderUpgrade PATTERN_PROVIDER_UPGRADE;
     public static ItemInterfaceUpgrade INTERFACE_UPGRADE;
     public static ItemIOBusUpgrade IO_BUS_UPGRADE;
+    public static ItemMEPackingTape PACKING_TAPE;
+    public static ItemPackedDevice PACKAGE;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -51,6 +50,8 @@ public class EPPItemAndBlock {
         IO_BUS_UPGRADE = new ItemIOBusUpgrade();
         INTERFACE_UPGRADE = new ItemInterfaceUpgrade();
         PATTERN_PROVIDER_UPGRADE = new ItemPatternProviderUpgrade();
+        PACKING_TAPE = new ItemMEPackingTape();
+        PACKAGE = new ItemPackedDevice();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
@@ -61,6 +62,8 @@ public class EPPItemAndBlock {
         regHandler.item("infinity_cell", INFINITY_CELL);
         regHandler.item("ex_export_bus_part", EX_EXPORT_BUS);
         regHandler.item("ex_import_bus_part", EX_IMPORT_BUS);
+        regHandler.item("me_packing_tape", PACKING_TAPE);
+        regHandler.item("package", PACKAGE);
     }
 
 }
