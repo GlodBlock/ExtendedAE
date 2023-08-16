@@ -6,6 +6,7 @@ import appeng.core.AppEngBase;
 import appeng.parts.PartModel;
 import appeng.parts.automation.ExportBusPart;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.ContainerExIOBus;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -43,7 +44,7 @@ public class PartExExportBus extends ExportBusPart {
 
     @Override
     protected int getOperationsPerTick() {
-        return super.getOperationsPerTick() * 8;
+        return super.getOperationsPerTick() * EPPConfig.busSpeed;
     }
 
     @Override
