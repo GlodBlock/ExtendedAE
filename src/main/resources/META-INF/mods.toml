@@ -3,6 +3,8 @@ loaderVersion="[43,)"
 license="LGPL-3.0"
 [[mods]]
 modId="expatternprovider"
+issueTrackerURL="https://github.com/GlodBlock/ExtendedAE/issues"
+displayURL="https://github.com/GlodBlock/ExtendedAE"
 version="1.19-0.1.1-forge"
 displayName="ExtendedAE"
 authors="GlodBlock"
