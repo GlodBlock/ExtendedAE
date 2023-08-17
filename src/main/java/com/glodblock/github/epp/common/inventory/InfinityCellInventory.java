@@ -10,6 +10,7 @@ import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.epp.common.items.InfinityCell;
+import com.glodblock.github.epp.config.EPPConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public double getIdleDrain() {
-        return 8.0;
+        return EPPConfig.INSTANCE.infCellCost;
     }
 
     @Override

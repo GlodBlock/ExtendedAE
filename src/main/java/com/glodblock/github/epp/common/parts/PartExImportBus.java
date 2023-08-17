@@ -6,6 +6,7 @@ import appeng.core.AppEngBase;
 import appeng.parts.PartModel;
 import appeng.parts.automation.ImportBusPart;
 import com.glodblock.github.epp.EPP;
+import com.glodblock.github.epp.config.EPPConfig;
 import com.glodblock.github.epp.container.ContainerExIOBus;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
@@ -43,7 +44,7 @@ public class PartExImportBus extends ImportBusPart {
 
     @Override
     protected int getOperationsPerTick() {
-        return super.getOperationsPerTick() * 8;
+        return super.getOperationsPerTick() * EPPConfig.INSTANCE.busSpeed;
     }
 
     @Override

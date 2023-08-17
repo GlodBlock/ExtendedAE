@@ -12,13 +12,13 @@ import appeng.core.AEConfig;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
 import com.glodblock.github.epp.common.EPPItemAndBlock;
+import com.glodblock.github.epp.config.EPPConfig;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -66,8 +66,8 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
-            stacks.add(getRecordCell(AEFluidKey.of(Fluids.WATER)));
-            stacks.add(getRecordCell(AEItemKey.of(Items.COBBLESTONE)));
+            EPPConfig.INSTANCE.getInfCellItem().forEach(i -> stacks.add(getRecordCell(AEItemKey.of(i))));
+            EPPConfig.INSTANCE.getInfCellFluid().forEach(f -> stacks.add(getRecordCell(AEFluidKey.of(f))));
         }
     }
 

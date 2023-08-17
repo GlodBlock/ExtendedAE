@@ -3,7 +3,9 @@ package com.glodblock.github.epp.util;
 import appeng.blockentity.AEBaseBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class FCUtil {
@@ -20,6 +22,14 @@ public class FCUtil {
         } else {
             newTile.markDirty();
         }
+    }
+
+    public static boolean checkInvalidRL(String rl, Registry<?> registry) {
+        return checkInvalidRL(new Identifier(rl), registry);
+    }
+
+    public static boolean checkInvalidRL(Identifier rl, Registry<?> registry) {
+        return registry.containsId(rl);
     }
 
 }
