@@ -15,7 +15,7 @@ import net.minecraft.util.ActionResult;
 
 import java.util.HashMap;
 
-public class ItemUpgrade extends Item {
+public abstract class ItemUpgrade extends Item {
 
     private final HashMap<Class<? extends BlockEntity>, TileEntityPair> BLOCK_MAP = new HashMap<>();
     private final HashMap<Class<? extends IPart>, IPartItem<?>> PART_MAP = new HashMap<>();

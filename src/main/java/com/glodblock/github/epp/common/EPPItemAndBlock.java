@@ -28,6 +28,8 @@ public class EPPItemAndBlock {
     public static InfinityCell INFINITY_CELL;
     public static PartItem<PartExExportBus> EX_EXPORT_BUS;
     public static PartItem<PartExImportBus> EX_IMPORT_BUS;
+    public static ItemMEPackingTape PACKING_TAPE;
+    public static ItemPackedDevice PACKAGE;
     public static final ItemGroup TAB = FabricItemGroupBuilder.build(EPP.id("eppitems"), () -> new ItemStack(EX_PATTERN_PROVIDER));
 
     public static void init(RegistryHandler regHandler) {
@@ -41,6 +43,8 @@ public class EPPItemAndBlock {
         IO_BUS_UPGRADE = new ItemIOBusUpgrade();
         INTERFACE_UPGRADE = new ItemInterfaceUpgrade();
         PATTERN_PROVIDER_UPGRADE = new ItemPatternProviderUpgrade();
+        PACKING_TAPE = new ItemMEPackingTape();
+        PACKAGE = new ItemPackedDevice();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider.TYPE);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface.TYPE);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
@@ -51,6 +55,8 @@ public class EPPItemAndBlock {
         regHandler.item("infinity_cell", INFINITY_CELL);
         regHandler.item("ex_export_bus_part", EX_EXPORT_BUS);
         regHandler.item("ex_import_bus_part", EX_IMPORT_BUS);
+        regHandler.item("me_packing_tape", PACKING_TAPE);
+        regHandler.item("package", PACKAGE);
     }
 
 }

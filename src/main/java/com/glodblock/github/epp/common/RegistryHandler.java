@@ -13,12 +13,14 @@ import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import com.glodblock.github.epp.EPP;
 import com.glodblock.github.epp.common.inventory.InfinityCellInventory;
+import com.glodblock.github.epp.common.items.ItemMEPackingTape;
 import com.glodblock.github.epp.common.parts.PartExExportBus;
 import com.glodblock.github.epp.common.parts.PartExImportBus;
 import com.glodblock.github.epp.common.parts.PartExInterface;
 import com.glodblock.github.epp.common.parts.PartExPatternProvider;
 import com.glodblock.github.epp.common.tiles.TileExInterface;
 import com.glodblock.github.epp.common.tiles.TileExPatternProvider;
+import com.glodblock.github.epp.config.EPPConfig;
 import com.glodblock.github.epp.container.ContainerExIOBus;
 import com.glodblock.github.epp.container.ContainerExInterface;
 import com.glodblock.github.epp.container.ContainerExPatternProvider;
@@ -30,6 +32,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RegistryHandler {
@@ -93,6 +96,7 @@ public class RegistryHandler {
         }
     }
 
+    @SuppressWarnings("unused")
     private void onRegisterContainer() {
         var type = new Object[] {
                 ContainerExPatternProvider.TYPE,
@@ -126,6 +130,11 @@ public class RegistryHandler {
         }
         this.registerStorageHandler();
         this.registerInventory();
+        this.initPackageList();
+    }
+
+    private void initPackageList() {
+        Arrays.stream(EPPConfig.INSTANCE.tapeWhitelist).forEach(ItemMEPackingTape::registerPackableDevice);
     }
 
     @SuppressWarnings("all")

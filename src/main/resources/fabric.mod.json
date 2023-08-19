@@ -38,5 +38,6 @@
 	},
 	"suggests": {
 		"another-mod": "*"
-	}
+	},
+	"accessWidener" : "expatternprovider.accesswidener"
 }

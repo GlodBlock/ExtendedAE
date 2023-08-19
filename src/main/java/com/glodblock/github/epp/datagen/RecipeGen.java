@@ -131,5 +131,18 @@ public class RecipeGen extends FabricRecipeProvider {
                 .input(AEItems.CALCULATION_PROCESSOR)
                 .criterion(FabricRecipeProvider.hasItem(EPPItemAndBlock.IO_BUS_UPGRADE), FabricRecipeProvider.conditionsFromItem(EPPItemAndBlock.IO_BUS_UPGRADE))
                 .offerTo(exporter, EPP.id("ebus_upgrade"));
+
+        // ME Packing Tape
+        ShapedRecipeJsonBuilder
+                .create(EPPItemAndBlock.PACKING_TAPE)
+                .pattern("FG ")
+                .pattern("PIP")
+                .pattern(" GF")
+                .input('I', ConventionTags.IRON_INGOT)
+                .input('P', Items.PAPER)
+                .input('G', Items.SLIME_BALL)
+                .input('F', ConventionTags.FLUIX_DUST)
+                .criterion(FabricRecipeProvider.hasItem(EPPItemAndBlock.PACKING_TAPE), FabricRecipeProvider.conditionsFromItem(EPPItemAndBlock.PACKING_TAPE))
+                .offerTo(exporter, EPP.id("tape"));
     }
 }
