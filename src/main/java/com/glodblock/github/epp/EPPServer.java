@@ -13,6 +13,7 @@ public class EPPServer extends EPP implements ModInitializer {
 		EPPItemAndBlock.init(RegistryHandler.INSTANCE);
 		RegistryHandler.INSTANCE.runRegister();
 		RegistryHandler.INSTANCE.onInit();
+		this.common();
 	}
 
 }

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "connected=false": {
+      "model": "expatternprovider:block/wireless_connect_off"
+    },
+    "connected=true": {
+      "model": "expatternprovider:block/wireless_connect_on"
+    }
+  }
+}

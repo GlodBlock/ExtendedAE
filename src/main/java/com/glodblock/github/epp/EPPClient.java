@@ -8,6 +8,7 @@ public class EPPClient extends EPP implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientRegistryHandler.INSTANCE.init();
+        this.common();
     }
 
 }

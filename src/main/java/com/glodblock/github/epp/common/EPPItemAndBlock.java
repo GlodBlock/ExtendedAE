@@ -4,6 +4,7 @@ import appeng.items.parts.PartItem;
 import com.glodblock.github.epp.EPP;
 import com.glodblock.github.epp.common.blocks.BlockExInterface;
 import com.glodblock.github.epp.common.blocks.BlockExPatternProvider;
+import com.glodblock.github.epp.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.epp.common.items.*;
 import com.glodblock.github.epp.common.parts.PartExExportBus;
 import com.glodblock.github.epp.common.parts.PartExImportBus;
@@ -11,6 +12,7 @@ import com.glodblock.github.epp.common.parts.PartExInterface;
 import com.glodblock.github.epp.common.parts.PartExPatternProvider;
 import com.glodblock.github.epp.common.tiles.TileExInterface;
 import com.glodblock.github.epp.common.tiles.TileExPatternProvider;
+import com.glodblock.github.epp.common.tiles.TileWirelessConnector;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -30,6 +32,8 @@ public class EPPItemAndBlock {
     public static PartItem<PartExImportBus> EX_IMPORT_BUS;
     public static ItemMEPackingTape PACKING_TAPE;
     public static ItemPackedDevice PACKAGE;
+    public static BlockWirelessConnector WIRELESS_CONNECTOR;
+    public static ItemWirelessConnectTool WIRELESS_TOOL;
     public static final ItemGroup TAB = FabricItemGroupBuilder.build(EPP.id("eppitems"), () -> new ItemStack(EX_PATTERN_PROVIDER));
 
     public static void init(RegistryHandler regHandler) {
@@ -45,8 +49,11 @@ public class EPPItemAndBlock {
         PATTERN_PROVIDER_UPGRADE = new ItemPatternProviderUpgrade();
         PACKING_TAPE = new ItemMEPackingTape();
         PACKAGE = new ItemPackedDevice();
+        WIRELESS_CONNECTOR = new BlockWirelessConnector();
+        WIRELESS_TOOL = new ItemWirelessConnectTool();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider.TYPE);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface.TYPE);
+        regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector.TYPE);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("pattern_provider_upgrade", PATTERN_PROVIDER_UPGRADE);
@@ -57,6 +64,7 @@ public class EPPItemAndBlock {
         regHandler.item("ex_import_bus_part", EX_IMPORT_BUS);
         regHandler.item("me_packing_tape", PACKING_TAPE);
         regHandler.item("package", PACKAGE);
+        regHandler.item("wireless_tool", WIRELESS_TOOL);
     }
 
 }
