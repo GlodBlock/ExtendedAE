@@ -28,6 +28,9 @@ public class ItemWirelessConnectTool extends Item {
         var pos = BlockPos.fromLong(nbt.getLong("bind"));
         if (freq != 0) {
             list.add(Text.translatable("wireless.tooltip", pos.getX(), pos.getY(), pos.getZ()).formatted(Formatting.GRAY));
+            list.add(Text.translatable("wireless.use.tooltip.02").formatted(Formatting.GRAY));
+        } else {
+            list.add(Text.translatable("wireless.use.tooltip.01").formatted(Formatting.GRAY));
         }
         super.appendTooltip(stack, level, list, tooltipFlag);
     }

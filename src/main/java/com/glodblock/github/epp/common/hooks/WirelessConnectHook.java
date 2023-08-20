@@ -30,8 +30,7 @@ public class WirelessConnectHook {
                         stack.setNbt(nbt);
                         player.sendMessage(Text.translatable("chat.wireless.connect", pos.getX(), pos.getY(), pos.getZ()), true);
                     } else {
-                        var f = connector.getFrequency() == 0 ?
-                                TileWirelessConnector.G.genFreq() : connector.getFrequency();
+                        var f = TileWirelessConnector.G.genFreq();
                         connector.setFreq(f);
                         nbt.putLong("freq", f);
                         nbt.putLong("bind", connector.getPos().asLong());

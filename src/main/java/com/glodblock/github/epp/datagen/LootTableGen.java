@@ -14,6 +14,7 @@ public class LootTableGen extends FabricBlockLootTableProvider {
     protected void generateBlockLootTables() {
         this.addDrop(EPPItemAndBlock.EX_PATTERN_PROVIDER, drops(EPPItemAndBlock.EX_PATTERN_PROVIDER));
         this.addDrop(EPPItemAndBlock.EX_INTERFACE, drops(EPPItemAndBlock.EX_INTERFACE));
+        this.addDrop(EPPItemAndBlock.WIRELESS_CONNECTOR, drops(EPPItemAndBlock.WIRELESS_CONNECTOR));
     }
 
 }

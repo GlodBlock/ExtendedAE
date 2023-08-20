@@ -41,4 +41,5 @@ public class ContainerExIOBus extends UpgradeableMenu<IOBusPart> {
         this.addSlot(new OptionalFakeSlot(inv, this, 7, 2), s);
         this.addSlot(new OptionalFakeSlot(inv, this, 8, 2), s);
     }
+
 }

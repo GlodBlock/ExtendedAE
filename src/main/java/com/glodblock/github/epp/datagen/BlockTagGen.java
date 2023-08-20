@@ -18,6 +18,7 @@ public class BlockTagGen extends FabricTagProvider.BlockTagProvider {
         TagKey<Block> pickaxe = BlockTags.PICKAXE_MINEABLE;
         this.getOrCreateTagBuilder(pickaxe)
                 .add(EPPItemAndBlock.EX_PATTERN_PROVIDER)
-                .add(EPPItemAndBlock.EX_INTERFACE);
+                .add(EPPItemAndBlock.EX_INTERFACE)
+                .add(EPPItemAndBlock.WIRELESS_CONNECTOR);
     }
 }

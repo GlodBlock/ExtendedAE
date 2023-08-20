@@ -25,6 +25,8 @@
   "me_packing_tape.tooltip": "Sneak + Right click to pack ME devices",
   "packaged_device.error.tooltip": "Invalid",
   "packaged_device.tooltip": "Device: %s",
+  "wireless.use.tooltip.01": "Click to bind",
+  "wireless.use.tooltip.02": "Click on another one to connect",
   "wireless.tooltip": "Bound to Connector at X: %s, Y: %s, Z: %s",
   "gui.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",
   "gui.expatternprovider.ex_interface": "ME Extended Interface",

@@ -79,7 +79,7 @@ public class WirelessConnect implements IActionHost {
 
         if (myOtherSide instanceof WirelessConnect sideB) {
             var sideA = this;
-            this.dis = sideA.host.getPos().getSquaredDistance(sideB.host.getPos());
+            this.dis = Math.sqrt(sideA.host.getPos().getSquaredDistance(sideB.host.getPos()));
             if (sideA.isActive() && sideB.isActive()
                     && this.dis <= EPPConfig.INSTANCE.wirelessConnectorMaxRange
                     && (sideA.host.getWorld() == sideB.host.getWorld())) {
