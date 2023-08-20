@@ -34,5 +34,8 @@
   "gui.expatternprovider.ex_import_bus_part": "ME Extended Import Bus",
   "chat.wireless.bind": "Bound to X: %s, Y: %s, Z: %s",
   "chat.wireless.connect": "Connected to X: %s, Y: %s, Z: %s",
+  "chat.wireless.error.01": "Can't connect to itself",
+  "chat.wireless.error.02": "The Connector is too far",
+  "chat.wireless.error.03": "Connectors must in the same dimension",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus"
 }
