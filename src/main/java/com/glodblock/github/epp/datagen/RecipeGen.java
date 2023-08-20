@@ -144,5 +144,29 @@ public class RecipeGen extends FabricRecipeProvider {
                 .input('F', ConventionTags.FLUIX_DUST)
                 .criterion(FabricRecipeProvider.hasItem(EPPItemAndBlock.PACKING_TAPE), FabricRecipeProvider.conditionsFromItem(EPPItemAndBlock.PACKING_TAPE))
                 .offerTo(exporter, EPP.id("tape"));
+
+        // Wireless Connector
+        ShapedRecipeJsonBuilder
+                .create(EPPItemAndBlock.WIRELESS_CONNECTOR, 2)
+                .pattern("DWD")
+                .pattern("CEC")
+                .pattern("DWD")
+                .input('D', AEItems.SKY_DUST)
+                .input('W', AEItems.WIRELESS_RECEIVER)
+                .input('C', ConventionTags.SMART_CABLE)
+                .input('E', AEItems.ENGINEERING_PROCESSOR)
+                .criterion(FabricRecipeProvider.hasItem(EPPItemAndBlock.WIRELESS_CONNECTOR), FabricRecipeProvider.conditionsFromItem(EPPItemAndBlock.WIRELESS_CONNECTOR))
+                .offerTo(exporter, EPP.id("wireless_connector"));
+
+        ShapedRecipeJsonBuilder
+                .create(EPPItemAndBlock.WIRELESS_TOOL)
+                .pattern(" W ")
+                .pattern("ICI")
+                .pattern(" I ")
+                .input('I', ConventionTags.IRON_INGOT)
+                .input('W', AEItems.WIRELESS_RECEIVER)
+                .input('C', AEItems.CALCULATION_PROCESSOR)
+                .criterion(FabricRecipeProvider.hasItem(EPPItemAndBlock.WIRELESS_TOOL), FabricRecipeProvider.conditionsFromItem(EPPItemAndBlock.WIRELESS_TOOL))
+                .offerTo(exporter, EPP.id("wireless_tool"));
     }
 }
