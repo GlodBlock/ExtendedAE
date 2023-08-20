@@ -12,7 +12,6 @@ import com.glodblock.github.epp.config.EPPConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -150,7 +149,7 @@ public class WirelessConnect implements IActionHost {
         if (this.isDestroyed || !this.registered) {
             return false;
         }
-        return this.host.isPowered() && this.hasFreq();
+        return this.hasFreq();
     }
 
     private IGridNode getNode() {
