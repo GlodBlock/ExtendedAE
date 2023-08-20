@@ -8,9 +8,11 @@ import appeng.api.networking.security.IActionHost;
 import appeng.me.service.helpers.ConnectionWrapper;
 import com.glodblock.github.epp.EPP;
 import com.glodblock.github.epp.common.tiles.TileWirelessConnector;
+import com.glodblock.github.epp.config.EPPConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -26,6 +28,7 @@ public class WirelessConnect implements IActionHost {
     private long thisSide;
     private long otherSide;
     private boolean shutdown;
+    private double dis;
     private TileWirelessConnector host;
 
     static {
@@ -72,11 +75,14 @@ public class WirelessConnect implements IActionHost {
         var myOtherSide = this.otherSide == 0 ? null : CONNECTORS.get(host.getWorld(), this.otherSide);
 
         this.shutdown = false;
+        this.dis = 0;
 
         if (myOtherSide instanceof WirelessConnect sideB) {
             var sideA = this;
-
-            if (sideA.isActive() && sideB.isActive()) {
+            this.dis = sideA.host.getPos().getSquaredDistance(sideB.host.getPos());
+            if (sideA.isActive() && sideB.isActive()
+                    && this.dis <= EPPConfig.INSTANCE.wirelessConnectorMaxRange
+                    && (sideA.host.getWorld() == sideB.host.getWorld())) {
                 if (this.connection != null && this.connection.getConnection() != null) {
                     final IGridNode a = this.connection.getConnection().a();
                     final IGridNode b = this.connection.getConnection().b();
@@ -92,7 +98,6 @@ public class WirelessConnect implements IActionHost {
                         sideA.connection.getConnection().destroy();
                         sideA.connection = new ConnectionWrapper(null);
                     }
-
                     if (sideB.connection != null && sideB.connection.getConnection() != null) {
                         sideB.connection.getConnection().destroy();
                         sideB.connection = new ConnectionWrapper(null);
@@ -113,6 +118,10 @@ public class WirelessConnect implements IActionHost {
             this.connection.setConnection(null);
             this.connection = new ConnectionWrapper(null);
         }
+    }
+
+    public double getDistance() {
+        return this.dis;
     }
 
     public boolean isConnected() {

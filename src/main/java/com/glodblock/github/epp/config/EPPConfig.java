@@ -42,6 +42,11 @@ public class EPPConfig {
             "minecraft:cobblestone"
     };
 
+    @Configurable
+    @Configurable.Comment("The max range between two wireless connector")
+    @Configurable.DecimalRange(min = 10, max = 10000)
+    public double wirelessConnectorMaxRange = 1000;
+
     public List<Item> getInfCellItem() {
         return Arrays.stream(infCellTypeID).parallel().filter(
                 s -> FCUtil.checkInvalidRL(s, Registry.ITEM)

@@ -30,7 +30,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         super(TYPE, pos, blockState);
         this.getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
         this.getMainNode().setFlags(GridFlags.DENSE_CAPACITY);
-        this.getMainNode().setIdlePowerUsage(22);
+        this.getMainNode().setIdlePowerUsage(1.0);
         this.connect = new WirelessConnect(this);
     }
 
@@ -39,7 +39,17 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         if (this.updateStatus) {
             this.updateStatus = false;
             this.connect.updateStatus();
+            this.updatePowerUsage();
             this.markForUpdate();
+        }
+    }
+
+    public void updatePowerUsage() {
+        if (this.connect.isConnected()) {
+            var dis = Math.max(this.connect.getDistance(), Math.E);
+            this.getMainNode().setIdlePowerUsage(Math.max(1.0, dis * Math.log(dis)));
+        } else {
+            this.getMainNode().setIdlePowerUsage(1.0);
         }
     }
 
