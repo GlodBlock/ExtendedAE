@@ -1,6 +1,5 @@
 package com.github.glodblock.epp.common.blocks;
 
-import appeng.block.AEBaseEntityBlock;
 import appeng.block.crafting.PushDirection;
 import appeng.menu.locator.MenuLocators;
 import appeng.util.InteractionUtil;
@@ -8,7 +7,6 @@ import appeng.util.Platform;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,12 +18,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static appeng.block.crafting.PatternProviderBlock.PUSH_DIRECTION;
 
 @SuppressWarnings("deprecation")
-public class BlockExPatternProvider extends AEBaseEntityBlock<TileExPatternProvider> {
+public class BlockExPatternProvider extends BlockBaseGui<TileExPatternProvider> {
 
     public BlockExPatternProvider() {
         super(metalProps());
@@ -47,24 +44,17 @@ public class BlockExPatternProvider extends AEBaseEntityBlock<TileExPatternProvi
     }
 
     @Override
-    public InteractionResult onActivated(Level level, BlockPos pos, Player p, InteractionHand hand, @Nullable ItemStack heldItem, BlockHitResult hit) {
-        if (InteractionUtil.isInAlternateUseMode(p)) {
-            return InteractionResult.PASS;
-        } else {
-            var be = this.getBlockEntity(level, pos);
-            if (be != null) {
-                if (heldItem != null && InteractionUtil.canWrenchRotate(heldItem)) {
-                    setSide(level, pos, hit.getDirection());
-                    return InteractionResult.sidedSuccess(level.isClientSide());
-                }
-                if (!level.isClientSide()) {
-                    be.openMenu(p, MenuLocators.forBlockEntity(be));
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide());
-            } else {
-                return InteractionResult.PASS;
-            }
+    public InteractionResult check(TileExPatternProvider tile, ItemStack stack, Level world, BlockPos pos, BlockHitResult hit, Player p) {
+        if (stack != null && InteractionUtil.canWrenchRotate(stack)) {
+            this.setSide(world, pos, hit.getDirection());
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
+        return null;
+    }
+
+    @Override
+    public void openGui(TileExPatternProvider tile, Player p) {
+        tile.openMenu(p, MenuLocators.forBlockEntity(tile));
     }
 
     public void setSide(Level level, BlockPos pos, Direction facing) {

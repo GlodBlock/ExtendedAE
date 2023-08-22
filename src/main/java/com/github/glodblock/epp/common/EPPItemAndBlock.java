@@ -3,10 +3,12 @@ package com.github.glodblock.epp.common;
 import appeng.items.parts.PartItem;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
+import com.github.glodblock.epp.common.blocks.BlockWirelessConnector;
 import com.github.glodblock.epp.common.items.*;
 import com.github.glodblock.epp.common.parts.*;
 import com.github.glodblock.epp.common.tileentities.TileExInterface;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
+import com.github.glodblock.epp.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.item.Item;
 
 public class EPPItemAndBlock {
@@ -25,6 +27,8 @@ public class EPPItemAndBlock {
     public static ItemInterfaceUpgrade INTERFACE_UPGRADE;
     public static ItemIOBusUpgrade IO_BUS_UPGRADE;
     public static ItemPatternAccessTerminalUpgrade PATTERN_UPGRADE;
+    public static BlockWirelessConnector WIRELESS_CONNECTOR;
+    public static ItemWirelessConnectTool WIRELESS_TOOL;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -41,8 +45,11 @@ public class EPPItemAndBlock {
         PATTERN_UPGRADE = new ItemPatternAccessTerminalUpgrade();
         PACKING_TAPE = new ItemMEPackingTape();
         PACKAGE = new ItemPackedDevice();
+        WIRELESS_CONNECTOR = new BlockWirelessConnector();
+        WIRELESS_TOOL = new ItemWirelessConnectTool();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
+        regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);
@@ -55,6 +62,7 @@ public class EPPItemAndBlock {
         regHandler.item("pattern_terminal_upgrade", PATTERN_UPGRADE);
         regHandler.item("me_packing_tape", PACKING_TAPE);
         regHandler.item("package", PACKAGE);
+        regHandler.item("wireless_tool", WIRELESS_TOOL);
     }
 
 }

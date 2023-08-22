@@ -26,7 +26,7 @@ import java.util.List;
 public class ItemPackedDevice extends AEBaseItem {
 
     public ItemPackedDevice() {
-        super(new Item.Properties());
+        super(new Item.Properties().stacksTo(1));
     }
 
     @Override

@@ -28,6 +28,10 @@ public class EPPConfig {
             .comment("ME Infinity Cell idle energy cost (unit: AE/t)")
             .defineInRange("cost", 8.0, 0.1, 64.0);
 
+    private static final ForgeConfigSpec.DoubleValue WIRELESS_CONNECTOR_RANGE = BUILDER
+            .comment("The max range between two wireless connector")
+            .defineInRange("range", 1000.0, 10.0, 10000.0);
+
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> INFINITY_CELL_TYPES = BUILDER
             .comment("ME Infinity Cell types (item or fluid's id)")
             .defineList("types", Lists.newArrayList("minecraft:water", "minecraft:cobblestone"), EPPConfig::checkRL);
@@ -54,6 +58,7 @@ public class EPPConfig {
 
     public static int busSpeed;
     public static double infCellCost;
+    public static double wirelessMaxRange;
     public static List<Fluid> infCellFluid;
     public static List<Item> infCellItem;
     public static List<ResourceLocation> tapeWhitelist;
@@ -62,6 +67,7 @@ public class EPPConfig {
     static void onLoad(final ModConfigEvent event) {
         busSpeed = EX_BUS_SPEED.get();
         infCellCost = INFINITY_CELL_ENERGY.get();
+        wirelessMaxRange = WIRELESS_CONNECTOR_RANGE.get();
         infCellFluid = new ArrayList<>();
         infCellItem = new ArrayList<>();
         INFINITY_CELL_TYPES.get()

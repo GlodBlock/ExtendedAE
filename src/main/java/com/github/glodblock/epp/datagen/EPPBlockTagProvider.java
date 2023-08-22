@@ -24,6 +24,7 @@ public class EPPBlockTagProvider extends BlockTagsProvider {
         TagKey<Block> pickaxe = BlockTags.MINEABLE_WITH_PICKAXE;
         tag(pickaxe)
                 .add(EPPItemAndBlock.EX_PATTERN_PROVIDER)
-                .add(EPPItemAndBlock.EX_INTERFACE);
+                .add(EPPItemAndBlock.EX_INTERFACE)
+                .add(EPPItemAndBlock.WIRELESS_CONNECTOR);
     }
 }
