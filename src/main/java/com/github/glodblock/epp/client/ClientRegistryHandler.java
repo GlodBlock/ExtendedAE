@@ -4,16 +4,10 @@ import appeng.api.util.AEColor;
 import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
 import appeng.menu.SlotSemantics;
-import com.github.glodblock.epp.client.gui.GuiExIOBus;
-import com.github.glodblock.epp.client.gui.GuiExInterface;
-import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
-import com.github.glodblock.epp.client.gui.GuiExPatternTerminal;
+import com.github.glodblock.epp.client.gui.*;
 import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
-import com.github.glodblock.epp.container.ContainerExIOBus;
-import com.github.glodblock.epp.container.ContainerExInterface;
-import com.github.glodblock.epp.container.ContainerExPatternProvider;
-import com.github.glodblock.epp.container.ContainerExPatternTerminal;
+import com.github.glodblock.epp.container.*;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -41,6 +35,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExIOBus.EXPORT_TYPE, GuiExIOBus::new, "/screens/ex_export_bus.json");
         InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
         InitScreens.register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
+        InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
     }
 
     @SubscribeEvent

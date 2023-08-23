@@ -8,6 +8,7 @@ import appeng.blockentity.grid.AENetworkBlockEntity;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.FreqGenerator;
 import com.github.glodblock.epp.common.me.wireless.WirelessConnect;
+import com.github.glodblock.epp.util.CacheHolder;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,13 +23,16 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     private boolean updateStatus = true;
     private long freq = 0;
     private final WirelessConnect connect;
+    private double powerUse;
+    private final CacheHolder<BlockPos> other = CacheHolder.of(null);
     private static final FreqGenerator<Long> G = FreqGenerator.createLong();
 
     public TileWirelessConnector(BlockPos pos, BlockState blockState) {
         super(FCUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EPPItemAndBlock.WIRELESS_CONNECTOR), pos, blockState);
         this.getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
         this.getMainNode().setFlags(GridFlags.DENSE_CAPACITY);
-        this.getMainNode().setIdlePowerUsage(1.0);
+        this.powerUse = 1.0;
+        this.getMainNode().setIdlePowerUsage(this.powerUse);
         this.connect = new WirelessConnect(this);
     }
 
@@ -36,6 +40,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     public void serverTick() {
         if (this.updateStatus) {
             this.updateStatus = false;
+            this.other.expired();
             this.connect.updateStatus();
             this.updatePowerUsage();
             this.markForUpdate();
@@ -46,10 +51,25 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     public void updatePowerUsage() {
         if (this.connect.isConnected()) {
             var dis = Math.max(this.connect.getDistance(), Math.E);
-            this.getMainNode().setIdlePowerUsage(Math.max(1.0, dis * Math.log(dis)));
+            this.powerUse = Math.max(1.0, dis * Math.log(dis));
         } else {
-            this.getMainNode().setIdlePowerUsage(1.0);
+            this.powerUse = 1.0;
         }
+        this.getMainNode().setIdlePowerUsage(this.powerUse);
+    }
+
+    public double getPowerUse() {
+        return this.powerUse;
+    }
+
+    public BlockPos getOtherSide() {
+        if (this.connect.isConnected()) {
+            if (!this.other.isValid()) {
+                this.other.update(this.connect.getOtherSide());
+            }
+            return this.other.get();
+        }
+        return null;
     }
 
     @Override

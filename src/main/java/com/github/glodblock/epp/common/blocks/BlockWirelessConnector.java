@@ -1,10 +1,13 @@
 package com.github.glodblock.epp.common.blocks;
 
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuLocators;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.wireless.WirelessFail;
 import com.github.glodblock.epp.common.tileentities.TileWirelessConnector;
 import com.github.glodblock.epp.config.EPPConfig;
+import com.github.glodblock.epp.container.ContainerWirelessConnector;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -130,7 +133,7 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
 
     @Override
     public void openGui(TileWirelessConnector tile, Player p) {
-
+        MenuOpener.open(ContainerWirelessConnector.TYPE, p, MenuLocators.forBlockEntity(tile));
     }
 
 }

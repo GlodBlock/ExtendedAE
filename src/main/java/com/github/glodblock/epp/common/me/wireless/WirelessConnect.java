@@ -8,9 +8,11 @@ import appeng.me.service.helpers.ConnectionWrapper;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.tileentities.TileWirelessConnector;
 import com.github.glodblock.epp.config.EPPConfig;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -137,6 +139,15 @@ public class WirelessConnect implements IActionHost {
             }
         }
         return true;
+    }
+
+    @Nullable
+    public BlockPos getOtherSide() {
+        if (this.otherSide == 0) {
+            return null;
+        }
+        var o = CONNECTORS.get(this.host.getLevel(), this.otherSide);
+        return o instanceof WirelessConnect c ? c.host.getBlockPos() : null;
     }
 
     private boolean isActive() {

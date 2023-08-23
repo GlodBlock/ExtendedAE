@@ -17,10 +17,7 @@ import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
 import com.github.glodblock.epp.common.items.ItemMEPackingTape;
 import com.github.glodblock.epp.common.parts.*;
 import com.github.glodblock.epp.config.EPPConfig;
-import com.github.glodblock.epp.container.ContainerExIOBus;
-import com.github.glodblock.epp.container.ContainerExInterface;
-import com.github.glodblock.epp.container.ContainerExPatternProvider;
-import com.github.glodblock.epp.container.ContainerExPatternTerminal;
+import com.github.glodblock.epp.container.*;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -109,6 +106,7 @@ public class RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_export_bus"), ContainerExIOBus.EXPORT_TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_import_bus"), ContainerExIOBus.IMPORT_TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_pattern_access_terminal"), ContainerExPatternTerminal.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("wireless_connector"), ContainerWirelessConnector.TYPE);
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
