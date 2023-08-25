@@ -2,9 +2,13 @@ package com.github.glodblock.epp.common.tileentities;
 
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNodeListener;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.IUpgradeableObject;
+import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.grid.AENetworkBlockEntity;
+import appeng.core.definitions.AEItems;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.FreqGenerator;
 import com.github.glodblock.epp.common.me.wireless.WirelessConnect;
@@ -18,12 +22,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.EnumSet;
 
 // Adapt from Quantum Bridge code
-public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity {
+public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject {
 
     private boolean updateStatus = true;
     private long freq = 0;
     private final WirelessConnect connect;
     private double powerUse;
+    private final IUpgradeInventory upgrades;
     private final CacheHolder<BlockPos> other = CacheHolder.empty();
     private static final FreqGenerator<Long> G = FreqGenerator.createLong();
 
@@ -34,6 +39,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         this.powerUse = 1.0;
         this.getMainNode().setIdlePowerUsage(this.powerUse);
         this.connect = new WirelessConnect(this);
+        this.upgrades = UpgradeInventories.forMachine(EPPItemAndBlock.WIRELESS_CONNECTOR, 4, this::updatePowerUsage);
     }
 
     @Override
@@ -49,9 +55,10 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     }
 
     public void updatePowerUsage() {
+        var disc = 1 - 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
         if (this.connect.isConnected()) {
             var dis = Math.max(this.connect.getDistance(), Math.E);
-            this.powerUse = Math.max(1.0, dis * Math.log(dis));
+            this.powerUse = Math.max(1.0, dis * Math.log(dis) * disc);
         } else {
             this.powerUse = 1.0;
         }
@@ -103,6 +110,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     public void loadTag(CompoundTag data) {
         super.loadTag(data);
         this.freq = data.getLong("freq");
+        this.upgrades.readFromNBT(data, "upgrades");
         G.markUsed(this.freq);
     }
 
@@ -110,6 +118,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     public void saveAdditional(CompoundTag data) {
         super.saveAdditional(data);
         data.putLong("freq", this.freq);
+        this.upgrades.writeToNBT(data, "upgrades");
         G.markUsed(this.freq);
     }
 
@@ -141,6 +150,11 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
 
     public long getFrequency() {
         return this.freq;
+    }
+
+    @Override
+    public IUpgradeInventory getUpgrades() {
+        return this.upgrades;
     }
 
 }

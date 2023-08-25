@@ -1,35 +1,34 @@
 package com.github.glodblock.epp.container;
 
-import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
+import appeng.menu.implementations.UpgradeableMenu;
 import com.github.glodblock.epp.common.me.wireless.WirelessStatus;
 import com.github.glodblock.epp.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
-public class ContainerWirelessConnector extends AEBaseMenu {
+public class ContainerWirelessConnector extends UpgradeableMenu<TileWirelessConnector> {
 
     public static final MenuType<ContainerWirelessConnector> TYPE = MenuTypeBuilder
             .create(ContainerWirelessConnector::new, TileWirelessConnector.class)
             .build("wireless_connector");
 
     private final TileWirelessConnector connector;
-    @GuiSync(0)
+    @GuiSync(7)
     public double powerUse;
-    @GuiSync(1)
+    @GuiSync(8)
     public int usedChannel;
-    @GuiSync(2)
+    @GuiSync(9)
     public int maxChannel;
-    @GuiSync(3)
+    @GuiSync(10)
     public long otherSide;
-    @GuiSync(4)
+    @GuiSync(11)
     public WirelessStatus status = WirelessStatus.REMOTE_ERROR;
 
     public ContainerWirelessConnector(int id, Inventory playerInventory, TileWirelessConnector host) {
         super(TYPE, id, playerInventory, host);
         this.connector = host;
-        this.createPlayerInventorySlots(playerInventory);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.github.glodblock.epp.client.gui;
 
-import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import com.github.glodblock.epp.client.button.HighlightButton;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.Objects;
 
-public class GuiWirelessConnector extends AEBaseScreen<ContainerWirelessConnector> {
+public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessConnector> {
 
     public static final int PADDING_X = 8;
     public static final int PADDING_Y = 6;
