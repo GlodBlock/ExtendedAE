@@ -2,8 +2,8 @@
   "itemGroup.eterminal": "Enhanced Terminal",
   "item.eterminal.ex_pattern_access_part": "ME Enhanced Pattern Access Terminal",
   "gui.eterminal.ex_pattern_access_terminal": "ME Extended Pattern A. Terminal",
-  "gui.eterminal.ex_pattern_access_terminal.tooltip.01": "Search by output or interface name.",
-  "gui.eterminal.ex_pattern_access_terminal.tooltip.02": "Search by input or interface name.",
+  "gui.eterminal.ex_pattern_access_terminal.tooltip.01": "Search by output or pattern provider name.",
+  "gui.eterminal.ex_pattern_access_terminal.tooltip.02": "Search by input or pattern provider name.",
   "gui.eterminal.ex_pattern_access_terminal.tooltip.03": "Highlight the pattern provider in world.",
   "chat.ex_pattern_access_terminal.pos": "The pattern provider is now highlighted at: %s, Dim: %s"
 }
