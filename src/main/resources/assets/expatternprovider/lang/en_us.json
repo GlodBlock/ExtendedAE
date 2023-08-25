@@ -43,7 +43,8 @@
   "gui.wireless_connect.status": "Status: %s",
   "gui.wireless_connect.power": "Power Usage: %s AE/t",
   "gui.wireless_connect.channel": "Channel: %s/%s",
-  "gui.wireless_connect.remote": "Connected to X: %s, Y: %s, Z: %s",
+  "gui.wireless_connect.remote": "Position X: %s, Y: %s, Z: %s",
+  "gui.wireless_connect.highlight.tooltip": "Highlight the remote Wireless Connector in world.",
   "chat.ex_pattern_access_terminal.pos": "The pattern provider is now highlighted at: %s, Dim: %s",
   "chat.wireless_connect.out_of_range": "The Wireless Connector is too far",
   "chat.wireless_connect.self_reference": "Can't connect to itself",
@@ -52,5 +53,6 @@
   "chat.wireless_connect.clear": "The setting is cleared",
   "chat.wireless_connect": "Connected to X: %s, Y: %s, Z: %s",
   "chat.wireless_bind": "Bound to X: %s, Y: %s, Z: %s",
+  "chat.wireless.highlight": "The pattern provider is now highlighted at: %s, Dim: %s",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus"
 }

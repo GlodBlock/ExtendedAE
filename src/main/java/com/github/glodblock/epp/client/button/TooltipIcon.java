@@ -1,9 +1,8 @@
 package com.github.glodblock.epp.client.button;
 
-import appeng.client.gui.Icon;
-import appeng.client.gui.widgets.IconButton;
+import appeng.client.gui.style.Blitter;
 
-public class TooltipIcon extends IconButton {
+public class TooltipIcon extends EPPButton {
 
     public TooltipIcon() {
         super(b -> {});
@@ -11,7 +10,7 @@ public class TooltipIcon extends IconButton {
     }
 
     @Override
-    protected Icon getIcon() {
-        return Icon.HELP;
+    Blitter getBlitterIcon() {
+        return EPPIcon.INFO;
     }
 }

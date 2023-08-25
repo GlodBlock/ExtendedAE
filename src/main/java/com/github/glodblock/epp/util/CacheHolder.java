@@ -14,6 +14,10 @@ public class CacheHolder<T> {
         return new CacheHolder<>(obj);
     }
 
+    public static <T> CacheHolder<T> empty() {
+        return new CacheHolder<>(null);
+    }
+
     public void expired() {
         this.expired = true;
     }
@@ -24,6 +28,10 @@ public class CacheHolder<T> {
 
     public boolean isValid() {
         return !this.expired;
+    }
+
+    public boolean isEmpty() {
+        return obj == null;
     }
 
     public void update(T obj) {

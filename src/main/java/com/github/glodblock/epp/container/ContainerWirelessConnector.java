@@ -24,7 +24,7 @@ public class ContainerWirelessConnector extends AEBaseMenu {
     @GuiSync(3)
     public long otherSide;
     @GuiSync(4)
-    public WirelessStatus status;
+    public WirelessStatus status = WirelessStatus.REMOTE_ERROR;
 
     public ContainerWirelessConnector(int id, Inventory playerInventory, TileWirelessConnector host) {
         super(TYPE, id, playerInventory, host);

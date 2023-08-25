@@ -24,7 +24,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     private long freq = 0;
     private final WirelessConnect connect;
     private double powerUse;
-    private final CacheHolder<BlockPos> other = CacheHolder.of(null);
+    private final CacheHolder<BlockPos> other = CacheHolder.empty();
     private static final FreqGenerator<Long> G = FreqGenerator.createLong();
 
     public TileWirelessConnector(BlockPos pos, BlockState blockState) {
