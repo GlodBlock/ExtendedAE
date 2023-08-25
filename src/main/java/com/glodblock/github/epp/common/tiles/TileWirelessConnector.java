@@ -116,12 +116,4 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         return this.freq;
     }
 
-    public boolean isPowered() {
-        if (isClientSide()) {
-            return true;
-        }
-        var node = getMainNode().getNode();
-        return node != null && node.isPowered();
-    }
-
 }
