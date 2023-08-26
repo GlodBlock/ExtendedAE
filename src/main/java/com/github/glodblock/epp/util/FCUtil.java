@@ -67,4 +67,8 @@ public class FCUtil {
         return registry.containsKey(rl);
     }
 
+    public static double clamp(double num, double floor, double ceil) {
+        return Math.min(ceil, Math.max(floor, num));
+    }
+
 }

@@ -24,18 +24,13 @@ import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
 import com.github.glodblock.epp.client.button.HighlightButton;
-import com.github.glodblock.epp.client.render.HighlightHandler;
 import com.github.glodblock.epp.container.ContainerExPatternTerminal;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.locale.Language;
@@ -527,15 +522,14 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
                 var inventory = container.getInventory();
                 if (inventory.size() > 0) {
                     var info = this.infoMap.get(container.getServerId());
-                    var btn = new HighlightButton(t -> {
-                        if (t instanceof HighlightButton ht) {
-                            HighlightHandler.highlight(info.pos(), info.playerWorld(), System.currentTimeMillis() + (long) (800 * ht.multiplier));
-                            var lp = (LocalPlayer) ht.player;
-                            if (info.pos() != null && info.playerWorld() != null) {
-                                lp.displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", info.pos().toShortString(), info.playerWorld().location().getPath()), false);
-                            }
+                    var btn = new HighlightButton();
+                    btn.setMultiplier(this.playerToBlockDis(info.pos()));
+                    btn.setTarget(info.pos, info.playerWorld);
+                    btn.setSuccessJob(() -> {
+                        if (this.getPlayer() != null && info.pos != null && info.playerWorld != null) {
+                            this.getPlayer().displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", info.pos.toShortString(), info.playerWorld.location().getPath()), false);
                         }
-                    }, (float) this.playerToBlockDis(info.pos()), this.getPlayer());
+                    });
                     btn.setTooltip(Tooltip.create(Component.translatable("gui.expatternprovider.ex_pattern_access_terminal.tooltip.03")));
                     btn.setVisibility(false);
                     this.highlightBtns.put(this.rows.size(), this.addRenderableWidget(btn));

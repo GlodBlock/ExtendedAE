@@ -6,13 +6,10 @@ import appeng.client.gui.style.ScreenStyle;
 import com.github.glodblock.epp.client.button.HighlightButton;
 import com.github.glodblock.epp.client.button.TooltipIcon;
 import com.github.glodblock.epp.client.gui.widget.WorldDisplay;
-import com.github.glodblock.epp.client.render.HighlightHandler;
 import com.github.glodblock.epp.common.me.wireless.WirelessStatus;
 import com.github.glodblock.epp.container.ContainerWirelessConnector;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,7 +35,7 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
         super.init();
         this.statusIcon.setPosition(this.leftPos + 152, this.topPos + PADDING_Y);
         this.remote.setPosition(this.leftPos + 24, this.topPos + 76);
-        this.highlight = new HighlightButton(this::highlight, 0, this.getPlayer());
+        this.highlight = new HighlightButton();
         this.highlight.setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.highlight.tooltip")));
         this.highlight.setPosition(this.leftPos + 152, this.topPos + PADDING_Y + 18);
         this.remote.refreshBounds();
@@ -51,11 +48,18 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
     protected void updateBeforeRender() {
         super.updateBeforeRender();
         if (this.menu.status == WirelessStatus.WORKING) {
-            if (!Objects.equals(BlockPos.of(this.menu.otherSide), this.lastPos)) {
-                this.remote.locate(BlockPos.of(this.menu.otherSide));
-                this.lastPos = BlockPos.of(this.menu.otherSide);
+            var remotePos = BlockPos.of(this.menu.otherSide);
+            if (!Objects.equals(remotePos, this.lastPos)) {
+                this.remote.locate(remotePos);
+                this.lastPos = remotePos;
             }
-            this.highlight.multiplier = (float) this.playerToBlockDis(this.lastPos);
+            this.highlight.setTarget(remotePos, this.getPlayer().clientLevel.dimension());
+            this.highlight.setMultiplier(this.playerToBlockDis(remotePos));
+            this.highlight.setSuccessJob(() -> {
+                if (this.getPlayer() != null) {
+                    this.getPlayer().displayClientMessage(Component.translatable("chat.wireless.highlight", remotePos.toShortString(), this.getPlayer().level().dimension().location().getPath()), false);
+                }
+            });
             this.highlight.setVisibility(true);
         } else {
             this.remote.unload();
@@ -127,16 +131,6 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
             return true;
         }
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);
-    }
-
-    public void highlight(Button button) {
-        if (this.menu.status == WirelessStatus.WORKING) {
-            if (button instanceof HighlightButton ht) {
-                var lp = (LocalPlayer) ht.player;
-                HighlightHandler.highlight(BlockPos.of(this.menu.otherSide), lp.level().dimension(), System.currentTimeMillis() + (long) (800 * ht.multiplier));
-                lp.displayClientMessage(Component.translatable("chat.wireless.highlight", BlockPos.of(this.menu.otherSide).toShortString(), lp.level().dimension().location().getPath()), false);
-            }
-        }
     }
 
 }

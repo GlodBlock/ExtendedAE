@@ -7,6 +7,7 @@ import appeng.client.guidebook.scene.GuidebookLevelRenderer;
 import appeng.client.guidebook.scene.GuidebookScene;
 import appeng.client.guidebook.scene.level.GuidebookLevel;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
+import com.github.glodblock.epp.util.FCUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -140,7 +141,7 @@ public class WorldDisplay extends AbstractWidget {
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
         if (this.visible && this.ready && this.isMouseOver(pMouseX, pMouseY)) {
-            this.zoom = (float) Math.min(10F, Math.max(this.zoom + pDelta / 5, 0.5F));
+            this.zoom = (float) FCUtil.clamp(this.zoom + pDelta / 5, 0.5, 10);
             this.scene.getCameraSettings().setZoom(this.zoom);
             return true;
         }
