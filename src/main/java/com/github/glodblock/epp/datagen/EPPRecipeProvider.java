@@ -188,5 +188,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('C', AEItems.CALCULATION_PROCESSOR)
                 .unlockedBy(C, has(EPPItemAndBlock.WIRELESS_TOOL))
                 .save(c, EPP.id("wireless_tool"));
+
+        // Ingredient Buffer
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.INGREDIENT_BUFFER)
+                .pattern("IKI")
+                .pattern("G G")
+                .pattern("IKI")
+                .define('I', ConventionTags.IRON_INGOT)
+                .define('K', AEItems.CELL_COMPONENT_1K)
+                .define('G', AEBlocks.QUARTZ_GLASS)
+                .unlockedBy(C, has(EPPItemAndBlock.INGREDIENT_BUFFER))
+                .save(c, EPP.id("ingredient_buffer"));
     }
 }
