@@ -3,11 +3,13 @@ package com.github.glodblock.epp.common;
 import appeng.items.parts.PartItem;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
+import com.github.glodblock.epp.common.blocks.BlockIngredientBuffer;
 import com.github.glodblock.epp.common.blocks.BlockWirelessConnector;
 import com.github.glodblock.epp.common.items.*;
 import com.github.glodblock.epp.common.parts.*;
 import com.github.glodblock.epp.common.tileentities.TileExInterface;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
+import com.github.glodblock.epp.common.tileentities.TileIngredientBuffer;
 import com.github.glodblock.epp.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.item.Item;
 
@@ -29,6 +31,7 @@ public class EPPItemAndBlock {
     public static ItemPatternAccessTerminalUpgrade PATTERN_UPGRADE;
     public static BlockWirelessConnector WIRELESS_CONNECTOR;
     public static ItemWirelessConnectTool WIRELESS_TOOL;
+    public static BlockIngredientBuffer INGREDIENT_BUFFER;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -47,9 +50,11 @@ public class EPPItemAndBlock {
         PACKAGE = new ItemPackedDevice();
         WIRELESS_CONNECTOR = new BlockWirelessConnector();
         WIRELESS_TOOL = new ItemWirelessConnectTool();
+        INGREDIENT_BUFFER = new BlockIngredientBuffer();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
+        regHandler.block("ingredient_buffer", INGREDIENT_BUFFER, TileIngredientBuffer.class, TileIngredientBuffer::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);

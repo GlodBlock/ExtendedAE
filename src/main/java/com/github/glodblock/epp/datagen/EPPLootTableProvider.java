@@ -32,6 +32,7 @@ public class EPPLootTableProvider extends LootTableProvider {
             add(EPPItemAndBlock.EX_PATTERN_PROVIDER, createSingleItemTable(EPPItemAndBlock.EX_PATTERN_PROVIDER));
             add(EPPItemAndBlock.EX_INTERFACE, createSingleItemTable(EPPItemAndBlock.EX_INTERFACE));
             add(EPPItemAndBlock.WIRELESS_CONNECTOR, createSingleItemTable(EPPItemAndBlock.WIRELESS_CONNECTOR));
+            add(EPPItemAndBlock.INGREDIENT_BUFFER, createSingleItemTable(EPPItemAndBlock.INGREDIENT_BUFFER));
         }
 
         public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> bi) {

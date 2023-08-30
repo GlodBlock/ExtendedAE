@@ -25,6 +25,7 @@ public class EPPBlockTagProvider extends BlockTagsProvider {
         tag(pickaxe)
                 .add(EPPItemAndBlock.EX_PATTERN_PROVIDER)
                 .add(EPPItemAndBlock.EX_INTERFACE)
-                .add(EPPItemAndBlock.WIRELESS_CONNECTOR);
+                .add(EPPItemAndBlock.WIRELESS_CONNECTOR)
+                .add(EPPItemAndBlock.INGREDIENT_BUFFER);
     }
 }

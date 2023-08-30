@@ -9,6 +9,7 @@ import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.*;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,9 +37,11 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
         InitScreens.register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
         InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
+        InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
     }
 
     @SubscribeEvent
+    @SuppressWarnings("deprecation")
     public void registerColorHandler(RegisterColorHandlersEvent.Item event) {
         var color = event.getItemColors();
         color.register(new StaticItemColor(AEColor.TRANSPARENT), EPPItemAndBlock.EX_PATTERN_TERMINAL);
@@ -48,6 +51,11 @@ public class ClientRegistryHandler {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             HighlightRender.INSTANCE.tick(event.getPoseStack(), Ae2ReflectClient.getRenderBuffers(event.getLevelRenderer()).outlineBufferSource(), event.getCamera());
         }
+    }
+
+    @SubscribeEvent
+    public static void registerModels(ModelEvent.RegisterGeometryLoaders event) {
+        //event.register("ingredient_buffer", );
     }
 
 }
