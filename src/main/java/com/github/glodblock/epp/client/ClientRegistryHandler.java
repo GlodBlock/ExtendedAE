@@ -6,9 +6,13 @@ import appeng.init.client.InitScreens;
 import appeng.menu.SlotSemantics;
 import com.github.glodblock.epp.client.gui.*;
 import com.github.glodblock.epp.client.render.HighlightRender;
+import com.github.glodblock.epp.client.render.tesr.IngredientBufferTESR;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
+import com.github.glodblock.epp.common.tileentities.TileIngredientBuffer;
 import com.github.glodblock.epp.container.*;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
+import com.github.glodblock.epp.util.FCUtil;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -54,8 +58,8 @@ public class ClientRegistryHandler {
     }
 
     @SubscribeEvent
-    public static void registerModels(ModelEvent.RegisterGeometryLoaders event) {
-        //event.register("ingredient_buffer", );
+    public void registerModels(ModelEvent.RegisterGeometryLoaders event) {
+        BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
     }
 
 }
