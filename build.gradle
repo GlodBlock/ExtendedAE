@@ -88,8 +88,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
-    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.9-beta")
-    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4684757")
+    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.10")
+    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4733834")
 }
 
 tasks.named('processResources', ProcessResources).configure {

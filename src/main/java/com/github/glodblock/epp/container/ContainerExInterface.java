@@ -3,7 +3,6 @@ package com.github.glodblock.epp.container;
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
 import appeng.helpers.InterfaceLogicHost;
-import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.SetStockAmountMenu;
 import appeng.menu.implementations.UpgradeableMenu;

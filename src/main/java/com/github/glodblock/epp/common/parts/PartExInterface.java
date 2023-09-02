@@ -21,7 +21,6 @@ import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.container.ContainerExInterface;
-import com.github.glodblock.epp.util.mixinutil.ExtendedInterfaceLogic;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -60,8 +59,7 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
 
     public PartExInterface(IPartItem<?> partItem) {
         super(partItem);
-        this.logic = new InterfaceLogic(this.getMainNode(), this, partItem.asItem());
-        ((ExtendedInterfaceLogic) this.logic).extend();
+        this.logic = new InterfaceLogic(this.getMainNode(), this, partItem.asItem(), 18);
     }
 
     @Override

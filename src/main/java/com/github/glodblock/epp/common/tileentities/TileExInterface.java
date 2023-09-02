@@ -7,9 +7,7 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocator;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.ContainerExInterface;
-import com.github.glodblock.epp.util.Ae2Reflect;
 import com.github.glodblock.epp.util.FCUtil;
-import com.github.glodblock.epp.util.mixinutil.ExtendedInterfaceLogic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,9 +17,11 @@ public class TileExInterface extends InterfaceBlockEntity {
 
     public TileExInterface(BlockPos pos, BlockState blockState) {
         super(FCUtil.getTileType(TileExInterface.class, TileExInterface::new, EPPItemAndBlock.EX_INTERFACE), pos, blockState);
-        var l = new InterfaceLogic(this.getMainNode(), this, EPPItemAndBlock.EX_INTERFACE.asItem());
-        ((ExtendedInterfaceLogic) l).extend();
-        Ae2Reflect.setInterfaceLogic(this, l);
+    }
+
+    @Override
+    protected InterfaceLogic createLogic() {
+        return new InterfaceLogic(getMainNode(), this, getItemFromBlockEntity().asItem(), 18);
     }
 
     @Override

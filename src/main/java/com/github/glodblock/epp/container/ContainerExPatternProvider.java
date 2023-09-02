@@ -9,15 +9,11 @@ import net.minecraft.world.inventory.MenuType;
 public class ContainerExPatternProvider extends PatternProviderMenu {
 
     public static final MenuType<ContainerExPatternProvider> TYPE = MenuTypeBuilder
-            .create((id, inv, host) -> new ContainerExPatternProvider(id, inv, host), PatternProviderLogicHost.class)
+            .create(ContainerExPatternProvider::new, PatternProviderLogicHost.class)
             .build("ex_pattern_provider");
 
     protected ContainerExPatternProvider(int id, Inventory playerInventory, PatternProviderLogicHost host) {
-        this(TYPE, id, playerInventory, host);
-    }
-
-    protected ContainerExPatternProvider(MenuType<?> menuType, int id, Inventory playerInventory, PatternProviderLogicHost host) {
-        super(menuType, id, playerInventory, host);
+        super(TYPE, id, playerInventory, host);
     }
 
 }
