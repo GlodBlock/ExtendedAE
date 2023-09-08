@@ -212,5 +212,16 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('E', AEItems.CAPACITY_CARD)
                 .unlockedBy(C, has(EPPItemAndBlock.EX_DRIVE))
                 .save(c, EPP.id("ex_drive"));
+
+        // Drive Upgrade
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.DRIVE_UPGRADE)
+                .pattern("C C")
+                .pattern("FEF")
+                .define('C', ConventionTags.GLASS_CABLE)
+                .define('F', ConventionTags.FLUIX_DUST)
+                .define('E', AEItems.CAPACITY_CARD)
+                .unlockedBy(C, has(EPPItemAndBlock.DRIVE_UPGRADE))
+                .save(c, EPP.id("ex_drive_upgrade"));
     }
 }

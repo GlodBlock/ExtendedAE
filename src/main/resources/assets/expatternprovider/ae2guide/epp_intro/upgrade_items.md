@@ -10,6 +10,7 @@ item_ids:
 - expatternprovider:interface_upgrade
 - expatternprovider:io_bus_upgrade
 - expatternprovider:pattern_terminal_upgrade
+- expatternprovider:drive_upgrade
 ---
 
 # ME Device Upgrades
@@ -21,6 +22,7 @@ These upgrades allow you to replace normal ME devices with their extended versio
 <ItemImage id="expatternprovider:interface_upgrade" scale="4"></ItemImage>
 <ItemImage id="expatternprovider:io_bus_upgrade" scale="4"></ItemImage>
 <ItemImage id="expatternprovider:pattern_terminal_upgrade" scale="4"></ItemImage>
+<ItemImage id="expatternprovider:drive_upgrade" scale="4"></ItemImage>
 </Row>
 
 Sneak + Right Mouse Click on these devices, they will be turned into their extended version. All device settings and inventory
@@ -51,3 +53,4 @@ will be kept.
 |      <ItemImage id="expatternprovider:io_bus_upgrade" scale="3"></ItemImage>      |       <ItemImage id="ae2:import_bus" scale="3"></ItemImage>        |    <ItemImage id="expatternprovider:ex_import_bus_part" scale="3"></ItemImage>    |
 |      <ItemImage id="expatternprovider:io_bus_upgrade" scale="3"></ItemImage>      |       <ItemImage id="ae2:export_bus" scale="3"></ItemImage>        |    <ItemImage id="expatternprovider:ex_export_bus_part" scale="3"></ItemImage>    |
 | <ItemImage id="expatternprovider:pattern_terminal_upgrade" scale="3"></ItemImage> | <ItemImage id="ae2:pattern_access_terminal" scale="3"></ItemImage> |  <ItemImage id="expatternprovider:ex_pattern_access_part" scale="3"></ItemImage>  |
+|      <ItemImage id="expatternprovider:drive_upgrade" scale="3"></ItemImage>       |          <ItemImage id="ae2:drive" scale="3"></ItemImage>          |         <ItemImage id="expatternprovider:ex_drive" scale="3"></ItemImage>         |

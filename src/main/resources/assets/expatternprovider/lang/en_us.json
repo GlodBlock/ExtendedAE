@@ -19,6 +19,7 @@
   "item.expatternprovider.me_packing_tape": "ME Packing Tape",
   "item.expatternprovider.package": "Packaged Device",
   "item.expatternprovider.wireless_tool": "ME Wireless Setup Kit",
+  "item.expatternprovider.drive_upgrade": "Drive Upgrade",
   "infinity.tooltip": "It is an infinity source.",
   "packaged_device.error.tooltip": "Invalid",
   "packaged_device.tooltip": "Device: %s",

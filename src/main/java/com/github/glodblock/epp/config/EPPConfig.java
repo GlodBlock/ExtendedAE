@@ -43,6 +43,7 @@ public class EPPConfig {
                     "expatternprovider:ex_pattern_provider_part",
                     "expatternprovider:ex_interface",
                     "expatternprovider:ex_pattern_provider",
+                    "expatternprovider:ex_drive",
                     "ae2:cable_interface",
                     "ae2:cable_pattern_provider",
                     "ae2:interface",
