@@ -487,9 +487,6 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
                     if (!inputFilter.isEmpty() && found) {
                         found = this.itemStackMatchesSearchTerm(itemStack, inputFilter, false);
                     }
-                    if (found) {
-                        break;
-                    }
                 }
             }
 

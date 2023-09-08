@@ -100,6 +100,8 @@ public class WirelessConnect implements IActionHost {
                     }
                     if (sideA.getNode() != null && sideB.getNode() != null) {
                         sideA.connection = sideB.connection = new ConnectionWrapper(GridHelper.createConnection(sideA.getNode(), sideB.getNode()));
+                    } else {
+                        this.shutdown = true;
                     }
                 } catch (IllegalStateException e) {
                     EPP.LOGGER.debug(e.getMessage());
