@@ -200,5 +200,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('G', AEBlocks.QUARTZ_GLASS)
                 .unlockedBy(C, has(EPPItemAndBlock.INGREDIENT_BUFFER))
                 .save(c, EPP.id("ingredient_buffer"));
+
+        // Extended ME Drive
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_DRIVE)
+                .pattern("CDC")
+                .pattern("FEF")
+                .define('C', ConventionTags.GLASS_CABLE)
+                .define('D', AEBlocks.DRIVE)
+                .define('F', ConventionTags.FLUIX_DUST)
+                .define('E', AEItems.CAPACITY_CARD)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_DRIVE))
+                .save(c, EPP.id("ex_drive"));
     }
 }
