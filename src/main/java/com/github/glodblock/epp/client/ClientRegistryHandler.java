@@ -4,12 +4,27 @@ import appeng.api.util.AEColor;
 import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
 import appeng.menu.SlotSemantics;
-import com.github.glodblock.epp.client.gui.*;
+import com.github.glodblock.epp.client.gui.GuiExDrive;
+import com.github.glodblock.epp.client.gui.GuiExIOBus;
+import com.github.glodblock.epp.client.gui.GuiExInterface;
+import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
+import com.github.glodblock.epp.client.gui.GuiExPatternTerminal;
+import com.github.glodblock.epp.client.gui.GuiIngredientBuffer;
+import com.github.glodblock.epp.client.gui.GuiWirelessConnector;
+import com.github.glodblock.epp.client.model.ExDriveModel;
 import com.github.glodblock.epp.client.render.HighlightRender;
+import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
 import com.github.glodblock.epp.client.render.tesr.IngredientBufferTESR;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
+import com.github.glodblock.epp.common.tileentities.TileExDrive;
 import com.github.glodblock.epp.common.tileentities.TileIngredientBuffer;
-import com.github.glodblock.epp.container.*;
+import com.github.glodblock.epp.container.ContainerExDrive;
+import com.github.glodblock.epp.container.ContainerExIOBus;
+import com.github.glodblock.epp.container.ContainerExInterface;
+import com.github.glodblock.epp.container.ContainerExPatternProvider;
+import com.github.glodblock.epp.container.ContainerExPatternTerminal;
+import com.github.glodblock.epp.container.ContainerIngredientBuffer;
+import com.github.glodblock.epp.container.ContainerWirelessConnector;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -42,6 +57,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
         InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
         InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
+        InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
     }
 
     @SubscribeEvent
@@ -60,6 +76,8 @@ public class ClientRegistryHandler {
     @SubscribeEvent
     public void registerModels(ModelEvent.RegisterGeometryLoaders event) {
         BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
+        event.register("ex_drive", new ExDriveModel.Loader());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.glodblock.epp.client.render;
 
 import appeng.client.render.overlay.OverlayRenderType;
+import com.github.glodblock.epp.util.FCClientUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -70,10 +71,10 @@ public class HighlightRender extends RenderType {
             var topLeft = new Vec3(aabb.minX, aabb.maxY, aabb.maxZ);
             var center = aabb.getCenter();
             for (int i = 0; i < 4; i ++) {
-                topRight = rotor(topRight, center, Direction.Axis.Y, HALF_PI);
-                bottomRight = rotor(bottomRight, center, Direction.Axis.Y, HALF_PI);
-                bottomLeft = rotor(bottomLeft, center, Direction.Axis.Y, HALF_PI);
-                topLeft = rotor(topLeft, center, Direction.Axis.Y, HALF_PI);
+                topRight = FCClientUtil.rotor(topRight, center, Direction.Axis.Y, HALF_PI);
+                bottomRight = FCClientUtil.rotor(bottomRight, center, Direction.Axis.Y, HALF_PI);
+                bottomLeft = FCClientUtil.rotor(bottomLeft, center, Direction.Axis.Y, HALF_PI);
+                topLeft = FCClientUtil.rotor(topLeft, center, Direction.Axis.Y, HALF_PI);
                 renderBox(multiBuf, stack, topLeft, bottomLeft, topRight, bottomRight, r, g, b, a);
             }
         }
@@ -91,16 +92,6 @@ public class HighlightRender extends RenderType {
         var normal = from.subtract(to);
         buf.vertex(mat, (float) from.x, (float) from.y, (float) from.z).color(r, g, b, a).normal((float) normal.x, (float) normal.y, (float) normal.z).endVertex();
         buf.vertex(mat, (float) to.x, (float) to.y, (float) to.z).color(r, g, b, a).normal((float) normal.x, (float) normal.y, (float) normal.z).endVertex();
-    }
-
-    private Vec3 rotor(Vec3 point, Vec3 center, Direction.Axis axis, float a) {
-        Vec3 normal = Vec3.ZERO;
-        switch (axis) {
-            case X -> normal = point.subtract(center).xRot(a);
-            case Y -> normal = point.subtract(center).yRot(a);
-            case Z -> normal = point.subtract(center).zRot(a);
-        }
-        return normal.add(center);
     }
 
     private HighlightRender() {
