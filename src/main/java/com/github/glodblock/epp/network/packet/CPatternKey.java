@@ -5,7 +5,6 @@ import appeng.crafting.pattern.ProcessingPatternItem;
 import appeng.crafting.pattern.SmithingTablePatternItem;
 import appeng.crafting.pattern.StonecuttingPatternItem;
 import com.github.glodblock.epp.container.pattern.ContainerCraftingPattern;
-import com.github.glodblock.epp.container.pattern.ContainerPattern;
 import com.github.glodblock.epp.container.pattern.ContainerProcessingPattern;
 import com.github.glodblock.epp.container.pattern.ContainerSmithingTablePattern;
 import com.github.glodblock.epp.container.pattern.ContainerStonecuttingPattern;
@@ -40,9 +39,6 @@ public class CPatternKey implements IMessage<CPatternKey> {
 
     @Override
     public void onMessage(Player player) {
-        if (player.containerMenu instanceof ContainerPattern) {
-            return;
-        }
         if (this.pattern.getItem() instanceof ProcessingPatternItem) {
             PatternGuiHandler.open(player, ContainerProcessingPattern.ID.toString(), this.pattern);
         } else if (this.pattern.getItem() instanceof CraftingPatternItem) {
