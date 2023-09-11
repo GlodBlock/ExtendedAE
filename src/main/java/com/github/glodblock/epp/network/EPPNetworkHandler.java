@@ -2,6 +2,7 @@ package com.github.glodblock.epp.network;
 
 import appeng.core.sync.network.TargetPoint;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.network.packet.CPatternKey;
 import com.github.glodblock.epp.network.packet.IMessage;
 import com.github.glodblock.epp.network.packet.SExPatternInfo;
 import io.netty.buffer.Unpooled;
@@ -58,6 +59,7 @@ public class EPPNetworkHandler {
 
     public void init() {
         registerPacket(SExPatternInfo.class, SExPatternInfo::new);
+        registerPacket(CPatternKey.class, CPatternKey::new);
     }
 
     private void registerPacket(Class<?> clazz, Supplier<IMessage<?>> factory) {

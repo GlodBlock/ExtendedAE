@@ -1,6 +1,7 @@
 package com.github.glodblock.epp;
 
 import com.github.glodblock.epp.client.ClientRegistryHandler;
+import com.github.glodblock.epp.client.hotkey.PatternHotKey;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.RegistryHandler;
 import com.github.glodblock.epp.config.EPPConfig;
@@ -55,6 +56,7 @@ public class EPP {
 
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistryHandler.INSTANCE.init();
+        PatternHotKey.init();
     }
 
     public static ResourceLocation id(String id) {

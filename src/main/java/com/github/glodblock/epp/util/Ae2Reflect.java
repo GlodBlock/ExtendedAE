@@ -2,6 +2,7 @@ package com.github.glodblock.epp.util;
 
 import appeng.api.storage.cells.CellState;
 import appeng.blockentity.storage.DriveBlockEntity;
+import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
@@ -21,6 +22,7 @@ public class Ae2Reflect {
     private static final Field fDriveBlockEntity_clientSideCellItems;
     private static final Field fDriveBlockEntity_clientSideOnline;
     private static final Method mDriveBlockEntity_updateClientSideState;
+    private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
 
     static {
         try {
@@ -31,6 +33,7 @@ public class Ae2Reflect {
             fDriveBlockEntity_clientSideCellItems = reflectField(DriveBlockEntity.class, "clientSideCellItems");
             fDriveBlockEntity_clientSideOnline = reflectField(DriveBlockEntity.class, "clientSideOnline");
             mDriveBlockEntity_updateClientSideState = reflectMethod(DriveBlockEntity.class, "updateClientSideState");
+            mAECraftingPattern_getCompressedIndexFromSparse = reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -97,6 +100,15 @@ public class Ae2Reflect {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T executeMethod2(Object owner, Method method, Object ... args) {
+        try {
+            return (T) method.invoke(owner, args);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Failed to execute method: " + method);
+        }
+    }
+
     public static long getContainerID(Object owner) {
         return readField(owner, fContainerTracker_serverId);
     }
@@ -127,6 +139,10 @@ public class Ae2Reflect {
 
     public static Item[] getCellItem(DriveBlockEntity owner) {
         return Ae2Reflect.readField(owner, fDriveBlockEntity_clientSideCellItems);
+    }
+
+    public static int getCompressIndex(AECraftingPattern owner, int id) {
+        return Ae2Reflect.executeMethod2(owner, mAECraftingPattern_getCompressedIndexFromSparse, id);
     }
 
 }

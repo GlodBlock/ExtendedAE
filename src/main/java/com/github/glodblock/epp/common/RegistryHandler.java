@@ -18,6 +18,10 @@ import com.github.glodblock.epp.common.items.ItemMEPackingTape;
 import com.github.glodblock.epp.common.parts.*;
 import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.*;
+import com.github.glodblock.epp.container.pattern.ContainerCraftingPattern;
+import com.github.glodblock.epp.container.pattern.ContainerProcessingPattern;
+import com.github.glodblock.epp.container.pattern.ContainerSmithingTablePattern;
+import com.github.glodblock.epp.container.pattern.ContainerStonecuttingPattern;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -109,6 +113,10 @@ public class RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("wireless_connector"), ContainerWirelessConnector.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ingredient_buffer"), ContainerIngredientBuffer.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_drive"), ContainerExDrive.TYPE);
+        ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
+        ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
+        ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
+        ForgeRegistries.MENU_TYPES.register(ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {

@@ -11,6 +11,11 @@ import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
 import com.github.glodblock.epp.client.gui.GuiExPatternTerminal;
 import com.github.glodblock.epp.client.gui.GuiIngredientBuffer;
 import com.github.glodblock.epp.client.gui.GuiWirelessConnector;
+import com.github.glodblock.epp.client.gui.pattern.GuiCraftingPattern;
+import com.github.glodblock.epp.client.gui.pattern.GuiProcessingPattern;
+import com.github.glodblock.epp.client.gui.pattern.GuiSmithingTablePattern;
+import com.github.glodblock.epp.client.gui.pattern.GuiStonecuttingPattern;
+import com.github.glodblock.epp.client.hotkey.PatternHotKey;
 import com.github.glodblock.epp.client.model.ExDriveModel;
 import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
@@ -25,11 +30,17 @@ import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExPatternTerminal;
 import com.github.glodblock.epp.container.ContainerIngredientBuffer;
 import com.github.glodblock.epp.container.ContainerWirelessConnector;
+import com.github.glodblock.epp.container.pattern.ContainerCraftingPattern;
+import com.github.glodblock.epp.container.pattern.ContainerProcessingPattern;
+import com.github.glodblock.epp.container.pattern.ContainerSmithingTablePattern;
+import com.github.glodblock.epp.container.pattern.ContainerStonecuttingPattern;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
 import com.github.glodblock.epp.util.FCUtil;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -58,6 +69,10 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
         InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
         InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
+        MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
+        MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
+        MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
+        MenuScreens.register(ContainerSmithingTablePattern.TYPE, GuiSmithingTablePattern::new);
     }
 
     @SubscribeEvent
@@ -78,6 +93,11 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
+    }
+
+    @SubscribeEvent
+    public void registerHotKey(RegisterKeyMappingsEvent e) {
+        e.register(PatternHotKey.getHotKey());
     }
 
 }

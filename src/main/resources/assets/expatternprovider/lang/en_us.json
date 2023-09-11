@@ -26,6 +26,7 @@
   "wireless.use.tooltip.01": "Click to bind",
   "wireless.use.tooltip.02": "Click on another one to connect",
   "wireless.tooltip": "Bound to Connector at X: %s, Y: %s, Z: %s",
+  "pattern.tooltip": "Press [%s] to view pattern",
   "gui.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",
   "gui.expatternprovider.ex_interface": "ME Extended Interface",
   "gui.expatternprovider.ex_export_bus_part": "ME Extended Export Bus",
@@ -37,6 +38,8 @@
   "gui.expatternprovider.wireless_connect": "ME Wireless Connector",
   "gui.expatternprovider.ingredient_buffer": "ME Ingredient Buffer",
   "gui.expatternprovider.ex_drive": "ME Extended Drive",
+  "gui.pattern_view.craft.substitute": "Substitute: %s",
+  "gui.pattern_view.craft.fluid_substitute": "Fluid Substitute: %s",
   "gui.wireless_connect.status.unconnected": "Unconnected",
   "gui.wireless_connect.status.unconnected.desc": "This Wireless Connector hasn't been connected to a connector.",
   "gui.wireless_connect.status.working": "Working",
@@ -59,5 +62,8 @@
   "chat.wireless_connect": "Connected to X: %s, Y: %s, Z: %s",
   "chat.wireless_bind": "Bound to X: %s, Y: %s, Z: %s",
   "chat.wireless.highlight": "The wireless connector is now highlighted at: %s, Dim: %s",
-  "group.ex_io_bus_part": "ME Extended Import/Export Bus"
+  "chat.pattern_view.error": "This pattern isn't supported by ExtendedAE, please report it to Github: %s",
+  "group.ex_io_bus_part": "ME Extended Import/Export Bus",
+  "key.epp.viewpattern": "View Pattern",
+  "key.epp.category": "Extended AE"
 }

@@ -86,6 +86,7 @@ repositories {
 dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.10")
