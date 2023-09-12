@@ -1,6 +1,7 @@
 package com.github.glodblock.epp.common;
 
 import appeng.items.parts.PartItem;
+import com.github.glodblock.epp.common.blocks.BlockExDrive;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
 import com.github.glodblock.epp.common.items.*;
@@ -8,6 +9,7 @@ import com.github.glodblock.epp.common.parts.PartExExportBus;
 import com.github.glodblock.epp.common.parts.PartExImportBus;
 import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
+import com.github.glodblock.epp.common.tileentities.TileExDrive;
 import com.github.glodblock.epp.common.tileentities.TileExInterface;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
 import net.minecraft.world.item.CreativeModeTab;
@@ -38,6 +40,8 @@ public class EPPItemAndBlock {
     public static ItemIOBusUpgrade IO_BUS_UPGRADE;
     public static ItemMEPackingTape PACKING_TAPE;
     public static ItemPackedDevice PACKAGE;
+    public static BlockExDrive EX_DRIVE;
+    public static ItemDriveUpgrade DRIVE_UPGRADE;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -52,8 +56,11 @@ public class EPPItemAndBlock {
         PATTERN_PROVIDER_UPGRADE = new ItemPatternProviderUpgrade();
         PACKING_TAPE = new ItemMEPackingTape();
         PACKAGE = new ItemPackedDevice();
+        EX_DRIVE = new BlockExDrive();
+        DRIVE_UPGRADE = new ItemDriveUpgrade();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
+        regHandler.block("ex_drive", EX_DRIVE, TileExDrive.class, TileExDrive::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("pattern_provider_upgrade", PATTERN_PROVIDER_UPGRADE);
@@ -64,6 +71,7 @@ public class EPPItemAndBlock {
         regHandler.item("ex_import_bus_part", EX_IMPORT_BUS);
         regHandler.item("me_packing_tape", PACKING_TAPE);
         regHandler.item("package", PACKAGE);
+        regHandler.item("drive_upgrade", DRIVE_UPGRADE);
     }
 
 }

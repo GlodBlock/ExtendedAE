@@ -1,16 +1,11 @@
 package com.github.glodblock.epp.common.blocks;
 
 import appeng.api.util.IOrientable;
-import appeng.block.AEBaseEntityBlock;
 import appeng.menu.locator.MenuLocators;
-import appeng.util.InteractionUtil;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,15 +13,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 @SuppressWarnings("deprecation")
-public class BlockExPatternProvider extends AEBaseEntityBlock<TileExPatternProvider> {
+public class BlockExPatternProvider extends BlockBaseGui<TileExPatternProvider> {
 
     private static final BooleanProperty OMNIDIRECTIONAL = BooleanProperty.create("omnidirectional");
     private static final DirectionProperty FACING = DirectionProperty.create("facing", EnumSet.allOf(Direction.class));
@@ -58,20 +51,8 @@ public class BlockExPatternProvider extends AEBaseEntityBlock<TileExPatternProvi
     }
 
     @Override
-    public InteractionResult onActivated(Level level, BlockPos pos, Player p, InteractionHand hand, @Nullable ItemStack heldItem, BlockHitResult hit) {
-        if (InteractionUtil.isInAlternateUseMode(p)) {
-            return InteractionResult.PASS;
-        } else {
-            var be = this.getBlockEntity(level, pos);
-            if (be != null) {
-                if (!level.isClientSide()) {
-                    be.openMenu(p, MenuLocators.forBlockEntity(be));
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide());
-            } else {
-                return InteractionResult.PASS;
-            }
-        }
+    public void openGui(TileExPatternProvider tile, Player p) {
+        tile.openMenu(p, MenuLocators.forBlockEntity(tile));
     }
 
     @Override

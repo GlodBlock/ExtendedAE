@@ -147,5 +147,28 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('F', ConventionTags.FLUIX_DUST)
                 .unlockedBy(C, has(EPPItemAndBlock.PACKING_TAPE))
                 .save(c, EPP.id("tape"));
+
+        // Extended ME Drive
+        ShapedRecipeBuilder
+                .shaped(EPPItemAndBlock.EX_DRIVE)
+                .pattern("CDC")
+                .pattern("FEF")
+                .define('C', ConventionTags.GLASS_CABLE)
+                .define('D', AEBlocks.DRIVE)
+                .define('F', ConventionTags.FLUIX_DUST)
+                .define('E', AEItems.CAPACITY_CARD)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_DRIVE))
+                .save(c, EPP.id("ex_drive"));
+
+        // Drive Upgrade
+        ShapedRecipeBuilder
+                .shaped(EPPItemAndBlock.DRIVE_UPGRADE)
+                .pattern("C C")
+                .pattern("FEF")
+                .define('C', ConventionTags.GLASS_CABLE)
+                .define('F', ConventionTags.FLUIX_DUST)
+                .define('E', AEItems.CAPACITY_CARD)
+                .unlockedBy(C, has(EPPItemAndBlock.DRIVE_UPGRADE))
+                .save(c, EPP.id("ex_drive_upgrade"));
     }
 }

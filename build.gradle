@@ -148,6 +148,5 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 mixin {
-    reobfSrgFile = file("${buildDir}/fixMcpToSrg/output.tsrg")
     add sourceSets.main, "mixins.epp.refmap.json"
 }
