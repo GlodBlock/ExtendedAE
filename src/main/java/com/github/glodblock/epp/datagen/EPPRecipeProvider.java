@@ -183,5 +183,29 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.INGREDIENT_BUFFER))
                 .save(c, EPP.id("ingredient_buffer"));
 
+        // Wireless Connector
+        ShapedRecipeBuilder
+                .shaped(EPPItemAndBlock.WIRELESS_CONNECTOR, 2)
+                .pattern("DWD")
+                .pattern("CEC")
+                .pattern("DWD")
+                .define('D', AEItems.SKY_DUST)
+                .define('W', AEItems.WIRELESS_RECEIVER)
+                .define('C', ConventionTags.SMART_CABLE)
+                .define('E', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.WIRELESS_CONNECTOR))
+                .save(c, EPP.id("wireless_connector"));
+
+        ShapedRecipeBuilder
+                .shaped(EPPItemAndBlock.WIRELESS_TOOL)
+                .pattern(" W ")
+                .pattern("ICI")
+                .pattern(" I ")
+                .define('I', ConventionTags.IRON_INGOT)
+                .define('W', AEItems.WIRELESS_RECEIVER)
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.WIRELESS_TOOL))
+                .save(c, EPP.id("wireless_tool"));
+
     }
 }

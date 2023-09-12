@@ -5,6 +5,7 @@ import com.github.glodblock.epp.common.blocks.BlockExDrive;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
 import com.github.glodblock.epp.common.blocks.BlockIngredientBuffer;
+import com.github.glodblock.epp.common.blocks.BlockWirelessConnector;
 import com.github.glodblock.epp.common.items.*;
 import com.github.glodblock.epp.common.parts.PartExExportBus;
 import com.github.glodblock.epp.common.parts.PartExImportBus;
@@ -14,6 +15,7 @@ import com.github.glodblock.epp.common.tileentities.TileExDrive;
 import com.github.glodblock.epp.common.tileentities.TileExInterface;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
 import com.github.glodblock.epp.common.tileentities.TileIngredientBuffer;
+import com.github.glodblock.epp.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -45,6 +47,8 @@ public class EPPItemAndBlock {
     public static BlockExDrive EX_DRIVE;
     public static ItemDriveUpgrade DRIVE_UPGRADE;
     public static BlockIngredientBuffer INGREDIENT_BUFFER;
+    public static BlockWirelessConnector WIRELESS_CONNECTOR;
+    public static ItemWirelessConnectTool WIRELESS_TOOL;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -62,10 +66,13 @@ public class EPPItemAndBlock {
         EX_DRIVE = new BlockExDrive();
         DRIVE_UPGRADE = new ItemDriveUpgrade();
         INGREDIENT_BUFFER = new BlockIngredientBuffer();
+        WIRELESS_CONNECTOR = new BlockWirelessConnector();
+        WIRELESS_TOOL = new ItemWirelessConnectTool();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("ex_drive", EX_DRIVE, TileExDrive.class, TileExDrive::new);
         regHandler.block("ingredient_buffer", INGREDIENT_BUFFER, TileIngredientBuffer.class, TileIngredientBuffer::new);
+        regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("pattern_provider_upgrade", PATTERN_PROVIDER_UPGRADE);
@@ -77,6 +84,7 @@ public class EPPItemAndBlock {
         regHandler.item("me_packing_tape", PACKING_TAPE);
         regHandler.item("package", PACKAGE);
         regHandler.item("drive_upgrade", DRIVE_UPGRADE);
+        regHandler.item("wireless_tool", WIRELESS_TOOL);
     }
 
 }

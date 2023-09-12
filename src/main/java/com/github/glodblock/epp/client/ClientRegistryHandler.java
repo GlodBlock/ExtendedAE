@@ -9,6 +9,7 @@ import com.github.glodblock.epp.client.gui.GuiExIOBus;
 import com.github.glodblock.epp.client.gui.GuiExInterface;
 import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
 import com.github.glodblock.epp.client.gui.GuiIngredientBuffer;
+import com.github.glodblock.epp.client.gui.GuiWirelessConnector;
 import com.github.glodblock.epp.client.model.AERotatableBlocks;
 import com.github.glodblock.epp.client.model.ExDriveModel;
 import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
@@ -20,6 +21,7 @@ import com.github.glodblock.epp.container.ContainerExIOBus;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.container.ContainerIngredientBuffer;
+import com.github.glodblock.epp.container.ContainerWirelessConnector;
 import com.github.glodblock.epp.util.FCUtil;
 import com.google.common.collect.Sets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -55,6 +57,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
         InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
         InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
+        InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
     }
 
     @SubscribeEvent
