@@ -170,5 +170,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('E', AEItems.CAPACITY_CARD)
                 .unlockedBy(C, has(EPPItemAndBlock.DRIVE_UPGRADE))
                 .save(c, EPP.id("ex_drive_upgrade"));
+
+        // Ingredient Buffer
+        ShapedRecipeBuilder
+                .shaped(EPPItemAndBlock.INGREDIENT_BUFFER)
+                .pattern("IKI")
+                .pattern("G G")
+                .pattern("IKI")
+                .define('I', ConventionTags.IRON_INGOT)
+                .define('K', AEItems.CELL_COMPONENT_1K)
+                .define('G', AEBlocks.QUARTZ_GLASS)
+                .unlockedBy(C, has(EPPItemAndBlock.INGREDIENT_BUFFER))
+                .save(c, EPP.id("ingredient_buffer"));
+
     }
 }

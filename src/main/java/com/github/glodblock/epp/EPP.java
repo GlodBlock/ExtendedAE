@@ -5,11 +5,11 @@ import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.RegistryHandler;
 import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.network.EPPNetworkHandler;
+import com.github.glodblock.epp.util.ModLists;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -42,6 +42,7 @@ public class EPP {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
+        ModLists.init();
         RegistryHandler.INSTANCE.onInit();
         EPPNetworkHandler.INSTANCE.init();
     }
