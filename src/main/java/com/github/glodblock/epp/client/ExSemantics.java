@@ -1,12 +1,17 @@
 package com.github.glodblock.epp.client;
 
 import appeng.menu.SlotSemantic;
+import appeng.menu.SlotSemantics;
 
 public class ExSemantics {
 
-    public static SlotSemantic EX_1;
-    public static SlotSemantic EX_2;
-    public static SlotSemantic EX_3;
-    public static SlotSemantic EX_4;
+    public final static SlotSemantic EX_1 = SlotSemantics.register("EX_1", false);
+    public final static SlotSemantic EX_2 = SlotSemantics.register("EX_2", false);
+    public final static SlotSemantic EX_3 = SlotSemantics.register("EX_3", false);
+    public final static SlotSemantic EX_4 = SlotSemantics.register("EX_4", false);
+    public final static SlotSemantic EX_5 = SlotSemantics.register("EX_5", false);
+    public final static SlotSemantic EX_6 = SlotSemantics.register("EX_6", false);
+    public final static SlotSemantic EX_7 = SlotSemantics.register("EX_7", false);
+    public final static SlotSemantic EX_8 = SlotSemantics.register("EX_8", false);
 
 }

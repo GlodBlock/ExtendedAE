@@ -20,6 +20,7 @@ import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
+public class PartExInterface extends AEBasePart implements InterfaceLogicHost, IPage {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
             new ResourceLocation(EPP.MODID, "part/ex_interface"),
@@ -56,10 +57,11 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
     };
 
     private final InterfaceLogic logic;
+    private int page = 0;
 
     public PartExInterface(IPartItem<?> partItem) {
         super(partItem);
-        this.logic = new InterfaceLogic(this.getMainNode(), this, partItem.asItem(), 18);
+        this.logic = new InterfaceLogic(this.getMainNode(), this, partItem.asItem(), 36);
     }
 
     @Override
@@ -181,5 +183,15 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost {
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capabilityClass) {
         return this.logic.getCapability(capabilityClass, this.getSide());
+    }
+
+    @Override
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    @Override
+    public int getPage() {
+        return this.page;
     }
 }

@@ -3,17 +3,20 @@ package com.github.glodblock.epp.container;
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
 import appeng.helpers.InterfaceLogicHost;
+import appeng.menu.SlotSemantic;
+import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.SetStockAmountMenu;
 import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
+import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.client.ExSemantics;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
-public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> {
+public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> implements IPage {
 
     public static final String ACTION_OPEN_SET_AMOUNT = "setAmount";
 
@@ -21,17 +24,51 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> {
             .create(ContainerExInterface::new, InterfaceLogicHost.class)
             .build("ex_interface");
 
+    private static final int PAGE = 18;
+    private static final int LINE = 9;
+    private static final SlotSemantic[] CONFIG_PATTERN = new SlotSemantic[] {
+            ExSemantics.EX_1, ExSemantics.EX_3, ExSemantics.EX_5, ExSemantics.EX_7
+    };
+    private static final SlotSemantic[] STORAGE_PATTERN = new SlotSemantic[] {
+            ExSemantics.EX_2, ExSemantics.EX_4, ExSemantics.EX_6, ExSemantics.EX_8
+    };
+    @GuiSync(7)
+    public int page;
+
     public ContainerExInterface(int id, Inventory ip, InterfaceLogicHost host) {
         super(TYPE, id, ip, host);
         registerClientAction(ACTION_OPEN_SET_AMOUNT, Integer.class, this::openSetAmountMenu);
         var logic = host.getInterfaceLogic();
         var config = logic.getConfig().createMenuWrapper();
         for (int x = 0; x < config.size(); x++) {
-            this.addSlot(new FakeSlot(config, x), x < 9 ? ExSemantics.EX_1 : ExSemantics.EX_3);
+            int page = x / PAGE;
+            int row = (x - page * PAGE) / LINE;
+            this.addSlot(new FakeSlot(config, x), CONFIG_PATTERN[2 * page + row]);
         }
         var storage = logic.getStorage().createMenuWrapper();
         for (int x = 0; x < storage.size(); x++) {
-            this.addSlot(new AppEngSlot(storage, x), x < 9 ? ExSemantics.EX_2 : ExSemantics.EX_4);
+            int page = x / PAGE;
+            int row = (x - page * PAGE) / LINE;
+            this.addSlot(new AppEngSlot(storage, x), STORAGE_PATTERN[2 * page + row]);
+        }
+    }
+
+    public void showPage(int page) {
+        for (int index = 0; index < 4; index ++) {
+            var s = CONFIG_PATTERN[index];
+            for (var slot : this.getSlots(s)) {
+                if (slot instanceof AppEngSlot as) {
+                    as.setActive(page == index / 2);
+                }
+            }
+        }
+        for (int index = 0; index < 4; index ++) {
+            var s = STORAGE_PATTERN[index];
+            for (var slot : this.getSlots(s)) {
+                if (slot instanceof AppEngSlot as) {
+                    as.setActive(page == index / 2);
+                }
+            }
         }
     }
 
@@ -50,5 +87,26 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> {
                         stack.what(), (int) stack.amount());
             }
         }
+    }
+
+    @Override
+    public void broadcastChanges() {
+        if (this.getHost() instanceof IPage pg) {
+            this.page = pg.getPage();
+        }
+        super.broadcastChanges();
+    }
+
+    @Override
+    public void setPage(int page) {
+        this.page = page;
+        if (this.getHost() instanceof IPage pg) {
+            pg.setPage(page);
+        }
+    }
+
+    @Override
+    public int getPage() {
+        return this.page;
     }
 }

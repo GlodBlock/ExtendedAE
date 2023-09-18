@@ -3,7 +3,6 @@ package com.github.glodblock.epp.client.button;
 import appeng.client.gui.style.Blitter;
 import com.github.glodblock.epp.client.render.HighlightHandler;
 import com.github.glodblock.epp.util.FCUtil;
-import com.github.glodblock.epp.util.fun.Process;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -12,7 +11,7 @@ import net.minecraft.world.level.Level;
 public class HighlightButton extends EPPButton {
 
     private float multiplier;
-    private Process successJob;
+    private Runnable successJob;
     private BlockPos pos;
     private ResourceKey<Level> dim;
 
@@ -24,7 +23,7 @@ public class HighlightButton extends EPPButton {
         this.multiplier = (float) FCUtil.clamp(val, 1, 30);
     }
 
-    public void setSuccessJob(Process process) {
+    public void setSuccessJob(Runnable process) {
         this.successJob = process;
     }
 
@@ -38,7 +37,7 @@ public class HighlightButton extends EPPButton {
             if (hb.dim != null && hb.pos != null) {
                 HighlightHandler.highlight(hb.pos, hb.dim, System.currentTimeMillis() + (long) (600 * hb.multiplier));
                 if (hb.successJob != null) {
-                    hb.successJob.execute();
+                    hb.successJob.run();
                 }
             }
         }

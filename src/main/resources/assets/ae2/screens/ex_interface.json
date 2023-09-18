@@ -25,6 +25,26 @@
       "left": 8,
       "top": 131,
       "grid": "HORIZONTAL"
+    },
+    "EX_5": {
+      "left": 8,
+      "top": 53,
+      "grid": "HORIZONTAL"
+    },
+    "EX_6": {
+      "left": 8,
+      "top": 71,
+      "grid": "HORIZONTAL"
+    },
+    "EX_7": {
+      "left": 8,
+      "top": 113,
+      "grid": "HORIZONTAL"
+    },
+    "EX_8": {
+      "left": 8,
+      "top": 131,
+      "grid": "HORIZONTAL"
     }
   },
   "text": {
@@ -35,15 +55,6 @@
       "position": {
         "left": 8,
         "top": 6
-      }
-    },
-    "interface_config": {
-      "text": {
-        "translate": "gui.ae2.Config"
-      },
-      "position": {
-        "left": 8,
-        "top": 24
       }
     }
   },
@@ -157,6 +168,114 @@
       "height": 16
     },
     "amtButton18": {
+      "left": 152,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton19": {
+      "left": 8,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton20": {
+      "left": 26,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton21": {
+      "left": 44,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton22": {
+      "left": 62,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton23": {
+      "left": 80,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton24": {
+      "left": 98,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton25": {
+      "left": 116,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton26": {
+      "left": 134,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton27": {
+      "left": 152,
+      "top": 35,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton28": {
+      "left": 8,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton29": {
+      "left": 26,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton30": {
+      "left": 44,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton31": {
+      "left": 62,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton32": {
+      "left": 80,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton33": {
+      "left": 98,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton34": {
+      "left": 116,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton35": {
+      "left": 134,
+      "top": 95,
+      "width": 16,
+      "height": 16
+    },
+    "amtButton36": {
       "left": 152,
       "top": 95,
       "width": 16,
