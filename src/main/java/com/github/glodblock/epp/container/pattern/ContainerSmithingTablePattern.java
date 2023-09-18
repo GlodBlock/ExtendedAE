@@ -41,8 +41,4 @@ public class ContainerSmithingTablePattern extends ContainerPattern {
         }
     }
 
-    public boolean canSubstitute() {
-        return this.details instanceof AESmithingTablePattern pattern && pattern.canSubstitute();
-    }
-
 }
