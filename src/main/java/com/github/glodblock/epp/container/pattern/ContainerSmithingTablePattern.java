@@ -27,11 +27,7 @@ public class ContainerSmithingTablePattern extends ContainerPattern {
         if (this.details instanceof AESmithingTablePattern pattern) {
             var rawInputs = pattern.getInputs();
             for (var in : rawInputs) {
-                var possIn = clean(in.getPossibleInputs());
-                var inStacks = new GenericStack[possIn.length];
-                for (int i = 0; i < possIn.length; i ++) {
-                    inStacks[i] = new GenericStack(possIn[i].what(), possIn[i].amount());
-                }
+                var inStacks = new GenericStack[] {in.getPossibleInputs()[0]};
                 this.inputs.add(inStacks);
             }
             var rawOutputs = pattern.getPrimaryOutput();
