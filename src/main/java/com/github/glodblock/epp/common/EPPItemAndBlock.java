@@ -13,6 +13,7 @@ import com.github.glodblock.epp.common.items.ItemInterfaceUpgrade;
 import com.github.glodblock.epp.common.items.ItemMEPackingTape;
 import com.github.glodblock.epp.common.items.ItemPackedDevice;
 import com.github.glodblock.epp.common.items.ItemPatternAccessTerminalUpgrade;
+import com.github.glodblock.epp.common.items.ItemPatternModifier;
 import com.github.glodblock.epp.common.items.ItemPatternProviderUpgrade;
 import com.github.glodblock.epp.common.items.ItemWirelessConnectTool;
 import com.github.glodblock.epp.common.parts.PartExExportBus;
@@ -48,6 +49,7 @@ public class EPPItemAndBlock {
     public static BlockIngredientBuffer INGREDIENT_BUFFER;
     public static BlockExDrive EX_DRIVE;
     public static ItemDriveUpgrade DRIVE_UPGRADE;
+    public static ItemPatternModifier PATTERN_MODIFIER;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -69,6 +71,7 @@ public class EPPItemAndBlock {
         INGREDIENT_BUFFER = new BlockIngredientBuffer();
         EX_DRIVE = new BlockExDrive();
         DRIVE_UPGRADE = new ItemDriveUpgrade();
+        PATTERN_MODIFIER = new ItemPatternModifier();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -88,6 +91,7 @@ public class EPPItemAndBlock {
         regHandler.item("package", PACKAGE);
         regHandler.item("wireless_tool", WIRELESS_TOOL);
         regHandler.item("drive_upgrade", DRIVE_UPGRADE);
+        regHandler.item("pattern_modifier", PATTERN_MODIFIER);
     }
 
 }

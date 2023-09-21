@@ -55,16 +55,9 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
 
     public void showPage(int page) {
         for (int index = 0; index < 4; index ++) {
-            var s = CONFIG_PATTERN[index];
-            for (var slot : this.getSlots(s)) {
-                if (slot instanceof AppEngSlot as) {
-                    as.setActive(page == index / 2);
-                }
-            }
-        }
-        for (int index = 0; index < 4; index ++) {
-            var s = STORAGE_PATTERN[index];
-            for (var slot : this.getSlots(s)) {
+            var slots = this.getSlots(CONFIG_PATTERN[index]);
+            slots.addAll(this.getSlots(STORAGE_PATTERN[index]));
+            for (var slot : slots) {
                 if (slot instanceof AppEngSlot as) {
                     as.setActive(page == index / 2);
                 }

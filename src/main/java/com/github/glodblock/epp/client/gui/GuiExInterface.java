@@ -70,7 +70,7 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
     public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         guiGraphics.drawString(
                 this.font,
-                Component.translatable("gui.expatternprovider.ex_interface.config", this.menu.page),
+                Component.translatable("gui.expatternprovider.ex_interface.config", this.menu.page + 1),
                 8,
                 24,
                 style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
