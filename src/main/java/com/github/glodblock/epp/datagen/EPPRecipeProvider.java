@@ -10,6 +10,7 @@ import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
@@ -223,5 +224,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('E', AEItems.CAPACITY_CARD)
                 .unlockedBy(C, has(EPPItemAndBlock.DRIVE_UPGRADE))
                 .save(c, EPP.id("ex_drive_upgrade"));
+
+        // Pattern Modifier
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.PATTERN_MODIFIER)
+                .pattern("GPG")
+                .pattern(" L ")
+                .define('G', ConventionTags.dye(DyeColor.GREEN))
+                .define('P', AEItems.BLANK_PATTERN)
+                .define('L', AEItems.LOGIC_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.PATTERN_MODIFIER))
+                .save(c, EPP.id("pattern_modifier"));
+
     }
 }
