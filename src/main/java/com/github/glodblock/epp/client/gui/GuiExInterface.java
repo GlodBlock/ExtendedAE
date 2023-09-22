@@ -21,7 +21,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,25 +84,20 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
         this.fuzzyMode.set(menu.getFuzzyMode());
         this.fuzzyMode.setVisibility(menu.hasUpgrade(AEItems.FUZZY_CARD));
 
-        var configSlots = new ArrayList<Slot>();
         this.menu.showPage(this.menu.page);
         this.amountButtons.forEach(s -> s.visible = false);
 
         if (this.menu.page == 0) {
             this.nextPage.setVisibility(true);
             this.prePage.setVisibility(false);
-            configSlots.addAll(menu.getSlots(ExSemantics.EX_1));
-            configSlots.addAll(menu.getSlots(ExSemantics.EX_3));
         } else {
             this.prePage.setVisibility(true);
             this.nextPage.setVisibility(false);
-            configSlots.addAll(menu.getSlots(ExSemantics.EX_5));
-            configSlots.addAll(menu.getSlots(ExSemantics.EX_7));
         }
 
         for (int i = 0; i < 18; i++) {
             var button = amountButtons.get(i + this.menu.page * 18);
-            var item = configSlots.get(i).getItem();
+            var item = this.menu.getConfigSlots().get(i + this.menu.page * 18).getItem();
             button.visible = !item.isEmpty();
         }
     }

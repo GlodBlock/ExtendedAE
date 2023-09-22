@@ -15,6 +15,10 @@ import com.github.glodblock.epp.client.ExSemantics;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> implements IPage {
 
@@ -32,6 +36,7 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
     private static final SlotSemantic[] STORAGE_PATTERN = new SlotSemantic[] {
             ExSemantics.EX_2, ExSemantics.EX_4, ExSemantics.EX_6, ExSemantics.EX_8
     };
+    private final List<Slot> configSlots = new ArrayList<>();
     @GuiSync(7)
     public int page;
 
@@ -43,7 +48,7 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
         for (int x = 0; x < config.size(); x++) {
             int page = x / PAGE;
             int row = (x - page * PAGE) / LINE;
-            this.addSlot(new FakeSlot(config, x), CONFIG_PATTERN[2 * page + row]);
+            this.configSlots.add(this.addSlot(new FakeSlot(config, x), CONFIG_PATTERN[2 * page + row]));
         }
         var storage = logic.getStorage().createMenuWrapper();
         for (int x = 0; x < storage.size(); x++) {
@@ -53,13 +58,17 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
         }
     }
 
+    public List<Slot> getConfigSlots() {
+        return this.configSlots;
+    }
+
     public void showPage(int page) {
         for (int index = 0; index < 4; index ++) {
             var slots = this.getSlots(CONFIG_PATTERN[index]);
             slots.addAll(this.getSlots(STORAGE_PATTERN[index]));
             for (var slot : slots) {
                 if (slot instanceof AppEngSlot as) {
-                    as.setActive(page == index / 2);
+                    as.setActive(page == (index / 2));
                 }
             }
         }
