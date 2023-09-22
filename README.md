@@ -8,7 +8,7 @@
 
 <img alt="epp" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/epp.png?raw=true" width="250" height="304"/>
 
-- 18 slots interface
+- 36 slots interface
 
 <img alt="ei" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/2.png?raw=true" width="250" height="304"/>
 
