@@ -1,6 +1,7 @@
 package com.github.glodblock.epp.container;
 
 import appeng.api.crafting.PatternDetailsHelper;
+import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.core.definitions.AEItems;
 import appeng.crafting.pattern.AEProcessingPattern;
@@ -14,6 +15,7 @@ import appeng.menu.slot.OutputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
 import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.client.ExSemantics;
+import com.github.glodblock.epp.client.gui.widget.SingleFakeSlot;
 import com.github.glodblock.epp.common.inventory.PatternModifierInventory;
 import com.github.glodblock.epp.network.packet.sync.IActionHolder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -34,6 +36,8 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
 
     public final AppEngSlot targetSlot;
     public final AppEngSlot cloneSlot;
+    public final AppEngSlot replaceTarget;
+    public final AppEngSlot replaceWith;
     @GuiSync(1)
     public int page;
 
@@ -47,27 +51,57 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         var targetInv = host.getInventoryByName("targetInv");
         var blankPatternInv = host.getInventoryByName("blankPatternInv");
         var clonePatternInv = host.getInventoryByName("clonePatternInv");
+        var replaceInv = host.getInventoryByName("replaceInv");
         this.targetSlot = (AppEngSlot) this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.ENCODED_PATTERN, targetInv, 0), ExSemantics.EX_1);
         this.cloneSlot = (AppEngSlot) this.addSlot(new OutputSlot(clonePatternInv, 0, null), ExSemantics.EX_2);
+        this.replaceTarget = (AppEngSlot) this.addSlot(new SingleFakeSlot(replaceInv, 0), ExSemantics.EX_4);
+        this.replaceWith = (AppEngSlot) this.addSlot(new SingleFakeSlot(replaceInv, 1), ExSemantics.EX_5);
         for (int x = 0; x < blankPatternInv.size(); x ++) {
             this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.BLANK_PATTERN, blankPatternInv, x), ExSemantics.EX_3);
         }
         this.actions.put("clear", o -> clear());
         this.actions.put("clone", o -> clonePattern());
         this.actions.put("modify", o -> modify((int) o[0], (boolean) o[1]));
+        this.actions.put("replace", o -> replace());
     }
 
     public void showPage(int page) {
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             if (slot instanceof AppEngSlot as) {
-                as.setActive(page == 0);
+                as.setActive(page == 0 || page == 1);
             }
         }
-        this.targetSlot.setActive(page == 1);
-        this.cloneSlot.setActive(page == 1);
+        this.replaceTarget.setActive(page == 1);
+        this.replaceWith.setActive(page == 1);
+        this.targetSlot.setActive(page == 2);
+        this.cloneSlot.setActive(page == 2);
         for (var slot : this.getSlots(ExSemantics.EX_3)) {
             if (slot instanceof AppEngSlot as) {
-                as.setActive(page == 1);
+                as.setActive(page == 2);
+            }
+        }
+    }
+
+    public void replace() {
+        var replace = this.replaceTarget.getItem();
+        var with = this.replaceWith.getItem();
+        if (replace.isEmpty() || with.isEmpty()) {
+            return;
+        }
+        for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
+            var stack = slot.getItem();
+            if (stack.getItem() instanceof EncodedPatternItem pattern) {
+                var detail = pattern.decode(stack, this.getPlayer().level(), false);
+                if (detail instanceof AEProcessingPattern process) {
+                    var input = process.getSparseInputs();
+                    var output = process.getOutputs();
+                    var replaceInput = new GenericStack[input.length];
+                    var replaceOutput = new GenericStack[output.length];
+                    this.replace(input, replaceInput, new GenericStack(AEItemKey.of(replace), 1), new GenericStack(AEItemKey.of(with), 1));
+                    this.replace(output, replaceOutput, new GenericStack(AEItemKey.of(replace), 1), new GenericStack(AEItemKey.of(with), 1));
+                    var newPattern = PatternDetailsHelper.encodeProcessingPattern(replaceInput, replaceOutput);
+                    slot.set(newPattern);
+                }
             }
         }
     }
@@ -150,6 +184,18 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
             if (stacks[i] != null) {
                 long amt = div ? stacks[i].amount() / scale : stacks[i].amount() * scale;
                 des[i] = new GenericStack(stacks[i].what(), amt);
+            }
+        }
+    }
+
+    private void replace(GenericStack[] stacks, GenericStack[] des, GenericStack replace, GenericStack with) {
+        for (int i = 0; i < stacks.length; i ++) {
+            if (stacks[i] != null) {
+                if (stacks[i].what().matches(replace)) {
+                    des[i] = new GenericStack(with.what(), stacks[i].amount());
+                } else {
+                    des[i] = new GenericStack(stacks[i].what(), stacks[i].amount());
+                }
             }
         }
     }

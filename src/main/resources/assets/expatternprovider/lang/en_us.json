@@ -49,6 +49,7 @@
   "gui.expatternprovider.pattern_modifier.blank": "Blank Patterns",
   "gui.expatternprovider.pattern_modifier.change": "Change Mode",
   "gui.expatternprovider.pattern_modifier.clear": "Clear",
+  "gui.expatternprovider.pattern_modifier.replace": "Replace",
   "gui.expatternprovider.pattern_modifier.clone.desc": "Clone target pattern",
   "gui.expatternprovider.pattern_modifier.multi.desc": "Multiply the input and output amount by %s",
   "gui.expatternprovider.pattern_modifier.div.desc": "Divide the input and output amount by %s",

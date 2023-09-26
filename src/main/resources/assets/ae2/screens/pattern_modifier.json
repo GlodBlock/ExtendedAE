@@ -21,6 +21,16 @@
       "left": 53,
       "top": 67,
       "grid": "HORIZONTAL"
+    },
+    "EX_4": {
+      "left": 8,
+      "top": 16,
+      "grid": "HORIZONTAL"
+    },
+    "EX_5": {
+      "left": 62,
+      "top": 16,
+      "grid": "HORIZONTAL"
     }
   }
 }

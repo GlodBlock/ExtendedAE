@@ -14,6 +14,7 @@ public class PatternModifierInventory extends ItemMenuHost implements InternalIn
     private final AppEngInternalInventory targetInv = new AppEngInternalInventory(this, 1);
     private final AppEngInternalInventory blankPatternInv = new AppEngInternalInventory(this, 4);
     private final AppEngInternalInventory clonePatternInv = new AppEngInternalInventory(this, 1);
+    private final AppEngInternalInventory replaceInv = new AppEngInternalInventory(this, 2);
 
     public PatternModifierInventory(Player player, @Nullable Integer slot, ItemStack itemStack) {
         super(player, slot, itemStack);
@@ -23,6 +24,7 @@ public class PatternModifierInventory extends ItemMenuHost implements InternalIn
             this.targetInv.readFromNBT(itemTag, "targetInv");
             this.blankPatternInv.readFromNBT(itemTag, "blankPatternInv");
             this.clonePatternInv.readFromNBT(itemTag, "clonePatternInv");
+            this.replaceInv.readFromNBT(itemTag, "replaceInv");
         }
     }
 
@@ -33,6 +35,7 @@ public class PatternModifierInventory extends ItemMenuHost implements InternalIn
         this.targetInv.writeToNBT(itemTag, "targetInv");
         this.blankPatternInv.writeToNBT(itemTag, "blankPatternInv");
         this.clonePatternInv.writeToNBT(itemTag, "clonePatternInv");
+        this.replaceInv.writeToNBT(itemTag, "replaceInv");
     }
 
     @Override
@@ -50,6 +53,9 @@ public class PatternModifierInventory extends ItemMenuHost implements InternalIn
         if (this.clonePatternInv == inv) {
             this.clonePatternInv.writeToNBT(itemTag, "clonePatternInv");
         }
+        if (this.replaceInv == inv) {
+            this.replaceInv.writeToNBT(itemTag, "replaceInv");
+        }
     }
 
     public AppEngInternalInventory getInventoryByName(String name) {
@@ -58,6 +64,7 @@ public class PatternModifierInventory extends ItemMenuHost implements InternalIn
             case "targetInv" -> this.targetInv;
             case "blankPatternInv" -> this.blankPatternInv;
             case "clonePatternInv" -> this.clonePatternInv;
+            case "replaceInv" -> this.replaceInv;
             default -> null;
         };
     }
