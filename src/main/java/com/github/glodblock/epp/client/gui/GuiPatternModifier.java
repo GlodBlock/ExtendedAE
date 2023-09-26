@@ -22,41 +22,36 @@ import java.util.List;
 
 public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
 
-    private final ActionEPPButton goMulti;
-    private final ActionEPPButton goClone;
     private final ActionEPPButton clone;
     private final List<Button> multiBtns = new ArrayList<>();
 
     public GuiPatternModifier(ContainerPatternModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.goMulti = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.SCHEDULING_DEFAULT.getBlitter());
-        this.goClone = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.SCHEDULING_DEFAULT.getBlitter());
+        ActionEPPButton changeMode = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 2)), Icon.SCHEDULING_DEFAULT.getBlitter());
         this.clone = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clone")), EPPIcon.RIGHT);
-        this.goMulti.setMessage(Component.translatable("gui.expatternprovider.pattern_modifier.change"));
-        this.goClone.setMessage(Component.translatable("gui.expatternprovider.pattern_modifier.change"));
+        changeMode.setMessage(Component.translatable("gui.expatternprovider.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.expatternprovider.pattern_modifier.clone.desc"));
-        addToLeftToolbar(this.goMulti);
-        addToLeftToolbar(this.goClone);
+        addToLeftToolbar(changeMode);
         this.multiBtns.add(
-                Button.builder(Component.literal("x2"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 2, 1)))
+                Button.builder(Component.literal("x2"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 2, false)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.expatternprovider.pattern_modifier.multi.desc", 2)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("x10"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 10, 1)))
+                Button.builder(Component.literal("x10"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 10, false)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.expatternprovider.pattern_modifier.multi.desc", 10)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("÷2"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 2, 0)))
+                Button.builder(Component.literal("÷2"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 2, true)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.expatternprovider.pattern_modifier.div.desc", 2)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("÷10"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 10, 0)))
+                Button.builder(Component.literal("÷10"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 10, true)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.expatternprovider.pattern_modifier.div.desc", 10)))
                         .build()
@@ -121,13 +116,9 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         super.updateBeforeRender();
         this.menu.showPage(this.menu.page);
         if (this.menu.page == 0) {
-            this.goMulti.setVisibility(false);
-            this.goClone.setVisibility(true);
             this.clone.setVisibility(false);
             this.multiBtns.forEach(b -> b.visible = true);
         } else {
-            this.goMulti.setVisibility(true);
-            this.goClone.setVisibility(false);
             this.clone.setVisibility(true);
             this.multiBtns.forEach(b -> b.visible = false);
         }

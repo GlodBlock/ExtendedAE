@@ -4,6 +4,8 @@ import com.github.glodblock.epp.api.IPage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.function.Supplier;
+
 public class CUpdatePage implements IMessage<CUpdatePage> {
 
     private int page;
@@ -14,6 +16,10 @@ public class CUpdatePage implements IMessage<CUpdatePage> {
 
     public CUpdatePage(int page) {
         this.page = page;
+    }
+
+    public CUpdatePage(Supplier<Integer> page) {
+        this.page = page.get();
     }
 
     @Override

@@ -54,7 +54,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
         this.actions.put("clear", o -> clear());
         this.actions.put("clone", o -> clonePattern());
-        this.actions.put("modify", o -> modify((int) o[0], (int) o[1] == 0));
+        this.actions.put("modify", o -> modify((int) o[0], (boolean) o[1]));
     }
 
     public void showPage(int page) {

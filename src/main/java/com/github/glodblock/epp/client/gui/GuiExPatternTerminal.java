@@ -464,7 +464,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
         final String outputFilter = this.searchOutField.getValue().toLowerCase();
         final String inputFilter = this.searchInField.getValue().toLowerCase();
 
-        final Set<Object> cachedSearch = this.getCacheForSearchTerm(outputFilter + inputFilter);
+        final Set<Object> cachedSearch = this.getCacheForSearchTerm("out:" + outputFilter + "in:" + inputFilter);
         final boolean rebuild = cachedSearch.isEmpty();
 
         for (PatternContainerRecord entry : this.byId.values()) {
