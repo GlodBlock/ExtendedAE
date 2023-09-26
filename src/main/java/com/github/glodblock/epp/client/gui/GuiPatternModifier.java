@@ -33,7 +33,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         changeMode.setMessage(Component.translatable("gui.expatternprovider.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.expatternprovider.pattern_modifier.clone.desc"));
         addToLeftToolbar(changeMode);
-        this.replace = Button.builder(Component.translatable("gui.expatternprovider.pattern_modifier.replace"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("replace")))
+        this.replace = Button.builder(Component.translatable("gui.expatternprovider.pattern_modifier.replace_button"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("replace")))
                 .size(46, 18)
                 .build();
         this.multiBtns.add(
