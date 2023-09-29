@@ -1,0 +1,36 @@
+{
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "L": {
+      "item": "minecraft:lava_bucket"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
+    },
+    "X": {
+      "type": "appliedenergistics2:part",
+      "part": "material.cell16k_part"
+    }
+  },
+  "pattern": [
+    "CLC",
+    "WXW",
+    "III"
+  ],
+  "result": {
+    "item": "extendedae:infinity_cell",
+    "nbt": {
+      "r": {
+        "Craft": 0, "Cnt": 1, "id": "minecraft:cobblestone", "Count": 1, "Damage": 0, "Req": 0
+      },
+      "t": "i"
+    }
+  }
+}

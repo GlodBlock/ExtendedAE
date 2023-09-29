@@ -1,0 +1,33 @@
+{
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
+    },
+    "X": {
+      "type": "appliedenergistics2:part",
+      "part": "material.fluid_cell16k_part"
+    }
+  },
+  "pattern": [
+    "CWC",
+    "WXW",
+    "III"
+  ],
+  "result": {
+    "item": "extendedae:infinity_cell",
+    "nbt": {
+      "r": {
+        "FluidName": "water", "Craft": 0, "Cnt": 1, "Count": 0, "Req": 0
+      },
+      "t": "f"
+    }
+  }
+}

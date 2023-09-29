@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "extendedae",
+    "name": "ExtendedAE",
+    "description": "Add some QoL extended contents for AE2",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/GlodBlock/ExtendedAE",
+    "updateUrl": "",
+    "authorList": ["GlodBlock"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
