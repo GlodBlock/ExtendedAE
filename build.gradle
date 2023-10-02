@@ -80,7 +80,7 @@ repositories {
         content {
             includeGroup 'appeng'
         }
-    }
+}
 }
 
 dependencies {
@@ -88,8 +88,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
-    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.10")
-    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4733834")
+    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.12")
+    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4777696")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 

@@ -48,7 +48,6 @@ public class ItemMEPackingTape extends Item {
                     tag.putString("id", id.toString());
                     var ctxTag = new CompoundTag();
                     part.writeToNBT(ctxTag);
-                    ctxTag.putBoolean("exae_reload", true);
                     tag.put("ctx", ctxTag);
                     cable.removePart(part);
                 }

@@ -48,7 +48,6 @@ public abstract class ItemUpgrade extends Item {
                 if (part != null && this.PART_MAP.containsKey(part.getClass())) {
                     var contents = new CompoundTag();
                     var partItem = this.PART_MAP.get(part.getClass());
-                    contents.putBoolean("exae_reload", true);
                     part.writeToNBT(contents);
                     var p = cable.replacePart(partItem, side, context.getPlayer(), null);
                     if (p != null) {
