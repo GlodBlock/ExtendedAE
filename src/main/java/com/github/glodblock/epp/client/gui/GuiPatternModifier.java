@@ -117,7 +117,8 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
-        this.menu.showPage(this.menu.page);
+        EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("show"));
+        this.menu.showPage();
         if (this.menu.page == 0) {
             this.clone.setVisibility(false);
             this.multiBtns.forEach(b -> b.visible = true);

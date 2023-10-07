@@ -63,21 +63,22 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         this.actions.put("clone", o -> clonePattern());
         this.actions.put("modify", o -> modify((int) o[0], (boolean) o[1]));
         this.actions.put("replace", o -> replace());
+        this.actions.put("show", o -> showPage());
     }
 
-    public void showPage(int page) {
+    public void showPage() {
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             if (slot instanceof AppEngSlot as) {
-                as.setActive(page == 0 || page == 1);
+                as.setSlotEnabled(page == 0 || page == 1);
             }
         }
-        this.replaceTarget.setActive(page == 1);
-        this.replaceWith.setActive(page == 1);
-        this.targetSlot.setActive(page == 2);
-        this.cloneSlot.setActive(page == 2);
+        this.replaceTarget.setSlotEnabled(page == 1);
+        this.replaceWith.setSlotEnabled(page == 1);
+        this.targetSlot.setSlotEnabled(page == 2);
+        this.cloneSlot.setSlotEnabled(page == 2);
         for (var slot : this.getSlots(ExSemantics.EX_3)) {
             if (slot instanceof AppEngSlot as) {
-                as.setActive(page == 2);
+                as.setSlotEnabled(page == 2);
             }
         }
     }
