@@ -236,5 +236,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.PATTERN_MODIFIER))
                 .save(c, EPP.id("pattern_modifier"));
 
+        // Extended Molecular Assembler
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_ASSEMBLER)
+                .pattern("FAF")
+                .pattern("AEA")
+                .pattern("FAF")
+                .define('F', ConventionTags.FLUIX_CRYSTAL)
+                .define('A', AEBlocks.MOLECULAR_ASSEMBLER)
+                .define('E', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_ASSEMBLER))
+                .save(c, EPP.id("ex_molecular_assembler"));
+
     }
 }

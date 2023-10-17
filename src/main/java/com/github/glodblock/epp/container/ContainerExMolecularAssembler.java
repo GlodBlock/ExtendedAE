@@ -138,7 +138,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
 
         @Override
         public boolean isRenderDisabled() {
-            return true; // The background image does not include a slot background
+            return true;
         }
 
         @Override

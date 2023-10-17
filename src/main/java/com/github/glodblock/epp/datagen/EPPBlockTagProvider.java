@@ -27,6 +27,7 @@ public class EPPBlockTagProvider extends BlockTagsProvider {
                 .add(EPPItemAndBlock.EX_INTERFACE)
                 .add(EPPItemAndBlock.WIRELESS_CONNECTOR)
                 .add(EPPItemAndBlock.INGREDIENT_BUFFER)
-                .add(EPPItemAndBlock.EX_DRIVE);
+                .add(EPPItemAndBlock.EX_DRIVE)
+                .add(EPPItemAndBlock.EX_ASSEMBLER);
     }
 }
