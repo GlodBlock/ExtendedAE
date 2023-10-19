@@ -478,14 +478,18 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
 
             // Search if the current inventory holds a pattern containing the search term.
             if (!found) {
+                boolean midRes;
                 for (ItemStack itemStack : entry.getInventory()) {
                     if (!outputFilter.isEmpty()) {
-                        found = this.itemStackMatchesSearchTerm(itemStack, outputFilter, true);
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, outputFilter, true);
                     } else {
-                        found = true;
+                        midRes = true;
                     }
-                    if (!inputFilter.isEmpty() && found) {
-                        found = this.itemStackMatchesSearchTerm(itemStack, inputFilter, false);
+                    if (!inputFilter.isEmpty() && midRes) {
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, inputFilter, false);
+                    }
+                    if (midRes) {
+                        found = true;
                     }
                 }
             }
