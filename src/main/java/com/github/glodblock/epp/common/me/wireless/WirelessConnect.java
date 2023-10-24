@@ -36,7 +36,7 @@ public class WirelessConnect implements IActionHost {
 
     @SubscribeEvent
     public void onUnload(final LevelEvent.Unload e) {
-        if (this.host.getLevel() == e.getLevel()) {
+        if (this.host != null && this.host.getLevel() == e.getLevel()) {
             this.destroy();
         }
     }
