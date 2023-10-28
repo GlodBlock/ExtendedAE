@@ -1,7 +1,7 @@
 ---
 navigation:
     parent: epp_intro/epp_intro-index.md
-    title: Extended Molecular Assembler
+    title: ME Extended Molecular Assembler
     icon: expatternprovider:ex_molecular_assembler
 categories:
 - extended devices
