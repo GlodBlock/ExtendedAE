@@ -17,9 +17,12 @@ import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.EnumSet;
+import java.util.List;
 
 // Adapt from Quantum Bridge code
 public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject {
@@ -155,6 +158,14 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     @Override
     public IUpgradeInventory getUpgrades() {
         return this.upgrades;
+    }
+
+    @Override
+    public void addAdditionalDrops(Level level, BlockPos pos, List<ItemStack> drops) {
+        super.addAdditionalDrops(level, pos, drops);
+        for (var card : this.upgrades) {
+            drops.add(card);
+        }
     }
 
 }
