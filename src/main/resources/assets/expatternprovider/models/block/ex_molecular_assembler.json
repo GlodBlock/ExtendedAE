@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "ae2:block/molecular_assembler",
+  "render_type": "cutout",
   "textures": {
-    "all": "expatternprovider:block/ex_molecular_assembler"
+    "particle": "expatternprovider:block/ex_molecular_assembler",
+    "outside": "expatternprovider:block/ex_molecular_assembler"
   }
 }

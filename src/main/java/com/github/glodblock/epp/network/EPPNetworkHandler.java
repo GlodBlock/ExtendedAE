@@ -6,6 +6,7 @@ import com.github.glodblock.epp.network.packet.CGenericPacket;
 import com.github.glodblock.epp.network.packet.CPatternKey;
 import com.github.glodblock.epp.network.packet.CUpdatePage;
 import com.github.glodblock.epp.network.packet.IMessage;
+import com.github.glodblock.epp.network.packet.SAssemblerAnimation;
 import com.github.glodblock.epp.network.packet.SExPatternInfo;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -61,6 +62,7 @@ public class EPPNetworkHandler {
 
     public void init() {
         registerPacket(SExPatternInfo.class, SExPatternInfo::new);
+        registerPacket(SAssemblerAnimation.class, SAssemblerAnimation::new);
         registerPacket(CPatternKey.class, CPatternKey::new);
         registerPacket(CUpdatePage.class, CUpdatePage::new);
         registerPacket(CGenericPacket.class, CGenericPacket::new);

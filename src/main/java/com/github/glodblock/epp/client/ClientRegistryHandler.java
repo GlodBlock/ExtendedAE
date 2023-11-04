@@ -20,9 +20,11 @@ import com.github.glodblock.epp.client.hotkey.PatternHotKey;
 import com.github.glodblock.epp.client.model.ExDriveModel;
 import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
+import com.github.glodblock.epp.client.render.tesr.ExMolecularAssemblerTESR;
 import com.github.glodblock.epp.client.render.tesr.IngredientBufferTESR;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.tileentities.TileExDrive;
+import com.github.glodblock.epp.common.tileentities.TileExMolecularAssembler;
 import com.github.glodblock.epp.common.tileentities.TileIngredientBuffer;
 import com.github.glodblock.epp.container.ContainerExDrive;
 import com.github.glodblock.epp.container.ContainerExIOBus;
@@ -89,6 +91,7 @@ public class ClientRegistryHandler {
     public void registerModels(ModelEvent.RegisterGeometryLoaders event) {
         BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
     }
 

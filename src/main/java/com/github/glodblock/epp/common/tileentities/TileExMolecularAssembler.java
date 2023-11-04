@@ -22,12 +22,16 @@ import appeng.api.util.AECableType;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.blockentity.grid.AENetworkInvBlockEntity;
 import appeng.capabilities.Capabilities;
+import appeng.client.render.crafting.AssemblerAnimationStatus;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
+import appeng.core.sync.network.TargetPoint;
 import appeng.util.inv.CombinedInternalInventory;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.CraftingThread;
+import com.github.glodblock.epp.network.EPPNetworkHandler;
+import com.github.glodblock.epp.network.packet.SAssemblerAnimation;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,9 +42,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +62,8 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
     private final CraftingThread[] threads = new CraftingThread[MAX_THREAD];
     private final InternalInventory internalInv;
     private final InternalInventory gridInvExt;
+    @OnlyIn(Dist.CLIENT)
+    private AssemblerAnimationStatus animationStatus;
 
     public TileExMolecularAssembler(BlockPos pos, BlockState blockState) {
         super(FCUtil.getTileType(TileExMolecularAssembler.class, TileExMolecularAssembler::new, EPPItemAndBlock.EX_ASSEMBLER), pos, blockState);
@@ -191,6 +200,7 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
         var rate = TickRateModulation.SLEEP;
+        var firstJob = ItemStack.EMPTY;
         int cards = this.upgrades.getInstalledUpgrades(AEItems.SPEED_CARD);
         for (var t : this.threads) {
             if (t.isAwake()) {
@@ -198,7 +208,15 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
                 if (tr.ordinal() > rate.ordinal()) {
                     rate = tr;
                 }
+                if (firstJob.isEmpty()) {
+                    firstJob = t.getOutput();
+                }
             }
+        }
+        var item = AEItemKey.of(firstJob);
+        if (item != null) {
+            final TargetPoint where = new TargetPoint(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 32, this.level);
+            EPPNetworkHandler.INSTANCE.sendToAllAround(new SAssemblerAnimation(this.worldPosition, (byte) 50, item), where);
         }
         return rate;
     }
@@ -271,6 +289,17 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
 
     public IMolecularAssemblerSupportedPattern getCurrentPattern(int index) {
         return this.threads[index].getCurrentPattern();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void setAnimationStatus(@Nullable AssemblerAnimationStatus status) {
+        this.animationStatus = status;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Nullable
+    public AssemblerAnimationStatus getAnimationStatus() {
+        return this.animationStatus;
     }
 
 }

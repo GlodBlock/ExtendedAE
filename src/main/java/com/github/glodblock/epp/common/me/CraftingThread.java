@@ -39,6 +39,7 @@ public class CraftingThread {
     private boolean isAwake = false;
     private boolean forcePlan = false;
     private boolean reboot = true;
+    private ItemStack output = ItemStack.EMPTY;
 
     public CraftingThread(@NotNull AENetworkInvBlockEntity host) {
         this.host = host;
@@ -148,14 +149,14 @@ public class CraftingThread {
             }
 
             this.progress = 0;
-            final ItemStack output = this.myPlan.assemble(this.craftingInv, this.host.getLevel());
-            if (!output.isEmpty()) {
-                CraftingEvent.fireAutoCraftingEvent(this.host.getLevel(), this.myPlan, output, this.craftingInv);
+            this.output = this.myPlan.assemble(this.craftingInv, this.host.getLevel());
+            if (!this.output.isEmpty()) {
+                CraftingEvent.fireAutoCraftingEvent(this.host.getLevel(), this.myPlan, this.output, this.craftingInv);
 
                 // pushOut might reset the plan back to null, so get the remaining items before
                 var craftingRemainders = this.myPlan.getRemainingItems(this.craftingInv);
 
-                this.pushOut(output.copy());
+                this.pushOut(this.output.copy());
 
                 for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
                     this.gridInv.setItemDirect(x, craftingRemainders.get(x));
@@ -310,6 +311,10 @@ public class CraftingThread {
 
     private boolean canPush() {
         return !this.gridInv.getStackInSlot(9).isEmpty();
+    }
+
+    public ItemStack getOutput() {
+        return this.output;
     }
 
     private static class CraftingGridFilter implements IAEItemFilter {
