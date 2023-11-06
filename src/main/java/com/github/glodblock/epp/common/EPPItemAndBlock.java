@@ -2,6 +2,7 @@ package com.github.glodblock.epp.common;
 
 import appeng.items.parts.PartItem;
 import com.github.glodblock.epp.common.blocks.BlockExDrive;
+import com.github.glodblock.epp.common.blocks.BlockExInscriber;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExMolecularAssembler;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
@@ -23,6 +24,7 @@ import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
 import com.github.glodblock.epp.common.tileentities.TileExDrive;
+import com.github.glodblock.epp.common.tileentities.TileExInscriber;
 import com.github.glodblock.epp.common.tileentities.TileExInterface;
 import com.github.glodblock.epp.common.tileentities.TileExMolecularAssembler;
 import com.github.glodblock.epp.common.tileentities.TileExPatternProvider;
@@ -53,6 +55,7 @@ public class EPPItemAndBlock {
     public static ItemDriveUpgrade DRIVE_UPGRADE;
     public static ItemPatternModifier PATTERN_MODIFIER;
     public static BlockExMolecularAssembler EX_ASSEMBLER;
+    public static BlockExInscriber EX_INSCRIBER;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -76,12 +79,14 @@ public class EPPItemAndBlock {
         DRIVE_UPGRADE = new ItemDriveUpgrade();
         PATTERN_MODIFIER = new ItemPatternModifier();
         EX_ASSEMBLER = new BlockExMolecularAssembler();
+        EX_INSCRIBER = new BlockExInscriber();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
         regHandler.block("ingredient_buffer", INGREDIENT_BUFFER, TileIngredientBuffer.class, TileIngredientBuffer::new);
         regHandler.block("ex_drive", EX_DRIVE, TileExDrive.class, TileExDrive::new);
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
+        regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);

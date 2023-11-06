@@ -23,6 +23,7 @@ import com.github.glodblock.epp.common.parts.PartExPatternProvider;
 import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.ContainerExDrive;
 import com.github.glodblock.epp.container.ContainerExIOBus;
+import com.github.glodblock.epp.container.ContainerExInscriber;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExMolecularAssembler;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -127,6 +128,7 @@ public class RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_drive"), ContainerExDrive.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("pattern_modifier"), ContainerPatternModifier.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_molecular_assembler"), ContainerExMolecularAssembler.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_inscriber"), ContainerExInscriber.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -179,6 +181,7 @@ public class RegistryHandler {
         Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_CONNECTOR, 4, "gui.expatternprovider.wireless_connect");
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_ASSEMBLER, 5, "gui.expatternprovider.ex_molecular_assembler");
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_INSCRIBER, 4, "gui.expatternprovider.ex_inscriber");
     }
 
     private void registerStorageHandler() {

@@ -5,6 +5,7 @@ import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
 import com.github.glodblock.epp.client.gui.GuiExDrive;
 import com.github.glodblock.epp.client.gui.GuiExIOBus;
+import com.github.glodblock.epp.client.gui.GuiExInscriber;
 import com.github.glodblock.epp.client.gui.GuiExInterface;
 import com.github.glodblock.epp.client.gui.GuiExMolecularAssembler;
 import com.github.glodblock.epp.client.gui.GuiExPatternProvider;
@@ -20,14 +21,17 @@ import com.github.glodblock.epp.client.hotkey.PatternHotKey;
 import com.github.glodblock.epp.client.model.ExDriveModel;
 import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
+import com.github.glodblock.epp.client.render.tesr.ExInscriberTESR;
 import com.github.glodblock.epp.client.render.tesr.ExMolecularAssemblerTESR;
 import com.github.glodblock.epp.client.render.tesr.IngredientBufferTESR;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.tileentities.TileExDrive;
+import com.github.glodblock.epp.common.tileentities.TileExInscriber;
 import com.github.glodblock.epp.common.tileentities.TileExMolecularAssembler;
 import com.github.glodblock.epp.common.tileentities.TileIngredientBuffer;
 import com.github.glodblock.epp.container.ContainerExDrive;
 import com.github.glodblock.epp.container.ContainerExIOBus;
+import com.github.glodblock.epp.container.ContainerExInscriber;
 import com.github.glodblock.epp.container.ContainerExInterface;
 import com.github.glodblock.epp.container.ContainerExMolecularAssembler;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
@@ -68,6 +72,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
         InitScreens.register(ContainerPatternModifier.TYPE, GuiPatternModifier::new, "/screens/pattern_modifier.json");
         InitScreens.register(ContainerExMolecularAssembler.TYPE, GuiExMolecularAssembler::new, "/screens/ex_molecular_assembler.json");
+        InitScreens.register(ContainerExInscriber.TYPE, GuiExInscriber::new, "/screens/ex_inscriber.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -92,6 +97,7 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
     }
 
