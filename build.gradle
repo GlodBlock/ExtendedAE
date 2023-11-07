@@ -90,6 +90,7 @@ dependencies {
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.12")
     runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4777696")
+    implementation fg.deobf("curse.maven:jade-324717:4768593")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 

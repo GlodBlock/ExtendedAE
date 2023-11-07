@@ -1,7 +1,6 @@
 package com.github.glodblock.epp.client.render.tesr;
 
 import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.misc.InscriberBlockEntity;
 import appeng.core.AppEng;
 import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipe;
