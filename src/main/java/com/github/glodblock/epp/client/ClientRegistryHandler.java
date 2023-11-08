@@ -20,11 +20,13 @@ import com.github.glodblock.epp.client.gui.pattern.GuiStonecuttingPattern;
 import com.github.glodblock.epp.client.hotkey.PatternHotKey;
 import com.github.glodblock.epp.client.model.ExDriveModel;
 import com.github.glodblock.epp.client.render.HighlightRender;
+import com.github.glodblock.epp.client.render.tesr.ExChargerTESR;
 import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
 import com.github.glodblock.epp.client.render.tesr.ExInscriberTESR;
 import com.github.glodblock.epp.client.render.tesr.ExMolecularAssemblerTESR;
 import com.github.glodblock.epp.client.render.tesr.IngredientBufferTESR;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
+import com.github.glodblock.epp.common.tileentities.TileExCharger;
 import com.github.glodblock.epp.common.tileentities.TileExDrive;
 import com.github.glodblock.epp.common.tileentities.TileExInscriber;
 import com.github.glodblock.epp.common.tileentities.TileExMolecularAssembler;
@@ -98,6 +100,7 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
     }
 

@@ -6,6 +6,7 @@ import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.RegistryHandler;
 import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.network.EPPNetworkHandler;
+import com.github.glodblock.epp.xmod.LoadList;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +35,7 @@ public class EPP {
     public EPP() {
         assert INSTANCE == null;
         INSTANCE = this;
+        LoadList.init();
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EPPConfig.SPEC);
         EPPItemAndBlock.init(RegistryHandler.INSTANCE);

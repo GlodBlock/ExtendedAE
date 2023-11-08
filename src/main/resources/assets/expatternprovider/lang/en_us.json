@@ -7,6 +7,7 @@
   "block.expatternprovider.ex_drive": "ME Extended Drive",
   "block.expatternprovider.ex_molecular_assembler": "Extended Molecular Assembler",
   "block.expatternprovider.ex_inscriber": "Extended Inscriber",
+  "block.expatternprovider.ex_charger": "Extended Charger",
   "item.expatternprovider.ex_pattern_provider_part": "ME Extended Pattern Provider",
   "item.expatternprovider.ex_interface_part": "ME Extended Interface",
   "item.expatternprovider.pattern_provider_upgrade": "Pattern Provider Upgrade",

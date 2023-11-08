@@ -1,5 +1,10 @@
 package com.github.glodblock.epp.util;
 
+import appeng.recipes.handlers.InscriberRecipe;
+import com.github.glodblock.epp.xmod.LoadList;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.world.level.LevelAccessor;
@@ -12,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 public class Ae2ReflectClient {
 
     private static final Field fLevelRenderer_renderBuffers;
+    private static final Field fInscriberRecipeCategory_RECIPE_TYPE;
     private static final Constructor<?> cFakeForwardingServerLevel;
 
     static {
@@ -21,6 +27,14 @@ public class Ae2ReflectClient {
                     .forName("appeng.client.guidebook.scene.element.FakeForwardingServerLevel")
                     .getDeclaredConstructor(LevelAccessor.class);
             cFakeForwardingServerLevel.setAccessible(true);
+            if (LoadList.JEI) {
+                fInscriberRecipeCategory_RECIPE_TYPE = Ae2Reflect.reflectField(
+                        Class.forName("appeng.integration.modules.jei.InscriberRecipeCategory"),
+                        "RECIPE_TYPE"
+                );
+            } else {
+                fInscriberRecipeCategory_RECIPE_TYPE = null;
+            }
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -37,6 +51,10 @@ public class Ae2ReflectClient {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static RecipeType<InscriberRecipe> getInscribeRecipe() {
+        return Ae2Reflect.readField(null, fInscriberRecipeCategory_RECIPE_TYPE);
     }
 
 }

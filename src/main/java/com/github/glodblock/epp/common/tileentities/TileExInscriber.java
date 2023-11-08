@@ -1,7 +1,5 @@
 package com.github.glodblock.epp.common.tileentities;
 
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerUnits;
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
@@ -21,13 +19,13 @@ import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.blockentity.grid.AENetworkPowerBlockEntity;
-import appeng.blockentity.misc.CrankBlockEntity;
 import appeng.capabilities.Capabilities;
 import appeng.core.settings.TickRates;
 import appeng.recipes.handlers.InscriberRecipe;
 import appeng.util.ConfigManager;
 import appeng.util.inv.CombinedInternalInventory;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
+import com.github.glodblock.epp.common.me.Crankable;
 import com.github.glodblock.epp.common.me.InscriberThread;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.core.BlockPos;
@@ -312,7 +310,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
 
     public ICrankable getCrankable(Direction direction) {
         if (direction != getFront()) {
-            return new Crankable();
+            return new Crankable(this);
         }
         return null;
     }
@@ -329,18 +327,6 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
                     LazyOptional.of(() -> crankable));
         }
         return super.getCapability(capability, facing);
-    }
-
-    class Crankable implements ICrankable {
-        @Override
-        public boolean canTurn() {
-            return getInternalCurrentPower() < getInternalMaxPower();
-        }
-
-        @Override
-        public void applyTurn() {
-            injectExternalPower(PowerUnits.AE, CrankBlockEntity.POWER_PER_CRANK_TURN, Actionable.MODULATE);
-        }
     }
 
 }

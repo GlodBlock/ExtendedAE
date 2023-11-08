@@ -2,13 +2,17 @@ package com.github.glodblock.epp.xmod.jei;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
+import appeng.client.gui.AEBaseScreen;
 import appeng.integration.modules.jei.GenericEntryStackHelper;
 import appeng.items.misc.WrappedGenericStack;
 import com.github.glodblock.epp.EPP;
+import com.github.glodblock.epp.client.gui.GuiExInscriber;
 import com.github.glodblock.epp.client.gui.pattern.GuiPattern;
 import com.github.glodblock.epp.container.pattern.ContainerPattern;
+import com.github.glodblock.epp.util.Ae2ReflectClient;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
@@ -18,6 +22,8 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @JeiPlugin
@@ -71,6 +77,19 @@ public class JEIPlugin implements IModPlugin {
                             }
                         }
                         return Optional.empty();
+                    }
+                }
+        );
+        registration.addGenericGuiContainerHandler(AEBaseScreen.class,
+                new IGuiContainerHandler<AEBaseScreen<?>>() {
+                    @Override
+                    public @NotNull Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull AEBaseScreen<?> screen, double mouseX, double mouseY) {
+                        if (screen instanceof GuiExInscriber) {
+                            return Collections.singletonList(
+                                    IGuiClickableArea.createBasic(82, 50, 26, 16, Ae2ReflectClient.getInscribeRecipe())
+                            );
+                        }
+                        return Collections.emptyList();
                     }
                 }
         );
