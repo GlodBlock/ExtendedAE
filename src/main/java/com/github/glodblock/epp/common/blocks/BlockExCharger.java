@@ -103,29 +103,16 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
         var forward = orientation.getSide(RelativeSide.FRONT);
         var twoPixels = 2.0 / 16.0;
 
-        var bb = new AEAxisAlignedBB(twoPixels, twoPixels, twoPixels, 1.0 - twoPixels,
-                1.0 - twoPixels, 1.0 - twoPixels);
-
-        if (up.getStepX() != 0) {
-            bb.minX = 0;
-            bb.maxX = 1;
-        }
-        if (up.getStepY() != 0) {
-            bb.minY = 0;
-            bb.maxY = 1;
-        }
-        if (up.getStepZ() != 0) {
-            bb.minZ = 0;
-            bb.maxZ = 1;
-        }
+        var bb = new AEAxisAlignedBB(0, 0, 0, 1.0,
+                1.00, 1.0);
 
         switch (forward) {
-            case DOWN -> bb.maxY = 1;
-            case UP -> bb.minY = 0;
-            case NORTH -> bb.maxZ = 1;
-            case SOUTH -> bb.minZ = 0;
-            case EAST -> bb.minX = 0;
-            case WEST -> bb.maxX = 1;
+            case UP -> bb.maxY = 1.0 - twoPixels;
+            case DOWN -> bb.minY = 0.0 + twoPixels;
+            case SOUTH -> bb.maxZ = 1.0 - twoPixels;
+            case NORTH -> bb.minZ = 0.0 + twoPixels;
+            case WEST -> bb.minX = 0.0 + twoPixels;
+            case EAST -> bb.maxX = 1.0 - twoPixels;
             default -> {
             }
         }
