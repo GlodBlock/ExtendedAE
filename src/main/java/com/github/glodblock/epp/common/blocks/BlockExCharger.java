@@ -107,13 +107,19 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
                 1.00, 1.0);
 
         switch (forward) {
-            case UP -> bb.maxY = 1.0 - twoPixels;
-            case DOWN -> bb.minY = 0.0 + twoPixels;
-            case SOUTH -> bb.maxZ = 1.0 - twoPixels;
-            case NORTH -> bb.minZ = 0.0 + twoPixels;
-            case WEST -> bb.minX = 0.0 + twoPixels;
-            case EAST -> bb.maxX = 1.0 - twoPixels;
-            default -> {
+            case UP, DOWN:
+                bb.maxY = 1.0 - twoPixels;
+                bb.minY = 0.0 + twoPixels;
+                break;
+            case SOUTH, NORTH:
+                bb.maxZ = 1.0 - twoPixels;
+                bb.minZ = 0.0 + twoPixels;
+                break;
+            case WEST, EAST:
+                bb.minX = 0.0 + twoPixels;
+                bb.maxX = 1.0 - twoPixels;
+                break;
+            default: {
             }
         }
 
