@@ -32,8 +32,6 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
 
     private static final float ITEM_RENDER_SCALE = 0.5f;
 
-
-
     private static final float[][] offset = new float[][] {
             {0.1875f, 0.1875f}, {0.1875f, -0.1875f}, {-0.1875f, 0.1875f}, {-0.1875f, -0.1875f}
     };

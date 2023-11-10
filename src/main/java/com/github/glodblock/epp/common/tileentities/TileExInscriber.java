@@ -100,7 +100,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     public boolean isSmash() {
         if (this.animationIndex < 0) {
             for (int x = 0; x < MAX_THREAD; x ++) {
-                if (this.threads[x].isSmash()) {
+                if (this.threads[x].isSmash() && this.checkTime(this.threads[x].getClientStart())) {
                     this.animationIndex = x;
                     return true;
                 }
@@ -109,6 +109,15 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
             return this.threads[this.animationIndex].isSmash();
         }
         return false;
+    }
+
+    // Prevent wrong synced animation
+    private boolean checkTime(long clientTime) {
+        final long currentTime = System.currentTimeMillis();
+        if (clientTime == 0) {
+            return true;
+        }
+        return currentTime - clientTime < 100;
     }
 
     public long getClientStart() {
