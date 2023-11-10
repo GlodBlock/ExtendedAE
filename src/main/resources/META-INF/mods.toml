@@ -8,6 +8,7 @@ displayURL="https://github.com/GlodBlock/ExtendedAE"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
+credits="Sea_Kerman"
 logoFile="logo.png"
 
 description='''${mod_description}'''

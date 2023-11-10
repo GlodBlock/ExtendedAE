@@ -26,3 +26,7 @@
 
 <img alt="buss" src="https://github.com/GlodBlock/AE2FluidCraft-Rework/blob/pic/buss.png?raw=true" width="200" height="90"/>
 
+## Credits
+
+[Sea_Kerman](https://github.com/Sea-Kerman): Textures and Models
+
