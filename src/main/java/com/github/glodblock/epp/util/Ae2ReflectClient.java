@@ -2,9 +2,7 @@ package com.github.glodblock.epp.util;
 
 import appeng.recipes.handlers.InscriberRecipe;
 import com.github.glodblock.epp.xmod.LoadList;
-import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.world.level.LevelAccessor;

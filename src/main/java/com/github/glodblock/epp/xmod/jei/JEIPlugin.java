@@ -3,11 +3,13 @@ package com.github.glodblock.epp.xmod.jei;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.client.gui.AEBaseScreen;
+import appeng.integration.modules.jei.ChargerCategory;
 import appeng.integration.modules.jei.GenericEntryStackHelper;
 import appeng.items.misc.WrappedGenericStack;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.client.gui.GuiExInscriber;
 import com.github.glodblock.epp.client.gui.pattern.GuiPattern;
+import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.pattern.ContainerPattern;
 import com.github.glodblock.epp.util.Ae2ReflectClient;
 import mezz.jei.api.IModPlugin;
@@ -16,10 +18,12 @@ import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.runtime.IClickableIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -93,6 +97,12 @@ public class JEIPlugin implements IModPlugin {
                     }
                 }
         );
+    }
+
+    @Override
+    public void registerRecipeCatalysts(@NotNull IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(EPPItemAndBlock.EX_INSCRIBER), Ae2ReflectClient.getInscribeRecipe());
+        registration.addRecipeCatalyst(new ItemStack(EPPItemAndBlock.EX_CHARGER), ChargerCategory.RECIPE_TYPE);
     }
 
 }
