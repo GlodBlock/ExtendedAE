@@ -248,5 +248,29 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.EX_ASSEMBLER))
                 .save(c, EPP.id("ex_molecular_assembler"));
 
+        // Extended Inscriber
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_INSCRIBER)
+                .pattern("FAF")
+                .pattern("AEA")
+                .pattern("FAF")
+                .define('F', AEBlocks.INSCRIBER)
+                .define('A', AEParts.STORAGE_BUS)
+                .define('E', ConventionTags.INTERFACE)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_INSCRIBER))
+                .save(c, EPP.id("ex_inscriber"));
+
+        // Extended Charger
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_CHARGER)
+                .pattern("FAF")
+                .pattern("AEA")
+                .pattern("FAF")
+                .define('F', AEBlocks.CHARGER)
+                .define('A', AEParts.STORAGE_BUS)
+                .define('E', ConventionTags.INTERFACE)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_CHARGER))
+                .save(c, EPP.id("ex_charger"));
+
     }
 }
