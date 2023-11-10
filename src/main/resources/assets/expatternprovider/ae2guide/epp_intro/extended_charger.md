@@ -1,7 +1,7 @@
 ---
 navigation:
     parent: epp_intro/epp_intro-index.md
-    title: Extended Inscriber
+    title: Extended Charger
     icon: expatternprovider:ex_charger
 categories:
 - extended devices
