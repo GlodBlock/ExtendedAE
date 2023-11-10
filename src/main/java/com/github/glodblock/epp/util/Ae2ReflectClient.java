@@ -2,6 +2,7 @@ package com.github.glodblock.epp.util;
 
 import appeng.recipes.handlers.InscriberRecipe;
 import com.github.glodblock.epp.xmod.LoadList;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -16,6 +17,7 @@ public class Ae2ReflectClient {
 
     private static final Field fLevelRenderer_renderBuffers;
     private static final Field fInscriberRecipeCategory_RECIPE_TYPE;
+    private static final Field fInscriberRecipeCategory_ID;
     private static final Constructor<?> cFakeForwardingServerLevel;
 
     static {
@@ -32,6 +34,14 @@ public class Ae2ReflectClient {
                 );
             } else {
                 fInscriberRecipeCategory_RECIPE_TYPE = null;
+            }
+            if (LoadList.REI) {
+                fInscriberRecipeCategory_ID = Ae2Reflect.reflectField(
+                        Class.forName("appeng.integration.modules.rei.InscriberRecipeCategory"),
+                        "ID"
+                );
+            } else {
+                fInscriberRecipeCategory_ID = null;
             }
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
@@ -53,6 +63,10 @@ public class Ae2ReflectClient {
 
     public static RecipeType<InscriberRecipe> getInscribeRecipe() {
         return Ae2Reflect.readField(null, fInscriberRecipeCategory_RECIPE_TYPE);
+    }
+
+    public static CategoryIdentifier<?> getInscribeRecipeREI() {
+        return Ae2Reflect.readField(null, fInscriberRecipeCategory_ID);
     }
 
 }

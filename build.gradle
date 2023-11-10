@@ -80,7 +80,15 @@ repositories {
         content {
             includeGroup 'appeng'
         }
-}
+    }
+    maven {
+        url "https://maven.shedaniel.me/"
+        content {
+            includeGroup "me.shedaniel"
+            includeGroup "me.shedaniel.cloth"
+            includeGroup "dev.architectury"
+        }
+    }
 }
 
 dependencies {
@@ -90,7 +98,12 @@ dependencies {
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.12")
     runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4777696")
-    implementation fg.deobf("curse.maven:jade-324717:4768593")
+    compileOnly fg.deobf("curse.maven:jade-324717:4768593")
+    // rei
+    compileOnly "me.shedaniel.cloth:basic-math:0.6.1"
+    compileOnly fg.deobf("dev.architectury:architectury-forge:7.0.66")
+    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:12.0.622")
+    compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
