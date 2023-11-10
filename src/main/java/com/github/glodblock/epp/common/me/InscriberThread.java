@@ -51,9 +51,9 @@ public class InscriberThread {
     public InscriberThread(@NotNull TileExInscriber host) {
         this.host = host;
         IAEItemFilter baseFilter = new BaseFilter();
-        this.topItemHandler = new AppEngInternalInventory(this.host, 1, 64, baseFilter);
-        this.bottomItemHandler = new AppEngInternalInventory(this.host, 1, 64, baseFilter);
-        this.sideItemHandler = new AppEngInternalInventory(this.host, 2, 64, baseFilter);
+        this.topItemHandler = new AppEngInternalInventory(this.host, 1, 4, baseFilter);
+        this.bottomItemHandler = new AppEngInternalInventory(this.host, 1, 4, baseFilter);
+        this.sideItemHandler = new AppEngInternalInventory(this.host, 2, 4, baseFilter);
         this.inv = new CombinedInternalInventory(this.topItemHandler, this.bottomItemHandler, this.sideItemHandler);
         this.lastStacks = new IdentityHashMap<>(Map.of(
                 topItemHandler, ItemStack.EMPTY, bottomItemHandler, ItemStack.EMPTY,
