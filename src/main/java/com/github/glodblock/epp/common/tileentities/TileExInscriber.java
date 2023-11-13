@@ -56,6 +56,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     private final InternalInventory sideItemHandlerAll;
     private final InternalInventory combinedItemHandlerExternAll;
     private final InternalInventory invAll;
+    private int stackSize = 1;
     private int animationIndex = -1;
 
     public TileExInscriber(BlockPos pos, BlockState blockState) {
@@ -180,6 +181,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
         super.saveAdditional(data);
         this.upgrades.writeToNBT(data, "upgrades");
         this.configManager.writeToNBT(data);
+        data.putInt("stacksize", this.stackSize);
     }
 
     @Override
@@ -187,9 +189,24 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
         super.loadTag(data);
         this.upgrades.readFromNBT(data, "upgrades");
         this.configManager.readFromNBT(data);
+        this.stackSize = data.contains("stacksize") ? data.getInt("stacksize") : 1;
         for (var t : this.threads) {
             t.init();
+            t.setStackSize(this.stackSize);
         }
+    }
+
+    public int getInvStackSize() {
+        return this.stackSize;
+    }
+
+    public void setInvStackSize(int size) {
+        this.stackSize = size;
+        for (var t : this.threads) {
+            t.setStackSize(size);
+        }
+        this.markForUpdate();
+        this.saveChanges();
     }
 
     @Override
@@ -198,6 +215,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
         for (var t : this.threads) {
             t.readFromStream(data);
         }
+        this.stackSize = data.readVarInt();
         return c;
     }
 
@@ -207,6 +225,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
         for (var t : this.threads) {
             t.writeToStream(data);
         }
+        data.writeVarInt(this.stackSize);
     }
 
     @Override

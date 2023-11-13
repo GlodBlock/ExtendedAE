@@ -17,6 +17,8 @@ item_ids:
 
 Extended Inscriber is an advanced <ItemLink id="ae2:inscriber" />.
 
-It can run 4 inscribing jobs at the same time and the max stack size of its inventory is 4, which allows it to parallelize 
-easily.
+It can run 4 inscribing jobs at the same time.
 
+There is button that allows you to change the max stack size of its inventory like the normal one.
+
+It is suggested to set stack size to 1 when using it with <ItemLink id="ae2:pattern_provider" /> to avoid possible issues.

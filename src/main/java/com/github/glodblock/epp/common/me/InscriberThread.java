@@ -51,9 +51,9 @@ public class InscriberThread {
     public InscriberThread(@NotNull TileExInscriber host) {
         this.host = host;
         IAEItemFilter baseFilter = new BaseFilter();
-        this.topItemHandler = new AppEngInternalInventory(this.host, 1, 4, baseFilter);
-        this.bottomItemHandler = new AppEngInternalInventory(this.host, 1, 4, baseFilter);
-        this.sideItemHandler = new AppEngInternalInventory(this.host, 2, 4, baseFilter);
+        this.topItemHandler = new AppEngInternalInventory(this.host, 1, 1, baseFilter);
+        this.bottomItemHandler = new AppEngInternalInventory(this.host, 1, 1, baseFilter);
+        this.sideItemHandler = new AppEngInternalInventory(this.host, 2, 1, baseFilter);
         this.inv = new CombinedInternalInventory(this.topItemHandler, this.bottomItemHandler, this.sideItemHandler);
         this.lastStacks = new IdentityHashMap<>(Map.of(
                 topItemHandler, ItemStack.EMPTY, bottomItemHandler, ItemStack.EMPTY,
@@ -70,6 +70,12 @@ public class InscriberThread {
         this.lastStacks.put(topItemHandler, topItemHandler.getStackInSlot(0));
         this.lastStacks.put(bottomItemHandler, bottomItemHandler.getStackInSlot(0));
         this.lastStacks.put(sideItemHandler, sideItemHandler.getStackInSlot(0));
+    }
+
+    public void setStackSize(int size) {
+        this.topItemHandler.setMaxStackSize(0, size);
+        this.bottomItemHandler.setMaxStackSize(0, size);
+        this.sideItemHandler.setMaxStackSize(0, size);
     }
 
     public boolean containsInv(InternalInventory inv) {

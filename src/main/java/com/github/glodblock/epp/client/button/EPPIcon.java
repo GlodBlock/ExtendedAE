@@ -12,5 +12,7 @@ public class EPPIcon {
     public static final Blitter HIGHLIGHT_BLOCK = Blitter.texture(TEXTURE, 64, 64).src(16, 0, 16, 16);
     public static final Blitter LEFT = Blitter.texture(TEXTURE, 64, 64).src(32, 0, 16, 16);
     public static final Blitter RIGHT = Blitter.texture(TEXTURE, 64, 64).src(48, 0, 16, 16);
+    public static final Blitter STACK_1 = Blitter.texture(TEXTURE, 64, 64).src(0, 16, 16, 16);
+    public static final Blitter STACK_64 = Blitter.texture(TEXTURE, 64, 64).src(16, 16, 16, 16);
 
 }

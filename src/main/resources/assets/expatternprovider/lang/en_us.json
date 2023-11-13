@@ -53,6 +53,8 @@
   "gui.expatternprovider.ex_inscriber.next": "Next Inscription Job",
   "gui.expatternprovider.ex_inscriber.pre": "Previous Inscription Job",
   "gui.expatternprovider.ex_inscriber.number": "Inscription Job %s",
+  "gui.expatternprovider.ex_inscriber.unstackable": "Stack to 1",
+  "gui.expatternprovider.ex_inscriber.stackable": "Stack to 64",
   "gui.expatternprovider.pattern_modifier": "Pattern Modifier (%s)",
   "gui.expatternprovider.pattern_modifier.multiply": "Multiply Mode",
   "gui.expatternprovider.pattern_modifier.clone": "Clone Mode",

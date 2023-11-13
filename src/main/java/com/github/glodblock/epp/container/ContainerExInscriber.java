@@ -84,6 +84,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
     public ContainerExInscriber(int id, Inventory ip, TileExInscriber host) {
         super(TYPE, id, ip, host);
         this.actions.put("show", o -> showPage());
+        this.actions.put("stack", o -> this.getHost().setInvStackSize((int) o[0]));
         for (int x = 0; x < TileExInscriber.MAX_THREAD; x ++) {
             var inv = host.getIndexInventory(x);
 
@@ -122,6 +123,10 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
             ((AppEngSlot) this.outputs[x]).setSlotEnabled(x == this.page);
         }
         this.getHost().markForUpdate();
+    }
+
+    public int getStackMode() {
+        return this.getHost().getInvStackSize() == 1 ? 0 : 1;
     }
 
     @Override

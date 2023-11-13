@@ -9,6 +9,7 @@ import appeng.client.gui.widgets.ProgressBar;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import com.github.glodblock.epp.client.button.ActionEPPButton;
+import com.github.glodblock.epp.client.button.CycleEPPButton;
 import com.github.glodblock.epp.client.button.EPPIcon;
 import com.github.glodblock.epp.common.tileentities.TileExInscriber;
 import com.github.glodblock.epp.container.ContainerExInscriber;
@@ -43,6 +44,11 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         this.pre = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), EPPIcon.LEFT);
         this.next.setMessage(Component.translatable("gui.expatternprovider.ex_inscriber.next"));
         this.pre.setMessage(Component.translatable("gui.expatternprovider.ex_inscriber.pre"));
+        CycleEPPButton stackChange = new CycleEPPButton();
+        stackChange.addActionPair(EPPIcon.STACK_1, Component.translatable("gui.expatternprovider.ex_inscriber.unstackable"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("stack", 64)));
+        stackChange.addActionPair(EPPIcon.STACK_64, Component.translatable("gui.expatternprovider.ex_inscriber.stackable"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("stack", 1)));
+        stackChange.setState(this.menu.getStackMode());
+        addToLeftToolbar(stackChange);
         addToLeftToolbar(this.next);
         addToLeftToolbar(this.pre);
     }
@@ -65,7 +71,6 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         if (this.menu.page == TileExInscriber.MAX_THREAD - 1) {
             this.next.setVisibility(false);
         }
-
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("show"));
         this.menu.showPage();
     }
