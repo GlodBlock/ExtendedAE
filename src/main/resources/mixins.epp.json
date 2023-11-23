@@ -1,5 +1,5 @@
 {
-  "required": true,
+  "required": false,
   "package": "com.github.glodblock.epp.mixins",
   "refmap": "mixins.epp.refmap.json",
   "compatibilityLevel": "JAVA_17",
@@ -9,7 +9,10 @@
   "client": [
     "MixinAbstractContainerScreen",
     "MixinClearPatternAccessTerminalPacket",
-    "MixinPatternAccessTerminalPacket"
+    "MixinPatternAccessTerminalPacket",
+    "mek.MixinRenderMechanicalPipe",
+    "mek.MixinRenderPressurizedTube",
+    "mek.MixinRenderUniversalCable"
   ],
   "server": []
 }

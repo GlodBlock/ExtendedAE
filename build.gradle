@@ -75,11 +75,8 @@ repositories {
         url = "https://dvs1.progwml6.com/files/maven/"
     }
     maven {
-        name "Modmaven"
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
+        name = "Modmaven"
+        url = "https://modmaven.dev/"
     }
     maven {
         url "https://maven.shedaniel.me/"
@@ -104,6 +101,7 @@ dependencies {
     compileOnly fg.deobf("dev.architectury:architectury-forge:7.0.66")
     compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:12.0.622")
     compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
+    compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.5.19")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
