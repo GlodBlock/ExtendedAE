@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "ae2:glass_cable"
+    },
+    "E": {
+      "item": "ae2:capacity_card"
+    },
+    "F": {
+      "tag": "c:fluix_dusts"
+    }
+  },
+  "pattern": [
+    "C C",
+    "FEF"
+  ],
+  "result": {
+    "item": "extendedae:drive_upgrade"
+  },
+  "show_notification": true
+}

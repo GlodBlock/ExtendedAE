@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:capacity_card"
+    },
+    {
+      "item": "ae2:capacity_card"
+    },
+    {
+      "item": "ae2:logic_processor"
+    }
+  ],
+  "result": {
+    "item": "extendedae:interface_upgrade"
+  }
+}

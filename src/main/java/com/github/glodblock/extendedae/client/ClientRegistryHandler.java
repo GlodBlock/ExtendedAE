@@ -1,0 +1,106 @@
+package com.github.glodblock.extendedae.client;
+
+import appeng.api.util.AEColor;
+import appeng.client.render.SimpleModelLoader;
+import appeng.client.render.StaticItemColor;
+import appeng.init.client.InitItemColors;
+import appeng.init.client.InitScreens;
+import com.github.glodblock.extendedae.EAE;
+import com.github.glodblock.extendedae.client.gui.GuiExDrive;
+import com.github.glodblock.extendedae.client.gui.GuiExIOBus;
+import com.github.glodblock.extendedae.client.gui.GuiExInscriber;
+import com.github.glodblock.extendedae.client.gui.GuiExInterface;
+import com.github.glodblock.extendedae.client.gui.GuiExMolecularAssembler;
+import com.github.glodblock.extendedae.client.gui.GuiExPatternProvider;
+import com.github.glodblock.extendedae.client.gui.GuiExPatternTerminal;
+import com.github.glodblock.extendedae.client.gui.GuiIngredientBuffer;
+import com.github.glodblock.extendedae.client.gui.GuiPatternModifier;
+import com.github.glodblock.extendedae.client.gui.GuiWirelessConnector;
+import com.github.glodblock.extendedae.client.gui.pattern.GuiCraftingPattern;
+import com.github.glodblock.extendedae.client.gui.pattern.GuiProcessingPattern;
+import com.github.glodblock.extendedae.client.gui.pattern.GuiSmithingTablePattern;
+import com.github.glodblock.extendedae.client.gui.pattern.GuiStonecuttingPattern;
+import com.github.glodblock.extendedae.client.model.ExDriveModel;
+import com.github.glodblock.extendedae.client.render.tesr.ExChargerTESR;
+import com.github.glodblock.extendedae.client.render.tesr.ExDriveTESR;
+import com.github.glodblock.extendedae.client.render.tesr.ExInscriberTESR;
+import com.github.glodblock.extendedae.client.render.tesr.ExMolecularAssemblerTESR;
+import com.github.glodblock.extendedae.client.render.tesr.IngredientBufferTESR;
+import com.github.glodblock.extendedae.common.EAEItemAndBlock;
+import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
+import com.github.glodblock.extendedae.common.tileentities.TileExDrive;
+import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
+import com.github.glodblock.extendedae.common.tileentities.TileExMolecularAssembler;
+import com.github.glodblock.extendedae.common.tileentities.TileIngredientBuffer;
+import com.github.glodblock.extendedae.container.ContainerExDrive;
+import com.github.glodblock.extendedae.container.ContainerExIOBus;
+import com.github.glodblock.extendedae.container.ContainerExInscriber;
+import com.github.glodblock.extendedae.container.ContainerExInterface;
+import com.github.glodblock.extendedae.container.ContainerExMolecularAssembler;
+import com.github.glodblock.extendedae.container.ContainerExPatternProvider;
+import com.github.glodblock.extendedae.container.ContainerExPatternTerminal;
+import com.github.glodblock.extendedae.container.ContainerIngredientBuffer;
+import com.github.glodblock.extendedae.container.ContainerPatternModifier;
+import com.github.glodblock.extendedae.container.ContainerWirelessConnector;
+import com.github.glodblock.extendedae.container.pattern.ContainerCraftingPattern;
+import com.github.glodblock.extendedae.container.pattern.ContainerProcessingPattern;
+import com.github.glodblock.extendedae.container.pattern.ContainerSmithingTablePattern;
+import com.github.glodblock.extendedae.container.pattern.ContainerStonecuttingPattern;
+import com.github.glodblock.extendedae.util.FCUtil;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+
+public class ClientRegistryHandler {
+
+    public static final ClientRegistryHandler INSTANCE = new ClientRegistryHandler();
+
+    public void init() {
+        this.registerGui();
+        this.registerModels();
+        this.registerColorHandler();
+        this.setBlockRenderLayer();
+    }
+
+    private void registerGui() {
+        InitScreens.register(ContainerExPatternProvider.TYPE, GuiExPatternProvider::new, "/screens/ex_pattern_provider.json");
+        InitScreens.register(ContainerExInterface.TYPE, GuiExInterface::new, "/screens/ex_interface.json");
+        InitScreens.register(ContainerExIOBus.EXPORT_TYPE, GuiExIOBus::new, "/screens/ex_export_bus.json");
+        InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
+        InitScreens.register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
+        InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
+        InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
+        InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
+        InitScreens.register(ContainerPatternModifier.TYPE, GuiPatternModifier::new, "/screens/pattern_modifier.json");
+        InitScreens.register(ContainerExMolecularAssembler.TYPE, GuiExMolecularAssembler::new, "/screens/ex_molecular_assembler.json");
+        InitScreens.register(ContainerExInscriber.TYPE, GuiExInscriber::new, "/screens/ex_inscriber.json");
+        MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
+        MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
+        MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
+        MenuScreens.register(ContainerSmithingTablePattern.TYPE, GuiSmithingTablePattern::new);
+    }
+
+    private void registerColorHandler() {
+        InitItemColors.Registry color = ColorProviderRegistry.ITEM::register;
+        color.register(new StaticItemColor(AEColor.TRANSPARENT), EAEItemAndBlock.EX_PATTERN_TERMINAL);
+    }
+
+    private void registerModels() {
+        BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new SimpleModelLoader<>(EAE.id("block/ex_drive"), ExDriveModel::new));
+    }
+
+    private void setBlockRenderLayer() {
+        BlockRenderLayerMap.INSTANCE.putBlock(EAEItemAndBlock.EX_DRIVE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(EAEItemAndBlock.EX_ASSEMBLER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(EAEItemAndBlock.INGREDIENT_BUFFER, RenderType.cutout());
+    }
+
+}

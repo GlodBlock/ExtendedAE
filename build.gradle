@@ -1,0 +1,152 @@
+plugins {
+	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	maven {
+		url = "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+	maven {
+		url = "https://maven.blamejared.com/"
+	}
+	maven {
+		url = "https://dvs1.progwml6.com/files/maven/"
+	}
+	maven {
+		name "Modmaven"
+		url "https://modmaven.dev/"
+		content {
+			includeGroup 'appeng'
+		}
+	}
+	maven {
+		url "https://maven.shedaniel.me/"
+		content {
+			includeGroup "me.shedaniel"
+			includeGroup "me.shedaniel.cloth"
+			includeGroup "dev.architectury"
+		}
+	}
+	maven {
+		url "https://maven.parchmentmc.net/"
+		content {
+			includeGroup "org.parchmentmc.data"
+		}
+	}
+	maven { url = "https://maven.quiltmc.org/repository/release" }
+	maven { url = "https://maven.fabricmc.net/" }
+	maven { url = "https://maven.minecraftforge.net/" }
+}
+
+loom {
+	runs {
+		datagen {
+			inherit client
+			name "Data Generation"
+			vmArg "-Dfabric-api.datagen"
+			vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+			vmArg "-Dfabric-api.datagen.modid=extendedae"
+			runDir "build/datagen"
+		}
+	}
+	accessWidenerPath = file("src/main/resources/extendedae.accesswidener")
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.05@zip")
+	}
+	modImplementation "appeng:appliedenergistics2-fabric:15.0.15"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "mezz.jei:jei-${project.jei_minecraft_version}-fabric:${project.jei_version}"
+	modImplementation "teamreborn:energy:${project.tr_energy_version}"
+	modImplementation "curse.maven:configuration-444699:${project.config_fid}"
+	include "curse.maven:configuration-444699:${project.config_fid}"
+
+	modCompileOnly("curse.maven:jade-324717:4586193") {
+		exclude group: "net.fabricmc"
+		exclude group: "net.fabricmc.fabric-api"
+	}
+	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:12.0.622") {
+		exclude group: "net.fabricmc"
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "org.yaml"
+		exclude group: "blue.endless"
+	}
+	modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:12.0.622") {
+		exclude group: "net.fabricmc"
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "org.yaml"
+		exclude group: "blue.endless"
+	}
+
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDirs += [
+					'src/main/generated'
+			]
+		}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}

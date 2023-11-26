@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "ae2:export_bus"
+    },
+    "S": {
+      "item": "ae2:speed_card"
+    },
+    "Z": {
+      "item": "ae2:calculation_processor"
+    }
+  },
+  "pattern": [
+    "PS",
+    "SZ"
+  ],
+  "result": {
+    "item": "extendedae:ex_export_bus_part"
+  },
+  "show_notification": true
+}

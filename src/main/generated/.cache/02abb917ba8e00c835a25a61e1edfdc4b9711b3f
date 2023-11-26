@@ -1,0 +1,9 @@
+// 1.20.1	2023-11-25T22:44:42.862863	ExtendedAE/Block Loot Tables
+0b50701ba31a8ea8ff15daee590d6e79e6b046df data\extendedae\loot_tables\blocks\ex_interface.json
+24c71b6a63dc2d0f59ff270a57f1726c1f552acc data\extendedae\loot_tables\blocks\wireless_connect.json
+06cd161fbcac8e01ff365488afdb95c66ddbcf26 data\extendedae\loot_tables\blocks\ex_drive.json
+b88aff654e2b52c77d3a954b0a40624ba2b7d94c data\extendedae\loot_tables\blocks\ex_pattern_provider.json
+a8be6e15007892fb1d04f553bfc9a8808c8618d1 data\extendedae\loot_tables\blocks\ingredient_buffer.json
+8f0fa3bfe64e61ee7cab0a7ae899257059883a87 data\extendedae\loot_tables\blocks\ex_charger.json
+19d659c4dcf2e05ad65727c6e22a95e22e1887b6 data\extendedae\loot_tables\blocks\ex_molecular_assembler.json
+fd265728b9c9f3e5a720fa211cad991ed8e0566f data\extendedae\loot_tables\blocks\ex_inscriber.json

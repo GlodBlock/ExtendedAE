@@ -1,0 +1,51 @@
+{
+	"schemaVersion": 1,
+	"id": "extendedae",
+	"version": "${version}",
+	"name": "ExtendedAE",
+	"description": "Add some QoL extended contents for AE2",
+	"authors": [
+		"GlodBlock"
+	],
+	"contact": {
+		"homepage": "https://github.com/GlodBlock",
+		"sources": "https://github.com/GlodBlock/ExPatternProvider",
+		"issues": "https://github.com/GlodBlock/ExPatternProvider/issues"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/extendedae/logo.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.github.glodblock.extendedae.EAEServer"
+		],
+		"client": [
+			"com.github.glodblock.extendedae.EAEClient"
+		],
+		"fabric-datagen": [
+			"com.github.glodblock.extendedae.datagen.EAEDataGen"
+		],
+		"rei_client": [
+			"com.github.glodblock.extendedae.xmod.rei.REIPlugin"
+		],
+		"jei_mod_plugin": [
+			"com.github.glodblock.extendedae.xmod.jei.JEIPlugin"
+		],
+		"jade": [
+			"com.github.glodblock.extendedae.xmod.jade.JadePlugin"
+		]
+	},
+	"mixins": [
+		"extendedae.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"accessWidener": "extendedae.accesswidener",
+	"suggests": {
+		"another-mod": "*"
+	}
+}

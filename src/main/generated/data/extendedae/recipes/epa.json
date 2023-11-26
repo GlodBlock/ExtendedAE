@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ae2:logic_processor"
+    },
+    "L": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "P": {
+      "item": "ae2:pattern_access_terminal"
+    }
+  },
+  "pattern": [
+    " L ",
+    "CPC",
+    " C "
+  ],
+  "result": {
+    "item": "extendedae:ex_pattern_access_part"
+  },
+  "show_notification": true
+}

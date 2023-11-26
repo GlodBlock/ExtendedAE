@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ae2:capacity_card"
+    },
+    "P": {
+      "tag": "ae2:interface"
+    },
+    "Z": {
+      "item": "ae2:logic_processor"
+    }
+  },
+  "pattern": [
+    "PC",
+    "CZ"
+  ],
+  "result": {
+    "item": "extendedae:ex_interface"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "com.github.glodblock.extendedae.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinInitUpgrades",
+    "MixinPatternAccessTermMenu"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "MixinAbstractContainerScreen",
+    "MixinClearPatternAccessTerminalPacket",
+    "MixinPatternAccessTerminalPacket"
+  ]
+}

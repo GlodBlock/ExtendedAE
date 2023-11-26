@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ae2:molecular_assembler"
+    },
+    "E": {
+      "item": "ae2:engineering_processor"
+    },
+    "F": {
+      "tag": "c:fluix"
+    }
+  },
+  "pattern": [
+    "FAF",
+    "AEA",
+    "FAF"
+  ],
+  "result": {
+    "item": "extendedae:ex_molecular_assembler"
+  },
+  "show_notification": true
+}
