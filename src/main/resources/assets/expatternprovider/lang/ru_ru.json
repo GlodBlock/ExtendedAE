@@ -74,7 +74,7 @@
   "gui.wireless_connect.status.unconnected.desc": "Этот беспроводной соединитель не был связан с соединителем.",
   "gui.wireless_connect.status.working": "Работает",
   "gui.wireless_connect.status.working.desc": "Все работает нормально.",
-  "gui.wireless_connect.status.remote_error": "Ошибка удаления",
+  "gui.wireless_connect.status.remote_error": "Ошибка связи",
   "gui.wireless_connect.status.remote_error.desc": "Привязанный соединитель отсутствует или перестал работать.",
   "gui.wireless_connect.status.no_power": "Нет энергии",
   "gui.wireless_connect.status.no_power.desc": "Беспроводному соединителю необходимо больше энергии.",
