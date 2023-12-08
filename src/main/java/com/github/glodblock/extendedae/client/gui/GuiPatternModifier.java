@@ -8,7 +8,7 @@ import appeng.core.AppEng;
 import com.github.glodblock.extendedae.client.button.ActionEPPButton;
 import com.github.glodblock.extendedae.client.button.EPPIcon;
 import com.github.glodblock.extendedae.container.ContainerPatternModifier;
-import com.github.glodblock.extendedae.network.EPPNetworkHandler;
+import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.CGenericPacket;
 import com.github.glodblock.extendedae.network.packet.CUpdatePage;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,40 +28,40 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
 
     public GuiPatternModifier(ContainerPatternModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        ActionEPPButton changeMode = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 3)), Icon.SCHEDULING_DEFAULT.getBlitter());
-        this.clone = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clone")), EPPIcon.RIGHT);
+        ActionEPPButton changeMode = new ActionEPPButton(b -> EAENetworkServer.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 3)), Icon.SCHEDULING_DEFAULT.getBlitter());
+        this.clone = new ActionEPPButton(b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("clone")), EPPIcon.RIGHT);
         changeMode.setMessage(Component.translatable("gui.extendedae.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.extendedae.pattern_modifier.clone.desc"));
         addToLeftToolbar(changeMode);
-        this.replace = Button.builder(Component.translatable("gui.extendedae.pattern_modifier.replace_button"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("replace")))
+        this.replace = Button.builder(Component.translatable("gui.extendedae.pattern_modifier.replace_button"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("replace")))
                 .size(46, 18)
                 .build();
         this.multiBtns.add(
-                Button.builder(Component.literal("x2"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 2, false)))
+                Button.builder(Component.literal("x2"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("modify", 2, false)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", 2)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("x10"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 10, false)))
+                Button.builder(Component.literal("x10"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("modify", 10, false)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", 10)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("÷2"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 2, true)))
+                Button.builder(Component.literal("÷2"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("modify", 2, true)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", 2)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("÷10"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("modify", 10, true)))
+                Button.builder(Component.literal("÷10"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("modify", 10, true)))
                         .size(23, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", 10)))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.translatable("gui.extendedae.pattern_modifier.clear"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clear")))
+                Button.builder(Component.translatable("gui.extendedae.pattern_modifier.clear"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("clear")))
                         .size(36, 18)
                         .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.clear.desc")))
                         .build()
@@ -117,7 +117,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
-        EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("show"));
+        EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("show"));
         this.menu.showPage();
         if (this.menu.page == 0) {
             this.clone.setVisibility(false);

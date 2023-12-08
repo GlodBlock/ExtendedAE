@@ -3,6 +3,7 @@ package com.github.glodblock.extendedae;
 import com.github.glodblock.extendedae.client.ClientRegistryHandler;
 import com.github.glodblock.extendedae.client.hotkey.PatternHotKey;
 import com.github.glodblock.extendedae.client.render.HighlightRender;
+import com.github.glodblock.extendedae.network.EAENetworkClient;
 import net.fabricmc.api.ClientModInitializer;
 
 public class EAEClient extends EAE implements ClientModInitializer {
@@ -12,6 +13,7 @@ public class EAEClient extends EAE implements ClientModInitializer {
         ClientRegistryHandler.INSTANCE.init();
         PatternHotKey.init();
         HighlightRender.install();
+        new EAENetworkClient();
     }
 
 }

@@ -13,7 +13,7 @@ import com.github.glodblock.extendedae.client.button.CycleEPPButton;
 import com.github.glodblock.extendedae.client.button.EPPIcon;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
 import com.github.glodblock.extendedae.container.ContainerExInscriber;
-import com.github.glodblock.extendedae.network.EPPNetworkHandler;
+import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.CGenericPacket;
 import com.github.glodblock.extendedae.network.packet.CUpdatePage;
 import net.minecraft.client.gui.GuiGraphics;
@@ -40,13 +40,13 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         this.autoExportBtn = new ServerSettingToggleButton<>(Settings.AUTO_EXPORT, YesNo.NO);
         this.addToLeftToolbar(autoExportBtn);
 
-        this.next = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExInscriber.MAX_THREAD)), EPPIcon.RIGHT);
-        this.pre = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), EPPIcon.LEFT);
+        this.next = new ActionEPPButton(b -> EAENetworkServer.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExInscriber.MAX_THREAD)), EPPIcon.RIGHT);
+        this.pre = new ActionEPPButton(b -> EAENetworkServer.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), EPPIcon.LEFT);
         this.next.setMessage(Component.translatable("gui.extendedae.ex_inscriber.next"));
         this.pre.setMessage(Component.translatable("gui.extendedae.ex_inscriber.pre"));
         CycleEPPButton stackChange = new CycleEPPButton();
-        stackChange.addActionPair(EPPIcon.STACK_1, Component.translatable("gui.extendedae.ex_inscriber.unstackable"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("stack", 64)));
-        stackChange.addActionPair(EPPIcon.STACK_64, Component.translatable("gui.extendedae.ex_inscriber.stackable"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("stack", 1)));
+        stackChange.addActionPair(EPPIcon.STACK_1, Component.translatable("gui.extendedae.ex_inscriber.unstackable"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("stack", 64)));
+        stackChange.addActionPair(EPPIcon.STACK_64, Component.translatable("gui.extendedae.ex_inscriber.stackable"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("stack", 1)));
         stackChange.setState(this.menu.getStackMode());
         addToLeftToolbar(stackChange);
         addToLeftToolbar(this.next);
@@ -71,7 +71,7 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         if (this.menu.page == TileExInscriber.MAX_THREAD - 1) {
             this.next.setVisibility(false);
         }
-        EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("show"));
+        EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("show"));
         this.menu.showPage();
     }
 

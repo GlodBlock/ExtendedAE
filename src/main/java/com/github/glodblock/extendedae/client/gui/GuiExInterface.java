@@ -15,7 +15,7 @@ import com.github.glodblock.extendedae.client.ExSemantics;
 import com.github.glodblock.extendedae.client.button.ActionEPPButton;
 import com.github.glodblock.extendedae.client.button.EPPIcon;
 import com.github.glodblock.extendedae.container.ContainerExInterface;
-import com.github.glodblock.extendedae.network.EPPNetworkHandler;
+import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.CUpdatePage;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -37,8 +37,8 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
         super(menu, playerInventory, title, style);
 
         this.fuzzyMode = new ServerSettingToggleButton<>(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
-        this.nextPage = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), EPPIcon.RIGHT);
-        this.prePage = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), EPPIcon.LEFT);
+        this.nextPage = new ActionEPPButton(b -> EAENetworkServer.INSTANCE.sendToServer(new CUpdatePage(1)), EPPIcon.RIGHT);
+        this.prePage = new ActionEPPButton(b -> EAENetworkServer.INSTANCE.sendToServer(new CUpdatePage(0)), EPPIcon.LEFT);
         this.nextPage.setMessage(Component.translatable("gui.extendedae.ex_interface.next"));
         this.prePage.setMessage(Component.translatable("gui.extendedae.ex_interface.pre"));
         addToLeftToolbar(this.fuzzyMode);

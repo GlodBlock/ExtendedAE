@@ -29,7 +29,7 @@ import appeng.core.sync.network.TargetPoint;
 import appeng.util.inv.CombinedInternalInventory;
 import com.github.glodblock.extendedae.common.EAEItemAndBlock;
 import com.github.glodblock.extendedae.common.me.CraftingThread;
-import com.github.glodblock.extendedae.network.EPPNetworkHandler;
+import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.SAssemblerAnimation;
 import com.github.glodblock.extendedae.util.FCUtil;
 import net.fabricmc.api.EnvType;
@@ -212,7 +212,7 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
         var item = AEItemKey.of(firstJob);
         if (item != null) {
             final TargetPoint where = new TargetPoint(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 32, this.level);
-            EPPNetworkHandler.INSTANCE.sendToAllAround(new SAssemblerAnimation(this.worldPosition, (byte) 50, item), where);
+            EAENetworkServer.INSTANCE.sendToAllAround(new SAssemblerAnimation(this.worldPosition, (byte) 50, item), where);
         }
         return rate;
     }

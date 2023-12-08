@@ -5,7 +5,7 @@ import appeng.helpers.patternprovider.PatternContainer;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.parts.AEBasePart;
-import com.github.glodblock.extendedae.network.EPPNetworkHandler;
+import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.SExPatternInfo;
 import com.github.glodblock.extendedae.util.Ae2Reflect;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,9 +40,9 @@ public abstract class MixinPatternAccessTermMenu extends AEBaseMenu {
                 var id = Ae2Reflect.getContainerID(inv);
                 var container = Ae2Reflect.getContainer(inv);
                 if (container instanceof BlockEntity te) {
-                    EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, te.getBlockPos(), Objects.requireNonNull(te.getLevel()).dimension()), player);
+                    EAENetworkServer.INSTANCE.sendTo(new SExPatternInfo(id, te.getBlockPos(), Objects.requireNonNull(te.getLevel()).dimension()), player);
                 } else if (container instanceof AEBasePart part) {
-                    EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, part.getBlockEntity().getBlockPos(), Objects.requireNonNull(part.getLevel()).dimension()), player);
+                    EAENetworkServer.INSTANCE.sendTo(new SExPatternInfo(id, part.getBlockEntity().getBlockPos(), Objects.requireNonNull(part.getLevel()).dimension()), player);
                 }
             }
         }

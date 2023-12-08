@@ -2,7 +2,7 @@ package com.github.glodblock.extendedae.client.hotkey;
 
 import appeng.crafting.pattern.EncodedPatternItem;
 import com.github.glodblock.extendedae.EAE;
-import com.github.glodblock.extendedae.network.EPPNetworkHandler;
+import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.CPatternKey;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -34,7 +34,7 @@ public class PatternHotKey {
         if (isKeyBound() && stack.getItem() instanceof EncodedPatternItem) {
             tooltip.add(1, Component.translatable("pattern.tooltip", VIEW_PATTERN.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY));
             if (pressed()) {
-                EPPNetworkHandler.INSTANCE.sendToServer(new CPatternKey(stack));
+                EAENetworkServer.INSTANCE.sendToServer(new CPatternKey(stack));
             }
         }
     }
