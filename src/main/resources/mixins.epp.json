@@ -1,5 +1,6 @@
 {
   "required": false,
+  "minVersion": "0.8",
   "package": "com.github.glodblock.epp.mixins",
   "refmap": "mixins.epp.refmap.json",
   "compatibilityLevel": "JAVA_17",
