@@ -94,6 +94,8 @@
   "chat.wireless.highlight": "The wireless connector is now highlighted at: %s, Dim: %s",
   "chat.pattern_view.error": "This pattern isn't supported by ExtendedAE, please report it to Github: %s",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus",
+  "jade.wireless_connector.color": "Color: %s",
+  "config.jade.plugin_expatternprovider.jade_wireless": "ME Wireless Connector Color",
   "key.epp.viewpattern": "View Pattern",
   "key.epp.category": "Extended AE"
 }
