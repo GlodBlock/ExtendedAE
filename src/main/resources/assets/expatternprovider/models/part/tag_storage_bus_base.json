@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:part/storage_bus_base",
+  "textures": {
+    "front": "expatternprovider:part/tag_storage_bus_base"
+  }
+}

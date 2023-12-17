@@ -11,6 +11,7 @@ import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
 import appeng.items.AEBaseItem;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.inventory.InfinityCellInventory;
@@ -20,6 +21,7 @@ import com.github.glodblock.epp.common.parts.PartExImportBus;
 import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
+import com.github.glodblock.epp.common.parts.PartTagStorageBus;
 import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.ContainerExDrive;
 import com.github.glodblock.epp.container.ContainerExIOBus;
@@ -30,6 +32,7 @@ import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExPatternTerminal;
 import com.github.glodblock.epp.container.ContainerIngredientBuffer;
 import com.github.glodblock.epp.container.ContainerPatternModifier;
+import com.github.glodblock.epp.container.ContainerTagStorageBus;
 import com.github.glodblock.epp.container.ContainerWirelessConnector;
 import com.github.glodblock.epp.container.pattern.ContainerCraftingPattern;
 import com.github.glodblock.epp.container.pattern.ContainerProcessingPattern;
@@ -129,6 +132,7 @@ public class RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("pattern_modifier"), ContainerPatternModifier.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_molecular_assembler"), ContainerExMolecularAssembler.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_inscriber"), ContainerExInscriber.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_storage_bus"), ContainerTagStorageBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -182,6 +186,9 @@ public class RegistryHandler {
         Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_CONNECTOR, 4, "gui.expatternprovider.wireless_connect");
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_ASSEMBLER, 5, "gui.expatternprovider.ex_molecular_assembler");
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_INSCRIBER, 4, "gui.expatternprovider.ex_inscriber");
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_INSCRIBER, 4, "gui.expatternprovider.ex_inscriber");
+        Upgrades.add(AEItems.INVERTER_CARD, EPPItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
+        Upgrades.add(AEItems.VOID_CARD, EPPItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
     }
 
     private void registerStorageHandler() {
@@ -195,6 +202,7 @@ public class RegistryHandler {
         PartModels.registerModels(PartExExportBus.MODELS);
         PartModels.registerModels(PartExImportBus.MODELS);
         PartModels.registerModels(PartExPatternAccessTerminal.MODELS);
+        PartModels.registerModels(PartTagStorageBus.MODEL_BASE);
     }
 
     private void initPackageList() {

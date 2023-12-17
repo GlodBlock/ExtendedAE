@@ -272,5 +272,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.EX_CHARGER))
                 .save(c, EPP.id("ex_charger"));
 
+        // Tag Storage Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.TAG_STORAGE_BUS)
+                .pattern(" L ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('L', AEItems.LOGIC_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.STORAGE_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EPPItemAndBlock.TAG_STORAGE_BUS))
+                .save(c, EPP.id("tag_storage_bus"));
+
     }
 }

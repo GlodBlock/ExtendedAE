@@ -1,0 +1,58 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json", "common/player_inventory.json"],
+  "background": {
+    "texture": "guis/tag_storage_bus.png",
+    "srcRect": [0, 0, 176, 172]
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.expatternprovider.tag_storage_bus"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    },
+    "tooltip_01": {
+      "text": {
+        "translate": "gui.expatternprovider.tag_storage_bus.desc.01"
+      },
+      "position": {
+        "left": 8,
+        "top": 42
+      }
+    },
+    "tooltip_02": {
+      "text": {
+        "translate": "gui.expatternprovider.tag_storage_bus.desc.02"
+      },
+      "position": {
+        "left": 8,
+        "top": 52
+      }
+    },
+    "tooltip_03": {
+      "text": {
+        "translate": "gui.expatternprovider.tag_storage_bus.desc.03"
+      },
+      "position": {
+        "left": 8,
+        "top": 62
+      }
+    }
+  },
+  "widgets": {
+    "filter_input": {
+      "left": 8,
+      "top": 27,
+      "width": 120,
+      "height": 12
+    },
+    "openPriority": {
+      "left": 154,
+      "top": 0
+    }
+  }
+}

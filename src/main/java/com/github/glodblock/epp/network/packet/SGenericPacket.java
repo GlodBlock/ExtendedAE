@@ -2,24 +2,25 @@ package com.github.glodblock.epp.network.packet;
 
 import com.github.glodblock.epp.network.packet.sync.IActionHolder;
 import com.github.glodblock.epp.network.packet.sync.ParaSerializer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-public class CGenericPacket implements IMessage<CGenericPacket> {
+public class SGenericPacket implements IMessage<SGenericPacket> {
 
     private String name;
     private Object[] paras;
 
-    public CGenericPacket() {
+    public SGenericPacket() {
         // NO-OP
     }
 
-    public CGenericPacket(String name) {
+    public SGenericPacket(String name) {
         this.name = name;
         this.paras = null;
     }
 
-    public CGenericPacket(String name, Object... paras) {
+    public SGenericPacket(String name, Object... paras) {
         this.name = name;
         this.paras = paras;
     }
@@ -47,7 +48,7 @@ public class CGenericPacket implements IMessage<CGenericPacket> {
 
     @Override
     public void onMessage(Player player) {
-        if (player.containerMenu instanceof IActionHolder ah) {
+        if (Minecraft.getInstance().screen instanceof IActionHolder ah) {
             var fun = ah.getActionMap().get(this.name);
             if (fun != null) {
                 fun.accept(this.paras);
@@ -56,13 +57,13 @@ public class CGenericPacket implements IMessage<CGenericPacket> {
     }
 
     @Override
-    public Class<CGenericPacket> getPacketClass() {
-        return CGenericPacket.class;
+    public Class<SGenericPacket> getPacketClass() {
+        return SGenericPacket.class;
     }
 
     @Override
     public boolean isClient() {
-        return false;
+        return true;
     }
 
 }
