@@ -24,6 +24,7 @@ import com.github.glodblock.epp.common.parts.PartExImportBus;
 import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
+import com.github.glodblock.epp.common.parts.PartTagExportBus;
 import com.github.glodblock.epp.common.parts.PartTagStorageBus;
 import com.github.glodblock.epp.common.tileentities.TileExCharger;
 import com.github.glodblock.epp.common.tileentities.TileExDrive;
@@ -61,6 +62,7 @@ public class EPPItemAndBlock {
     public static BlockExInscriber EX_INSCRIBER;
     public static BlockExCharger EX_CHARGER;
     public static PartItem<PartTagStorageBus> TAG_STORAGE_BUS;
+    public static PartItem<PartTagExportBus> TAG_EXPORT_BUS;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -87,6 +89,7 @@ public class EPPItemAndBlock {
         EX_INSCRIBER = new BlockExInscriber();
         EX_CHARGER = new BlockExCharger();
         TAG_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartTagStorageBus.class, PartTagStorageBus::new);
+        TAG_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartTagExportBus.class, PartTagExportBus::new);
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -111,6 +114,7 @@ public class EPPItemAndBlock {
         regHandler.item("drive_upgrade", DRIVE_UPGRADE);
         regHandler.item("pattern_modifier", PATTERN_MODIFIER);
         regHandler.item("tag_storage_bus", TAG_STORAGE_BUS);
+        regHandler.item("tag_export_bus", TAG_EXPORT_BUS);
     }
 
 }

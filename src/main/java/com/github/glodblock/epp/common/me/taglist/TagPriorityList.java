@@ -1,16 +1,11 @@
 package com.github.glodblock.epp.common.me.taglist;
 
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.util.prioritylist.IPartitionList;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,7 +15,6 @@ public class TagPriorityList implements IPartitionList {
 
     private final Set<TagKey<?>> tagKeys;
     private final String tagExp;
-    private final List<AEKey> typeList = ImmutableList.of(AEItemKey.of(Blocks.COBBLESTONE), AEFluidKey.of(Fluids.WATER));
     private final LoadingCache<AEKey, Boolean> accept = CacheBuilder.newBuilder().build(
             new CacheLoader<>() {
                 @Override
@@ -52,7 +46,7 @@ public class TagPriorityList implements IPartitionList {
 
     @Override
     public Iterable<AEKey> getItems() {
-        return typeList;
+        return List.of();
     }
 
 }

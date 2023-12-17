@@ -21,6 +21,7 @@ import com.github.glodblock.epp.common.parts.PartExImportBus;
 import com.github.glodblock.epp.common.parts.PartExInterface;
 import com.github.glodblock.epp.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.epp.common.parts.PartExPatternProvider;
+import com.github.glodblock.epp.common.parts.PartTagExportBus;
 import com.github.glodblock.epp.common.parts.PartTagStorageBus;
 import com.github.glodblock.epp.config.EPPConfig;
 import com.github.glodblock.epp.container.ContainerExDrive;
@@ -32,6 +33,7 @@ import com.github.glodblock.epp.container.ContainerExPatternProvider;
 import com.github.glodblock.epp.container.ContainerExPatternTerminal;
 import com.github.glodblock.epp.container.ContainerIngredientBuffer;
 import com.github.glodblock.epp.container.ContainerPatternModifier;
+import com.github.glodblock.epp.container.ContainerTagExportBus;
 import com.github.glodblock.epp.container.ContainerTagStorageBus;
 import com.github.glodblock.epp.container.ContainerWirelessConnector;
 import com.github.glodblock.epp.container.pattern.ContainerCraftingPattern;
@@ -133,6 +135,7 @@ public class RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_molecular_assembler"), ContainerExMolecularAssembler.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_inscriber"), ContainerExInscriber.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_storage_bus"), ContainerTagStorageBus.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_export_bus"), ContainerTagExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -175,7 +178,6 @@ public class RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.EX_EXPORT_BUS, 5, "group.ex_io_bus_part");
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_EXPORT_BUS, 4, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.INVERTER_CARD, EPPItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.EX_IMPORT_BUS, 5, "group.ex_io_bus_part");
@@ -189,6 +191,8 @@ public class RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_INSCRIBER, 4, "gui.expatternprovider.ex_inscriber");
         Upgrades.add(AEItems.INVERTER_CARD, EPPItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
         Upgrades.add(AEItems.VOID_CARD, EPPItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
+        Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.TAG_EXPORT_BUS, 1, "item.expatternprovider.tag_export_bus");
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.TAG_EXPORT_BUS, 4, "item.expatternprovider.tag_export_bus");
     }
 
     private void registerStorageHandler() {
@@ -203,6 +207,7 @@ public class RegistryHandler {
         PartModels.registerModels(PartExImportBus.MODELS);
         PartModels.registerModels(PartExPatternAccessTerminal.MODELS);
         PartModels.registerModels(PartTagStorageBus.MODEL_BASE);
+        PartModels.registerModels(PartTagExportBus.MODEL_BASE);
     }
 
     private void initPackageList() {
