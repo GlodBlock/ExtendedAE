@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.tags.TagKey;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Set;
 public final class TagExpParser {
 
     private final static ReferenceSet<TagKey<?>> TAGS = new ReferenceOpenHashSet<>();
+    private static boolean isInit = false;
     private final static LoadingCache<String, Set<TagKey<?>>> CACHE = CacheBuilder.newBuilder().build(
             new CacheLoader<>() {
                 @Override
@@ -28,8 +30,9 @@ public final class TagExpParser {
             }
     );
 
-    public static void recordTag(TagKey<?> tag) {
-        TAGS.add(tag);
+    private static void init() {
+        TAGS.addAll(ForgeRegistries.ITEMS.tags().getTagNames().toList());
+        TAGS.addAll(ForgeRegistries.FLUIDS.tags().getTagNames().toList());
     }
 
     public static Set<TagKey<?>> getMatchingOre(String oreExp) {
@@ -39,6 +42,10 @@ public final class TagExpParser {
     private static Set<TagKey<?>> getMatchingOreInternal(String oreExp) {
         if (oreExp.isEmpty()) {
             return Set.of();
+        }
+        if (!isInit) {
+            init();
+            isInit = true;
         }
         Set<TagKey<?>> matchingIds = new HashSet<>();
         List<MatchRule> rulesList = parseExpression(oreExp);
