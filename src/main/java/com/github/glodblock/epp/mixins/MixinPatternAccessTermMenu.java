@@ -42,7 +42,7 @@ public abstract class MixinPatternAccessTermMenu extends AEBaseMenu {
                 if (container instanceof BlockEntity te) {
                     EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, te.getBlockPos(), Objects.requireNonNull(te.getLevel()).dimension()), player);
                 } else if (container instanceof AEBasePart part) {
-                    EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, part.getBlockEntity().getBlockPos(), Objects.requireNonNull(part.getLevel()).dimension()), player);
+                    EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, part.getBlockEntity().getBlockPos(), Objects.requireNonNull(part.getLevel()).dimension(), part.getSide()), player);
                 }
             }
         }

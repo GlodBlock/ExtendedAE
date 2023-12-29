@@ -33,6 +33,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -406,8 +407,8 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
         this.refreshList();
     }
 
-    public void postTileInfo(long id, BlockPos pos, ResourceKey<Level> dim) {
-        this.infoMap.put(id, new PatternProviderInfo(pos, dim));
+    public void postTileInfo(long id, BlockPos pos, ResourceKey<Level> dim, Direction face) {
+        this.infoMap.put(id, new PatternProviderInfo(pos, face, dim));
         this.refreshList();
     }
 
@@ -525,7 +526,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
                     var info = this.infoMap.get(container.getServerId());
                     var btn = new HighlightButton();
                     btn.setMultiplier(this.playerToBlockDis(info.pos()));
-                    btn.setTarget(info.pos, info.playerWorld);
+                    btn.setTarget(info.pos, info.face, info.playerWorld);
                     btn.setSuccessJob(() -> {
                         if (this.getPlayer() != null && info.pos != null && info.playerWorld != null) {
                             this.getPlayer().displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", info.pos.toShortString(), info.playerWorld.location().getPath()), false);
@@ -663,7 +664,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
     record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
     }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable ResourceKey<Level> playerWorld) {
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> playerWorld) {
 
     }
 }
