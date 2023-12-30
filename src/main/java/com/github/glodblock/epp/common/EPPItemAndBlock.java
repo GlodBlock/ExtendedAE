@@ -7,6 +7,7 @@ import com.github.glodblock.epp.common.blocks.BlockExInscriber;
 import com.github.glodblock.epp.common.blocks.BlockExInterface;
 import com.github.glodblock.epp.common.blocks.BlockExMolecularAssembler;
 import com.github.glodblock.epp.common.blocks.BlockExPatternProvider;
+import com.github.glodblock.epp.common.blocks.BlockFishbig;
 import com.github.glodblock.epp.common.blocks.BlockIngredientBuffer;
 import com.github.glodblock.epp.common.blocks.BlockWirelessConnector;
 import com.github.glodblock.epp.common.items.InfinityCell;
@@ -63,6 +64,7 @@ public class EPPItemAndBlock {
     public static BlockExCharger EX_CHARGER;
     public static PartItem<PartTagStorageBus> TAG_STORAGE_BUS;
     public static PartItem<PartTagExportBus> TAG_EXPORT_BUS;
+    public static BlockFishbig FISHBIG;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -90,6 +92,7 @@ public class EPPItemAndBlock {
         EX_CHARGER = new BlockExCharger();
         TAG_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartTagStorageBus.class, PartTagStorageBus::new);
         TAG_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartTagExportBus.class, PartTagExportBus::new);
+        FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -98,6 +101,7 @@ public class EPPItemAndBlock {
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
+        regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);

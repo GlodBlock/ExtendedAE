@@ -298,5 +298,15 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.TAG_EXPORT_BUS))
                 .save(c, EPP.id("tag_export_bus"));
 
+        // Fishbig
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)
+                .pattern("FFF")
+                .pattern("F F")
+                .pattern("FFF")
+                .define('F', Items.PUFFERFISH)
+                .unlockedBy(C, has(EPPItemAndBlock.FISHBIG))
+                .save(c, EPP.id("fishbig"));
+
     }
 }
