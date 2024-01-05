@@ -1,6 +1,7 @@
 package com.github.glodblock.epp.network.packet;
 
 import com.github.glodblock.epp.api.IPage;
+import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 

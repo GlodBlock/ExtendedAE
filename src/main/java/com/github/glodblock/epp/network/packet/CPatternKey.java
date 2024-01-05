@@ -9,6 +9,7 @@ import com.github.glodblock.epp.container.pattern.ContainerProcessingPattern;
 import com.github.glodblock.epp.container.pattern.ContainerSmithingTablePattern;
 import com.github.glodblock.epp.container.pattern.ContainerStonecuttingPattern;
 import com.github.glodblock.epp.container.pattern.PatternGuiHandler;
+import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

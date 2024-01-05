@@ -66,7 +66,7 @@ public class EPPItemAndBlock {
     public static PartItem<PartTagExportBus> TAG_EXPORT_BUS;
     public static BlockFishbig FISHBIG;
 
-    public static void init(RegistryHandler regHandler) {
+    public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
         EX_PATTERN_PROVIDER_PART = new PartItem<>(new Item.Properties(), PartExPatternProvider.class, PartExPatternProvider::new);
         EX_INTERFACE = new BlockExInterface();

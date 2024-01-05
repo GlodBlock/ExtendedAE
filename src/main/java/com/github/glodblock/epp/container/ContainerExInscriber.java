@@ -20,8 +20,8 @@ import appeng.menu.slot.OutputSlot;
 import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.client.ExSemantics;
 import com.github.glodblock.epp.common.tileentities.TileExInscriber;
-import com.github.glodblock.epp.network.packet.sync.IActionHolder;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -42,7 +42,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
     private final Slot[] middles = new Slot[4];
     private final Slot[] bottoms = new Slot[4];
     private final Slot[] outputs = new Slot[4];
-    private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Consumer<Paras>> actions = createHolder();
     private static final SlotSemantic[] TOP = {
             SlotSemantics.INSCRIBER_PLATE_TOP,
             ExSemantics.EX_1,
@@ -84,7 +84,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
     public ContainerExInscriber(int id, Inventory ip, TileExInscriber host) {
         super(TYPE, id, ip, host);
         this.actions.put("show", o -> showPage());
-        this.actions.put("stack", o -> this.getHost().setInvStackSize((int) o[0]));
+        this.actions.put("stack", o -> this.getHost().setInvStackSize(o.get(0)));
         for (int x = 0; x < TileExInscriber.MAX_THREAD; x ++) {
             var inv = host.getIndexInventory(x);
 
@@ -207,7 +207,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
 
     @NotNull
     @Override
-    public Map<String, Consumer<Object[]>> getActionMap() {
+    public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
 }

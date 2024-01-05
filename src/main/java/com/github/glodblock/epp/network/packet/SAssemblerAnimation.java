@@ -3,6 +3,7 @@ package com.github.glodblock.epp.network.packet;
 import appeng.api.stacks.AEKey;
 import appeng.client.render.crafting.AssemblerAnimationStatus;
 import com.github.glodblock.epp.common.tileentities.TileExMolecularAssembler;
+import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;

@@ -27,7 +27,7 @@ import appeng.util.inv.CombinedInternalInventory;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.Crankable;
 import com.github.glodblock.epp.common.me.InscriberThread;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -60,7 +60,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     private int animationIndex = -1;
 
     public TileExInscriber(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileExInscriber.class, TileExInscriber::new, EPPItemAndBlock.EX_INSCRIBER), pos, blockState);
+        super(GlodUtil.getTileType(TileExInscriber.class, TileExInscriber::new, EPPItemAndBlock.EX_INSCRIBER), pos, blockState);
         this.getMainNode()
                 .setIdlePowerUsage(0)
                 .addService(IGridTickable.class, this);

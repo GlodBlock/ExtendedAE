@@ -90,6 +90,7 @@ repositories {
 
 dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
+    implementation fg.deobf("curse.maven:glodium-957920:5006780")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.12")

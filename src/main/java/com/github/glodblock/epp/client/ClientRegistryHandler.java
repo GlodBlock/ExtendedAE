@@ -21,7 +21,6 @@ import com.github.glodblock.epp.client.gui.pattern.GuiSmithingTablePattern;
 import com.github.glodblock.epp.client.gui.pattern.GuiStonecuttingPattern;
 import com.github.glodblock.epp.client.hotkey.PatternHotKey;
 import com.github.glodblock.epp.client.model.ExDriveModel;
-import com.github.glodblock.epp.client.render.HighlightRender;
 import com.github.glodblock.epp.client.render.tesr.ExChargerTESR;
 import com.github.glodblock.epp.client.render.tesr.ExDriveTESR;
 import com.github.glodblock.epp.client.render.tesr.ExInscriberTESR;
@@ -49,14 +48,12 @@ import com.github.glodblock.epp.container.pattern.ContainerCraftingPattern;
 import com.github.glodblock.epp.container.pattern.ContainerProcessingPattern;
 import com.github.glodblock.epp.container.pattern.ContainerSmithingTablePattern;
 import com.github.glodblock.epp.container.pattern.ContainerStonecuttingPattern;
-import com.github.glodblock.epp.util.Ae2ReflectClient;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ClientRegistryHandler {
@@ -94,19 +91,13 @@ public class ClientRegistryHandler {
         color.register(new StaticItemColor(AEColor.TRANSPARENT), EPPItemAndBlock.EX_PATTERN_TERMINAL);
     }
 
-    public void registerHighLightRender(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-            HighlightRender.INSTANCE.tick(event.getPoseStack(), Ae2ReflectClient.getRenderBuffers(event.getLevelRenderer()).outlineBufferSource(), event.getCamera());
-        }
-    }
-
     @SubscribeEvent
     public void registerModels(ModelEvent.RegisterGeometryLoaders event) {
-        BlockEntityRenderers.register(FCUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
-        BlockEntityRenderers.register(FCUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
-        BlockEntityRenderers.register(FCUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
-        BlockEntityRenderers.register(FCUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
-        BlockEntityRenderers.register(FCUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
     }
 

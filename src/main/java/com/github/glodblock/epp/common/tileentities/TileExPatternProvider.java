@@ -8,7 +8,7 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocator;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.ContainerExPatternProvider;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileExPatternProvider extends PatternProviderBlockEntity {
 
     public TileExPatternProvider(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileExPatternProvider.class, TileExPatternProvider::new, EPPItemAndBlock.EX_PATTERN_PROVIDER), pos, blockState);
+        super(GlodUtil.getTileType(TileExPatternProvider.class, TileExPatternProvider::new, EPPItemAndBlock.EX_PATTERN_PROVIDER), pos, blockState);
     }
 
     @Override

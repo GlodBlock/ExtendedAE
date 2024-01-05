@@ -10,9 +10,9 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import com.github.glodblock.epp.common.parts.PartTagStorageBus;
 import com.github.glodblock.epp.network.EPPNetworkHandler;
-import com.github.glodblock.epp.network.packet.SGenericPacket;
-import com.github.glodblock.epp.network.packet.sync.IActionHolder;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import com.glodblock.github.glodium.network.packet.SGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> implements IActionHolder {
 
-    private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Consumer<Paras>> actions = createHolder();
     private static final String ACTION_PARTITION = "partition";
 
     public static final MenuType<ContainerTagStorageBus> TYPE = MenuTypeBuilder
@@ -52,7 +52,7 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
         super(TYPE, id, ip, te);
 
         registerClientAction(ACTION_PARTITION, this::partition);
-        this.actions.put("set", o -> this.setExp((String) o[0]));
+        this.actions.put("set", o -> this.setExp(o.get(0)));
         this.actions.put("update", o -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EPPNetworkHandler.INSTANCE.sendTo(new SGenericPacket("init", this.exp), sp);
@@ -131,7 +131,7 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
 
     @NotNull
     @Override
-    public Map<String, Consumer<Object[]>> getActionMap() {
+    public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
 }

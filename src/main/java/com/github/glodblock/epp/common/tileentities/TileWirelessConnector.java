@@ -15,7 +15,7 @@ import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.FreqGenerator;
 import com.github.glodblock.epp.common.me.wireless.WirelessConnect;
 import com.github.glodblock.epp.util.CacheHolder;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +42,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     private AEColor color = AEColor.TRANSPARENT;
 
     public TileWirelessConnector(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EPPItemAndBlock.WIRELESS_CONNECTOR), pos, blockState);
+        super(GlodUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EPPItemAndBlock.WIRELESS_CONNECTOR), pos, blockState);
         this.getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
         this.getMainNode().setFlags(GridFlags.DENSE_CAPACITY);
         this.powerUse = 1.0;

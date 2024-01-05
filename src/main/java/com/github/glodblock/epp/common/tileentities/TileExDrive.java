@@ -9,7 +9,7 @@ import appeng.menu.locator.MenuLocators;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.ContainerExDrive;
 import com.github.glodblock.epp.util.Ae2Reflect;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileExDrive extends DriveBlockEntity {
 
     public TileExDrive(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileExDrive.class, TileExDrive::new, EPPItemAndBlock.EX_DRIVE), pos, blockState);
+        super(GlodUtil.getTileType(TileExDrive.class, TileExDrive::new, EPPItemAndBlock.EX_DRIVE), pos, blockState);
     }
 
     @Override

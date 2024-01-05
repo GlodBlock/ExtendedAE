@@ -10,8 +10,9 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
 import com.github.glodblock.epp.container.ContainerTagExportBus;
 import com.github.glodblock.epp.network.EPPNetworkHandler;
-import com.github.glodblock.epp.network.packet.CGenericPacket;
-import com.github.glodblock.epp.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.CGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 
 public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> implements IActionHolder {
 
-    private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Consumer<Paras>> actions = createHolder();
     private final SettingToggleButton<RedstoneMode> redstoneMode;
     private final AETextField filterInputs;
     private static final Pattern ORE_DICTIONARY_FILTER = Pattern.compile("[0-9a-zA-Z* &|^!():/_]*");
@@ -38,13 +39,13 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip"));
         this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s)));
-        this.actions.put("init", o -> this.filterInputs.setValue((String) o[0]));
+        this.actions.put("init", o -> this.filterInputs.setValue(o.get(0)));
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
     }
 
     @NotNull
     @Override
-    public Map<String, Consumer<Object[]>> getActionMap() {
+    public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
 

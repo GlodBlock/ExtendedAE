@@ -1,6 +1,7 @@
 package com.github.glodblock.epp.network.packet;
 
 import com.github.glodblock.epp.client.gui.GuiExPatternTerminal;
+import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

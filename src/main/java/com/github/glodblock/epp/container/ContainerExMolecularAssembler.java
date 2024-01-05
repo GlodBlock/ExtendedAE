@@ -15,7 +15,8 @@ import appeng.menu.slot.OutputSlot;
 import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.client.ExSemantics;
 import com.github.glodblock.epp.common.tileentities.TileExMolecularAssembler;
-import com.github.glodblock.epp.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -34,7 +35,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
             .build("ex_molecular_assembler");
 
     private static final int MAX_CRAFT_PROGRESS = 100;
-    private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Consumer<Paras>> actions = createHolder();
     private static final SlotSemantic[] SLOT = new SlotSemantic[] {
             ExSemantics.EX_1,
             ExSemantics.EX_2,
@@ -112,7 +113,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
 
     @NotNull
     @Override
-    public Map<String, Consumer<Object[]>> getActionMap() {
+    public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
 

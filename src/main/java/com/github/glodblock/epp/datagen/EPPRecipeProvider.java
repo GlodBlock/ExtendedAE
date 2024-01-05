@@ -8,6 +8,7 @@ import appeng.core.definitions.AEParts;
 import appeng.datagen.providers.tags.ConventionTags;
 import com.github.glodblock.epp.EPP;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
+import com.glodblock.github.glodium.datagen.NBTRecipeBuilder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.DyeColor;

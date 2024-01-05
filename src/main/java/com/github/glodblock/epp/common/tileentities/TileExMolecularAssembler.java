@@ -26,13 +26,13 @@ import appeng.client.render.crafting.AssemblerAnimationStatus;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
-import appeng.core.sync.network.TargetPoint;
 import appeng.util.inv.CombinedInternalInventory;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.CraftingThread;
 import com.github.glodblock.epp.network.EPPNetworkHandler;
 import com.github.glodblock.epp.network.packet.SAssemblerAnimation;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.network.TargetPoint;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -66,7 +66,7 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
     private AssemblerAnimationStatus animationStatus;
 
     public TileExMolecularAssembler(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileExMolecularAssembler.class, TileExMolecularAssembler::new, EPPItemAndBlock.EX_ASSEMBLER), pos, blockState);
+        super(GlodUtil.getTileType(TileExMolecularAssembler.class, TileExMolecularAssembler::new, EPPItemAndBlock.EX_ASSEMBLER), pos, blockState);
         this.getMainNode().setIdlePowerUsage(0.0).addService(IGridTickable.class, this);
         this.upgrades = UpgradeInventories.forMachine(EPPItemAndBlock.EX_ASSEMBLER, this.getUpgradeSlots(), this::saveChanges);
         var invs = new ArrayList<InternalInventory>();

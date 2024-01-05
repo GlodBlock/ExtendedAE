@@ -15,9 +15,9 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.localization.GuiText;
 import com.github.glodblock.epp.container.ContainerTagStorageBus;
 import com.github.glodblock.epp.network.EPPNetworkHandler;
-import com.github.glodblock.epp.network.packet.CGenericPacket;
-import com.github.glodblock.epp.network.packet.sync.IActionHolder;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import com.glodblock.github.glodium.network.packet.CGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 
 public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> implements IActionHolder {
 
-    private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Consumer<Paras>> actions = createHolder();
     private final SettingToggleButton<AccessRestriction> rwMode;
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
@@ -51,7 +51,7 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip"));
         this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s)));
-        this.actions.put("init", o -> this.filterInputs.setValue((String) o[0]));
+        this.actions.put("init", o -> this.filterInputs.setValue(o.get(0)));
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
     }
 
@@ -101,7 +101,7 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
 
     @NotNull
     @Override
-    public Map<String, Consumer<Object[]>> getActionMap() {
+    public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
 }

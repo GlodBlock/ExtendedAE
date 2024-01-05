@@ -6,7 +6,7 @@ import appeng.blockentity.AEBaseBlockEntity;
 import appeng.capabilities.Capabilities;
 import appeng.helpers.externalstorage.GenericStackInv;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +42,7 @@ public class TileIngredientBuffer extends AEBaseBlockEntity {
     }
 
     public TileIngredientBuffer(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileIngredientBuffer.class, TileIngredientBuffer::new, EPPItemAndBlock.INGREDIENT_BUFFER), pos, blockState);
+        super(GlodUtil.getTileType(TileIngredientBuffer.class, TileIngredientBuffer::new, EPPItemAndBlock.INGREDIENT_BUFFER), pos, blockState);
         this.buffer = new GenericStackInv(this::setChanged, 36);
         this.buffer.setCapacity(AEKeyType.fluids(), 64000);
         if (MEK != null) {

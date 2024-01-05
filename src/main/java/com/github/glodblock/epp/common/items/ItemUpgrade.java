@@ -5,6 +5,7 @@ import appeng.api.parts.IPartItem;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.parts.AEBasePart;
 import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -38,7 +39,7 @@ public abstract class ItemUpgrade extends Item {
             if (this.BLOCK_MAP.containsKey(tClazz)) {
                 var replaceInfo = this.BLOCK_MAP.get(tClazz);
                 var state = replaceInfo.block.getStateForPlacement(ctx);
-                var tileType = FCUtil.getTileType(replaceInfo.tile);
+                var tileType = GlodUtil.getTileType(replaceInfo.tile);
                 assert state != null;
                 var te = tileType.create(pos, state);
                 FCUtil.replaceTile(world, pos, tile, te, state);

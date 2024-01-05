@@ -8,7 +8,7 @@ import appeng.menu.locator.MenuLocator;
 import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.container.ContainerExInterface;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class TileExInterface extends InterfaceBlockEntity implements IPage {
     private int page = 0;
 
     public TileExInterface(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileExInterface.class, TileExInterface::new, EPPItemAndBlock.EX_INTERFACE), pos, blockState);
+        super(GlodUtil.getTileType(TileExInterface.class, TileExInterface::new, EPPItemAndBlock.EX_INTERFACE), pos, blockState);
     }
 
     @Override

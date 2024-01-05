@@ -1,7 +1,7 @@
 package com.github.glodblock.epp.client.button;
 
 import appeng.client.gui.style.Blitter;
-import com.github.glodblock.epp.client.render.HighlightHandler;
+import com.github.glodblock.epp.client.render.EAEHighlightHandler;
 import com.github.glodblock.epp.util.FCClientUtil;
 import com.github.glodblock.epp.util.FCUtil;
 import net.minecraft.client.gui.components.Button;
@@ -47,7 +47,7 @@ public class HighlightButton extends EPPButton {
         if (btn instanceof HighlightButton hb) {
             if (hb.dim != null && hb.pos != null) {
                 if (hb.face == null) {
-                    HighlightHandler.highlight(hb.pos, hb.dim, System.currentTimeMillis() + (long) (600 * hb.multiplier));
+                    EAEHighlightHandler.highlight(hb.pos, hb.dim, System.currentTimeMillis() + (long) (600 * hb.multiplier));
                 } else {
                     var origin = getNorthPartModel().move(hb.pos);
                     var center = new AABB(hb.pos).getCenter();
@@ -58,7 +58,7 @@ public class HighlightButton extends EPPButton {
                         case UP -> origin = FCClientUtil.rotor(origin, center, Direction.Axis.X, (float) (-Math.PI / 2));
                         case DOWN -> origin = FCClientUtil.rotor(origin, center, Direction.Axis.X, (float) (Math.PI / 2));
                     }
-                    HighlightHandler.highlight(hb.pos, hb.face, hb.dim, System.currentTimeMillis() + (long) (600 * hb.multiplier), origin);
+                    EAEHighlightHandler.highlight(hb.pos, hb.face, hb.dim, System.currentTimeMillis() + (long) (600 * hb.multiplier), origin);
                 }
                 if (hb.successJob != null) {
                     hb.successJob.run();

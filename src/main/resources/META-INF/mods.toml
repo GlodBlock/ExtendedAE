@@ -30,3 +30,9 @@ description='''${mod_description}'''
     versionRange="[15.0.12,)"
     ordering="AFTER"
     side="BOTH"
+[[dependencies.expatternprovider]]
+    modId="glodium"
+    mandatory=true
+    versionRange="[1.0,)"
+    ordering="AFTER"
+    side="BOTH"

@@ -25,7 +25,7 @@ import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.github.glodblock.epp.common.EPPItemAndBlock;
 import com.github.glodblock.epp.common.me.Crankable;
-import com.github.glodblock.epp.util.FCUtil;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,7 +52,7 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, MAX_THREAD, 1, new ChargerInvFilter(this));
 
     public TileExCharger(BlockPos pos, BlockState blockState) {
-        super(FCUtil.getTileType(TileExCharger.class, TileExCharger::new, EPPItemAndBlock.EX_CHARGER), pos, blockState);
+        super(GlodUtil.getTileType(TileExCharger.class, TileExCharger::new, EPPItemAndBlock.EX_CHARGER), pos, blockState);
         this.getMainNode()
                 .setFlags()
                 .setIdlePowerUsage(0)

@@ -17,7 +17,8 @@ import com.github.glodblock.epp.api.IPage;
 import com.github.glodblock.epp.client.ExSemantics;
 import com.github.glodblock.epp.client.gui.widget.SingleFakeSlot;
 import com.github.glodblock.epp.common.inventory.PatternModifierInventory;
-import com.github.glodblock.epp.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
 
 public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActionHolder {
 
-    private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Consumer<Paras>> actions = createHolder();
     public static final MenuType<ContainerPatternModifier> TYPE = MenuTypeBuilder
             .create(ContainerPatternModifier::new, PatternModifierInventory.class)
             .build("pattern_modifier");
@@ -61,7 +62,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
         this.actions.put("clear", o -> clear());
         this.actions.put("clone", o -> clonePattern());
-        this.actions.put("modify", o -> modify((int) o[0], (boolean) o[1]));
+        this.actions.put("modify", o -> modify(o.get(0), o.get(1)));
         this.actions.put("replace", o -> replace());
         this.actions.put("show", o -> showPage());
     }
@@ -227,7 +228,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
 
     @NotNull
     @Override
-    public Map<String, Consumer<Object[]>> getActionMap() {
+    public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
 }
