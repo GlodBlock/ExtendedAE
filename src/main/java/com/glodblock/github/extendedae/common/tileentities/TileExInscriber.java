@@ -21,8 +21,11 @@ import appeng.api.util.IConfigurableObject;
 import appeng.blockentity.grid.AENetworkPowerBlockEntity;
 import appeng.capabilities.Capabilities;
 import appeng.core.settings.TickRates;
+import appeng.items.tools.MemoryCardItem;
 import appeng.recipes.handlers.InscriberRecipe;
 import appeng.util.ConfigManager;
+import appeng.util.CustomNameUtil;
+import appeng.util.SettingsFrom;
 import appeng.util.inv.CombinedInternalInventory;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.me.Crankable;
@@ -33,6 +36,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -193,6 +197,22 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
         for (var t : this.threads) {
             t.init();
             t.setStackSize(this.stackSize);
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, CompoundTag output, @Nullable Player player) {
+        super.exportSettings(mode, output, player);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            output.putInt("max_size", this.stackSize);
+        }
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        if (input.contains("max_size", 3)) {
+            this.setInvStackSize(input.getInt("max_size"));
         }
     }
 
