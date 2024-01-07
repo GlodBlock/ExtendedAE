@@ -10,7 +10,6 @@ import com.glodblock.github.extendedae.xmod.LoadList;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -21,7 +20,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 
 @Mod(ExtendedAE.MODID)
@@ -61,10 +59,6 @@ public class ExtendedAE {
 
     public static ResourceLocation id(String id) {
         return new ResourceLocation(MODID, id);
-    }
-
-    public MinecraftServer getServer() {
-        return ServerLifecycleHooks.getCurrentServer();
     }
 
 }

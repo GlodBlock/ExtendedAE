@@ -51,6 +51,10 @@ public class EPPConfig {
                     "ae2:drive"
             ), o -> true);
 
+    private static final ForgeConfigSpec.BooleanValue INSCRIBER_RENDER = BUILDER
+            .comment("Disable Extended Inscriber's item render, it only works in client side.")
+            .define("disableItemRender", false);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     private static boolean checkRL(Object o) {
@@ -63,6 +67,7 @@ public class EPPConfig {
     public static List<Fluid> infCellFluid;
     public static List<Item> infCellItem;
     public static List<ResourceLocation> tapeWhitelist;
+    public static boolean disableInscriberRender;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -81,6 +86,7 @@ public class EPPConfig {
                     }
                 });
         tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::new).collect(Collectors.toList());
+        disableInscriberRender = INSCRIBER_RENDER.get();
     }
 
 }

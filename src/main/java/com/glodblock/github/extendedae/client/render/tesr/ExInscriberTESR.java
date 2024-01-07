@@ -5,6 +5,7 @@ import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipe;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -143,50 +144,52 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
 
         // render items.
 
-        for (int x = 0; x < TileExInscriber.MAX_THREAD; x ++) {
-            var inv = blockEntity.getIndexInventory(x);
+        if (!EPPConfig.disableInscriberRender) {
+            for (int x = 0; x < TileExInscriber.MAX_THREAD; x ++) {
+                var inv = blockEntity.getIndexInventory(x);
 
-            int items = 0;
-            if (!inv.getStackInSlot(0).isEmpty()) {
-                items++;
-            }
-            if (!inv.getStackInSlot(1).isEmpty()) {
-                items++;
-            }
-            if (!inv.getStackInSlot(2).isEmpty()) {
-                items++;
-            }
-
-            boolean renderPresses;
-            if (relativeProgress > 1.0f || items == 0) {
-                // When crafting completes, don't render the presses (they may have been
-                // consumed, see below)
-                renderPresses = false;
-
-                ItemStack is = inv.getStackInSlot(3);
-
-                if (is.isEmpty()) {
-                    final InscriberRecipe ir = blockEntity.getTask(x);
-                    if (ir != null) {
-                        // The "PRESS" type will consume the presses, so they should not render after
-                        // completing
-                        // the press animation
-                        renderPresses = ir.getProcessType() == InscriberProcessType.INSCRIBE;
-                        is = ir.getResultItem().copy();
-                    }
+                int items = 0;
+                if (!inv.getStackInSlot(0).isEmpty()) {
+                    items++;
                 }
-                this.renderItem(ms, is, x, 0.0f, buffers, combinedLight, combinedOverlay, blockEntity.getLevel());
-            } else {
-                renderPresses = true;
-                this.renderItem(ms, inv.getStackInSlot(2), x, 0.0f, buffers, combinedLight, combinedOverlay,
-                        blockEntity.getLevel());
-            }
+                if (!inv.getStackInSlot(1).isEmpty()) {
+                    items++;
+                }
+                if (!inv.getStackInSlot(2).isEmpty()) {
+                    items++;
+                }
 
-            if (renderPresses) {
-                this.renderItem(ms, inv.getStackInSlot(0), x, press, buffers, combinedLight, combinedOverlay,
-                        blockEntity.getLevel());
-                this.renderItem(ms, inv.getStackInSlot(1), x, -press, buffers, combinedLight, combinedOverlay,
-                        blockEntity.getLevel());
+                boolean renderPresses;
+                if (relativeProgress > 1.0f || items == 0) {
+                    // When crafting completes, don't render the presses (they may have been
+                    // consumed, see below)
+                    renderPresses = false;
+
+                    ItemStack is = inv.getStackInSlot(3);
+
+                    if (is.isEmpty()) {
+                        final InscriberRecipe ir = blockEntity.getTask(x);
+                        if (ir != null) {
+                            // The "PRESS" type will consume the presses, so they should not render after
+                            // completing
+                            // the press animation
+                            renderPresses = ir.getProcessType() == InscriberProcessType.INSCRIBE;
+                            is = ir.getResultItem().copy();
+                        }
+                    }
+                    this.renderItem(ms, is, x, 0.0f, buffers, combinedLight, combinedOverlay, blockEntity.getLevel());
+                } else {
+                    renderPresses = true;
+                    this.renderItem(ms, inv.getStackInSlot(2), x, 0.0f, buffers, combinedLight, combinedOverlay,
+                            blockEntity.getLevel());
+                }
+
+                if (renderPresses) {
+                    this.renderItem(ms, inv.getStackInSlot(0), x, press, buffers, combinedLight, combinedOverlay,
+                            blockEntity.getLevel());
+                    this.renderItem(ms, inv.getStackInSlot(1), x, -press, buffers, combinedLight, combinedOverlay,
+                            blockEntity.getLevel());
+                }
             }
         }
 
