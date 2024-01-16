@@ -299,6 +299,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.TAG_EXPORT_BUS))
                 .save(c, ExtendedAE.id("tag_export_bus"));
 
+        // Threshold Level Emitter
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.THRESHOLD_LEVEL_EMITTER)
+                .pattern("RER")
+                .pattern(" C ")
+                .define('R', Items.REDSTONE_TORCH)
+                .define('E', AEParts.LEVEL_EMITTER)
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.THRESHOLD_LEVEL_EMITTER))
+                .save(c, ExtendedAE.id("threshold_level_emitter"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)

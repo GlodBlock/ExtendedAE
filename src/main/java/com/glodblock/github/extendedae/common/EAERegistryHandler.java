@@ -22,6 +22,7 @@ import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
@@ -34,6 +35,7 @@ import com.glodblock.github.extendedae.container.ContainerIngredientBuffer;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
+import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
@@ -88,6 +90,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_inscriber"), ContainerExInscriber.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_storage_bus"), ContainerTagStorageBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_export_bus"), ContainerTagExportBus.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("threshold_level_emitter"), ContainerThresholdLevelEmitter.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -145,6 +148,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.VOID_CARD, EPPItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.TAG_EXPORT_BUS, 1, "item.expatternprovider.tag_export_bus");
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.TAG_EXPORT_BUS, 4, "item.expatternprovider.tag_export_bus");
+        Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.THRESHOLD_LEVEL_EMITTER, 1, "item.expatternprovider.threshold_level_emitter");
     }
 
     private void registerStorageHandler() {
@@ -160,6 +164,7 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartExPatternAccessTerminal.MODELS);
         PartModels.registerModels(PartTagStorageBus.MODEL_BASE);
         PartModels.registerModels(PartTagExportBus.MODEL_BASE);
+        PartModels.registerModels(PartThresholdLevelEmitter.MODELS);
     }
 
     private void initPackageList() {

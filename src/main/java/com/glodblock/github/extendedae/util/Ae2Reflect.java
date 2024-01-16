@@ -4,6 +4,7 @@ import appeng.api.storage.cells.CellState;
 import appeng.blockentity.storage.DriveBlockEntity;
 import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
+import appeng.parts.automation.AbstractLevelEmitterPart;
 import com.glodblock.github.glodium.reflect.ReflectKit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
@@ -20,6 +21,7 @@ public class Ae2Reflect {
     private static final Field fDriveBlockEntity_clientSideCellState;
     private static final Field fDriveBlockEntity_clientSideCellItems;
     private static final Field fDriveBlockEntity_clientSideOnline;
+    private static final Field fAbstractLevelEmitterPart_prevState;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
 
@@ -31,6 +33,7 @@ public class Ae2Reflect {
             fDriveBlockEntity_clientSideCellState = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideCellState");
             fDriveBlockEntity_clientSideCellItems = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideCellItems");
             fDriveBlockEntity_clientSideOnline = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideOnline");
+            fAbstractLevelEmitterPart_prevState = ReflectKit.reflectField(AbstractLevelEmitterPart.class, "prevState");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
         } catch (Exception e) {
@@ -72,6 +75,10 @@ public class Ae2Reflect {
 
     public static int getCompressIndex(AECraftingPattern owner, int id) {
         return ReflectKit.executeMethod2(owner, mAECraftingPattern_getCompressedIndexFromSparse, id);
+    }
+
+    public static boolean getPrevState(AbstractLevelEmitterPart owner) {
+        return ReflectKit.readField(owner, fAbstractLevelEmitterPart_prevState);
     }
 
 }
