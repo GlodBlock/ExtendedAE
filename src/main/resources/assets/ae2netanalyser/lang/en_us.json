@@ -1,6 +1,6 @@
 {
-  "itemGroup.ae2netanalyser": "AE2 Network Analyser",
-  "item.ae2netanalyser.network_analyser": "ME Network Analyser",
+  "itemGroup.ae2netanalyser": "AE2 Network Analyzer",
+  "item.ae2netanalyser.network_analyser": "ME Network Analyzer",
   "gui.ae2netanalyser.network_analyser.mode": "Mode",
   "gui.ae2netanalyser.network_analyser.node_size": "Size",
   "gui.ae2netanalyser.network_analyser.reset": "Reset Color",
