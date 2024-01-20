@@ -1,0 +1,6 @@
+{
+  "sources": [
+    {"type": "minecraft:single", "resource": "appflux:energy/fe"},
+    {"type": "minecraft:single", "resource": "appflux:energy/gteu"}
+  ]
+}

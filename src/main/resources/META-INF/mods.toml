@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+[[mods]]
+modId="appflux"
+issueTrackerURL="https://github.com/GlodBlock/ExtendedAE/issues"
+displayURL="https://github.com/GlodBlock/ExtendedAE"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+
+description='''${mod_description}'''
+[[dependencies.appflux]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="ae2"
+    mandatory=true
+    versionRange="[15.0.12,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="glodium"
+    mandatory=true
+    versionRange="[1.0,)"
+    ordering="AFTER"
+    side="BOTH"

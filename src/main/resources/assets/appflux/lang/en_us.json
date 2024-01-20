@@ -1,0 +1,19 @@
+{
+  "itemGroup.af": "Applied Flux",
+  "item.appflux.fe_cell_housing": "ME FE Cell Housing",
+  "item.appflux.fe_1k_cell": "1k ME FE Storage Cell",
+  "item.appflux.fe_4k_cell": "4k ME FE Storage Cell",
+  "item.appflux.fe_16k_cell": "16k ME FE Storage Cell",
+  "item.appflux.fe_64k_cell": "64k ME FE Storage Cell",
+  "item.appflux.fe_256k_cell": "256k ME FE Storage Cell",
+  "item.appflux.gteu_cell_housing": "ME GTEU Cell Housing",
+  "item.appflux.gteu_1k_cell": "1k ME GTEU Storage Cell",
+  "item.appflux.gteu_4k_cell": "4k ME GTEU Storage Cell",
+  "item.appflux.gteu_16k_cell": "16k ME GTEU Storage Cell",
+  "item.appflux.gteu_64k_cell": "64k ME GTEU Storage Cell",
+  "item.appflux.gteu_256k_cell": "256k ME GTEU Storage Cell",
+  "appflux.key.flux": "Energy",
+  "appfkux.type.fe.name": "FE",
+  "appfkux.type.gteu.name": "EU(GT)",
+  "appflux.cell.storage": "Contains: %s %s"
+}
