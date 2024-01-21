@@ -67,7 +67,7 @@ public class AFItemAndBlock {
         regHandler.item("fe_64k_cell", FE_CELL_64k);
         regHandler.item("fe_256k_cell", FE_CELL_256k);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
-        if (ModList.get().isLoaded("gtceu")) {
+        /*if (ModList.get().isLoaded("gtceu")) {
             GTEU_HOUSING = new MaterialItem(new Item.Properties());
             GTEU_CELL_1k = new ItemGTEUCell(CORE_1k, 1, 0.5);
             GTEU_CELL_4k = new ItemGTEUCell(CORE_4k, 4, 1.0);
@@ -80,7 +80,7 @@ public class AFItemAndBlock {
             regHandler.item("gteu_16k_cell", GTEU_CELL_16k);
             regHandler.item("gteu_64k_cell", GTEU_CELL_64k);
             regHandler.item("gteu_256k_cell", GTEU_CELL_256k);
-        }
+        }*/
     }
 
 }

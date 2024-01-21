@@ -5,9 +5,7 @@ import appeng.api.networking.storage.IStorageService;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
-import com.glodblock.github.appflux.common.caps.NetworkGTEUPower;
 import com.glodblock.github.glodium.util.GlodUtil;
-import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,11 +24,11 @@ public class TileFluxAccessor extends AENetworkBlockEntity {
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (ModList.get().isLoaded("gtceu")) {
+        /*if (ModList.get().isLoaded("gtceu")) {
             if (cap == GTCapability.CAPABILITY_ENERGY_CONTAINER && this.getStorage() != null) {
                 return LazyOptional.of(() -> new NetworkGTEUPower(this.getStorage(), this.getSource(), this.getAsker(side), side != null ? side.getOpposite() : null)).cast();
             }
-        }
+        }*/
         if (cap == ForgeCapabilities.ENERGY && this.getStorage() != null) {
             return LazyOptional.of(() -> new NetworkFEPower(this.getStorage(), this.getSource())).cast();
         }

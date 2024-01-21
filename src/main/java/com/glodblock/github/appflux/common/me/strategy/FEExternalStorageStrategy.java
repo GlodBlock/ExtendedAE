@@ -35,19 +35,19 @@ public class FEExternalStorageStrategy implements ExternalStorageStrategy {
     public FEExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
         this.apiCache = BlockApiCache.create(ForgeCapabilities.ENERGY, level, fromPos);
         this.fromSide = fromSide;
-        if (isGTPresent()) {
+        /*if (isGTPresent()) {
             this.gteuHandler = new GTEUExternalStorageStrategy(level, fromPos, fromSide);
-        }
+        }*/
     }
 
     @Override
     public @Nullable MEStorage createWrapper(boolean extractableOnly, Runnable callback) {
-        if (isGTPresent()) {
+        /*if (isGTPresent()) {
             var res = this.gteuHandler.createWrapper(extractableOnly, callback);
             if (res != null) {
                 return res;
             }
-        }
+        }*/
         var storage = this.apiCache.find(this.fromSide);
         if (storage == null) {
             return null;

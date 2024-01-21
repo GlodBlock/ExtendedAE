@@ -138,7 +138,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.FE_CELL_64k, "64k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.FE_CELL_256k, "256k");
-        ShapedRecipeBuilder
+        /*ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFItemAndBlock.GTEU_HOUSING)
                 .pattern("GDG")
                 .pattern("D D")
@@ -152,7 +152,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.GTEU_CELL_4k, "4k");
         addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.GTEU_CELL_16k, "16k");
         addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.GTEU_CELL_64k, "64k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.GTEU_CELL_256k, "256k");
+        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.GTEU_CELL_256k, "256k");*/
     }
 
     private void addFECellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {

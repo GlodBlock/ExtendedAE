@@ -21,13 +21,13 @@ public class AFClientRegistryHandler {
         event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_16k);
         event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_64k);
         event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_256k);
-        if (ModList.get().isLoaded("gtceu")) {
+        /*if (ModList.get().isLoaded("gtceu")) {
             event.register(BasicStorageCell::getColor, AFItemAndBlock.GTEU_CELL_1k);
             event.register(BasicStorageCell::getColor, AFItemAndBlock.GTEU_CELL_4k);
             event.register(BasicStorageCell::getColor, AFItemAndBlock.GTEU_CELL_16k);
             event.register(BasicStorageCell::getColor, AFItemAndBlock.GTEU_CELL_64k);
             event.register(BasicStorageCell::getColor, AFItemAndBlock.GTEU_CELL_256k);
-        }
+        }*/
     }
 
     public void init() {

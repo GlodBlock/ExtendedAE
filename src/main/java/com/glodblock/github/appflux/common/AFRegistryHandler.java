@@ -70,14 +70,14 @@ public class AFRegistryHandler extends RegistryHandler {
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_16k, AppFlux.id("block/drive/fe_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
-        if (ModList.get().isLoaded("gtceu")) {
+        /*if (ModList.get().isLoaded("gtceu")) {
             StorageCells.addCellHandler(GTEUCellHandler.HANDLER);
             StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_1k, AppFlux.id("block/drive/gteu_cell"));
             StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_4k, AppFlux.id("block/drive/gteu_cell"));
             StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_16k, AppFlux.id("block/drive/gteu_cell"));
             StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_64k, AppFlux.id("block/drive/gteu_cell"));
             StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_256k, AppFlux.id("block/drive/gteu_cell"));
-        }
+        }*/
     }
 
     public void register(RegisterEvent event) {
