@@ -48,7 +48,7 @@ public class GTEUContainerItemStrategy {
         if (handler == null) {
             return 0;
         }
-        long extracted = handler.discharge(amount, handler.getTier(), false, true, mode.isSimulate());
+        long extracted = handler.discharge(amount, handler.getTier(), true, true, mode.isSimulate());
         if (mode == Actionable.MODULATE) {
             stack.shrink(1);
             context.addOverflow(copy);
@@ -64,7 +64,7 @@ public class GTEUContainerItemStrategy {
             return 0;
         }
 
-        long filled = handler.charge(amount, handler.getTier(), false, mode.isSimulate());
+        long filled = handler.charge(amount, handler.getTier(), true, mode.isSimulate());
         if (mode == Actionable.MODULATE) {
             stack.shrink(1);
             context.addOverflow(copy);

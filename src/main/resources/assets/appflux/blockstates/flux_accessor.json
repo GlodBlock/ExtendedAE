@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "appflux:block/flux_accessor"
+    }
+  }
+}

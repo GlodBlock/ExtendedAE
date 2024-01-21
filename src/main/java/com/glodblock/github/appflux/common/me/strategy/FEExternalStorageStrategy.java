@@ -42,11 +42,14 @@ public class FEExternalStorageStrategy implements ExternalStorageStrategy {
 
     @Override
     public @Nullable MEStorage createWrapper(boolean extractableOnly, Runnable callback) {
+        if (isGTPresent()) {
+            var res = this.gteuHandler.createWrapper(extractableOnly, callback);
+            if (res != null) {
+                return res;
+            }
+        }
         var storage = this.apiCache.find(this.fromSide);
         if (storage == null) {
-            if (isGTPresent()) {
-                return this.gteuHandler.createWrapper(extractableOnly, callback);
-            }
             return null;
         }
         return new FEStorageWrapper(storage, callback);

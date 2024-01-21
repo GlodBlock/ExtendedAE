@@ -26,34 +26,43 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public @Nullable GenericStack getContainedStack(ItemStack stack) {
+        if (isGTPresent()) {
+            var res =  GTEUContainerItemStrategy.BRIDGE.getContainedStack(stack);
+            if (res != null) {
+                return res;
+            }
+        }
         var energy = AFUtil.findCapability(stack, ForgeCapabilities.ENERGY);
         if (energy != null && energy.getEnergyStored() > 0) {
             return new GenericStack(FluxKey.of(EnergyType.FE), energy.getEnergyStored());
-        }
-        if (isGTPresent()) {
-            return GTEUContainerItemStrategy.BRIDGE.getContainedStack(stack);
         }
         return null;
     }
 
     @Override
     public @Nullable ItemContext findCarriedContext(Player player, AbstractContainerMenu menu) {
+        if (isGTPresent()) {
+            var res = GTEUContainerItemStrategy.BRIDGE.findCarriedContext(player, menu);
+            if (res != null) {
+                return res;
+            }
+        }
         if (menu.getCarried().getCapability(ForgeCapabilities.ENERGY).isPresent()) {
             return new CarriedContext(player, menu);
-        }
-        if (isGTPresent()) {
-            return GTEUContainerItemStrategy.BRIDGE.findCarriedContext(player, menu);
         }
         return null;
     }
 
     @Override
     public @Nullable ItemContext findPlayerSlotContext(Player player, int slot) {
+        if (isGTPresent()) {
+            var res = GTEUContainerItemStrategy.BRIDGE.findPlayerSlotContext(player, slot);
+            if (res != null) {
+                return res;
+            }
+        }
         if (player.getInventory().getItem(slot).getCapability(ForgeCapabilities.ENERGY).isPresent()) {
             return new PlayerInvContext(player, slot);
-        }
-        if (isGTPresent()) {
-            return GTEUContainerItemStrategy.BRIDGE.findPlayerSlotContext(player, slot);
         }
         return null;
     }

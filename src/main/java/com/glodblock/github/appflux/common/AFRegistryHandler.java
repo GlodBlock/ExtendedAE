@@ -5,6 +5,11 @@ import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.StorageCellModels;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
+import appeng.block.AEBaseBlockItem;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.ClientTickingBlockEntity;
+import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.items.AEBaseItem;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
@@ -15,12 +20,15 @@ import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.strategy.FEContainerItemStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEExternalStorageStrategy;
 import com.glodblock.github.glodium.registry.RegistryHandler;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,6 +39,24 @@ public class AFRegistryHandler extends RegistryHandler {
 
     public AFRegistryHandler() {
         super(AppFlux.MODID);
+    }
+
+    public <T extends AEBaseBlockEntity> void block(String name, AEBaseEntityBlock<T> block, Class<T> clazz, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
+        bindTileEntity(clazz, block, supplier);
+        block(name, block, b -> new AEBaseBlockItem(b, new Item.Properties()));
+        tile(name, block.getBlockEntityType());
+    }
+
+    private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
+        BlockEntityTicker<T> serverTicker = null;
+        if (ServerTickingBlockEntity.class.isAssignableFrom(clazz)) {
+            serverTicker = (level, pos, state, entity) -> ((ServerTickingBlockEntity) entity).serverTick();
+        }
+        BlockEntityTicker<T> clientTicker = null;
+        if (ClientTickingBlockEntity.class.isAssignableFrom(clazz)) {
+            clientTicker = (level, pos, state, entity) -> ((ClientTickingBlockEntity) entity).clientTick();
+        }
+        block.setBlockEntity(clazz, GlodUtil.getTileType(clazz, supplier, block), clientTicker, serverTicker);
     }
 
     @SuppressWarnings("UnstableApiUsage")
