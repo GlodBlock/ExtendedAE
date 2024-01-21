@@ -20,7 +20,8 @@ public class BlockFluxAccessor extends AEBaseEntityBlock<TileFluxAccessor> {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, @NotNull TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.1").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.2").withStyle(ChatFormatting.GRAY));
     }
 
 }
