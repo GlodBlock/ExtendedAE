@@ -53,7 +53,7 @@ public class NetworkData {
     }
 
     private NetworkData() {
-        // NO-OP
+        this.isCorrupt = false;
     }
 
     public static NetworkData readBytes(FriendlyByteBuf buf) {
