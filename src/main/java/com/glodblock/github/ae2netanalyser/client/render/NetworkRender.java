@@ -48,7 +48,7 @@ public class NetworkRender extends RenderType {
                 RenderSystem.enableBlend();
                 RenderSystem.blendFunc(
                         GlStateManager.SourceFactor.SRC_ALPHA,
-                        GlStateManager.DestFactor.ONE
+                        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
                 );
             },
             () -> {
@@ -188,18 +188,16 @@ public class NetworkRender extends RenderType {
                     GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
             );
             stack.pushPose();
-            synchronized(this) {
-                if (renderNodeModes.contains(mode)) {
-                    renderNodes(NetworkDataHandler.pullData(), stack, multiBuf, offset);
-                }
-                if (renderLinkModes.contains(mode)) {
-                    renderLinks(NetworkDataHandler.pullData(), stack, multiBuf, offset, mode == AnalyserMode.P2P);
-                }
-                if (mode == AnalyserMode.FULL && !Util.isInfChannel()) {
-                    for (var link : NetworkDataHandler.pullData().links) {
-                        if (link.channel() > 0) {
-                            drawInWorldText(String.valueOf(link.channel()), WHITE, ClientUtil.getCenter(link.a().pos(), link.b().pos()), offset, camera, stack, multiBuf);
-                        }
+            if (renderNodeModes.contains(mode)) {
+                renderNodes(NetworkDataHandler.pullData(), stack, multiBuf, offset);
+            }
+            if (renderLinkModes.contains(mode)) {
+                renderLinks(NetworkDataHandler.pullData(), stack, multiBuf, offset, mode == AnalyserMode.P2P);
+            }
+            if (mode == AnalyserMode.FULL && !Util.isInfChannel()) {
+                for (var link : NetworkDataHandler.pullData().links) {
+                    if (link.channel() > 0) {
+                        drawInWorldText(String.valueOf(link.channel()), WHITE, ClientUtil.getCenter(link.a().pos(), link.b().pos()), offset, camera, stack, multiBuf);
                     }
                 }
             }
