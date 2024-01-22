@@ -23,17 +23,22 @@ public class NetworkData {
 
     public ANode[] nodes;
     public ALink[] links;
+    private boolean isCorrupt;
     private final Object2IntMap<ANode> nodeMap = new Object2IntOpenHashMap<>();
 
     public NetworkData(ANode[] nodes, ALink[] links) {
         this.nodes = nodes;
         this.links = links;
+        this.isCorrupt = false;
         for (int i = 0; i < nodes.length; i ++) {
             this.nodeMap.put(nodes[i], i);
         }
     }
 
     public int countNode(NodeFlag type) {
+        if (this.isCorrupt) {
+            return 0;
+        }
         int cnt = 0;
         for (var n : this.nodes) {
             if (n.state.get() == type) {
@@ -41,6 +46,10 @@ public class NetworkData {
             }
         }
         return cnt;
+    }
+
+    public boolean isCorrupt() {
+        return this.isCorrupt;
     }
 
     private NetworkData() {
@@ -64,6 +73,7 @@ public class NetworkData {
             }
         } catch (IOException | NullPointerException e) {
             AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!");
+            data.isCorrupt = true;
             e.printStackTrace();
         }
         return data;
@@ -87,6 +97,7 @@ public class NetworkData {
             }
         } catch (IOException | NullPointerException e) {
             AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!");
+            this.isCorrupt = true;
             e.printStackTrace();
         }
     }

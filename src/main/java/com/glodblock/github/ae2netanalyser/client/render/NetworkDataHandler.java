@@ -20,7 +20,11 @@ public class NetworkDataHandler {
     private static final ColorData WHITE = new ColorData(1f, 1f, 1f);
 
     public static void receiveData(NetworkData data) {
-        DATA = data;
+        if (data != null && data.isCorrupt()) {
+            DATA = null;
+        } else {
+            DATA = data;
+        }
     }
 
     @Nullable
