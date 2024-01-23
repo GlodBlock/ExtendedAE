@@ -61,7 +61,7 @@ public abstract class FluxCellInventory implements StorageCell {
     }
 
     public long getUsedBytes() {
-        var amountPerByte = FluxKeyType.TYPE.getAmountPerByte();
+        long amountPerByte = FluxKeyType.TYPE.getAmountPerByte();
         return (this.storedEnergy + amountPerByte - 1) / amountPerByte;
     }
 

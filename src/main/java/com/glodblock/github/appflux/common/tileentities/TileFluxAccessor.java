@@ -1,10 +1,22 @@
 package com.glodblock.github.appflux.common.tileentities;
 
+import appeng.api.config.Actionable;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.blockentity.grid.AENetworkBlockEntity;
+import appeng.blockentity.networking.CableBusBlockEntity;
+import appeng.blockentity.networking.EnergyAcceptorBlockEntity;
+import appeng.helpers.InterfaceLogicHost;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
+import com.glodblock.github.appflux.common.me.key.FluxKey;
+import com.glodblock.github.appflux.common.me.key.type.EnergyType;
+import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,10 +28,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TileFluxAccessor extends AENetworkBlockEntity {
+public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTickable {
 
     public TileFluxAccessor(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFItemAndBlock.FLUX_ACCESSOR), pos, blockState);
+        this.getMainNode().setIdlePowerUsage(1.0).addService(IGridTickable.class, this);
     }
 
     @Override
@@ -51,6 +64,46 @@ public class TileFluxAccessor extends AENetworkBlockEntity {
 
     private IActionSource getSource() {
         return IActionSource.ofMachine(this);
+    }
+
+    @Override
+    public TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(1, 1, false, false);
+    }
+
+    @Override
+    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
+        var storage = this.getStorage();
+        if (storage != null && this.level != null) {
+            for (var d : Direction.values()) {
+                var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
+                if (te != null && !checkBlackListTE(te)) {
+                    var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                    if (accepter != null) {
+                        var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
+                        if (toAdd > 0) {
+                            var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, this.getSource());
+                            if (drained > 0) {
+                                var actuallyDrained = accepter.receiveEnergy((int) drained, false);
+                                var differ = drained - actuallyDrained;
+                                if (differ > 0) {
+                                    storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, this.getSource());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return TickRateModulation.SAME;
+    }
+
+    private boolean checkBlackListTE(BlockEntity te) {
+        return te instanceof TileFluxAccessor ||
+                te instanceof InterfaceLogicHost ||
+                te instanceof PatternProviderLogicHost ||
+                te instanceof CableBusBlockEntity ||
+                te instanceof EnergyAcceptorBlockEntity;
     }
 
 }

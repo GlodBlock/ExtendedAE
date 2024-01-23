@@ -30,7 +30,7 @@ public class FluxKeyType extends AEKeyType {
 
     @Override
     public int getAmountPerByte() {
-        return 1024 * 64;
+        return 1024 * 1024 * 4;
     }
 
     @Override
