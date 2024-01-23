@@ -17,7 +17,7 @@
   "item.appflux.core_16k": "16k ME能源存储组件",
   "item.appflux.core_64k": "64k ME能源存储组件",
   "item.appflux.core_256k": "256k ME能源存储组件",
-  "item.appflux.charged_redstone": "带电红石",
+  "item.appflux.charged_redstone": "充能红石",
   "item.appflux.energy_processor": "能量处理器",
   "item.appflux.printed_energy_processor": "能量电路板",
   "item.appflux.energy_processor_press": "能量压印模板",
