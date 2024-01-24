@@ -181,10 +181,6 @@ public class NetworkRender extends RenderType {
             var mode = NetworkDataHandler.getMode();
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
-            RenderSystem.blendFunc(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-            );
             stack.pushPose();
             if (renderNodeModes.contains(mode)) {
                 renderNodes(NetworkDataHandler.pullData(), stack, multiBuf, offset);
@@ -192,6 +188,8 @@ public class NetworkRender extends RenderType {
             if (renderLinkModes.contains(mode)) {
                 renderLinks(NetworkDataHandler.pullData(), stack, multiBuf, offset, mode == AnalyserMode.P2P);
             }
+            multiBuf.endBatch();
+            RenderSystem.disableBlend();
             if (mode == AnalyserMode.FULL && !Util.isInfChannel()) {
                 for (var link : NetworkDataHandler.pullData().links) {
                     if (link.channel() > 0) {
