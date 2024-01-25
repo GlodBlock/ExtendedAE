@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "ae2netanalyser",
+	"version": "${version}",
+	"name": "ae2netanalyser",
+	"description": "Add a tool to analyze your AE network easily.",
+	"authors": [
+		"GlodBlock"
+	],
+	"contact": {
+		"sources": "https://github.com/GlodBlock/ExtendedAE/tree/analyser/1.20.1-fabric"
+	},
+	"license": "LGPL-3.0",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.glodblock.github.ae2netanalyser.AEAnalyzerServer"
+		],
+		"client": [
+			"com.glodblock.github.ae2netanalyser.AEAnalyzerClient"
+		],
+		"fabric-datagen": [
+			"com.glodblock.github.ae2netanalyser.datagen.AEADataGen"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*",
+		"ae2": ">=15.0.15",
+		"glodium": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
