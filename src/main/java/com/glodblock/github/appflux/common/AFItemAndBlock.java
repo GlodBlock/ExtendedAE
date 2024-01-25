@@ -1,13 +1,21 @@
 package com.glodblock.github.appflux.common;
 
-import appeng.core.definitions.AEItems;
 import appeng.items.materials.MaterialItem;
+import appeng.items.parts.PartItem;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
 import com.glodblock.github.appflux.common.items.ItemGTEUCell;
+import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.ModList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class AFItemAndBlock {
 
@@ -33,6 +41,7 @@ public class AFItemAndBlock {
     public static ItemGTEUCell GTEU_CELL_64k;
     public static ItemGTEUCell GTEU_CELL_256k;
     public static BlockFluxAccessor FLUX_ACCESSOR;
+    public static PartItem<PartFluxAccessor> PART_FLUX_ACCESSOR;
 
     public static void init(AFRegistryHandler regHandler) {
         CORE_1k = new MaterialItem(new Item.Properties());
@@ -51,6 +60,13 @@ public class AFItemAndBlock {
         FE_CELL_64k = new ItemFECell(CORE_64k, 64, 2.0);
         FE_CELL_256k = new ItemFECell(CORE_256k, 256, 2.5);
         FLUX_ACCESSOR = new BlockFluxAccessor();
+        PART_FLUX_ACCESSOR = new PartItem<>(new Item.Properties(), PartFluxAccessor.class, PartFluxAccessor::new) {
+            @Override
+            public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag advancedTooltips) {
+                tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.1").withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.2").withStyle(ChatFormatting.GRAY));
+            }
+        };
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
         regHandler.item("core_16k", CORE_16k);
@@ -66,6 +82,7 @@ public class AFItemAndBlock {
         regHandler.item("fe_16k_cell", FE_CELL_16k);
         regHandler.item("fe_64k_cell", FE_CELL_64k);
         regHandler.item("fe_256k_cell", FE_CELL_256k);
+        regHandler.item("part_flux_accessor", PART_FLUX_ACCESSOR);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
         /*if (ModList.get().isLoaded("gtceu")) {
             GTEU_HOUSING = new MaterialItem(new Item.Properties());

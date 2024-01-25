@@ -1,5 +1,11 @@
 package com.glodblock.github.appflux.util;
 
+import appeng.blockentity.networking.CableBusBlockEntity;
+import appeng.blockentity.networking.ControllerBlockEntity;
+import appeng.blockentity.networking.EnergyAcceptorBlockEntity;
+import appeng.helpers.InterfaceLogicHost;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,6 +32,15 @@ public class AFUtil {
             return tile.getCapability(capability, side).resolve().orElse(null);
         }
         return null;
+    }
+
+    public static boolean isBlackListTE(BlockEntity te) {
+        return te instanceof TileFluxAccessor ||
+                te instanceof InterfaceLogicHost ||
+                te instanceof PatternProviderLogicHost ||
+                te instanceof CableBusBlockEntity ||
+                te instanceof EnergyAcceptorBlockEntity ||
+                te instanceof ControllerBlockEntity;
     }
 
 }

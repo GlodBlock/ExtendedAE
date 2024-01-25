@@ -3,6 +3,7 @@ package com.glodblock.github.appflux.common;
 import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.StorageCellModels;
+import appeng.api.parts.PartModels;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
 import appeng.block.AEBaseBlockItem;
@@ -19,6 +20,7 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.strategy.FEContainerItemStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEExternalStorageStrategy;
+import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
@@ -83,6 +85,7 @@ public class AFRegistryHandler extends RegistryHandler {
     public void register(RegisterEvent event) {
         super.register(event);
         AEKeyTypes.register(FluxKeyType.TYPE);
+        PartModels.registerModels(PartFluxAccessor.RL);
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

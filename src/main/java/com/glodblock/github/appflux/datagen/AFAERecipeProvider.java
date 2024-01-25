@@ -123,6 +123,16 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
                 .unlockedBy(C, has(AFItemAndBlock.ENERGY_PROCESSOR))
                 .save(consumer, AppFlux.id("flux_accessor"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AFItemAndBlock.FLUX_ACCESSOR)
+                .requires(AFItemAndBlock.PART_FLUX_ACCESSOR)
+                .unlockedBy(C, has(AFItemAndBlock.FLUX_ACCESSOR))
+                .save(consumer, AppFlux.id("flux_accessor_alt"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AFItemAndBlock.PART_FLUX_ACCESSOR)
+                .requires(AFItemAndBlock.FLUX_ACCESSOR)
+                .unlockedBy(C, has(AFItemAndBlock.PART_FLUX_ACCESSOR))
+                .save(consumer, AppFlux.id("part_flux_accessor"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFItemAndBlock.FE_HOUSING)
                 .pattern("GDG")

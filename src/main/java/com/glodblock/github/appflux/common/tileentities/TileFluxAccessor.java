@@ -8,10 +8,6 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.blockentity.grid.AENetworkBlockEntity;
-import appeng.blockentity.networking.CableBusBlockEntity;
-import appeng.blockentity.networking.EnergyAcceptorBlockEntity;
-import appeng.helpers.InterfaceLogicHost;
-import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
@@ -77,7 +73,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
         if (storage != null && this.level != null) {
             for (var d : Direction.values()) {
                 var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
-                if (te != null && !checkBlackListTE(te)) {
+                if (te != null && !AFUtil.isBlackListTE(te)) {
                     var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
                     if (accepter != null) {
                         var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
@@ -96,14 +92,6 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
             }
         }
         return TickRateModulation.SAME;
-    }
-
-    private boolean checkBlackListTE(BlockEntity te) {
-        return te instanceof TileFluxAccessor ||
-                te instanceof InterfaceLogicHost ||
-                te instanceof PatternProviderLogicHost ||
-                te instanceof CableBusBlockEntity ||
-                te instanceof EnergyAcceptorBlockEntity;
     }
 
 }
