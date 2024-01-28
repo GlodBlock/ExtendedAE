@@ -18,6 +18,7 @@ public class NetworkDataHandler {
             ItemNetworkAnalyser.defaultColors
     );
     private static final ColorData WHITE = new ColorData(1f, 1f, 1f);
+    private static boolean needUpdate = true;
 
     public static void receiveData(NetworkData data) {
         if (data != null && data.isCorrupt()) {
@@ -25,11 +26,18 @@ public class NetworkDataHandler {
         } else {
             DATA = data;
         }
+        needUpdate = true;
     }
 
     @Nullable
     public static NetworkData pullData() {
         return DATA;
+    }
+
+    public static boolean update() {
+        boolean ret = needUpdate;
+        needUpdate = false;
+        return ret;
     }
 
     public static ColorData getColorByConfig(Enum<?> mode) {
@@ -46,6 +54,7 @@ public class NetworkDataHandler {
 
     public static void updateConfig(ItemNetworkAnalyser.AnalyserConfig config) {
         CONFIG = config;
+        needUpdate = true;
     }
 
 }

@@ -9,13 +9,16 @@ import com.glodblock.github.ae2netanalyser.util.Util;
 import com.glodblock.github.glodium.client.render.ColorData;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -27,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -39,6 +43,7 @@ public class NetworkRender extends RenderType {
     private static final Set<AnalyserMode> renderLinkModes = EnumSet.of(AnalyserMode.CHANNELS, AnalyserMode.FULL, AnalyserMode.NONUM, AnalyserMode.P2P);
     private static ItemStack currentAnalyser;
     private static final ColorData WHITE = new ColorData(1f, 1f, 1f);
+    private static VertexBuffer VBO = null;
 
     private final TransparencyStateShard STO = new RenderStateShard.TransparencyStateShard(
             "sto",
@@ -81,25 +86,25 @@ public class NetworkRender extends RenderType {
                 }
                 var pos = AEAItems.ANALYSER.getPos(currentAnalyser);
                 if (pos != null && pos.dimension().equals(player.level().dimension())) {
-                    INSTANCE.tick(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource(), event.getCamera());
+                    INSTANCE.tick(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource(), event.getProjectionMatrix(), event.getCamera());
                 }
             }
         }
     }
 
-    public void renderNodes(@NotNull NetworkData data, PoseStack stack, MultiBufferSource multiBuf, Vec3 offset) {
+    public void renderNodes(@NotNull NetworkData data, PoseStack stack, BufferBuilder buf) {
         for (var node : data.nodes) {
             var color = NetworkDataHandler.getColorByConfig(node.state().get());
-            drawCube(NetworkDataHandler.getNodeSize(), color, node.pos(), offset, stack, multiBuf);
+            drawCube(NetworkDataHandler.getNodeSize(), color, node.pos(), stack, buf);
         }
     }
 
-    public void renderLinks(@NotNull NetworkData data, PoseStack stack, MultiBufferSource multiBuf, Vec3 offset, boolean p2pOnly) {
+    public void renderLinks(@NotNull NetworkData data, PoseStack stack, BufferBuilder buf, boolean p2pOnly) {
         for (var link : data.links) {
             var flag = link.state().get();
             if (!p2pOnly || flag == LinkFlag.COMPRESSED) {
                 var color = NetworkDataHandler.getColorByConfig(flag);
-                drawLink(flag == LinkFlag.DENSE, color, link.a().pos(), link.b().pos(), offset, stack, multiBuf);
+                drawLink(flag == LinkFlag.DENSE, color, link.a().pos(), link.b().pos(), stack, buf);
             }
         }
     }
@@ -118,12 +123,10 @@ public class NetworkRender extends RenderType {
         stack.popPose();
     }
 
-    public void drawCube(float size, ColorData color, BlockPos pos, Vec3 offset, PoseStack stack, MultiBufferSource multiBuf) {
+    public void drawCube(float size, ColorData color, BlockPos pos, PoseStack stack, BufferBuilder buf) {
         float half = size / 2f;
-        var buf = multiBuf.getBuffer(CUBE_RENDER);
         var c = pos.getCenter();
         var box = new AABB(c.x - half, c.y - half, c.z - half, c.x + half, c.y + half, c.z + half);
-        box = box.move(offset);
         Vec3 topRight = new Vec3(box.maxX, box.maxY, box.maxZ);
         Vec3 bottomRight = new Vec3(box.maxX, box.minY, box.maxZ);
         Vec3 bottomLeft = new Vec3(box.minX, box.minY, box.maxZ);
@@ -141,10 +144,9 @@ public class NetworkRender extends RenderType {
     }
 
     // Mojang's line render isn't suitable for thick line, so we use a slim cuboid and pretend it as a line
-    public void drawLink(boolean isDense, ColorData color, BlockPos from, BlockPos to, Vec3 offset, PoseStack stack, MultiBufferSource multiBuf) {
-        var buf = multiBuf.getBuffer(CUBE_RENDER);
-        var a = from.getCenter().add(offset);
-        var b = to.getCenter().add(offset);
+    public void drawLink(boolean isDense, ColorData color, BlockPos from, BlockPos to, PoseStack stack, BufferBuilder buf) {
+        var a = from.getCenter();
+        var b = to.getCenter();
         var wide = isDense ? 0.1 : 0.025;
         var law = ClientUtil.getLawVec(a, b).scale(wide);
         var law2 = ClientUtil.getLawVec2(a, b).scale(wide);
@@ -172,8 +174,28 @@ public class NetworkRender extends RenderType {
         buf.vertex(mat, (float) tl.x, (float) tl.y, (float) tl.z).color(color.getRf(), color.getGf(), color.getBf(), color.getAf()).endVertex();
     }
 
-    public void tick(PoseStack stack, MultiBufferSource.BufferSource multiBuf, Camera camera) {
-        if (NetworkDataHandler.pullData() == null) {
+    public void createVBO(AnalyserMode mode, NetworkData data) {
+        if (VBO != null) {
+            VBO.close();
+        }
+        var buf = new BufferBuilder(CUBE_RENDER.bufferSize() * 8);
+        buf.begin(CUBE_RENDER.mode(), CUBE_RENDER.format());
+        var stack = new PoseStack();
+        if (renderNodeModes.contains(mode)) {
+            renderNodes(data, stack, buf);
+        }
+        if (renderLinkModes.contains(mode)) {
+            renderLinks(data, stack, buf, mode == AnalyserMode.P2P);
+        }
+        var rendered = buf.end();
+        VBO = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
+        VBO.bind();
+        VBO.upload(rendered);
+        VertexBuffer.unbind();
+    }
+
+    public void tick(PoseStack stack, MultiBufferSource.BufferSource multiBuf, Matrix4f pro, Camera camera) {
+        if (NetworkDataHandler.pullData() == null || GameRenderer.getPositionColorShader() == null) {
             return;
         }
         if (camera.isInitialized()) {
@@ -181,14 +203,28 @@ public class NetworkRender extends RenderType {
             var mode = NetworkDataHandler.getMode();
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
-            stack.pushPose();
-            if (renderNodeModes.contains(mode)) {
-                renderNodes(NetworkDataHandler.pullData(), stack, multiBuf, offset);
+            if (NetworkDataHandler.update()) {
+                createVBO(mode, NetworkDataHandler.pullData());
             }
-            if (renderLinkModes.contains(mode)) {
-                renderLinks(NetworkDataHandler.pullData(), stack, multiBuf, offset, mode == AnalyserMode.P2P);
+            if (VBO != null) {
+                RenderSystem.setShader(GameRenderer::getPositionColorShader);
+                RenderSystem.blendFunc(
+                        GlStateManager.SourceFactor.SRC_ALPHA,
+                        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
+                );
+                RenderSystem.disableCull();
+                stack.pushPose();
+                stack.translate(offset.x, offset.y, offset.z);
+                VBO.bind();
+                VBO.drawWithShader(
+                        stack.last().pose(),
+                        pro,
+                        GameRenderer.getPositionColorShader()
+                );
+                VertexBuffer.unbind();
+                stack.popPose();
+                RenderSystem.enableCull();
             }
-            multiBuf.endBatch();
             RenderSystem.disableBlend();
             if (mode == AnalyserMode.FULL && !Util.isInfChannel()) {
                 for (var link : NetworkDataHandler.pullData().links) {
@@ -198,7 +234,6 @@ public class NetworkRender extends RenderType {
                 }
             }
             multiBuf.endBatch();
-            stack.popPose();
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
