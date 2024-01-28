@@ -13,9 +13,10 @@ public class AFDataGen {
         var pack = dataEvent.getGenerator().getVanillaPack(true);
         var file = dataEvent.getExistingFileHelper();
         var lookup = dataEvent.getLookupProvider();
-        pack.addProvider(c -> new AFBlockTagProvider(c, lookup, file));
+        var block = pack.addProvider(c -> new AFBlockTagProvider(c, lookup, file));
         pack.addProvider(AFLootTableProvider::new);
         pack.addProvider(AFAERecipeProvider::new);
+        pack.addProvider(c -> new AFItemTagProvider(c, lookup, block.contentsGetter(), file));
     }
 
 }

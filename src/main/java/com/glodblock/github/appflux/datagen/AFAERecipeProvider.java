@@ -7,17 +7,23 @@ import appeng.datagen.providers.tags.ConventionTags;
 import appeng.recipes.handlers.ChargerRecipeBuilder;
 import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipeBuilder;
+import appeng.recipes.transform.TransformCircumstance;
+import appeng.recipes.transform.TransformRecipeBuilder;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.util.AFTags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -32,9 +38,17 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+        TransformRecipeBuilder.transform(consumer,
+                AppFlux.id("transform/redstone_crystal"),
+                AFItemAndBlock.REDSTONE_CRYSTAL, 1,
+                TransformCircumstance.fluid(FluidTags.WATER),
+                Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE),
+                Ingredient.of(ConventionTags.FLUIX_DUST),
+                Ingredient.of(AEItems.SKY_DUST)
+        );
         ChargerRecipeBuilder.charge(consumer,
                 AppFlux.id("charger/charge_redstone"),
-                Blocks.REDSTONE_BLOCK,
+                AFItemAndBlock.REDSTONE_CRYSTAL,
                 AFItemAndBlock.CHARGED_REDSTONE
         );
         ChargerRecipeBuilder.charge(consumer,
@@ -58,15 +72,44 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .setTop(Ingredient.of(AFItemAndBlock.ENERGY_PROCESSOR_PRESS))
                 .setMode(InscriberProcessType.INSCRIBE)
                 .save(consumer, AppFlux.id("inscriber/energy_press"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AFItemAndBlock.INSULATING_RESIN)
+                .requires(Items.WATER_BUCKET)
+                .requires(Blocks.CACTUS)
+                .requires(Blocks.CACTUS)
+                .requires(Items.BONE_MEAL)
+                .requires(ConventionTags.SILICON)
+                .requires(Items.SLIME_BALL)
+                .requires(ConventionTags.GLOWSTONE)
+                .unlockedBy(C, has(Blocks.CACTUS))
+                .save(consumer, AppFlux.id("insulating_resin"));
+        SimpleCookingRecipeBuilder
+                .smelting(
+                        Ingredient.of(AFItemAndBlock.INSULATING_RESIN),
+                        RecipeCategory.MISC,
+                        AFItemAndBlock.HARDEN_INSULATING_RESIN,
+                        0.35F, 200
+                )
+                .unlockedBy(C, has(AFItemAndBlock.INSULATING_RESIN))
+                .save(consumer,  AppFlux.id("smelting/harden_resin"));
+        SimpleCookingRecipeBuilder
+                .blasting(
+                        Ingredient.of(AFItemAndBlock.INSULATING_RESIN),
+                        RecipeCategory.MISC,
+                        AFItemAndBlock.HARDEN_INSULATING_RESIN,
+                        0.35F, 100
+                )
+                .unlockedBy(C, has(AFItemAndBlock.INSULATING_RESIN))
+                .save(consumer,  AppFlux.id("blasting/harden_resin"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_1k)
                 .pattern("DCD")
                 .pattern("CPC")
                 .pattern("DCD")
                 .define('D', ConventionTags.CERTUS_QUARTZ_DUST)
-                .define('C', AFItemAndBlock.CHARGED_REDSTONE)
+                .define('C', AFItemAndBlock.REDSTONE_CRYSTAL)
                 .define('P', AEItems.LOGIC_PROCESSOR)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
+                .unlockedBy(C, has(AFItemAndBlock.REDSTONE_CRYSTAL))
                 .save(consumer, AppFlux.id("1k_core"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_4k)
@@ -138,10 +181,10 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .pattern("GDG")
                 .pattern("D D")
                 .pattern("III")
-                .define('D', AFItemAndBlock.CHARGED_REDSTONE)
+                .define('D', ConventionTags.REDSTONE)
                 .define('G', AEBlocks.QUARTZ_GLASS)
-                .define('I', ConventionTags.COPPER_INGOT)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
+                .define('I', AFTags.RESIN_INGOT)
+                .unlockedBy(C, has(AFItemAndBlock.HARDEN_INSULATING_RESIN))
                 .save(consumer, AppFlux.id("fe_housing"));
         addFECellRecipe(consumer, AFItemAndBlock.CORE_1k, AFItemAndBlock.FE_CELL_1k, "1k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.FE_CELL_4k, "4k");
@@ -171,11 +214,11 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .pattern("GDG")
                 .pattern("DXD")
                 .pattern("III")
-                .define('D', AFItemAndBlock.CHARGED_REDSTONE)
+                .define('D', ConventionTags.REDSTONE)
                 .define('G', AEBlocks.QUARTZ_GLASS)
-                .define('I', ConventionTags.COPPER_INGOT)
+                .define('I', AFTags.RESIN_INGOT)
                 .define('X', core)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
+                .unlockedBy(C, has(AFItemAndBlock.HARDEN_INSULATING_RESIN))
                 .save(consumer, AppFlux.id(id + "_fe_cell"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, result)

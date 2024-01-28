@@ -28,6 +28,9 @@ public class AFItemAndBlock {
     public static MaterialItem ENERGY_PROCESSOR_PRINT;
     public static MaterialItem ENERGY_PROCESSOR_PRESS;
     public static MaterialItem ENERGY_PROCESSOR;
+    public static MaterialItem REDSTONE_CRYSTAL;
+    public static MaterialItem INSULATING_RESIN;
+    public static MaterialItem HARDEN_INSULATING_RESIN;
     public static MaterialItem FE_HOUSING;
     public static ItemFECell FE_CELL_1k;
     public static ItemFECell FE_CELL_4k;
@@ -50,6 +53,9 @@ public class AFItemAndBlock {
         CORE_64k = new MaterialItem(new Item.Properties());
         CORE_256k = new MaterialItem(new Item.Properties());
         CHARGED_REDSTONE = new MaterialItem(new Item.Properties());
+        REDSTONE_CRYSTAL = new MaterialItem(new Item.Properties());
+        INSULATING_RESIN = new MaterialItem(new Item.Properties());
+        HARDEN_INSULATING_RESIN = new MaterialItem(new Item.Properties());
         ENERGY_PROCESSOR = new MaterialItem(new Item.Properties());
         ENERGY_PROCESSOR_PRINT = new MaterialItem(new Item.Properties());
         ENERGY_PROCESSOR_PRESS = new MaterialItem(new Item.Properties());
@@ -73,6 +79,9 @@ public class AFItemAndBlock {
         regHandler.item("core_64k", CORE_64k);
         regHandler.item("core_256k", CORE_256k);
         regHandler.item("charged_redstone", CHARGED_REDSTONE);
+        regHandler.item("redstone_crystal", REDSTONE_CRYSTAL);
+        regHandler.item("insulating_resin", INSULATING_RESIN);
+        regHandler.item("harden_insulating_resin", HARDEN_INSULATING_RESIN);
         regHandler.item("energy_processor", ENERGY_PROCESSOR);
         regHandler.item("printed_energy_processor", ENERGY_PROCESSOR_PRINT);
         regHandler.item("energy_processor_press", ENERGY_PROCESSOR_PRESS);
