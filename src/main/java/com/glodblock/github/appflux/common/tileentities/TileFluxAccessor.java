@@ -1,6 +1,7 @@
 package com.glodblock.github.appflux.common.tileentities;
 
 import appeng.api.config.Actionable;
+import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
@@ -28,6 +29,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
 
     public TileFluxAccessor(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFItemAndBlock.FLUX_ACCESSOR), pos, blockState);
+        this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IGridTickable.class, this);
     }
 

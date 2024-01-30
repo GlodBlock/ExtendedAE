@@ -1,6 +1,7 @@
 package com.glodblock.github.appflux.common.parts;
 
 import appeng.api.config.Actionable;
+import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
@@ -30,6 +31,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
 
     public PartFluxAccessor(IPartItem<?> partItem) {
         super(partItem);
+        this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IGridTickable.class, this);
     }
 
