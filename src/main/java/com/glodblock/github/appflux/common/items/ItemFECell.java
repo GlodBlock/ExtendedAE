@@ -6,10 +6,13 @@ import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
 import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.caps.CellFEPower;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.google.common.base.Preconditions;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,6 +24,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,4 +120,22 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
     public void appendHoverText(ItemStack is, @Nullable Level level, List<Component> lines, TooltipFlag tooltipFlag) {
         addCellInformationToTooltip(is, lines);
     }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+        var inv = FECellHandler.HANDLER.getCellInventory(stack, null);
+        if (inv != null) {
+            return new ICapabilityProvider() {
+                @Override
+                public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+                    if (cap == ForgeCapabilities.ENERGY) {
+                        return LazyOptional.of(() -> new CellFEPower(inv)).cast();
+                    }
+                    return LazyOptional.empty();
+                }
+            };
+        }
+        return super.initCapabilities(stack, nbt);
+    }
+
 }

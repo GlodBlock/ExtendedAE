@@ -52,6 +52,10 @@ public abstract class FluxCellInventory implements StorageCell {
         return this.cellType.getIdleDrain();
     }
 
+    public long getStoredEnergy() {
+        return this.storedEnergy;
+    }
+
     public long getMaxEnergy() {
         return this.cellType.getBytes(this.stack) * FluxKeyType.TYPE.getAmountPerByte();
     }
