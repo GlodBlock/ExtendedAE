@@ -72,10 +72,12 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
         var storage = this.getStorage();
+        var gird = AFUtil.getGrid(this, null);
         if (storage != null && this.level != null) {
             for (var d : Direction.values()) {
                 var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
-                if (te != null && !AFUtil.isBlackListTE(te)) {
+                var thatGrid = AFUtil.getGrid(te, d.getOpposite());
+                if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
                     var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
                     if (accepter != null) {
                         var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);

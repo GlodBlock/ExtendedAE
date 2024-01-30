@@ -1,10 +1,11 @@
 package com.glodblock.github.appflux.util;
 
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IInWorldGridNodeHost;
 import appeng.blockentity.networking.CableBusBlockEntity;
-import appeng.blockentity.networking.ControllerBlockEntity;
-import appeng.blockentity.networking.EnergyAcceptorBlockEntity;
-import appeng.helpers.InterfaceLogicHost;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import appeng.me.helpers.IGridConnectedBlockEntity;
+import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -34,13 +35,25 @@ public class AFUtil {
         return null;
     }
 
-    public static boolean isBlackListTE(BlockEntity te) {
+    public static boolean isBlackListTE(BlockEntity te, Direction face) {
+        if (te instanceof CableBusBlockEntity cable) {
+            var part = cable.getPart(face);
+            return part instanceof PatternProviderLogicHost ||
+                    part instanceof PartFluxAccessor;
+        }
         return te instanceof TileFluxAccessor ||
-                te instanceof InterfaceLogicHost ||
-                te instanceof PatternProviderLogicHost ||
-                te instanceof CableBusBlockEntity ||
-                te instanceof EnergyAcceptorBlockEntity ||
-                te instanceof ControllerBlockEntity;
+                te instanceof PatternProviderLogicHost;
+    }
+
+    public static IGrid getGrid(Object a, Direction side) {
+        if (a instanceof IGridConnectedBlockEntity ba) {
+            var gn = ba.getGridNode();
+            return gn == null ? null : gn.getGrid();
+        } else if (a instanceof IInWorldGridNodeHost ha) {
+            var gn = ha.getGridNode(side);
+            return gn == null ? null : gn.getGrid();
+        }
+        return null;
     }
 
 }

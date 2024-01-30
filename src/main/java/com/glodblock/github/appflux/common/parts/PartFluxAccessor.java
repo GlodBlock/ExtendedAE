@@ -79,9 +79,11 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
     public TickRateModulation tickingRequest(IGridNode iGridNode, int i) {
         var storage = this.getStorage();
         var d = this.getSide();
+        var gird = this.getGridNode() == null ? null : this.getGridNode().getGrid();
         if (storage != null && d != null && this.getLevel() != null) {
             var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
-            if (te != null && !AFUtil.isBlackListTE(te)) {
+            var thatGrid = AFUtil.getGrid(te, d.getOpposite());
+            if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
                 var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
                 if (accepter != null) {
                     var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
