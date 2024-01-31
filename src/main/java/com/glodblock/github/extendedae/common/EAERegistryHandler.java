@@ -33,6 +33,7 @@ import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
 import com.glodblock.github.extendedae.container.ContainerIngredientBuffer;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
+import com.glodblock.github.extendedae.container.ContainerRenamer;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
@@ -91,6 +92,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_storage_bus"), ContainerTagStorageBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_export_bus"), ContainerTagExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("threshold_level_emitter"), ContainerThresholdLevelEmitter.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("renamer"), ContainerRenamer.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);

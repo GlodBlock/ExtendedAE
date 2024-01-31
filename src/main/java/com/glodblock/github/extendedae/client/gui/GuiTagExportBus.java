@@ -13,7 +13,6 @@ import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import com.glodblock.github.glodium.network.packet.sync.Paras;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -67,12 +66,6 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
     protected void init() {
         super.init();
         setInitialFocus(this.filterInputs);
-    }
-
-    @Override
-    public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
-        super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
-        this.filterInputs.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
 }

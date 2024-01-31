@@ -4,6 +4,7 @@ import com.glodblock.github.extendedae.client.ClientRegistryHandler;
 import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
 import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.common.hooks.CutterHook;
 import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.extendedae.xmod.LoadList;
@@ -11,6 +12,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -45,6 +47,7 @@ public class ExtendedAE {
                 EAERegistryHandler.INSTANCE.registerTab(e.getVanillaRegistry());
             }
         });
+        MinecraftForge.EVENT_BUS.register(CutterHook.INSTANCE);
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {

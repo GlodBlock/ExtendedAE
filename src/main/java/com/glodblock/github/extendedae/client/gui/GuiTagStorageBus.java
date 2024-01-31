@@ -93,12 +93,6 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         setInitialFocus(this.filterInputs);
     }
 
-    @Override
-    public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
-        super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
-        this.filterInputs.render(guiGraphics, mouseX, mouseY, partialTicks);
-    }
-
     @NotNull
     @Override
     public Map<String, Consumer<Paras>> getActionMap() {
