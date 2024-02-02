@@ -15,29 +15,9 @@ import appeng.items.AEBaseItem;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.inventory.InfinityCellInventory;
 import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
-import com.glodblock.github.extendedae.common.parts.PartExExportBus;
-import com.glodblock.github.extendedae.common.parts.PartExImportBus;
-import com.glodblock.github.extendedae.common.parts.PartExInterface;
-import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
-import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
-import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
-import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
-import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
+import com.glodblock.github.extendedae.common.parts.*;
 import com.glodblock.github.extendedae.config.EPPConfig;
-import com.glodblock.github.extendedae.container.ContainerExDrive;
-import com.glodblock.github.extendedae.container.ContainerExIOBus;
-import com.glodblock.github.extendedae.container.ContainerExInscriber;
-import com.glodblock.github.extendedae.container.ContainerExInterface;
-import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
-import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
-import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
-import com.glodblock.github.extendedae.container.ContainerIngredientBuffer;
-import com.glodblock.github.extendedae.container.ContainerPatternModifier;
-import com.glodblock.github.extendedae.container.ContainerRenamer;
-import com.glodblock.github.extendedae.container.ContainerTagExportBus;
-import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
-import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
-import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
+import com.glodblock.github.extendedae.container.*;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
@@ -93,6 +73,8 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("tag_export_bus"), ContainerTagExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("threshold_level_emitter"), ContainerThresholdLevelEmitter.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("renamer"), ContainerRenamer.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("mod_storage_bus"), ContainerModStorageBus.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("mod_export_bus"), ContainerModExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -151,6 +133,10 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.TAG_EXPORT_BUS, 1, "item.expatternprovider.tag_export_bus");
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.TAG_EXPORT_BUS, 4, "item.expatternprovider.tag_export_bus");
         Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.THRESHOLD_LEVEL_EMITTER, 1, "item.expatternprovider.threshold_level_emitter");
+        Upgrades.add(AEItems.INVERTER_CARD, EPPItemAndBlock.MOD_STORAGE_BUS, 1, "item.expatternprovider.mod_storage_bus");
+        Upgrades.add(AEItems.VOID_CARD, EPPItemAndBlock.MOD_STORAGE_BUS, 1, "item.expatternprovider.mod_storage_bus");
+        Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.MOD_EXPORT_BUS, 1, "item.expatternprovider.mod_export_bus");
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.MOD_EXPORT_BUS, 4, "item.expatternprovider.mod_export_bus");
     }
 
     private void registerStorageHandler() {
@@ -167,6 +153,8 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartTagStorageBus.MODEL_BASE);
         PartModels.registerModels(PartTagExportBus.MODEL_BASE);
         PartModels.registerModels(PartThresholdLevelEmitter.MODELS);
+        PartModels.registerModels(PartModStorageBus.MODEL_BASE);
+        PartModels.registerModels(PartModExportBus.MODEL_BASE);
     }
 
     private void initPackageList() {

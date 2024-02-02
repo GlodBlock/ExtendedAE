@@ -310,6 +310,32 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.THRESHOLD_LEVEL_EMITTER))
                 .save(c, ExtendedAE.id("threshold_level_emitter"));
 
+        // Mod Storage Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.MOD_STORAGE_BUS)
+                .pattern(" C ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.STORAGE_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EPPItemAndBlock.MOD_STORAGE_BUS))
+                .save(c, ExtendedAE.id("mod_storage_bus"));
+
+        // Mod Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.MOD_EXPORT_BUS)
+                .pattern(" C ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.EXPORT_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EPPItemAndBlock.MOD_EXPORT_BUS))
+                .save(c, ExtendedAE.id("mod_export_bus"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)

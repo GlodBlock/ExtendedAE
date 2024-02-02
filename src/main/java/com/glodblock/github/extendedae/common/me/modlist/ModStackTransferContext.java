@@ -1,4 +1,4 @@
-package com.glodblock.github.extendedae.common.me.taglist;
+package com.glodblock.github.extendedae.common.me.modlist;
 
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
@@ -10,9 +10,8 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
 
-// clueless
 @SuppressWarnings("UnstableApiUsage")
-public class TagStackTransferContext implements StackTransferContext {
+public class ModStackTransferContext implements StackTransferContext {
     private final IStorageService internalStorage;
     private final IEnergySource energySource;
     private final IActionSource actionSource;
@@ -21,7 +20,7 @@ public class TagStackTransferContext implements StackTransferContext {
     private int operationsRemaining;
     private boolean isInverted;
 
-    public TagStackTransferContext(IStorageService internalStorage, IEnergySource energySource, IActionSource actionSource, int operationsRemaining, IPartitionList filter) {
+    public ModStackTransferContext(IStorageService internalStorage, IEnergySource energySource, IActionSource actionSource, int operationsRemaining, IPartitionList filter) {
         this.internalStorage = internalStorage;
         this.energySource = energySource;
         this.actionSource = actionSource;
@@ -67,7 +66,7 @@ public class TagStackTransferContext implements StackTransferContext {
 
     @Override
     public boolean isKeyTypeEnabled(AEKeyType space) {
-        return space == AEKeyType.items() || space == AEKeyType.fluids();
+        return true;
     }
 
     @Override

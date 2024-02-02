@@ -8,19 +8,18 @@ import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
-import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
+import com.glodblock.github.extendedae.common.me.modlist.ModPriorityList;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
-import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
+import com.glodblock.github.extendedae.container.ContainerModStorageBus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
 
-public class PartTagStorageBus extends PartSpecialStorageBus {
+public class PartModStorageBus extends PartSpecialStorageBus {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/tag_storage_bus_base");
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/mod_storage_bus_base");
 
     @PartModels
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_off"));
@@ -31,26 +30,26 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
-    private String oreExp = "";
+    private String modid = "";
 
-    public PartTagStorageBus(IPartItem<?> partItem) {
+    public PartModStorageBus(IPartItem<?> partItem) {
         super(partItem);
     }
 
     @Override
     public void readFromNBT(CompoundTag data) {
         super.readFromNBT(data);
-        this.oreExp = data.getString("oreExp");
+        this.modid = data.getString("modid");
     }
 
     @Override
     public void writeToNBT(CompoundTag data) {
         super.writeToNBT(data);
-        data.putString("oreExp", this.oreExp);
+        data.putString("modid", this.modid);
     }
 
     public MenuType<?> getMenuType() {
-        return ContainerTagStorageBus.TYPE;
+        return ContainerModStorageBus.TYPE;
     }
 
     @Override
@@ -58,21 +57,21 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         return 2;
     }
 
-    public void setTagFilter(String exp) {
-        if (!exp.equals(this.oreExp)) {
-            this.oreExp = exp;
+    public void setModNameFilter(String exp) {
+        if (!exp.equals(this.modid)) {
+            this.modid = exp;
             this.filter = null;
             this.forceUpdate();
         }
     }
 
-    public String getTagFilter() {
-        return this.oreExp;
+    public String getModNameFilter() {
+        return this.modid;
     }
 
     protected IPartitionList createFilter() {
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExp), this.oreExp);
+            this.filter = new ModPriorityList(this.modid);
         }
         return this.filter;
     }
@@ -80,10 +79,10 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     @Override
     public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        if (input.contains("ore_dict_exp")) {
-            this.oreExp = input.getString("ore_dict_exp");
+        if (input.contains("mod_name_exp")) {
+            this.modid = input.getString("mod_name_exp");
         } else {
-            this.oreExp = "";
+            this.modid = "";
         }
     }
 
@@ -91,7 +90,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     public void exportSettings(SettingsFrom mode, CompoundTag output) {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            output.putString("ore_dict_exp", this.oreExp);
+            output.putString("mod_name_exp", this.modid);
         }
     }
 

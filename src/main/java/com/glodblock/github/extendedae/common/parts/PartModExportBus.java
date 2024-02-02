@@ -10,20 +10,19 @@ import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
-import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
-import com.glodblock.github.extendedae.common.me.taglist.TagStackTransferContext;
+import com.glodblock.github.extendedae.common.me.modlist.ModPriorityList;
+import com.glodblock.github.extendedae.common.me.modlist.ModStackTransferContext;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialExportBus;
-import com.glodblock.github.extendedae.container.ContainerTagExportBus;
+import com.glodblock.github.extendedae.container.ContainerModExportBus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnstableApiUsage")
-public class PartTagExportBus extends PartSpecialExportBus {
+public class PartModExportBus extends PartSpecialExportBus {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/tag_export_bus_base");
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/mod_export_bus_base");
 
     @PartModels
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE,
@@ -37,43 +36,43 @@ public class PartTagExportBus extends PartSpecialExportBus {
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
             new ResourceLocation(AppEng.MOD_ID, "part/export_bus_has_channel"));
 
-    private String oreExp = "";
+    private String modid = "";
 
-    public PartTagExportBus(IPartItem<?> partItem) {
+    public PartModExportBus(IPartItem<?> partItem) {
         super(partItem);
     }
 
     @Override
     public void readFromNBT(CompoundTag extra) {
         super.readFromNBT(extra);
-        this.oreExp = extra.getString("oreExp");
+        this.modid = extra.getString("modid");
     }
 
     @Override
     public void writeToNBT(CompoundTag extra) {
         super.writeToNBT(extra);
-        extra.putString("oreExp", this.oreExp);
+        extra.putString("modid", this.modid);
     }
 
-    public String getTagFilter() {
-        return this.oreExp;
+    public String getModNameFilter() {
+        return this.modid;
     }
 
-    public void setTagFilter(String exp) {
-        if (!exp.equals(this.oreExp)) {
-            this.oreExp = exp;
+    public void setModNameFilter(String exp) {
+        if (!exp.equals(this.modid)) {
+            this.modid = exp;
             this.filter = null;
         }
     }
 
     @Override
     protected MenuType<?> getMenuType() {
-        return ContainerTagExportBus.TYPE;
+        return ContainerModExportBus.TYPE;
     }
 
     @NotNull
     protected StackTransferContext createTransferContext(IStorageService storageService, IEnergyService energyService) {
-        return new TagStackTransferContext(
+        return new ModStackTransferContext(
                 storageService,
                 energyService,
                 this.source,
@@ -85,7 +84,7 @@ public class PartTagExportBus extends PartSpecialExportBus {
     @Override
     protected IPartitionList createFilter() {
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExp), this.oreExp);
+            this.filter = new ModPriorityList(this.modid);
         }
         return this.filter;
     }

@@ -20,14 +20,7 @@ import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpg
 import com.glodblock.github.extendedae.common.items.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
-import com.glodblock.github.extendedae.common.parts.PartExExportBus;
-import com.glodblock.github.extendedae.common.parts.PartExImportBus;
-import com.glodblock.github.extendedae.common.parts.PartExInterface;
-import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
-import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
-import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
-import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
-import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
+import com.glodblock.github.extendedae.common.parts.*;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
@@ -66,6 +59,8 @@ public class EPPItemAndBlock {
     public static PartItem<PartTagStorageBus> TAG_STORAGE_BUS;
     public static PartItem<PartTagExportBus> TAG_EXPORT_BUS;
     public static PartItem<PartThresholdLevelEmitter> THRESHOLD_LEVEL_EMITTER;
+    public static PartItem<PartModStorageBus> MOD_STORAGE_BUS;
+    public static PartItem<PartModExportBus> MOD_EXPORT_BUS;
     public static BlockFishbig FISHBIG;
 
     public static void init(EAERegistryHandler regHandler) {
@@ -95,6 +90,8 @@ public class EPPItemAndBlock {
         TAG_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartTagStorageBus.class, PartTagStorageBus::new);
         TAG_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartTagExportBus.class, PartTagExportBus::new);
         THRESHOLD_LEVEL_EMITTER = new PartItem<>(new Item.Properties(), PartThresholdLevelEmitter.class, PartThresholdLevelEmitter::new);
+        MOD_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartModStorageBus.class, PartModStorageBus::new);
+        MOD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartModExportBus.class, PartModExportBus::new);
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -123,6 +120,8 @@ public class EPPItemAndBlock {
         regHandler.item("tag_storage_bus", TAG_STORAGE_BUS);
         regHandler.item("tag_export_bus", TAG_EXPORT_BUS);
         regHandler.item("threshold_level_emitter", THRESHOLD_LEVEL_EMITTER);
+        regHandler.item("mod_storage_bus", MOD_STORAGE_BUS);
+        regHandler.item("mod_export_bus", MOD_EXPORT_BUS);
     }
 
 }
