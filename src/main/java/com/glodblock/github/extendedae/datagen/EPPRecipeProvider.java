@@ -336,6 +336,15 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.MOD_EXPORT_BUS))
                 .save(c, ExtendedAE.id("mod_export_bus"));
 
+        // Mod Export Bus
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EPPItemAndBlock.ACTIVE_FORMATION_PLANE)
+                .requires(AEParts.FORMATION_PLANE)
+                .requires(AEParts.EXPORT_BUS)
+                .requires(AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.ACTIVE_FORMATION_PLANE))
+                .save(c, ExtendedAE.id("active_formation_plane"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)

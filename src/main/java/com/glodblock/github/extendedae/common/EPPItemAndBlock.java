@@ -61,6 +61,7 @@ public class EPPItemAndBlock {
     public static PartItem<PartThresholdLevelEmitter> THRESHOLD_LEVEL_EMITTER;
     public static PartItem<PartModStorageBus> MOD_STORAGE_BUS;
     public static PartItem<PartModExportBus> MOD_EXPORT_BUS;
+    public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
     public static BlockFishbig FISHBIG;
 
     public static void init(EAERegistryHandler regHandler) {
@@ -92,6 +93,7 @@ public class EPPItemAndBlock {
         THRESHOLD_LEVEL_EMITTER = new PartItem<>(new Item.Properties(), PartThresholdLevelEmitter.class, PartThresholdLevelEmitter::new);
         MOD_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartModStorageBus.class, PartModStorageBus::new);
         MOD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartModExportBus.class, PartModExportBus::new);
+        ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -122,6 +124,7 @@ public class EPPItemAndBlock {
         regHandler.item("threshold_level_emitter", THRESHOLD_LEVEL_EMITTER);
         regHandler.item("mod_storage_bus", MOD_STORAGE_BUS);
         regHandler.item("mod_export_bus", MOD_EXPORT_BUS);
+        regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
     }
 
 }

@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.client;
 import appeng.api.util.AEColor;
 import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.*;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiCraftingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiProcessingPattern;
@@ -10,6 +11,7 @@ import com.glodblock.github.extendedae.client.gui.pattern.GuiSmithingTablePatter
 import com.glodblock.github.extendedae.client.gui.pattern.GuiStonecuttingPattern;
 import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
+import com.glodblock.github.extendedae.client.model.ExPlaneModel;
 import com.glodblock.github.extendedae.client.render.tesr.ExChargerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExDriveTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExInscriberTESR;
@@ -60,6 +62,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerRenamer.TYPE, GuiRenamer::new, "/screens/renamer.json");
         InitScreens.register(ContainerModStorageBus.TYPE, GuiModStorageBus::new, "/screens/mod_storage_bus.json");
         InitScreens.register(ContainerModExportBus.TYPE, GuiModExportBus::new, "/screens/mod_export_bus.json");
+        InitScreens.register(ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -81,6 +84,8 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(GlodUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
         BlockEntityRenderers.register(GlodUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
+        event.register("active_formation_plane", new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane")));
+        event.register("active_formation_plane_on", new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane_on")));
     }
 
     @SubscribeEvent
