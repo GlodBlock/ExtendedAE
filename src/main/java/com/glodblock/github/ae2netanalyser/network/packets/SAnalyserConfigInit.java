@@ -1,7 +1,7 @@
 package com.glodblock.github.ae2netanalyser.network.packets;
 
 import com.glodblock.github.ae2netanalyser.client.gui.GuiAnalyser;
-import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyser;
+import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -9,13 +9,13 @@ import net.minecraft.world.entity.player.Player;
 
 public class SAnalyserConfigInit implements IMessage<SAnalyserConfigInit> {
 
-    private ItemNetworkAnalyser.AnalyserConfig config;
+    private ItemNetworkAnalyzer.AnalyserConfig config;
 
     public SAnalyserConfigInit() {
         // NO-OP
     }
 
-    public SAnalyserConfigInit(ItemNetworkAnalyser.AnalyserConfig config) {
+    public SAnalyserConfigInit(ItemNetworkAnalyzer.AnalyserConfig config) {
         this.config = config;
     }
 
@@ -26,7 +26,7 @@ public class SAnalyserConfigInit implements IMessage<SAnalyserConfigInit> {
 
     @Override
     public void fromBytes(FriendlyByteBuf buf) {
-        this.config = ItemNetworkAnalyser.AnalyserConfig.readFromBytes(buf);
+        this.config = ItemNetworkAnalyzer.AnalyserConfig.readFromBytes(buf);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.glodblock.github.ae2netanalyser.common.me.tracker;
+package com.glodblock.github.ae2netanalyser.common.me.network.tracker;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;

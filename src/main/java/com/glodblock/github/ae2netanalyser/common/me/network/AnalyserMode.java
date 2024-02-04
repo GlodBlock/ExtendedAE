@@ -1,4 +1,4 @@
-package com.glodblock.github.ae2netanalyser.common.me;
+package com.glodblock.github.ae2netanalyser.common.me.network;
 
 import net.minecraft.network.chat.Component;
 

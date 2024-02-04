@@ -1,9 +1,9 @@
-package com.glodblock.github.ae2netanalyser.common.me;
+package com.glodblock.github.ae2netanalyser.common.me.network;
 
 import com.glodblock.github.ae2netanalyser.AEAnalyser;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.LinkFlag;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.NodeFlag;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.State;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.LinkFlag;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.NodeFlag;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.State;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;

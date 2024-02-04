@@ -1,9 +1,9 @@
 package com.glodblock.github.ae2netanalyser.client.render;
 
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
-import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
-import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.LinkFlag;
+import com.glodblock.github.ae2netanalyser.common.me.network.AnalyserMode;
+import com.glodblock.github.ae2netanalyser.common.me.network.NetworkData;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.LinkFlag;
 import com.glodblock.github.ae2netanalyser.util.ClientUtil;
 import com.glodblock.github.ae2netanalyser.util.Util;
 import com.glodblock.github.glodium.client.render.ColorData;

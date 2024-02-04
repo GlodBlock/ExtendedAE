@@ -1,4 +1,4 @@
-package com.glodblock.github.ae2netanalyser.common.me.netdata;
+package com.glodblock.github.ae2netanalyser.common.me.network.netdata;
 
 public enum LinkFlag {
 

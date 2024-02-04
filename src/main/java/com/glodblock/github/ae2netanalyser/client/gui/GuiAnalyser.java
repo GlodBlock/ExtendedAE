@@ -8,10 +8,10 @@ import com.glodblock.github.ae2netanalyser.client.gui.elements.DraggableArea;
 import com.glodblock.github.ae2netanalyser.client.gui.elements.DrawableArea;
 import com.glodblock.github.ae2netanalyser.client.gui.textures.Blitters;
 import com.glodblock.github.ae2netanalyser.client.render.NetworkDataHandler;
-import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyser;
-import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.LinkFlag;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.NodeFlag;
+import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
+import com.glodblock.github.ae2netanalyser.common.me.network.AnalyserMode;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.LinkFlag;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.NodeFlag;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserConfigSave;
@@ -50,7 +50,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
 
     public GuiAnalyser(ContainerAnalyser menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.colors.putAll(ItemNetworkAnalyser.defaultColors);
+        this.colors.putAll(ItemNetworkAnalyzer.defaultColors);
         this.clickables.add(new ClickableArea(39, 21, 6, 11, this, () -> this.changeMode(-1)));
         this.clickables.add(new ClickableArea(107, 21, 6, 11, this, () -> this.changeMode(1)));
         this.clickables.add(new ClickableArea(39, 49, 6, 11, this, () -> this.changeSize(-0.1f)));
@@ -72,7 +72,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
         AEANetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
     }
 
-    public void loadConfig(ItemNetworkAnalyser.AnalyserConfig config) {
+    public void loadConfig(ItemNetworkAnalyzer.AnalyserConfig config) {
         this.mode = config.mode();
         this.size = config.nodeSize();
         this.colors.clear();
@@ -85,7 +85,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
 
     public void loadDefault() {
         this.colors.clear();
-        this.colors.putAll(ItemNetworkAnalyser.defaultColors);
+        this.colors.putAll(ItemNetworkAnalyzer.defaultColors);
         for (var entry : this.colors.entrySet()) {
             var btn = this.colorBtns.get(entry.getKey());
             btn.setColor(entry.getValue());
@@ -246,7 +246,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
 
     @Override
     public void onClose() {
-        AEANetworkHandler.INSTANCE.sendToServer(new CAnalyserConfigSave(new ItemNetworkAnalyser.AnalyserConfig(this.mode, this.size, this.colors)));
+        AEANetworkHandler.INSTANCE.sendToServer(new CAnalyserConfigSave(new ItemNetworkAnalyzer.AnalyserConfig(this.mode, this.size, this.colors)));
         super.onClose();
     }
 

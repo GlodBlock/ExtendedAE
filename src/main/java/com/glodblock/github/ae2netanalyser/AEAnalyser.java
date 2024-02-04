@@ -5,7 +5,7 @@ import com.glodblock.github.ae2netanalyser.client.gui.GuiAnalyser;
 import com.glodblock.github.ae2netanalyser.client.render.NetworkRender;
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
 import com.glodblock.github.ae2netanalyser.common.AEARegistryHandler;
-import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
+import com.glodblock.github.ae2netanalyser.common.me.network.tracker.PlayerTracker;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.mojang.logging.LogUtils;

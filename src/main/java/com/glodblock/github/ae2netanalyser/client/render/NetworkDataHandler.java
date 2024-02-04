@@ -1,8 +1,8 @@
 package com.glodblock.github.ae2netanalyser.client.render;
 
-import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyser;
-import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
-import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
+import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
+import com.glodblock.github.ae2netanalyser.common.me.network.AnalyserMode;
+import com.glodblock.github.ae2netanalyser.common.me.network.NetworkData;
 import com.glodblock.github.glodium.client.render.ColorData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 public class NetworkDataHandler {
 
     private static NetworkData DATA = null;
-    private static ItemNetworkAnalyser.AnalyserConfig CONFIG = new ItemNetworkAnalyser.AnalyserConfig(
+    private static ItemNetworkAnalyzer.AnalyserConfig CONFIG = new ItemNetworkAnalyzer.AnalyserConfig(
             AnalyserMode.FULL,
             0.4f,
-            ItemNetworkAnalyser.defaultColors
+            ItemNetworkAnalyzer.defaultColors
     );
     private static final ColorData WHITE = new ColorData(1f, 1f, 1f);
     private static boolean needUpdate = true;
@@ -52,7 +52,7 @@ public class NetworkDataHandler {
         return CONFIG.mode();
     }
 
-    public static void updateConfig(ItemNetworkAnalyser.AnalyserConfig config) {
+    public static void updateConfig(ItemNetworkAnalyzer.AnalyserConfig config) {
         CONFIG = config;
         needUpdate = true;
     }

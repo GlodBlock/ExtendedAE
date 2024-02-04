@@ -13,14 +13,14 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
 import com.glodblock.github.ae2netanalyser.AEAnalyser;
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
-import com.glodblock.github.ae2netanalyser.common.inventory.AnalyserInventory;
-import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
-import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.FlagType;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.LinkFlag;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.NodeFlag;
-import com.glodblock.github.ae2netanalyser.common.me.netdata.State;
-import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
+import com.glodblock.github.ae2netanalyser.common.inventory.DummyItemInventory;
+import com.glodblock.github.ae2netanalyser.common.me.network.AnalyserMode;
+import com.glodblock.github.ae2netanalyser.common.me.network.NetworkData;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.FlagType;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.LinkFlag;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.NodeFlag;
+import com.glodblock.github.ae2netanalyser.common.me.network.netdata.State;
+import com.glodblock.github.ae2netanalyser.common.me.network.tracker.PlayerTracker;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.SNetworkDataUpdate;
@@ -53,7 +53,7 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Set;
 
-public class ItemNetworkAnalyser extends Item implements IMenuItem {
+public class ItemNetworkAnalyzer extends Item implements IMenuItem {
 
     public static final Reference2ObjectMap<Enum<?>, ColorData> defaultColors = new Reference2ObjectOpenHashMap<>();
 
@@ -67,7 +67,7 @@ public class ItemNetworkAnalyser extends Item implements IMenuItem {
         defaultColors.put(LinkFlag.COMPRESSED, new ColorData(0.8f, 1f, 0f, 1f));
     }
 
-    public ItemNetworkAnalyser() {
+    public ItemNetworkAnalyzer() {
         super(new Item.Properties().stacksTo(1));
     }
 
@@ -243,7 +243,7 @@ public class ItemNetworkAnalyser extends Item implements IMenuItem {
 
     @Override
     public @Nullable ItemMenuHost getMenuHost(Player player, int inventorySlot, ItemStack stack, @Nullable BlockPos pos) {
-        return new AnalyserInventory(player, inventorySlot, stack);
+        return new DummyItemInventory(player, inventorySlot, stack);
     }
 
     public record AnalyserConfig(AnalyserMode mode, float nodeSize, Reference2ObjectMap<Enum<?>, ColorData> colors) {

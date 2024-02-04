@@ -1,7 +1,7 @@
 package com.glodblock.github.ae2netanalyser.network.packets;
 
 import com.glodblock.github.ae2netanalyser.client.render.NetworkDataHandler;
-import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
+import com.glodblock.github.ae2netanalyser.common.me.network.NetworkData;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
