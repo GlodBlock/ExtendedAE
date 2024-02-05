@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,8 +41,14 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
                 return LazyOptional.of(() -> new NetworkGTEUPower(this.getStorage(), this.getSource(), this.getAsker(side), side != null ? side.getOpposite() : null)).cast();
             }
         }*/
-        if (cap == ForgeCapabilities.ENERGY && this.getStorage() != null) {
-            return LazyOptional.of(() -> new NetworkFEPower(this.getStorage(), this.getSource())).cast();
+        if (cap == ForgeCapabilities.ENERGY) {
+            return LazyOptional.of(() -> {
+                if (this.getStorage() != null) {
+                    return new NetworkFEPower(this.getStorage(), this.getSource());
+                } else {
+                    return new EnergyStorage(0);
+                }
+            }).cast();
         }
         return super.getCapability(cap, side);
     }

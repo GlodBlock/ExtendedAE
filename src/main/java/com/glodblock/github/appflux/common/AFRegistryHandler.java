@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -72,6 +73,15 @@ public class AFRegistryHandler extends RegistryHandler {
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_16k, AppFlux.id("block/drive/fe_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
+        for (Pair<String, Block> entry : blocks) {
+            Block block = ForgeRegistries.BLOCKS.getValue(AppFlux.id(entry.getKey()));
+            if (block instanceof AEBaseEntityBlock<?>) {
+                AEBaseBlockEntity.registerBlockEntityItem(
+                        ((AEBaseEntityBlock<?>) block).getBlockEntityType(),
+                        block.asItem()
+                );
+            }
+        }
         /*if (ModList.get().isLoaded("gtceu")) {
             StorageCells.addCellHandler(GTEUCellHandler.HANDLER);
             StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_1k, AppFlux.id("block/drive/gteu_cell"));
