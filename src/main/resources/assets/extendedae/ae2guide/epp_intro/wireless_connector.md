@@ -40,6 +40,19 @@ Linked ME Wireless Connectors
   <ImportStructure src="../structure/wireless_connector_on.snbt"></ImportStructure>
 </GameScene>
 
+## Color
+
+Wireless Connectors can be colored like cables and only connect the cable/connectors with the same color.
+
+You need a <ItemLink id="ae2:color_applicator" /> to color the connector.
+
+So you can set up your wireless connectors like this:
+
+<GameScene zoom="3" background="transparent" interactive={true}>
+  <ImportStructure src="../structure/wireless_connector_setup.snbt"></ImportStructure>
+</GameScene>
+
+
 ## Power Usage
 
 ME Wireless Connector costs more energy when they are farther apart. Its cost-distance curve isn't linear so the power 

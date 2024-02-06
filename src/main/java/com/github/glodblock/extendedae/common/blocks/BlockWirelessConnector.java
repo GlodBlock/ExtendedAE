@@ -24,26 +24,30 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> {
 
     private static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    private static final IntegerProperty COLOR = IntegerProperty.create("color", 0, 16);
 
     public BlockWirelessConnector() {
         this.registerDefaultState(this.defaultBlockState().setValue(CONNECTED, false));
+        this.registerDefaultState(this.defaultBlockState().setValue(COLOR, 16));
     }
 
     @Override
     protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(CONNECTED);
+        builder.add(COLOR);
     }
 
     @Override
     protected BlockState updateBlockStateFromBlockEntity(BlockState currentState, TileWirelessConnector be) {
-        return currentState.setValue(CONNECTED, be.isConnected());
+        return currentState.setValue(CONNECTED, be.isConnected()).setValue(COLOR, be.getColor().ordinal());
     }
 
     @SuppressWarnings("deprecation")

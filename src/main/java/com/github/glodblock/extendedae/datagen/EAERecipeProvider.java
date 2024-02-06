@@ -274,6 +274,88 @@ public class EAERecipeProvider extends FabricRecipeProvider {
                 .define('E', ConventionTags.INTERFACE)
                 .unlockedBy(C, has(EAEItemAndBlock.EX_CHARGER))
                 .save(c, EAE.id("ex_charger"));
+
+        // Tag Storage Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.TAG_STORAGE_BUS)
+                .pattern(" L ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('L', AEItems.LOGIC_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.STORAGE_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EAEItemAndBlock.TAG_STORAGE_BUS))
+                .save(c, EAE.id("tag_storage_bus"));
+
+        // Tag Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.TAG_EXPORT_BUS)
+                .pattern(" L ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('L', AEItems.LOGIC_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.EXPORT_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EAEItemAndBlock.TAG_EXPORT_BUS))
+                .save(c, EAE.id("tag_export_bus"));
+
+        // Threshold Level Emitter
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.THRESHOLD_LEVEL_EMITTER)
+                .pattern("RER")
+                .pattern(" C ")
+                .define('R', Items.REDSTONE_TORCH)
+                .define('E', AEParts.LEVEL_EMITTER)
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EAEItemAndBlock.THRESHOLD_LEVEL_EMITTER))
+                .save(c, EAE.id("threshold_level_emitter"));
+
+        // Mod Storage Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.MOD_STORAGE_BUS)
+                .pattern(" C ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.STORAGE_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EAEItemAndBlock.MOD_STORAGE_BUS))
+                .save(c, EAE.id("mod_storage_bus"));
+
+        // Mod Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.MOD_EXPORT_BUS)
+                .pattern(" C ")
+                .pattern("RBR")
+                .pattern(" K ")
+                .define('C', AEItems.CALCULATION_PROCESSOR)
+                .define('R', ConventionTags.REDSTONE)
+                .define('B', AEParts.EXPORT_BUS)
+                .define('K', Items.BOOK)
+                .unlockedBy(C, has(EAEItemAndBlock.MOD_EXPORT_BUS))
+                .save(c, EAE.id("mod_export_bus"));
+
+        // Mod Export Bus
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EAEItemAndBlock.ACTIVE_FORMATION_PLANE)
+                .requires(AEParts.FORMATION_PLANE)
+                .requires(AEParts.EXPORT_BUS)
+                .requires(AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(EAEItemAndBlock.ACTIVE_FORMATION_PLANE))
+                .save(c, EAE.id("active_formation_plane"));
+
+        // Fishbig
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.FISHBIG)
+                .pattern("FFF")
+                .pattern("F F")
+                .pattern("FFF")
+                .define('F', Items.PUFFERFISH)
+                .unlockedBy(C, has(EAEItemAndBlock.FISHBIG))
+                .save(c, EAE.id("fishbig"));
     }
 
 }

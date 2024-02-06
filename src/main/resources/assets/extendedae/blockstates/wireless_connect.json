@@ -1,10 +1,165 @@
 {
-  "variants": {
-    "connected=false": {
-      "model": "extendedae:block/wireless_connect_off"
+  "multipart": [
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_off"
+      },
+      "when": {
+        "connected": "false"
+      }
     },
-    "connected=true": {
-      "model": "extendedae:block/wireless_connect_on"
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_white"
+      },
+      "when": {
+        "connected": "true",
+        "color": "0"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_orange"
+      },
+      "when": {
+        "connected": "true",
+        "color": "1"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_magenta"
+      },
+      "when": {
+        "connected": "true",
+        "color": "2"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_light_blue"
+      },
+      "when": {
+        "connected": "true",
+        "color": "3"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_yellow"
+      },
+      "when": {
+        "connected": "true",
+        "color": "4"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_lime"
+      },
+      "when": {
+        "connected": "true",
+        "color": "5"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_pink"
+      },
+      "when": {
+        "connected": "true",
+        "color": "6"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_gray"
+      },
+      "when": {
+        "connected": "true",
+        "color": "7"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_light_gray"
+      },
+      "when": {
+        "connected": "true",
+        "color": "8"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_cyan"
+      },
+      "when": {
+        "connected": "true",
+        "color": "9"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_purple"
+      },
+      "when": {
+        "connected": "true",
+        "color": "10"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_blue"
+      },
+      "when": {
+        "connected": "true",
+        "color": "11"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_brown"
+      },
+      "when": {
+        "connected": "true",
+        "color": "12"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_green"
+      },
+      "when": {
+        "connected": "true",
+        "color": "13"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_red"
+      },
+      "when": {
+        "connected": "true",
+        "color": "14"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_black"
+      },
+      "when": {
+        "connected": "true",
+        "color": "15"
+      }
+    },
+    {
+      "apply": {
+        "model": "extendedae:block/wireless_connect_fluix"
+      },
+      "when": {
+        "connected": "true",
+        "color": "16"
+      }
     }
-  }
+  ]
 }

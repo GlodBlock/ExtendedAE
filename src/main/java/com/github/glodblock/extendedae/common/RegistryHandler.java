@@ -17,11 +17,17 @@ import appeng.items.AEBaseItem;
 import com.github.glodblock.extendedae.EAE;
 import com.github.glodblock.extendedae.common.inventory.InfinityCellInventory;
 import com.github.glodblock.extendedae.common.items.ItemMEPackingTape;
+import com.github.glodblock.extendedae.common.parts.PartActiveFormationPlane;
 import com.github.glodblock.extendedae.common.parts.PartExExportBus;
 import com.github.glodblock.extendedae.common.parts.PartExImportBus;
 import com.github.glodblock.extendedae.common.parts.PartExInterface;
 import com.github.glodblock.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.extendedae.common.parts.PartExPatternProvider;
+import com.github.glodblock.extendedae.common.parts.PartModExportBus;
+import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
+import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
 import com.github.glodblock.extendedae.common.tileentities.TileExInterface;
@@ -29,6 +35,7 @@ import com.github.glodblock.extendedae.common.tileentities.TileExMolecularAssemb
 import com.github.glodblock.extendedae.common.tileentities.TileExPatternProvider;
 import com.github.glodblock.extendedae.common.tileentities.TileIngredientBuffer;
 import com.github.glodblock.extendedae.config.EPPConfig;
+import com.github.glodblock.extendedae.container.ContainerActiveFormationPlane;
 import com.github.glodblock.extendedae.container.ContainerExDrive;
 import com.github.glodblock.extendedae.container.ContainerExIOBus;
 import com.github.glodblock.extendedae.container.ContainerExInscriber;
@@ -37,7 +44,13 @@ import com.github.glodblock.extendedae.container.ContainerExMolecularAssembler;
 import com.github.glodblock.extendedae.container.ContainerExPatternProvider;
 import com.github.glodblock.extendedae.container.ContainerExPatternTerminal;
 import com.github.glodblock.extendedae.container.ContainerIngredientBuffer;
+import com.github.glodblock.extendedae.container.ContainerModExportBus;
+import com.github.glodblock.extendedae.container.ContainerModStorageBus;
 import com.github.glodblock.extendedae.container.ContainerPatternModifier;
+import com.github.glodblock.extendedae.container.ContainerRenamer;
+import com.github.glodblock.extendedae.container.ContainerTagExportBus;
+import com.github.glodblock.extendedae.container.ContainerTagStorageBus;
+import com.github.glodblock.extendedae.container.ContainerThresholdLevelEmitter;
 import com.github.glodblock.extendedae.container.ContainerWirelessConnector;
 import com.github.glodblock.extendedae.container.pattern.ContainerCraftingPattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerProcessingPattern;
@@ -136,7 +149,14 @@ public class RegistryHandler {
                 ContainerExDrive.TYPE,
                 ContainerPatternModifier.TYPE,
                 ContainerExMolecularAssembler.TYPE,
-                ContainerExInscriber.TYPE
+                ContainerExInscriber.TYPE,
+                ContainerTagStorageBus.TYPE,
+                ContainerTagExportBus.TYPE,
+                ContainerThresholdLevelEmitter.TYPE,
+                ContainerRenamer.TYPE,
+                ContainerModStorageBus.TYPE,
+                ContainerModExportBus.TYPE,
+                ContainerActiveFormationPlane.TYPE
         };
     }
 
@@ -214,6 +234,12 @@ public class RegistryHandler {
         PartModels.registerModels(PartExExportBus.MODELS);
         PartModels.registerModels(PartExImportBus.MODELS);
         PartModels.registerModels(PartExPatternAccessTerminal.MODELS);
+        PartModels.registerModels(PartTagStorageBus.MODEL_BASE);
+        PartModels.registerModels(PartTagExportBus.MODEL_BASE);
+        PartModels.registerModels(PartThresholdLevelEmitter.MODELS);
+        PartModels.registerModels(PartModStorageBus.MODEL_BASE);
+        PartModels.registerModels(PartModExportBus.MODEL_BASE);
+        PartModels.registerModels(PartActiveFormationPlane.MODELS);
     }
 
     private void bindItemTab() {

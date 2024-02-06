@@ -20,6 +20,7 @@ public class EAELootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(EAEItemAndBlock.EX_ASSEMBLER);
         dropSelf(EAEItemAndBlock.EX_INSCRIBER);
         dropSelf(EAEItemAndBlock.EX_CHARGER);
+        dropSelf(EAEItemAndBlock.FISHBIG);
     }
 
 }

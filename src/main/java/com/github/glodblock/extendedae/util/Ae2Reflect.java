@@ -1,9 +1,13 @@
 package com.github.glodblock.extendedae.util;
 
 import appeng.api.storage.cells.CellState;
+import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.storage.DriveBlockEntity;
 import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
+import appeng.parts.AEBasePart;
+import appeng.parts.automation.AbstractLevelEmitterPart;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 
 import java.lang.reflect.Field;
@@ -18,6 +22,9 @@ public class Ae2Reflect {
     private static final Field fDriveBlockEntity_clientSideCellState;
     private static final Field fDriveBlockEntity_clientSideCellItems;
     private static final Field fDriveBlockEntity_clientSideOnline;
+    private static final Field fAbstractLevelEmitterPart_prevState;
+    private static final Field fAEBaseBlockEntity_customName;
+    private static final Field fAEBasePart_customName;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
 
@@ -28,6 +35,9 @@ public class Ae2Reflect {
             fDriveBlockEntity_clientSideCellState = reflectField(DriveBlockEntity.class, "clientSideCellState");
             fDriveBlockEntity_clientSideCellItems = reflectField(DriveBlockEntity.class, "clientSideCellItems");
             fDriveBlockEntity_clientSideOnline = reflectField(DriveBlockEntity.class, "clientSideOnline");
+            fAbstractLevelEmitterPart_prevState = reflectField(AbstractLevelEmitterPart.class, "prevState");
+            fAEBaseBlockEntity_customName = reflectField(AEBaseBlockEntity.class, "customName");
+            fAEBasePart_customName = reflectField(AEBasePart.class, "customName");
             mDriveBlockEntity_updateClientSideState = reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
         } catch (Exception e) {
@@ -135,6 +145,18 @@ public class Ae2Reflect {
 
     public static int getCompressIndex(AECraftingPattern owner, int id) {
         return Ae2Reflect.executeMethod2(owner, mAECraftingPattern_getCompressedIndexFromSparse, id);
+    }
+
+    public static boolean getPrevState(AbstractLevelEmitterPart owner) {
+        return Ae2Reflect.readField(owner, fAbstractLevelEmitterPart_prevState);
+    }
+
+    public static void setCustomName(Object owner, Component name) {
+        if (owner instanceof AEBaseBlockEntity) {
+            Ae2Reflect.writeField(owner, fAEBaseBlockEntity_customName, name);
+        } else if (owner instanceof AEBasePart) {
+            Ae2Reflect.writeField(owner, fAEBasePart_customName, name);
+        }
     }
 
 }

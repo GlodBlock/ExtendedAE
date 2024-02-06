@@ -1,11 +1,13 @@
 package com.github.glodblock.extendedae.common.tileentities;
 
+import appeng.api.implementations.blockentities.IColorableBlockEntity;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import appeng.core.definitions.AEItems;
@@ -17,15 +19,17 @@ import com.github.glodblock.extendedae.util.FCUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.List;
 
 // Adapt from Quantum Bridge code
-public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject {
+public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity {
 
     private boolean updateStatus = true;
     private long freq = 0;
@@ -34,6 +38,8 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     private final IUpgradeInventory upgrades;
     private final CacheHolder<BlockPos> other = CacheHolder.empty();
     private static final FreqGenerator<Long> G = FreqGenerator.createLong();
+    @NotNull
+    private AEColor color = AEColor.TRANSPARENT;
 
     public TileWirelessConnector(BlockPos pos, BlockState blockState) {
         super(FCUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EAEItemAndBlock.WIRELESS_CONNECTOR), pos, blockState);
@@ -115,6 +121,11 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         this.freq = data.getLong("freq");
         this.upgrades.readFromNBT(data, "upgrades");
         G.markUsed(this.freq);
+        if (data.contains("color")) {
+            this.color = AEColor.valueOf(data.getString("color"));
+        } else {
+            this.color = AEColor.TRANSPARENT;
+        }
     }
 
     @Override
@@ -123,6 +134,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         data.putLong("freq", this.freq);
         this.upgrades.writeToNBT(data, "upgrades");
         G.markUsed(this.freq);
+        data.putString("color", this.color.name());
     }
 
     public void setFreq(long freq) {
@@ -166,6 +178,23 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         for (var card : this.upgrades) {
             drops.add(card);
         }
+    }
+
+    @Override
+    public @NotNull AEColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public boolean recolourBlock(Direction side, AEColor colour, Player who) {
+        if (colour == this.color) {
+            return false;
+        }
+        this.color = colour;
+        this.saveChanges();
+        this.markForUpdate();
+        this.getMainNode().setGridColor(this.color);
+        return true;
     }
 
 }

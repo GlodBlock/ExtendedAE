@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "extendedae:block/fishbig",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extendedae:block/fishbig"
+    },
+    "facing=south": {
+      "model": "extendedae:block/fishbig",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "extendedae:block/fishbig",
+      "y": 270
+    }
+  }
+}

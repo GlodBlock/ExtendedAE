@@ -10,6 +10,7 @@ import com.github.glodblock.extendedae.network.packet.CUpdatePage;
 import com.github.glodblock.extendedae.network.packet.IMessage;
 import com.github.glodblock.extendedae.network.packet.SAssemblerAnimation;
 import com.github.glodblock.extendedae.network.packet.SExPatternInfo;
+import com.github.glodblock.extendedae.network.packet.SGenericPacket;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -50,6 +51,7 @@ public class EAENetworkServer {
         }
         registerPacket(SExPatternInfo.class, SExPatternInfo::new);
         registerPacket(SAssemblerAnimation.class, SAssemblerAnimation::new);
+        registerPacket(SGenericPacket.class, SGenericPacket::new);
         registerPacket(CPatternKey.class, CPatternKey::new);
         registerPacket(CUpdatePage.class, CUpdatePage::new);
         registerPacket(CGenericPacket.class, CGenericPacket::new);

@@ -7,6 +7,7 @@ import com.github.glodblock.extendedae.common.blocks.BlockExInscriber;
 import com.github.glodblock.extendedae.common.blocks.BlockExInterface;
 import com.github.glodblock.extendedae.common.blocks.BlockExMolecularAssembler;
 import com.github.glodblock.extendedae.common.blocks.BlockExPatternProvider;
+import com.github.glodblock.extendedae.common.blocks.BlockFishbig;
 import com.github.glodblock.extendedae.common.blocks.BlockIngredientBuffer;
 import com.github.glodblock.extendedae.common.blocks.BlockWirelessConnector;
 import com.github.glodblock.extendedae.common.items.InfinityCell;
@@ -19,11 +20,17 @@ import com.github.glodblock.extendedae.common.items.ItemPatternAccessTerminalUpg
 import com.github.glodblock.extendedae.common.items.ItemPatternModifier;
 import com.github.glodblock.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.github.glodblock.extendedae.common.items.ItemWirelessConnectTool;
+import com.github.glodblock.extendedae.common.parts.PartActiveFormationPlane;
 import com.github.glodblock.extendedae.common.parts.PartExExportBus;
 import com.github.glodblock.extendedae.common.parts.PartExImportBus;
 import com.github.glodblock.extendedae.common.parts.PartExInterface;
 import com.github.glodblock.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.extendedae.common.parts.PartExPatternProvider;
+import com.github.glodblock.extendedae.common.parts.PartModExportBus;
+import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
+import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
 import com.github.glodblock.extendedae.common.tileentities.TileExDrive;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
@@ -59,6 +66,13 @@ public class EAEItemAndBlock {
     public static BlockExMolecularAssembler EX_ASSEMBLER;
     public static BlockExInscriber EX_INSCRIBER;
     public static BlockExCharger EX_CHARGER;
+    public static PartItem<PartTagStorageBus> TAG_STORAGE_BUS;
+    public static PartItem<PartTagExportBus> TAG_EXPORT_BUS;
+    public static PartItem<PartThresholdLevelEmitter> THRESHOLD_LEVEL_EMITTER;
+    public static PartItem<PartModStorageBus> MOD_STORAGE_BUS;
+    public static PartItem<PartModExportBus> MOD_EXPORT_BUS;
+    public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
+    public static BlockFishbig FISHBIG;
 
     public static void init(RegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -84,6 +98,13 @@ public class EAEItemAndBlock {
         EX_ASSEMBLER = new BlockExMolecularAssembler();
         EX_INSCRIBER = new BlockExInscriber();
         EX_CHARGER = new BlockExCharger();
+        TAG_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartTagStorageBus.class, PartTagStorageBus::new);
+        TAG_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartTagExportBus.class, PartTagExportBus::new);
+        THRESHOLD_LEVEL_EMITTER = new PartItem<>(new Item.Properties(), PartThresholdLevelEmitter.class, PartThresholdLevelEmitter::new);
+        MOD_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartModStorageBus.class, PartModStorageBus::new);
+        MOD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartModExportBus.class, PartModExportBus::new);
+        ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
+        FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -92,6 +113,7 @@ public class EAEItemAndBlock {
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
+        regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);
@@ -107,6 +129,12 @@ public class EAEItemAndBlock {
         regHandler.item("wireless_tool", WIRELESS_TOOL);
         regHandler.item("drive_upgrade", DRIVE_UPGRADE);
         regHandler.item("pattern_modifier", PATTERN_MODIFIER);
+        regHandler.item("tag_storage_bus", TAG_STORAGE_BUS);
+        regHandler.item("tag_export_bus", TAG_EXPORT_BUS);
+        regHandler.item("threshold_level_emitter", THRESHOLD_LEVEL_EMITTER);
+        regHandler.item("mod_storage_bus", MOD_STORAGE_BUS);
+        regHandler.item("mod_export_bus", MOD_EXPORT_BUS);
+        regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
     }
 
 }
