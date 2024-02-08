@@ -8,11 +8,11 @@ import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -29,14 +29,16 @@ public class ItemMEPackingTape extends Item {
     @Nonnull
     @Override
     public InteractionResult useOn(@Nonnull UseOnContext context) {
-        var side = context.getClickedFace();
         var pos = context.getClickedPos();
         var world = context.getLevel();
         var tile = world.getBlockEntity(pos);
-        if (tile != null) {
+        var player = context.getPlayer();
+        if (tile != null && player != null) {
             var tag = new CompoundTag();
             if (tile instanceof CableBusBlockEntity cable) {
-                var part = cable.getPart(side);
+                Vec3 hitVec = context.getClickLocation();
+                Vec3 hitInBlock = new Vec3(hitVec.x - pos.getX(), hitVec.y - pos.getY(), hitVec.z - pos.getZ());
+                var part = cable.getCableBus().selectPartLocal(hitInBlock).part;
                 if (part != null) {
                     tag.putBoolean("part", true);
                     var partItem = part.getPartItem().asItem();
@@ -73,7 +75,7 @@ public class ItemMEPackingTape extends Item {
                 var pack = new ItemStack(EPPItemAndBlock.PACKAGE);
                 pack.setTag(tag);
                 Platform.spawnDrops(world, pos, Collections.singletonList(pack));
-                context.getItemInHand().hurt(1, RandomSource.create(), null);
+                context.getItemInHand().hurtAndBreak(1, player, e -> e.broadcastBreakEvent(context.getHand()));
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
