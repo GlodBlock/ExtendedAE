@@ -36,6 +36,7 @@ public final class TagExpParser {
     }
 
     public static Set<TagKey<?>> getMatchingOre(String oreExp) {
+        oreExp = validateExp(oreExp);
         return CACHE.getUnchecked(oreExp);
     }
 
@@ -233,7 +234,7 @@ public final class TagExpParser {
         return lastPart.length() + index == oreDict.length();
     }
 
-    public static String validateExp(String input) {
+    private static String validateExp(String input) {
         // remove all operators that are double
         input = input.replaceAll("\\*{2,}", "*");
         input = input.replaceAll("&{2,}", "&");
