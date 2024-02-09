@@ -23,13 +23,7 @@ Here are some examples:
 
 forge:raw_materials/*
 
-- Deny all gems:
+- Accept all ingots and gems
 
-!(forge:gems/*)
-
-- Accept all dyes but cyan dye
-
-forge:dyes/* && !(forge:dyes/cyan)
-
-
+forge:ingots/* | forge:gems/*
 

@@ -78,7 +78,7 @@
   "gui.expatternprovider.tag_storage_bus": "ME标签存储总线",
   "gui.expatternprovider.tag_storage_bus.tooltip": "请输入标签",
   "gui.expatternprovider.tag_storage_bus.desc.01": "& = 逻辑与    | = 逻辑或",
-  "gui.expatternprovider.tag_storage_bus.desc.02": "^ = 逻辑异或    ! = 逻辑非",
+  "gui.expatternprovider.tag_storage_bus.desc.02": "^ = 逻辑异或",
   "gui.expatternprovider.tag_storage_bus.desc.03": "() 表示优先级    * 表示通配符",
   "gui.expatternprovider.tag_export_bus": "ME标签输出总线",
   "gui.expatternprovider.threshold_level_emitter": "ME阈值发信器",

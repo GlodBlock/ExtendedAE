@@ -78,7 +78,7 @@
   "gui.expatternprovider.tag_storage_bus": "Шина хранения по тегам",
   "gui.expatternprovider.tag_storage_bus.tooltip": "Входные теги",
   "gui.expatternprovider.tag_storage_bus.desc.01": "& = И               | = ИЛИ",
-  "gui.expatternprovider.tag_storage_bus.desc.02": "^ = ИСКЛ. ИЛИ    ! = НЕ",
+  "gui.expatternprovider.tag_storage_bus.desc.02": "^ = ИСКЛ. ИЛИ",
   "gui.expatternprovider.tag_storage_bus.desc.03": "() Для приоритета * Для совпадений",
   "gui.expatternprovider.tag_export_bus": "МЭ Шина экспорта по тегам",
   "gui.expatternprovider.threshold_level_emitter": "МЭ Порог. излучатель уровня",

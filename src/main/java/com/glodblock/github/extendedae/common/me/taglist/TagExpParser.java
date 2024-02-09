@@ -79,7 +79,7 @@ public final class TagExpParser {
             if (c == '(') {
                 List<MatchRule> subRules = new ArrayList<>();
                 i = parseExpression(subRules, expression.substring(i + 1)) + i + 1;
-                rules.add(MatchRule.group(subRules, builder.toString()));
+                rules.add(MatchRule.group(subRules));
                 builder = new StringBuilder();
             } else {
                 switch (c) {
@@ -106,7 +106,7 @@ public final class TagExpParser {
                 }
             }
         }
-        if (builder.length() > 0) {
+        if (!builder.isEmpty()) {
             rules.add(new MatchRule(builder.toString()));
         }
         return expression.length();
@@ -141,7 +141,7 @@ public final class TagExpParser {
 
                 boolean newResult;
                 if (rule.isGroup()) {
-                    newResult = rule.logic == MatchLogic.NOT ^ matches(rule.subRules, oreDict);
+                    newResult = matches(rule.subRules, oreDict);
                 } else {
                     newResult = matches(rule, oreDict);
                 }
@@ -176,7 +176,7 @@ public final class TagExpParser {
 
         String[] parts = filter.split("\\*+");
 
-        return (rule.logic == MatchLogic.NOT) ^ matches(parts, oreDict, startWild, endWild);
+        return matches(parts, oreDict, startWild, endWild);
     }
 
     private static boolean matches(String[] filter, String oreDict, boolean startWild, boolean endWild) {
@@ -239,7 +239,6 @@ public final class TagExpParser {
         input = input.replaceAll("\\*{2,}", "*");
         input = input.replaceAll("&{2,}", "&");
         input = input.replaceAll("\\|{2,}", "|");
-        input = input.replaceAll("!{2,}", "!");
         input = input.replaceAll("\\^{2,}", "^");
         input = input.replaceAll(" {2,}", " ");
         // move ( and ) so it doesn't create invalid expressions f.e. xxx (& yyy) => xxx & (yyy)
@@ -297,10 +296,6 @@ public final class TagExpParser {
         private final List<MatchRule> subRules;
 
         private MatchRule(MatchLogic logic, String expression, List<MatchRule> subRules) {
-            if (expression.startsWith("!")) {
-                logic = MatchLogic.NOT;
-                expression = expression.substring(1);
-            }
             this.logic = logic;
             this.expression = expression;
             this.subRules = subRules;
@@ -318,13 +313,8 @@ public final class TagExpParser {
             this(MatchLogic.ANY, expression);
         }
 
-        public static MatchRule not(String expression, boolean not) {
-            return new MatchRule(not ? MatchLogic.NOT : MatchLogic.ANY, expression);
-        }
-
-        public static MatchRule group(List<MatchRule> subRules, String expression) {
-            MatchLogic logic = expression.startsWith("!") ? MatchLogic.NOT : MatchLogic.ANY;
-            return new MatchRule(logic, "", subRules);
+        public static MatchRule group(List<MatchRule> subRules) {
+            return new MatchRule(MatchLogic.ANY, "", subRules);
         }
 
         public boolean isGroup() {
@@ -337,7 +327,6 @@ public final class TagExpParser {
         OR,
         AND,
         XOR,
-        NOT,
         ANY
     }
 
