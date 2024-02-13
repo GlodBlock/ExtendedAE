@@ -12,6 +12,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,9 @@ public class TagPriorityList implements IPartitionList {
     private final Set<TagKey<?>> whiteSet;
     private final Set<TagKey<?>> blackSet;
     private final String tagExp;
-    private final LoadingCache<Object, Boolean> accept = CacheBuilder.newBuilder().build(
+    private final LoadingCache<Object, Boolean> accept = CacheBuilder.newBuilder()
+            .expireAfterAccess(Duration.ofMinutes(10))
+            .build(
             new CacheLoader<>() {
                 @Override
                 public @NotNull Boolean load(@NotNull Object obj) {
