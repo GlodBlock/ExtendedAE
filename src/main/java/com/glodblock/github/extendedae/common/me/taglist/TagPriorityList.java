@@ -23,6 +23,7 @@ public class TagPriorityList implements IPartitionList {
     private final String tagExp;
     private final LoadingCache<Object, Boolean> accept = CacheBuilder.newBuilder()
             .expireAfterAccess(Duration.ofMinutes(10))
+            .maximumSize(4000)
             .build(
             new CacheLoader<>() {
                 @Override
