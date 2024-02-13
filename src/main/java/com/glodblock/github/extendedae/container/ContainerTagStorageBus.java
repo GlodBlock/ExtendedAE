@@ -48,14 +48,17 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
     @GuiSync(9)
     public String exp = "";
 
+    @GuiSync(10)
+    public String exp2 = "";
+
     public ContainerTagStorageBus(int id, Inventory ip, PartTagStorageBus te) {
         super(TYPE, id, ip, te);
 
         registerClientAction(ACTION_PARTITION, this::partition);
-        this.actions.put("set", o -> this.setExp(o.get(0)));
+        this.actions.put("set", o -> this.setExp(o.get(0), o.get(1)));
         this.actions.put("update", o -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
-                EPPNetworkHandler.INSTANCE.sendTo(new SGenericPacket("init", this.exp), sp);
+                EPPNetworkHandler.INSTANCE.sendTo(new SGenericPacket("init", this.exp, this.exp2), sp);
             }
         });
         this.connectedTo = te.getConnectedToDescription();
@@ -70,8 +73,11 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
     public void broadcastChanges() {
         super.broadcastChanges();
         this.connectedTo = getHost().getConnectedToDescription();
-        if (!this.exp.equals(getHost().getTagFilter())) {
-            this.exp = getHost().getTagFilter();
+        if (!this.exp.equals(getHost().getTagFilter(true))) {
+            this.exp = getHost().getTagFilter(true);
+        }
+        if (!this.exp2.equals(getHost().getTagFilter(false))) {
+            this.exp2 = getHost().getTagFilter(false);
         }
     }
 
@@ -95,8 +101,8 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
         this.broadcastChanges();
     }
 
-    public void setExp(String exp) {
-        getHost().setTagFilter(exp);
+    public void setExp(String exp, boolean isWhite) {
+        getHost().setTagFilter(exp, isWhite);
         this.broadcastChanges();
     }
 

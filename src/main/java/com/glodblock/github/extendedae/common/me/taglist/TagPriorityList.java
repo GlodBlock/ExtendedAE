@@ -17,13 +17,13 @@ import java.util.Set;
 
 public class TagPriorityList implements IPartitionList {
 
-    private final Set<TagKey<?>> tagKeys;
+    private final Set<TagKey<?>> whiteSet;
+    private final Set<TagKey<?>> blackSet;
     private final String tagExp;
-    private final LoadingCache<AEKey, Boolean> accept = CacheBuilder.newBuilder().build(
+    private final LoadingCache<Object, Boolean> accept = CacheBuilder.newBuilder().build(
             new CacheLoader<>() {
                 @Override
-                public @NotNull Boolean load(@NotNull AEKey key) {
-                    var obj = key.getPrimaryKey();
+                public @NotNull Boolean load(@NotNull Object obj) {
                     Holder<?> refer = null;
                     if (obj instanceof Item item) {
                         refer = ForgeRegistries.ITEMS.getHolder(item).orElse(null);
@@ -31,21 +31,31 @@ public class TagPriorityList implements IPartitionList {
                         refer = ForgeRegistries.FLUIDS.getHolder(fluid).orElse(null);
                     }
                     if (refer != null) {
-                        return refer.tags().anyMatch(tagKeys::contains);
+                        if (whiteSet.isEmpty()) {
+                            return false;
+                        }
+                        boolean pass = refer.tags().anyMatch(whiteSet::contains);
+                        if (pass) {
+                            if (!blackSet.isEmpty()) {
+                                return refer.tags().noneMatch(blackSet::contains);
+                            }
+                            return true;
+                        }
                     }
                     return false;
                 }
             }
     );
 
-    public TagPriorityList(Set<TagKey<?>> tagKeys, String tagExp) {
-        this.tagKeys = tagKeys;
+    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, String tagExp) {
+        this.whiteSet = whiteKeys;
+        this.blackSet = blackKeys;
         this.tagExp = tagExp;
     }
 
     @Override
     public boolean isListed(AEKey input) {
-        return this.accept.getUnchecked(input);
+        return this.accept.getUnchecked(input.getPrimaryKey());
     }
 
     @Override

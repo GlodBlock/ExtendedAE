@@ -77,6 +77,8 @@
   "gui.expatternprovider.pattern_modifier.clear.desc": "Clear all patterns' contents, turn them into blank patterns",
   "gui.expatternprovider.tag_storage_bus": "Tag Storage bus",
   "gui.expatternprovider.tag_storage_bus.tooltip": "Input tag here",
+  "gui.expatternprovider.tag_storage_bus.whitelist": "Whitelist Filter",
+  "gui.expatternprovider.tag_storage_bus.blacklist": "Blacklist Filter",
   "gui.expatternprovider.tag_storage_bus.desc.01": "& = AND    | = OR",
   "gui.expatternprovider.tag_storage_bus.desc.02": "^ = XOR",
   "gui.expatternprovider.tag_storage_bus.desc.03": "() for priority    * for wildcard",

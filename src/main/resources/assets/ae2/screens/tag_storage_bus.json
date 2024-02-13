@@ -3,7 +3,7 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/tag_storage_bus.png",
-    "srcRect": [0, 0, 176, 172]
+    "srcRect": [0, 0, 176, 207]
   },
   "text": {
     "dialog_title": {
@@ -15,13 +15,31 @@
         "top": 6
       }
     },
+    "whitelist": {
+      "text": {
+        "translate": "gui.expatternprovider.tag_storage_bus.whitelist"
+      },
+      "position": {
+        "left": 8,
+        "top": 27
+      }
+    },
+    "blacklist": {
+      "text": {
+        "translate": "gui.expatternprovider.tag_storage_bus.blacklist"
+      },
+      "position": {
+        "left": 8,
+        "top": 54
+      }
+    },
     "tooltip_01": {
       "text": {
         "translate": "gui.expatternprovider.tag_storage_bus.desc.01"
       },
       "position": {
         "left": 8,
-        "top": 42
+        "top": 81
       }
     },
     "tooltip_02": {
@@ -30,7 +48,7 @@
       },
       "position": {
         "left": 8,
-        "top": 52
+        "top": 91
       }
     },
     "tooltip_03": {
@@ -39,14 +57,20 @@
       },
       "position": {
         "left": 8,
-        "top": 62
+        "top": 101
       }
     }
   },
   "widgets": {
     "filter_input": {
       "left": 8,
-      "top": 27,
+      "top": 38,
+      "width": 120,
+      "height": 12
+    },
+    "filter_input_2": {
+      "left": 8,
+      "top": 65,
       "width": 120,
       "height": 12
     },

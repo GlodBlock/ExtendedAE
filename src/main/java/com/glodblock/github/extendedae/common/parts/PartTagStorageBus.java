@@ -31,7 +31,8 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
-    private String oreExp = "";
+    private String oreExpWhite = "";
+    private String oreExpBlack = "";
 
     public PartTagStorageBus(IPartItem<?> partItem) {
         super(partItem);
@@ -40,13 +41,15 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     @Override
     public void readFromNBT(CompoundTag data) {
         super.readFromNBT(data);
-        this.oreExp = data.getString("oreExp");
+        this.oreExpWhite = data.getString("oreExp");
+        this.oreExpBlack = data.getString("oreExp2");
     }
 
     @Override
     public void writeToNBT(CompoundTag data) {
         super.writeToNBT(data);
-        data.putString("oreExp", this.oreExp);
+        data.putString("oreExp", this.oreExpWhite);
+        data.putString("oreExp2", this.oreExpBlack);
     }
 
     public MenuType<?> getMenuType() {
@@ -58,21 +61,29 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         return 2;
     }
 
-    public void setTagFilter(String exp) {
-        if (!exp.equals(this.oreExp)) {
-            this.oreExp = exp;
-            this.filter = null;
-            this.forceUpdate();
+    public void setTagFilter(String exp, boolean isWhite) {
+        if (isWhite) {
+            if (!exp.equals(this.oreExpWhite)) {
+                this.oreExpWhite = exp;
+                this.filter = null;
+                this.forceUpdate();
+            }
+        } else {
+            if (!exp.equals(this.oreExpBlack)) {
+                this.oreExpBlack = exp;
+                this.filter = null;
+                this.forceUpdate();
+            }
         }
     }
 
-    public String getTagFilter() {
-        return this.oreExp;
+    public String getTagFilter(boolean isWhite) {
+        return isWhite ? this.oreExpWhite : this.oreExpBlack;
     }
 
     protected IPartitionList createFilter() {
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExp), this.oreExp);
+            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExpWhite), TagExpParser.getMatchingOre(this.oreExpBlack), this.oreExpWhite + this.oreExpBlack);
         }
         return this.filter;
     }
@@ -81,9 +92,14 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
         super.importSettings(mode, input, player);
         if (input.contains("ore_dict_exp")) {
-            this.oreExp = input.getString("ore_dict_exp");
+            this.oreExpWhite = input.getString("ore_dict_exp");
         } else {
-            this.oreExp = "";
+            this.oreExpWhite = "";
+        }
+        if (input.contains("ore_dict_exp_2")) {
+            this.oreExpBlack = input.getString("ore_dict_exp_2");
+        } else {
+            this.oreExpBlack = "";
         }
     }
 
@@ -91,7 +107,8 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     public void exportSettings(SettingsFrom mode, CompoundTag output) {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            output.putString("ore_dict_exp", this.oreExp);
+            output.putString("ore_dict_exp", this.oreExpWhite);
+            output.putString("ore_dict_exp_2", this.oreExpBlack);
         }
     }
 

@@ -37,7 +37,8 @@ public class PartTagExportBus extends PartSpecialExportBus {
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
             new ResourceLocation(AppEng.MOD_ID, "part/export_bus_has_channel"));
 
-    private String oreExp = "";
+    private String oreExpWhite = "";
+    private String oreExpBlack = "";
 
     public PartTagExportBus(IPartItem<?> partItem) {
         super(partItem);
@@ -46,23 +47,32 @@ public class PartTagExportBus extends PartSpecialExportBus {
     @Override
     public void readFromNBT(CompoundTag extra) {
         super.readFromNBT(extra);
-        this.oreExp = extra.getString("oreExp");
+        this.oreExpWhite = extra.getString("oreExp");
+        this.oreExpBlack = extra.getString("oreExp2");
     }
 
     @Override
     public void writeToNBT(CompoundTag extra) {
         super.writeToNBT(extra);
-        extra.putString("oreExp", this.oreExp);
+        extra.putString("oreExp", this.oreExpWhite);
+        extra.putString("oreExp2", this.oreExpBlack);
     }
 
-    public String getTagFilter() {
-        return this.oreExp;
+    public String getTagFilter(boolean isWhite) {
+        return isWhite ? this.oreExpWhite : this.oreExpBlack;
     }
 
-    public void setTagFilter(String exp) {
-        if (!exp.equals(this.oreExp)) {
-            this.oreExp = exp;
-            this.filter = null;
+    public void setTagFilter(String exp, boolean isWhite) {
+        if (isWhite) {
+            if (!exp.equals(this.oreExpWhite)) {
+                this.oreExpWhite = exp;
+                this.filter = null;
+            }
+        } else {
+            if (!exp.equals(this.oreExpBlack)) {
+                this.oreExpBlack = exp;
+                this.filter = null;
+            }
         }
     }
 
@@ -85,7 +95,7 @@ public class PartTagExportBus extends PartSpecialExportBus {
     @Override
     protected IPartitionList createFilter() {
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExp), this.oreExp);
+            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExpWhite), TagExpParser.getMatchingOre(this.oreExpBlack), this.oreExpWhite + this.oreExpBlack);
         }
         return this.filter;
     }

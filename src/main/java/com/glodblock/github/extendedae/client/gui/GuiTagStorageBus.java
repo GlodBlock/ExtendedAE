@@ -34,6 +34,7 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
     private final AETextField filterInputs;
+    private final AETextField filterInputs2;
     private static final Pattern ORE_DICTIONARY_FILTER = Pattern.compile("[0-9a-zA-Z* &|^!():/_]*");
 
     public GuiTagStorageBus(ContainerTagStorageBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
@@ -50,8 +51,13 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         this.filterInputs.setFilter(str -> ORE_DICTIONARY_FILTER.matcher(str).matches());
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip"));
-        this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s)));
-        this.actions.put("init", o -> this.filterInputs.setValue(o.get(0)));
+        this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, true)));
+        this.filterInputs2 = widgets.addTextField("filter_input_2");
+        this.filterInputs2.setFilter(str -> ORE_DICTIONARY_FILTER.matcher(str).matches());
+        this.filterInputs2.setMaxLength(512);
+        this.filterInputs2.setPlaceholder(Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip"));
+        this.filterInputs2.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, false)));
+        this.actions.put("init", o -> {this.filterInputs.setValue(o.get(0)); this.filterInputs2.setValue(o.get(1));});
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
     }
 
@@ -59,6 +65,9 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
     public boolean mouseClicked(double xCoord, double yCoord, int btn) {
         if (btn == 1 && this.filterInputs.isMouseOver(xCoord, yCoord)) {
             this.filterInputs.setValue("");
+        }
+        if (btn == 1 && this.filterInputs2.isMouseOver(xCoord, yCoord)) {
+            this.filterInputs2.setValue("");
         }
         return super.mouseClicked(xCoord, yCoord, btn);
     }
