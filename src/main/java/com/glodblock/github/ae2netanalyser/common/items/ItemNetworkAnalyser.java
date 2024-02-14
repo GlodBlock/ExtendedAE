@@ -7,10 +7,13 @@ import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridConnection;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.IActionHost;
+import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.me.InWorldGridNode;
 import appeng.me.helpers.IGridConnectedBlockEntity;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
+import appeng.parts.AEBasePart;
 import com.glodblock.github.ae2netanalyser.AEAnalyser;
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
 import com.glodblock.github.ae2netanalyser.common.inventory.AnalyserInventory;
@@ -31,6 +34,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -230,7 +234,7 @@ public class ItemNetworkAnalyser extends Item implements IMenuItem {
         if (node instanceof InWorldGridNode worldNode) {
             var pos = worldNode.getLocation();
             var state = new State<>(NodeFlag.NORMAL);
-            if (!node.meetsChannelRequirements()) {
+            if (!checkChannel(worldNode)) {
                 state.set(NodeFlag.MISSING);
             }
             if (node.hasFlag(GridFlags.DENSE_CAPACITY)) {
@@ -239,6 +243,24 @@ public class ItemNetworkAnalyser extends Item implements IMenuItem {
             return new NetworkData.ANode(pos, state);
         }
         return null;
+    }
+
+    private boolean checkChannel(@NotNull InWorldGridNode node) {
+        var world = node.getLevel();
+        var pos = node.getLocation();
+        var tile = world.getBlockEntity(pos);
+        if (tile instanceof CableBusBlockEntity cable) {
+            for (var face : Direction.values()) {
+                var part = cable.getPart(face);
+                if (part instanceof IActionHost host) {
+                    if (host.getActionableNode() != null && !host.getActionableNode().isOnline()) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return node.isOnline();
     }
 
     @Override
