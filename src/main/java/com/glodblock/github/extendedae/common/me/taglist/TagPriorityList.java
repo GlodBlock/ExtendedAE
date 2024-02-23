@@ -2,9 +2,8 @@ package com.glodblock.github.extendedae.common.me.taglist;
 
 import appeng.api.stacks.AEKey;
 import appeng.util.prioritylist.IPartitionList;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -12,7 +11,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -21,35 +19,8 @@ public class TagPriorityList implements IPartitionList {
     private final Set<TagKey<?>> whiteSet;
     private final Set<TagKey<?>> blackSet;
     private final String tagExp;
-    private final LoadingCache<Object, Boolean> accept = CacheBuilder.newBuilder()
-            .expireAfterAccess(Duration.ofMinutes(10))
-            .maximumSize(4000)
-            .build(
-            new CacheLoader<>() {
-                @Override
-                public @NotNull Boolean load(@NotNull Object obj) {
-                    Holder<?> refer = null;
-                    if (obj instanceof Item item) {
-                        refer = ForgeRegistries.ITEMS.getHolder(item).orElse(null);
-                    } else if (obj instanceof Fluid fluid) {
-                        refer = ForgeRegistries.FLUIDS.getHolder(fluid).orElse(null);
-                    }
-                    if (refer != null) {
-                        if (whiteSet.isEmpty()) {
-                            return false;
-                        }
-                        boolean pass = refer.tags().anyMatch(whiteSet::contains);
-                        if (pass) {
-                            if (!blackSet.isEmpty()) {
-                                return refer.tags().noneMatch(blackSet::contains);
-                            }
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
-    );
+    // Cache isn't fast enough here, so I have to use map here.
+    private final Reference2BooleanMap<Object> memory = new Reference2BooleanOpenHashMap<>();
 
     public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, String tagExp) {
         this.whiteSet = whiteKeys;
@@ -59,7 +30,8 @@ public class TagPriorityList implements IPartitionList {
 
     @Override
     public boolean isListed(AEKey input) {
-        return this.accept.getUnchecked(input.getPrimaryKey());
+        Object key = input.getPrimaryKey();
+        return this.memory.computeIfAbsent(key, this::eval);
     }
 
     @Override
@@ -70,6 +42,28 @@ public class TagPriorityList implements IPartitionList {
     @Override
     public Iterable<AEKey> getItems() {
         return List.of();
+    }
+
+    private boolean eval(@NotNull Object obj) {
+        Holder<?> refer = null;
+        if (obj instanceof Item item) {
+            refer = ForgeRegistries.ITEMS.getHolder(item).orElse(null);
+        } else if (obj instanceof Fluid fluid) {
+            refer = ForgeRegistries.FLUIDS.getHolder(fluid).orElse(null);
+        }
+        if (refer != null) {
+            if (whiteSet.isEmpty()) {
+                return false;
+            }
+            boolean pass = refer.tags().anyMatch(whiteSet::contains);
+            if (pass) {
+                if (!blackSet.isEmpty()) {
+                    return refer.tags().noneMatch(blackSet::contains);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
 }
