@@ -345,6 +345,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.ACTIVE_FORMATION_PLANE))
                 .save(c, ExtendedAE.id("active_formation_plane"));
 
+        // ME Caner
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.CANER)
+                .pattern("IBE")
+                .pattern(" P ")
+                .define('I', AEParts.IMPORT_BUS)
+                .define('E', AEParts.EXPORT_BUS)
+                .define('B', EPPItemAndBlock.INGREDIENT_BUFFER)
+                .define('P', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.INGREDIENT_BUFFER))
+                .save(c, ExtendedAE.id("caner"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)

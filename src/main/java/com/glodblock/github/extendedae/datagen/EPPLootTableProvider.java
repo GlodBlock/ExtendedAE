@@ -1,6 +1,6 @@
 package com.glodblock.github.extendedae.datagen;
 
-import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
@@ -28,15 +28,9 @@ public class EPPLootTableProvider extends LootTableProvider {
 
         @Override
         protected void generate() {
-            add(EPPItemAndBlock.EX_PATTERN_PROVIDER, createSingleItemTable(EPPItemAndBlock.EX_PATTERN_PROVIDER));
-            add(EPPItemAndBlock.EX_INTERFACE, createSingleItemTable(EPPItemAndBlock.EX_INTERFACE));
-            add(EPPItemAndBlock.WIRELESS_CONNECTOR, createSingleItemTable(EPPItemAndBlock.WIRELESS_CONNECTOR));
-            add(EPPItemAndBlock.INGREDIENT_BUFFER, createSingleItemTable(EPPItemAndBlock.INGREDIENT_BUFFER));
-            add(EPPItemAndBlock.EX_DRIVE, createSingleItemTable(EPPItemAndBlock.EX_DRIVE));
-            add(EPPItemAndBlock.EX_ASSEMBLER, createSingleItemTable(EPPItemAndBlock.EX_ASSEMBLER));
-            add(EPPItemAndBlock.EX_INSCRIBER, createSingleItemTable(EPPItemAndBlock.EX_INSCRIBER));
-            add(EPPItemAndBlock.EX_CHARGER, createSingleItemTable(EPPItemAndBlock.EX_CHARGER));
-            add(EPPItemAndBlock.FISHBIG, createSingleItemTable(EPPItemAndBlock.FISHBIG));
+            for (var block : EAERegistryHandler.INSTANCE.getBlocks()) {
+                add(block, createSingleItemTable(block));
+            }
         }
 
         public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> bi) {

@@ -63,6 +63,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Collection;
+
 public class EAERegistryHandler extends RegistryHandler {
 
     public static final EAERegistryHandler INSTANCE = new EAERegistryHandler();
@@ -82,6 +84,10 @@ public class EAERegistryHandler extends RegistryHandler {
         super.register(event);
         this.onRegisterContainer();
         this.onRegisterModels();
+    }
+
+    public Collection<Block> getBlocks() {
+        return this.blocks.stream().map(Pair::getRight).toList();
     }
 
     private void onRegisterContainer() {
