@@ -99,7 +99,6 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         var orientation = getOrientation(state);
-        var up = orientation.getSide(RelativeSide.TOP);
         var forward = orientation.getSide(RelativeSide.FRONT);
         var twoPixels = 2.0 / 16.0;
 

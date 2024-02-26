@@ -1,5 +1,5 @@
 {
-	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"textures": {
 		"0": "expatternprovider:block/caner/horizen_plane",
 		"1": "expatternprovider:block/caner/button",
@@ -68,7 +68,7 @@
 				"north": {"uv": [0, 0, 2, 12], "texture": "#2"},
 				"east": {"uv": [0, 0, 2, 12], "texture": "#2"},
 				"south": {"uv": [0, 0, 2, 12], "texture": "#2"},
-				"west": {"uv": [0, 0, 2, 12], "texture": "#2", "cullface": "up"}
+				"west": {"uv": [0, 0, 2, 12], "texture": "#2"}
 			}
 		},
 		{

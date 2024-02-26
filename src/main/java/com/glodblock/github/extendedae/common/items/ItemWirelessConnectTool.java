@@ -34,10 +34,10 @@ public class ItemWirelessConnectTool extends Item {
         var nbt = stack.hasTag() ? stack.getTag() : new CompoundTag();
         assert nbt != null;
         var freq = nbt.getLong("freq");
-        var globalPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, nbt.get("bind"))
+        var globalPos = nbt.contains("bind") ? GlobalPos.CODEC.decode(NbtOps.INSTANCE, nbt.get("bind"))
                 .resultOrPartial(Util.prefix("Connector position", ExtendedAE.LOGGER::error))
                 .map(Pair::getFirst)
-                .orElse(null);
+                .orElse(null) : null;
         BlockPos pos = globalPos != null ? globalPos.pos() : BlockPos.ZERO;
         if (freq != 0) {
             lines.add(Component.translatable("wireless.tooltip", pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GRAY));

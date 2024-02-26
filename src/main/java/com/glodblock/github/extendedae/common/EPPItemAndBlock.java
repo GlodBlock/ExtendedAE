@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.common;
 
 import appeng.items.parts.PartItem;
+import com.glodblock.github.extendedae.common.blocks.BlockCaner;
 import com.glodblock.github.extendedae.common.blocks.BlockExCharger;
 import com.glodblock.github.extendedae.common.blocks.BlockExDrive;
 import com.glodblock.github.extendedae.common.blocks.BlockExInscriber;
@@ -21,6 +22,7 @@ import com.glodblock.github.extendedae.common.items.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.parts.*;
+import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
@@ -63,6 +65,7 @@ public class EPPItemAndBlock {
     public static PartItem<PartModExportBus> MOD_EXPORT_BUS;
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
     public static BlockFishbig FISHBIG;
+    public static BlockCaner CANER;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -94,6 +97,7 @@ public class EPPItemAndBlock {
         MOD_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartModStorageBus.class, PartModStorageBus::new);
         MOD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartModExportBus.class, PartModExportBus::new);
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
+        CANER = new BlockCaner();
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -103,6 +107,7 @@ public class EPPItemAndBlock {
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
+        regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);

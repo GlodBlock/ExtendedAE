@@ -28,6 +28,7 @@ import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
+import com.glodblock.github.extendedae.container.ContainerCaner;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
 import com.glodblock.github.extendedae.container.ContainerExInscriber;
@@ -102,6 +103,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("mod_storage_bus"), ContainerModStorageBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("mod_export_bus"), ContainerModExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("active_formation_plane"), ContainerActiveFormationPlane.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("caner"), ContainerCaner.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);

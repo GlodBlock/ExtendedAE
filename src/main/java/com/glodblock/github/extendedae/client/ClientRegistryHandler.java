@@ -12,12 +12,14 @@ import com.glodblock.github.extendedae.client.gui.pattern.GuiStonecuttingPattern
 import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
 import com.glodblock.github.extendedae.client.model.ExPlaneModel;
+import com.glodblock.github.extendedae.client.render.tesr.CanerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExChargerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExDriveTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExInscriberTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExMolecularAssemblerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.IngredientBufferTESR;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
@@ -63,6 +65,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerModStorageBus.TYPE, GuiModStorageBus::new, "/screens/mod_storage_bus.json");
         InitScreens.register(ContainerModExportBus.TYPE, GuiModExportBus::new, "/screens/mod_export_bus.json");
         InitScreens.register(ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
+        InitScreens.register(ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -83,6 +86,7 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(GlodUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
         BlockEntityRenderers.register(GlodUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
         BlockEntityRenderers.register(GlodUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileCaner.class), CanerTESR::new);
         event.register("ex_drive", new ExDriveModel.Loader());
         event.register("active_formation_plane", new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane")));
         event.register("active_formation_plane_on", new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane_on")));
