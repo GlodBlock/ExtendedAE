@@ -19,6 +19,7 @@ import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IClickableIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.renderer.Rect2i;
@@ -103,6 +104,11 @@ public class JEIPlugin implements IModPlugin {
     public void registerRecipeCatalysts(@NotNull IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(EPPItemAndBlock.EX_INSCRIBER), Ae2ReflectClient.getInscribeRecipe());
         registration.addRecipeCatalyst(new ItemStack(EPPItemAndBlock.EX_CHARGER), ChargerCategory.RECIPE_TYPE);
+    }
+
+    @Override
+    public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
+        registration.useNbtForSubtypes(EPPItemAndBlock.INFINITY_CELL);
     }
 
 }

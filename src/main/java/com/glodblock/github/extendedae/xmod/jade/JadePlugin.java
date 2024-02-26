@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.xmod.jade;
 
-
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import net.minecraft.resources.ResourceLocation;
