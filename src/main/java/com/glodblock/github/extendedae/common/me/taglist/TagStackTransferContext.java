@@ -11,7 +11,7 @@ import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
 
 // clueless
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "NonExtendableApiUsage"})
 public class TagStackTransferContext implements StackTransferContext {
     private final IStorageService internalStorage;
     private final IEnergySource energySource;

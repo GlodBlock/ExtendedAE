@@ -10,7 +10,7 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "NonExtendableApiUsage"})
 public class ModStackTransferContext implements StackTransferContext {
     private final IStorageService internalStorage;
     private final IEnergySource energySource;
