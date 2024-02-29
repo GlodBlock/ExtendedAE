@@ -42,7 +42,7 @@ cobblestones as input, because 3÷2 is 1.5.
 
 ## Replace Mode
 
-Replace processing pattern's certain input and output ingredient with the other item.
+Replace pattern's certain input and output ingredient with the other item.
 
 ![PM3](../pic/pm4.png)
 

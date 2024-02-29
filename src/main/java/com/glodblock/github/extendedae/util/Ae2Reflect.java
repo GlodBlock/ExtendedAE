@@ -16,6 +16,7 @@ import com.glodblock.github.glodium.reflect.ReflectKit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.lang.reflect.Field;
@@ -32,6 +33,7 @@ public class Ae2Reflect {
     private static final Field fAbstractLevelEmitterPart_prevState;
     private static final Field fAEBaseBlockEntity_customName;
     private static final Field fAEBasePart_customName;
+    private static final Field fAECraftingPattern_recipe;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
     private static final Method mIOBusPart_updateState;
@@ -48,6 +50,7 @@ public class Ae2Reflect {
             fAbstractLevelEmitterPart_prevState = ReflectKit.reflectField(AbstractLevelEmitterPart.class, "prevState");
             fAEBaseBlockEntity_customName = ReflectKit.reflectField(AEBaseBlockEntity.class, "customName");
             fAEBasePart_customName = ReflectKit.reflectField(AEBasePart.class, "customName");
+            fAECraftingPattern_recipe = ReflectKit.reflectField(AECraftingPattern.class, "recipe");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
             mIOBusPart_updateState = ReflectKit.reflectMethod(IOBusPart.class, "updateState");
@@ -112,6 +115,10 @@ public class Ae2Reflect {
     @SuppressWarnings("UnstableApiUsage")
     public static StackTransferContext getExportContext(ExportBusPart owner, IStorageService storageService, IEnergyService energyService) {
         return ReflectKit.executeMethod2(owner, mExportBusPart_createTransferContext, storageService, energyService);
+    }
+
+    public static CraftingRecipe getCraftRecipe(AECraftingPattern owner) {
+        return ReflectKit.readField(owner, fAECraftingPattern_recipe);
     }
 
 }
