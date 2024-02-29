@@ -1,5 +1,8 @@
 package com.glodblock.github.extendedae.util;
 
+import appeng.api.behaviors.StackTransferContext;
+import appeng.api.networking.energy.IEnergyService;
+import appeng.api.networking.storage.IStorageService;
 import appeng.api.storage.cells.CellState;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.storage.DriveBlockEntity;
@@ -7,6 +10,8 @@ import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AbstractLevelEmitterPart;
+import appeng.parts.automation.ExportBusPart;
+import appeng.parts.automation.IOBusPart;
 import com.glodblock.github.glodium.reflect.ReflectKit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -29,6 +34,8 @@ public class Ae2Reflect {
     private static final Field fAEBasePart_customName;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
+    private static final Method mIOBusPart_updateState;
+    private static final Method mExportBusPart_createTransferContext;
 
     static {
         try {
@@ -43,6 +50,8 @@ public class Ae2Reflect {
             fAEBasePart_customName = ReflectKit.reflectField(AEBasePart.class, "customName");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
+            mIOBusPart_updateState = ReflectKit.reflectMethod(IOBusPart.class, "updateState");
+            mExportBusPart_createTransferContext = ReflectKit.reflectMethod(ExportBusPart.class, "createTransferContext", IStorageService.class, IEnergyService.class);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -94,6 +103,15 @@ public class Ae2Reflect {
         } else if (owner instanceof AEBasePart) {
             ReflectKit.writeField(owner, fAEBasePart_customName, name);
         }
+    }
+
+    public static void updatePartState(IOBusPart owner) {
+        ReflectKit.executeMethod(owner, mIOBusPart_updateState);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static StackTransferContext getExportContext(ExportBusPart owner, IStorageService storageService, IEnergyService energyService) {
+        return ReflectKit.executeMethod2(owner, mExportBusPart_createTransferContext, storageService, energyService);
     }
 
 }

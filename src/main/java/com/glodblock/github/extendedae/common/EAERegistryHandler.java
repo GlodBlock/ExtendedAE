@@ -23,6 +23,7 @@ import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
 import com.glodblock.github.extendedae.common.parts.PartModExportBus;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
@@ -40,6 +41,7 @@ import com.glodblock.github.extendedae.container.ContainerIngredientBuffer;
 import com.glodblock.github.extendedae.container.ContainerModExportBus;
 import com.glodblock.github.extendedae.container.ContainerModStorageBus;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
+import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
@@ -110,6 +112,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("mod_export_bus"), ContainerModExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("active_formation_plane"), ContainerActiveFormationPlane.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("caner"), ContainerCaner.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("precise_export_bus"), ContainerPreciseExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -173,6 +176,9 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.MOD_EXPORT_BUS, 4, "item.expatternprovider.mod_export_bus");
         Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.ACTIVE_FORMATION_PLANE, 1, "item.expatternprovider.active_formation_plane");
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.ACTIVE_FORMATION_PLANE, 5, "item.expatternprovider.active_formation_plane");
+        Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 5, "item.expatternprovider.precise_export_bus");
+        Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
+        Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
     }
 
     private void registerStorageHandler() {
@@ -192,6 +198,7 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartModStorageBus.MODEL_BASE);
         PartModels.registerModels(PartModExportBus.MODEL_BASE);
         PartModels.registerModels(PartActiveFormationPlane.MODELS);
+        PartModels.registerModels(PartPreciseExportBus.MODELS);
     }
 
     private void initPackageList() {

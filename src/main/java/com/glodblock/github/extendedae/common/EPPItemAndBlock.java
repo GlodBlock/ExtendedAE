@@ -66,6 +66,7 @@ public class EPPItemAndBlock {
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
     public static BlockFishbig FISHBIG;
     public static BlockCaner CANER;
+    public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -99,6 +100,7 @@ public class EPPItemAndBlock {
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         CANER = new BlockCaner();
         FISHBIG = new BlockFishbig();
+        PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -130,6 +132,7 @@ public class EPPItemAndBlock {
         regHandler.item("mod_storage_bus", MOD_STORAGE_BUS);
         regHandler.item("mod_export_bus", MOD_EXPORT_BUS);
         regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
+        regHandler.item("precise_export_bus", PRECISE_EXPORT_BUS);
     }
 
 }
