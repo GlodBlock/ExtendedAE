@@ -357,6 +357,15 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.INGREDIENT_BUFFER))
                 .save(c, ExtendedAE.id("caner"));
 
+        // ME Precise Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.PRECISE_EXPORT_BUS)
+                .pattern("PBP")
+                .define('B', EPPItemAndBlock.EX_EXPORT_BUS)
+                .define('P', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_EXPORT_BUS))
+                .save(c, ExtendedAE.id("pre_bus"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)
