@@ -212,8 +212,7 @@ public class CraftingThread {
     private int userPower(int ticksPassed, int bonusValue, double acceleratorTax) {
         var grid = this.host.getMainNode().getGrid();
         if (grid != null) {
-            return (int) (grid.getEnergyService().extractAEPower(ticksPassed * bonusValue * acceleratorTax,
-                    Actionable.MODULATE, PowerMultiplier.CONFIG) / acceleratorTax);
+            return (int) (grid.getEnergyService().extractAEPower(ticksPassed * bonusValue * acceleratorTax, Actionable.MODULATE, PowerMultiplier.CONFIG) / acceleratorTax);
         } else {
             return 0;
         }

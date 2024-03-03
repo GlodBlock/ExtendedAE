@@ -93,7 +93,7 @@ dependencies {
     implementation fg.deobf("curse.maven:glodium-957920:5006780")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
-    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.12")
+    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.21")
     compileOnly fg.deobf("curse.maven:jade-324717:4768593")
     // rei
     compileOnly "me.shedaniel.cloth:basic-math:0.6.1"
@@ -105,7 +105,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     // runtime test
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
-    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4777696")
+    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:5117032")
     runtimeOnly fg.deobf("curse.maven:jade-324717:4768593")
 }
 
