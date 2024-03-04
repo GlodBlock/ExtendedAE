@@ -21,6 +21,7 @@ import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpg
 import com.glodblock.github.extendedae.common.items.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
+import com.glodblock.github.extendedae.common.items.tools.ItemWirelessExPAT;
 import com.glodblock.github.extendedae.common.parts.*;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
@@ -67,6 +68,7 @@ public class EPPItemAndBlock {
     public static BlockFishbig FISHBIG;
     public static BlockCaner CANER;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
+    public static ItemWirelessExPAT WIRELESS_EX_PAT;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -101,6 +103,7 @@ public class EPPItemAndBlock {
         CANER = new BlockCaner();
         FISHBIG = new BlockFishbig();
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
+        WIRELESS_EX_PAT = new ItemWirelessExPAT();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -133,6 +136,7 @@ public class EPPItemAndBlock {
         regHandler.item("mod_export_bus", MOD_EXPORT_BUS);
         regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
         regHandler.item("precise_export_bus", PRECISE_EXPORT_BUS);
+        regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
     }
 
 }

@@ -16,4 +16,9 @@ public class ContainerExPatternTerminal extends PatternAccessTermMenu {
     public ContainerExPatternTerminal(int id, Inventory ip, IConfigurableObject host) {
         super(TYPE, id, ip, host, true);
     }
+
+    public ContainerExPatternTerminal(MenuType<?> type, int id, Inventory ip, IConfigurableObject host, boolean bindInventory) {
+        super(type, id, ip, host, bindInventory);
+    }
+
 }

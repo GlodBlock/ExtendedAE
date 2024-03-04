@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.common;
 
 import appeng.api.client.StorageCellModels;
+import appeng.api.features.GridLinkables;
 import appeng.api.parts.PartModels;
 import appeng.api.storage.StorageCells;
 import appeng.api.upgrades.Upgrades;
@@ -11,7 +12,9 @@ import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
+import appeng.core.localization.GuiText;
 import appeng.items.AEBaseItem;
+import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.inventory.InfinityCellInventory;
 import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
@@ -47,6 +50,7 @@ import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
+import com.glodblock.github.extendedae.container.ContainerWirelessExPAT;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
@@ -113,6 +117,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("active_formation_plane"), ContainerActiveFormationPlane.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("caner"), ContainerCaner.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("precise_export_bus"), ContainerPreciseExportBus.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("wireless_ex_pat"), ContainerWirelessExPAT.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -143,6 +148,7 @@ public class EAERegistryHandler extends RegistryHandler {
         }
         this.registerAEUpgrade();
         this.registerStorageHandler();
+        this.registerRandomAPI();
         this.initPackageList();
     }
 
@@ -179,6 +185,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 5, "item.expatternprovider.precise_export_bus");
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
+        Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
     }
 
     private void registerStorageHandler() {
@@ -203,6 +210,10 @@ public class EAERegistryHandler extends RegistryHandler {
 
     private void initPackageList() {
         EPPConfig.tapeWhitelist.forEach(ItemMEPackingTape::registerPackableDevice);
+    }
+
+    private void registerRandomAPI() {
+        GridLinkables.register(EPPItemAndBlock.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

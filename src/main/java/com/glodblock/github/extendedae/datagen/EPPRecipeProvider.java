@@ -366,6 +366,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.EX_EXPORT_BUS))
                 .save(c, ExtendedAE.id("pre_bus"));
 
+        // Wireless Ex PAT
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.WIRELESS_EX_PAT)
+                .pattern("A")
+                .pattern("B")
+                .pattern("C")
+                .define('A', AEItems.WIRELESS_RECEIVER)
+                .define('B', EPPItemAndBlock.EX_PATTERN_TERMINAL)
+                .define('C', AEBlocks.DENSE_ENERGY_CELL)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_PATTERN_TERMINAL))
+                .save(c, ExtendedAE.id("wireless_ex_pat"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)

@@ -53,7 +53,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 // 1.12holic
-public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTerminal> {
+public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends AEBaseScreen<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiExPatternTerminal.class);
 
     private static final int GUI_WIDTH = 209;
@@ -139,8 +139,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
 
     private final ServerSettingToggleButton<ShowPatternProviders> showPatternProviders;
 
-    public GuiExPatternTerminal(ContainerExPatternTerminal menu, Inventory playerInventory,
-                                   Component title, ScreenStyle style) {
+    public GuiExPatternTerminal(T menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.scrollbar = widgets.addScrollBar("scrollbar");
         this.imageWidth = GUI_WIDTH;
