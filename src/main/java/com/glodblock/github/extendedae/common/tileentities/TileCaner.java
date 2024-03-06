@@ -1,5 +1,7 @@
 package com.glodblock.github.extendedae.common.tileentities;
 
+import appeng.api.behaviors.ContainerItemContext;
+import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
@@ -13,7 +15,6 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
-import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
@@ -22,100 +23,31 @@ import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.grid.AENetworkPowerBlockEntity;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.helpers.externalstorage.GenericStackInv;
+import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
-import com.glodblock.github.extendedae.xmod.ExternalTypes;
 import com.glodblock.github.glodium.util.GlodUtil;
-import com.google.common.primitives.Ints;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import mekanism.api.Action;
-import mekanism.api.chemical.gas.Gas;
-import mekanism.api.chemical.gas.GasStack;
-import mekanism.common.capabilities.Capabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import vazkii.botania.api.BotaniaForgeCapabilities;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("UnstableApiUsage")
 public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickable, ICraftingMachine {
-
-    private static final Reference2ObjectMap<AEKeyType, ToCan<?>> CAN_MAP = new Reference2ObjectOpenHashMap<>();
-
-    static {
-        CAN_MAP.put(AEKeyType.fluids(), new ToCan<>(ForgeCapabilities.FLUID_HANDLER_ITEM, AEKeyType.fluids()) {
-            @Override
-            long fill(ItemStack stack, long amount, AEKey stuff) {
-                var cap = this.getCap(stack);
-                if (cap != null) {
-                    var filled = cap.fill(((AEFluidKey) stuff).toStack(Ints.saturatedCast(amount)), IFluidHandler.FluidAction.EXECUTE);
-                    this.result = cap.getContainer();
-                    return amount - filled;
-                }
-                return amount;
-            }
-        });
-        if (ExternalTypes.FLUX != null) {
-            CAN_MAP.put(ExternalTypes.FLUX, new ToCan<>(ForgeCapabilities.ENERGY, ExternalTypes.FLUX) {
-                @Override
-                long fill(ItemStack stack, long amount, AEKey stuff) {
-                    var cap = this.getCap(stack);
-                    if (cap != null) {
-                        int added = cap.receiveEnergy(Ints.saturatedCast(amount), false);
-                        this.result = stack.copy();
-                        return amount - added;
-                    }
-                    return amount;
-                }
-            });
-        }
-        if (ExternalTypes.MANA != null) {
-            CAN_MAP.put(ExternalTypes.MANA, new ToCan<>(BotaniaForgeCapabilities.MANA_ITEM, ExternalTypes.MANA) {
-                @Override
-                long fill(ItemStack stack, long amount, AEKey stuff) {
-                    var cap = this.getCap(stack);
-                    if (cap != null) {
-                        int origin = cap.getMana();
-                        cap.addMana(Ints.saturatedCast(amount));
-                        int now = cap.getMana();
-                        int added = now - origin;
-                        this.result = stack.copy();
-                        return amount - added;
-                    }
-                    return amount;
-                }
-            });
-        }
-        if (ExternalTypes.GAS != null) {
-            CAN_MAP.put(ExternalTypes.GAS, new ToCan<>(Capabilities.GAS_HANDLER, ExternalTypes.GAS) {
-                @Override
-                long fill(ItemStack stack, long amount, AEKey stuff) {
-                    var cap = this.getCap(stack);
-                    if (cap != null && stuff.getPrimaryKey() instanceof Gas gas) {
-                        var left = cap.insertChemical(new GasStack(gas, amount), Action.EXECUTE);
-                        this.result = stack.copy();
-                        return left.getAmount();
-                    }
-                    return amount;
-                }
-            });
-        }
-    }
 
     public static final int POWER_MAXIMUM_AMOUNT = 3200;
     public static final int POWER_USAGE = 800;
@@ -145,9 +77,9 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     }
 
     @Nullable
-    private ToCan<?> getAndCast(AEKeyType type) {
-        if (CAN_MAP.containsKey(type)) {
-            return CAN_MAP.get(type);
+    private ContainerItemContext getStrategy(AEKey type, Player player, ItemStack target) {
+        if (ContainerItemStrategies.isKeySupported(type)) {
+            return ContainerItemStrategies.findOwnedItemContext(type.getType(), player, target);
         }
         return null;
     }
@@ -285,16 +217,25 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
         if (stack.isEmpty() || obj == null) {
             return;
         }
-        var handler = this.getAndCast(obj.what().getType());
-        if (handler == null || !handler.isValid(stack, obj.what())) {
+        if (!(this.level instanceof ServerLevel)) {
             return;
         }
-        long origin = obj.amount();
+        var player = Platform.getFakePlayer((ServerLevel) this.level, null);
+        player.getInventory().setItem(0, stack);
+        player.getInventory().setItem(1, ItemStack.EMPTY);
+        var handler = this.getStrategy(obj.what(), player, stack);
+        if (handler == null) {
+            return;
+        }
         if (this.getInternalCurrentPower() >= POWER_USAGE) {
-            long now = handler.fill(stack, obj.amount(), obj.what());
-            if (origin != now) {
-                this.stuff.extract(0, obj.what(), origin - now, Actionable.MODULATE);
-                this.container.setItemDirect(0, handler.getResult());
+            long added = handler.insert(obj.what(), obj.amount(), Actionable.MODULATE);
+            if (added > 0) {
+                this.stuff.extract(0, obj.what(), added, Actionable.MODULATE);
+                if (!player.getInventory().getItem(0).isEmpty()) {
+                    this.container.setItemDirect(0, player.getInventory().getItem(0).copy());
+                } else {
+                    this.container.setItemDirect(0, player.getInventory().getItem(1).copy());
+                }
                 this.extractAEPower(POWER_USAGE, Actionable.MODULATE, PowerMultiplier.CONFIG);
             }
         }
@@ -358,34 +299,6 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     @Override
     public boolean acceptsPlans() {
         return true;
-    }
-
-    abstract static class ToCan<T> {
-
-        final Capability<T> cap;
-        final AEKeyType type;
-        ItemStack result = ItemStack.EMPTY;
-
-        ToCan(Capability<T> cap, AEKeyType type) {
-            this.cap = cap;
-            this.type = type;
-        }
-
-        boolean isValid(ItemStack stack, AEKey stuff) {
-            return stuff.getType() == this.type && stack.getCapability(this.cap).isPresent();
-        }
-
-        T getCap(ItemStack stack) {
-            return stack.getCapability(this.cap).resolve().orElse(null);
-        }
-
-        ItemStack getResult() {
-            return this.result;
-        }
-
-        // Return how much left.
-        abstract long fill(ItemStack stack, long amount, AEKey type);
-
     }
 
 }

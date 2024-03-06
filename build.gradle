@@ -101,7 +101,6 @@ dependencies {
     compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:12.0.622")
     compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
     compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.5.19")
-    compileOnly fg.deobf("curse.maven:botania-225643:5002307")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     // runtime test
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
