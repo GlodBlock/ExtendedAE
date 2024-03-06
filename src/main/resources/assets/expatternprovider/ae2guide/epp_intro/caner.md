@@ -51,3 +51,8 @@ Fill water bucket:
 Empower Energy Tablet (Need Applied Flux installed):
 
 ![P1](../pic/fill_energy.png)
+
+
+## Uncaning
+
+ME Caner also can drain stuffs from container in Empty mode. You need to switch the inputs and outputs in pattern.
