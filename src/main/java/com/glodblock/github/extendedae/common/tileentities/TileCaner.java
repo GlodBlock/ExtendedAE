@@ -23,8 +23,10 @@ import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.grid.AENetworkPowerBlockEntity;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.helpers.externalstorage.GenericStackInv;
+import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
+import com.glodblock.github.extendedae.api.CanerMode;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -55,6 +57,8 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     private final GenericStackInv stuff = new GenericStackInv(this::wake, 1);
     private ItemStack target = ItemStack.EMPTY;
     private Direction ejectSide = null;
+    private CanerMode mode = CanerMode.FILL;
+    private AEKey emptyKey = null;
 
     public TileCaner(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCaner.class, TileCaner::new, EPPItemAndBlock.CANER), pos, blockState);
@@ -76,6 +80,14 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
         return this.stuff;
     }
 
+    public CanerMode getMode() {
+        return this.mode;
+    }
+
+    public void setMode(CanerMode mode) {
+        this.mode = mode;
+    }
+
     @Nullable
     private ContainerItemContext getStrategy(AEKey type, Player player, ItemStack target) {
         if (ContainerItemStrategies.isKeySupported(type)) {
@@ -92,15 +104,25 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     }
 
     private void eject() {
-        if (this.level != null && !this.container.getStackInSlot(0).isEmpty()) {
+        if (this.level instanceof ServerLevel && !this.container.getStackInSlot(0).isEmpty()) {
             if (this.ejectSide != null) {
                 var target = InternalInventory.wrapExternal(this.level, this.getBlockPos().relative(this.ejectSide), this.ejectSide.getOpposite());
                 if (target != null) {
                     int startItems = this.container.getStackInSlot(0).getCount();
                     this.container.insertItem(0, target.addItems(this.container.extractItem(0, 64, false)), false);
                     int endItems = this.container.getStackInSlot(0).getCount();
-                    if (startItems != endItems) {
+                    long pushed = 0;
+                    long origin = 0;
+                    if (this.mode == CanerMode.EMPTY && this.stuff.getStack(0) != null) {
+                        var genTarget = StackWorldBehaviors.createExportFacade((ServerLevel) this.level, this.getBlockPos().relative(this.ejectSide), this.ejectSide.getOpposite());
+                        var obj = this.stuff.getStack(0);
+                        origin = obj.amount();
+                        pushed = genTarget.push(obj.what(), origin, Actionable.MODULATE);
+                        this.stuff.extract(0, obj.what(), pushed, Actionable.MODULATE);
+                    }
+                    if (startItems != endItems && pushed == origin) {
                         this.target = ItemStack.EMPTY;
+                        this.emptyKey = null;
                     }
                 }
             }
@@ -144,7 +166,11 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
                 this.injectExternalPower(PowerUnits.AE, extracted, Actionable.MODULATE);
             });
         }
-        this.fill();
+        if (this.mode == CanerMode.FILL) {
+            this.fill();
+        } else if (this.mode == CanerMode.EMPTY) {
+            this.empty();
+        }
         if (this.isDone()) {
             this.eject();
         }
@@ -175,6 +201,10 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
         if (this.ejectSide != null) {
             data.putString("ejectSide", this.ejectSide.name());
         }
+        data.putByte("mode", (byte) this.mode.ordinal());
+        if (this.emptyKey != null) {
+            data.put("emptyKey", this.emptyKey.toTag());
+        }
     }
 
     @Override
@@ -186,6 +216,12 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
         }
         if (data.contains("ejectSide")) {
             this.ejectSide = Direction.valueOf(data.getString("ejectSide"));
+        }
+        if (data.contains("mode")) {
+            this.mode = CanerMode.values()[data.getByte("mode")];
+        }
+        if (data.contains("emptyKey")) {
+            this.emptyKey = AEKey.fromTagGeneric(data.getCompound("emptyKey"));
         }
     }
 
@@ -241,8 +277,59 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
         }
     }
 
+    private void empty() {
+        var stack = this.container.getStackInSlot(0);
+        var obj = this.stuff.getStack(0);
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (!(this.level instanceof ServerLevel)) {
+            return;
+        }
+        GenericStack contents;
+        if (this.emptyKey != null) {
+            contents = ContainerItemStrategies.getContainedStack(stack, this.emptyKey.getType());
+        } else {
+            contents = ContainerItemStrategies.getContainedStack(stack);
+        }
+        if (contents == null) {
+            return;
+        }
+        if (obj != null && !obj.what().equals(contents.what())) {
+            return;
+        }
+        var player = Platform.getFakePlayer((ServerLevel) this.level, null);
+        player.getInventory().setItem(0, stack);
+        player.getInventory().setItem(1, ItemStack.EMPTY);
+        var handler = this.getStrategy(contents.what(), player, stack);
+        if (handler == null) {
+            return;
+        }
+        if (this.getInternalCurrentPower() >= POWER_USAGE) {
+            long toAdd = handler.extract(contents.what(), contents.amount(), Actionable.SIMULATE);
+            if (toAdd > 0) {
+                long canAdd = this.stuff.insert(0, contents.what(), toAdd, Actionable.SIMULATE);
+                if (canAdd == toAdd) {
+                    handler.extract(contents.what(), canAdd, Actionable.MODULATE);
+                    this.stuff.insert(0, contents.what(), canAdd, Actionable.MODULATE);
+                    if (!player.getInventory().getItem(0).isEmpty()) {
+                        this.container.setItemDirect(0, player.getInventory().getItem(0).copy());
+                    } else {
+                        this.container.setItemDirect(0, player.getInventory().getItem(1).copy());
+                    }
+                    this.extractAEPower(POWER_USAGE, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                }
+            }
+        }
+    }
+
     private boolean hasJob() {
-        return this.stuff.getStack(0) != null && !this.container.getStackInSlot(0).isEmpty();
+        if (this.mode == CanerMode.FILL) {
+            return this.stuff.getStack(0) != null && !this.container.getStackInSlot(0).isEmpty();
+        } else if (this.mode == CanerMode.EMPTY) {
+            return !this.container.getStackInSlot(0).isEmpty();
+        }
+        return false;
     }
 
     @Override
@@ -255,39 +342,71 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     public boolean pushPattern(IPatternDetails patternDetails, KeyCounter[] inputs, Direction ejectionDirection) {
         if (patternDetails instanceof AEProcessingPattern) {
             if (this.stuff.getStack(0) == null && this.container.getStackInSlot(0).isEmpty()) {
-                if (inputs.length == 2) {
-                    if (inputs[0].getFirstEntry() != null && inputs[1].getFirstEntry() != null) {
-                        var obj = inputs[0].getFirstEntry();
-                        var cnt = inputs[1].getFirstEntry();
-                        var rst = patternDetails.getPrimaryOutput();
-                        if (obj.getKey() instanceof AEItemKey) {
-                            obj = inputs[1].getFirstEntry();
-                            cnt = inputs[0].getFirstEntry();
+                if (this.mode == CanerMode.FILL) {
+                    if (inputs.length == 2) {
+                        if (inputs[0].getFirstEntry() != null && inputs[1].getFirstEntry() != null) {
+                            var obj = inputs[0].getFirstEntry();
+                            var cnt = inputs[1].getFirstEntry();
+                            var rst = patternDetails.getPrimaryOutput();
+                            if (obj.getKey() instanceof AEItemKey) {
+                                obj = inputs[1].getFirstEntry();
+                                cnt = inputs[0].getFirstEntry();
+                            }
+                            // sanity check
+                            if (!(cnt.getKey() instanceof AEItemKey) || cnt.getLongValue() != 1) {
+                                return false;
+                            }
+                            if (!(rst.what() instanceof AEItemKey) || rst.amount() != 1) {
+                                return false;
+                            }
+                            // try to fill
+                            this.stuff.setStack(0, new GenericStack(obj.getKey(), obj.getLongValue()));
+                            this.container.setItemDirect(0, ((AEItemKey) cnt.getKey()).toStack());
+                            // check success
+                            boolean fail = this.stuff.getStack(0) == null || this.stuff.getStack(0).amount() != obj.getLongValue();
+                            if (this.container.getStackInSlot(0).isEmpty()) {
+                                fail = true;
+                            }
+                            // roll back
+                            if (fail) {
+                                this.stuff.setStack(0, null);
+                                this.container.setItemDirect(0, ItemStack.EMPTY);
+                                return false;
+                            } else {
+                                this.target = ((AEItemKey) rst.what()).toStack();
+                                this.ejectSide = ejectionDirection;
+                                return true;
+                            }
                         }
-                        // sanity check
-                        if (!(cnt.getKey() instanceof AEItemKey) || cnt.getLongValue() != 1) {
-                            return false;
-                        }
-                        if (!(rst.what() instanceof AEItemKey) || rst.amount() != 1) {
-                            return false;
-                        }
-                        // try to fill
-                        this.stuff.setStack(0, new GenericStack(obj.getKey(), obj.getLongValue()));
-                        this.container.setItemDirect(0, ((AEItemKey) cnt.getKey()).toStack());
-                        // check success
-                        boolean fail = this.stuff.getStack(0) == null || this.stuff.getStack(0).amount() != obj.getLongValue();
-                        if (this.container.getStackInSlot(0).isEmpty()) {
-                            fail = true;
-                        }
-                        // roll back
-                        if (fail) {
-                            this.stuff.setStack(0, null);
-                            this.container.setItemDirect(0, ItemStack.EMPTY);
-                            return false;
-                        } else {
-                            this.target = ((AEItemKey) rst.what()).toStack();
-                            this.ejectSide = ejectionDirection;
-                            return true;
+                    }
+                } else if (this.mode == CanerMode.EMPTY) {
+                    if (inputs.length == 1 && patternDetails.getOutputs().length == 2) {
+                        if (inputs[0].getFirstEntry() != null) {
+                            var cnt = inputs[0].getFirstEntry();
+                            var obj = patternDetails.getOutputs()[0];
+                            var rst = patternDetails.getOutputs()[1];
+                            if (obj.what() instanceof AEItemKey) {
+                                obj = patternDetails.getOutputs()[1];
+                                rst = patternDetails.getOutputs()[0];
+                            }
+                            // sanity check
+                            if (!(cnt.getKey() instanceof AEItemKey) || cnt.getLongValue() != 1) {
+                                return false;
+                            }
+                            if (!(rst.what() instanceof AEItemKey) || rst.amount() != 1) {
+                                return false;
+                            }
+                            // try to fill
+                            this.container.setItemDirect(0, ((AEItemKey) cnt.getKey()).toStack());
+                            // check success
+                            boolean fail = this.container.getStackInSlot(0).isEmpty() || obj == null;
+                            // roll back
+                            if (!fail) {
+                                this.target = ((AEItemKey) rst.what()).toStack();
+                                this.emptyKey = obj.what();
+                                this.ejectSide = ejectionDirection;
+                                return true;
+                            }
                         }
                     }
                 }

@@ -112,6 +112,8 @@
   "gui.wireless_connect.remote": "Position X: %s, Y: %s, Z: %s",
   "gui.wireless_connect.highlight.tooltip": "Highlight the remote Wireless Connector in world.",
   "gui.expatternprovider.caner": "ME Caner",
+  "gui.expatternprovider.caner.fill": "Fill mode",
+  "gui.expatternprovider.caner.empty": "Empty Mode",
   "gui.expatternprovider.precise_export_bus": "ME Precise Export Bus",
   "gui.expatternprovider.precise_export_bus.set_amount": "Use mouse middle click to set amount",
   "chat.ex_pattern_access_terminal.pos": "The pattern provider is now highlighted at: %s, Dim: %s",
