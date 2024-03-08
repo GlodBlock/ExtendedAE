@@ -20,6 +20,8 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.strategy.FEContainerItemStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEExternalStorageStrategy;
+import com.glodblock.github.appflux.common.me.strategy.FEStackExportStrategy;
+import com.glodblock.github.appflux.common.me.strategy.FEStackImportStrategy;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -65,6 +67,8 @@ public class AFRegistryHandler extends RegistryHandler {
     @SuppressWarnings("UnstableApiUsage")
     public void init() {
         StackWorldBehaviors.registerExternalStorageStrategy(FluxKeyType.TYPE, FEExternalStorageStrategy::new);
+        StackWorldBehaviors.registerExportStrategy(FluxKeyType.TYPE, FEStackExportStrategy::new);
+        StackWorldBehaviors.registerImportStrategy(FluxKeyType.TYPE, FEStackImportStrategy::new);
         ContainerItemStrategy.register(FluxKeyType.TYPE, FluxKey.class, new FEContainerItemStrategy());
         GenericSlotCapacities.register(FluxKeyType.TYPE, 1000000L);
         StorageCells.addCellHandler(FECellHandler.HANDLER);
