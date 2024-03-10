@@ -17,7 +17,7 @@ ME Caner is a machine that "canning" stuffs, including fluids, Mekanism gas, Bot
 
 The first slot is for what to fill, and the second slot is for what to be filled.
 
-It needs energy to run and every operation costs 800 AE.
+It needs energy to run and every operation costs 80 AE.
 
 ![GUI](../pic/caner_gui.png)
 
