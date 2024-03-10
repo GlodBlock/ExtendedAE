@@ -52,7 +52,7 @@ import java.util.Set;
 public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickable, ICraftingMachine {
 
     public static final int POWER_MAXIMUM_AMOUNT = 3200;
-    public static final int POWER_USAGE = 800;
+    public static final int POWER_USAGE = 80;
     private final AppEngInternalInventory container = new AppEngInternalInventory(this, 1, 1);
     private final GenericStackInv stuff = new GenericStackInv(this::wake, 1);
     private ItemStack target = ItemStack.EMPTY;
@@ -113,7 +113,7 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
                     int endItems = this.container.getStackInSlot(0).getCount();
                     long pushed = 0;
                     long origin = 0;
-                    if (this.mode == CanerMode.EMPTY && this.stuff.getStack(0) != null) {
+                    if (this.stuff.getStack(0) != null) {
                         var genTarget = StackWorldBehaviors.createExportFacade((ServerLevel) this.level, this.getBlockPos().relative(this.ejectSide), this.ejectSide.getOpposite());
                         var obj = this.stuff.getStack(0);
                         origin = obj.amount();
