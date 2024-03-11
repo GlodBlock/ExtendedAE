@@ -26,5 +26,9 @@ public class AFItemTagProvider extends ItemTagsProvider {
         tag(Tags.Items.INGOTS).add(AFItemAndBlock.HARDEN_INSULATING_RESIN);
         tag(AFTags.REDSTONE_GEM).add(AFItemAndBlock.REDSTONE_CRYSTAL);
         tag(Tags.Items.GEMS).add(AFItemAndBlock.REDSTONE_CRYSTAL);
+        tag(AFTags.DIAMOND_DUST).add(AFItemAndBlock.DIAMOND_DUST);
+        tag(Tags.Items.DUSTS).add(AFItemAndBlock.DIAMOND_DUST);
+        tag(AFTags.EMERALD_DUST).add(AFItemAndBlock.EMERALD_DUST);
+        tag(Tags.Items.DUSTS).add(AFItemAndBlock.EMERALD_DUST);
     }
 }

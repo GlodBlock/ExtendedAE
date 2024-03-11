@@ -43,13 +43,8 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 AFItemAndBlock.REDSTONE_CRYSTAL, 1,
                 TransformCircumstance.fluid(FluidTags.WATER),
                 Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE),
-                Ingredient.of(ConventionTags.FLUIX_DUST),
-                Ingredient.of(AEItems.SKY_DUST)
-        );
-        ChargerRecipeBuilder.charge(consumer,
-                AppFlux.id("charger/charge_redstone"),
-                AFItemAndBlock.REDSTONE_CRYSTAL,
-                AFItemAndBlock.CHARGED_REDSTONE
+                Ingredient.of(AEBlocks.FLUIX_BLOCK),
+                Ingredient.of(AFTags.DIAMOND_DUST)
         );
         ChargerRecipeBuilder.charge(consumer,
                 AppFlux.id("charger/energy_press"),
@@ -72,6 +67,25 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .setTop(Ingredient.of(AFItemAndBlock.ENERGY_PROCESSOR_PRESS))
                 .setMode(InscriberProcessType.INSCRIBE)
                 .save(consumer, AppFlux.id("inscriber/energy_press"));
+        InscriberRecipeBuilder
+                .inscribe(ConventionTags.DIAMOND, AFItemAndBlock.DIAMOND_DUST, 1)
+                .setMode(InscriberProcessType.INSCRIBE)
+                .save(consumer, AppFlux.id("inscriber/crush_diamond"));
+        InscriberRecipeBuilder
+                .inscribe(Tags.Items.GEMS_EMERALD, AFItemAndBlock.EMERALD_DUST, 1)
+                .setMode(InscriberProcessType.INSCRIBE)
+                .save(consumer, AppFlux.id("inscriber/crush_emerald"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFItemAndBlock.CHARGED_REDSTONE)
+                .pattern("XYX")
+                .pattern("ZCZ")
+                .pattern("XYX")
+                .define('C', AFItemAndBlock.REDSTONE_CRYSTAL)
+                .define('X', ConventionTags.GLOWSTONE)
+                .define('Y', AFTags.EMERALD_DUST)
+                .define('Z', ConventionTags.ENDER_PEARL_DUST)
+                .unlockedBy(C, has(AFItemAndBlock.REDSTONE_CRYSTAL))
+                .save(consumer, AppFlux.id("charge_redstone"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, AFItemAndBlock.INSULATING_RESIN)
                 .requires(Items.WATER_BUCKET)
@@ -127,7 +141,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .pattern("DPD")
                 .pattern("LGL")
                 .pattern("DLD")
-                .define('D', ConventionTags.FLUIX_DUST)
+                .define('D', AFTags.DIAMOND_DUST)
                 .define('L', AFItemAndBlock.CORE_4k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
@@ -138,7 +152,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .pattern("DPD")
                 .pattern("LGL")
                 .pattern("DLD")
-                .define('D', ConventionTags.FLUIX_DUST)
+                .define('D', AFTags.DIAMOND_DUST)
                 .define('L', AFItemAndBlock.CORE_16k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
@@ -149,7 +163,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .pattern("DPD")
                 .pattern("LGL")
                 .pattern("DLD")
-                .define('D', ConventionTags.ENDER_PEARL_DUST)
+                .define('D', AFTags.EMERALD_DUST)
                 .define('L', AFItemAndBlock.CORE_64k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFItemAndBlock.ENERGY_PROCESSOR)

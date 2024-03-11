@@ -28,6 +28,8 @@ public class AFItemAndBlock {
     public static NormalItem ENERGY_PROCESSOR_PRESS;
     public static NormalItem ENERGY_PROCESSOR;
     public static NormalItem REDSTONE_CRYSTAL;
+    public static NormalItem DIAMOND_DUST;
+    public static NormalItem EMERALD_DUST;
     public static NormalItem INSULATING_RESIN;
     public static NormalItem HARDEN_INSULATING_RESIN;
     public static NormalItem FE_HOUSING;
@@ -53,6 +55,8 @@ public class AFItemAndBlock {
         ENERGY_PROCESSOR = new NormalItem();
         ENERGY_PROCESSOR_PRINT = new NormalItem();
         ENERGY_PROCESSOR_PRESS = new NormalItem();
+        DIAMOND_DUST = new NormalItem();
+        EMERALD_DUST = new NormalItem();
         FE_HOUSING = new NormalItem();
         FE_CELL_1k = new ItemFECell(CORE_1k, 1, 0.5);
         FE_CELL_4k = new ItemFECell(CORE_4k, 4, 1.0);
@@ -86,6 +90,8 @@ public class AFItemAndBlock {
         regHandler.item("fe_64k_cell", FE_CELL_64k);
         regHandler.item("fe_256k_cell", FE_CELL_256k);
         regHandler.item("part_flux_accessor", PART_FLUX_ACCESSOR);
+        regHandler.item("diamond_dust", DIAMOND_DUST);
+        regHandler.item("emerald_dust", EMERALD_DUST);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
     }
 

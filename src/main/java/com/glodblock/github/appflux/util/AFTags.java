@@ -9,5 +9,7 @@ public class AFTags {
 
     public static final TagKey<Item> RESIN_INGOT = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "ingots/insulating_resin"));
     public static final TagKey<Item> REDSTONE_GEM = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "gems/redstone"));
+    public static final TagKey<Item> DIAMOND_DUST = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "dusts/diamond"));
+    public static final TagKey<Item> EMERALD_DUST = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "dusts/emerald"));
 
 }
