@@ -1,31 +1,23 @@
 package com.glodblock.github.appflux;
 
-import appeng.capabilities.Capabilities;
+import appeng.capabilities.AppEngCapabilities;
 import com.glodblock.github.appflux.client.AFClientRegistryHandler;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegisterEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 
 @Mod(AppFlux.MODID)
@@ -36,34 +28,41 @@ public class AppFlux {
     public static AppFlux INSTANCE;
 
     @SuppressWarnings("UnstableApiUsage")
-    public AppFlux() {
+    public AppFlux(IEventBus bus) {
         assert INSTANCE == null;
         INSTANCE = this;
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        AFItemAndBlock.init(AFRegistryHandler.INSTANCE);
-        bus.register(AFRegistryHandler.INSTANCE);
-        bus.addListener(this::commonSetup);
-        bus.addListener(this::clientSetup);
         bus.addListener((RegisterEvent e) -> {
-            if (e.getRegistryKey() == Registries.CREATIVE_MODE_TAB) {
-                AFRegistryHandler.INSTANCE.registerTab(e.getVanillaRegistry());
+            if (e.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
+                AFRegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));
+                return;
+            }
+            if (e.getRegistryKey().equals(Registries.BLOCK)) {
+                AFItemAndBlock.init(AFRegistryHandler.INSTANCE);
+                AFRegistryHandler.INSTANCE.runRegister();
             }
         });
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.register(AFClientRegistryHandler.INSTANCE));
-        MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, (AttachCapabilitiesEvent<BlockEntity> event) -> {
-            var blockEntity = event.getObject();
-            event.addCapability(AppFlux.id("generic_inv_wrapper"), new ICapabilityProvider() {
-                @NotNull
-                @Override
-                public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction side) {
-                    if (capability == ForgeCapabilities.ENERGY) {
-                        return blockEntity.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
-                                .lazyMap(FEGenericStackInvStorage::new)
-                                .cast();
-                    }
-                    return LazyOptional.empty();
+        bus.addListener(this::commonSetup);
+        bus.addListener(this::clientSetup);
+        bus.register(AFRegistryHandler.INSTANCE);
+        if (FMLEnvironment.dist.isClient()) {
+            bus.register(AFClientRegistryHandler.INSTANCE);
+        }
+        bus.addListener(EventPriority.LOWEST, (RegisterCapabilitiesEvent event) -> {
+            for (var block : BuiltInRegistries.BLOCK) {
+                if (event.isBlockRegistered(AppEngCapabilities.GENERIC_INTERNAL_INV, block)) {
+                    event.registerBlock(
+                            Capabilities.EnergyStorage.BLOCK,
+                            (level, pos, state, blockEntity, context) -> {
+                                var genericInv = level.getCapability(AppEngCapabilities.GENERIC_INTERNAL_INV, pos, state, blockEntity, context);
+                                if (genericInv != null) {
+                                    return new FEGenericStackInvStorage(genericInv);
+                                }
+                                return null;
+                            },
+                            block
+                    );
                 }
-            });
+            }
         });
     }
 

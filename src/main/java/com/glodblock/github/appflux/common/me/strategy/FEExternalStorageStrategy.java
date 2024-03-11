@@ -7,7 +7,6 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.core.localization.GuiText;
-import appeng.util.BlockApiCache;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
@@ -16,39 +15,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FEExternalStorageStrategy implements ExternalStorageStrategy {
 
-    private final Direction fromSide;
-    private final BlockApiCache<IEnergyStorage> apiCache;
-    private GTEUExternalStorageStrategy gteuHandler;
-
-    private boolean isGTPresent() {
-        return ModList.get().isLoaded("gtceu");
-    }
+    private final BlockCapabilityCache<IEnergyStorage, Direction> apiCache;
 
     public FEExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        this.apiCache = BlockApiCache.create(ForgeCapabilities.ENERGY, level, fromPos);
-        this.fromSide = fromSide;
-        /*if (isGTPresent()) {
-            this.gteuHandler = new GTEUExternalStorageStrategy(level, fromPos, fromSide);
-        }*/
+        this.apiCache = BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, level, fromPos, fromSide);
     }
 
     @Override
     public @Nullable MEStorage createWrapper(boolean extractableOnly, Runnable callback) {
-        /*if (isGTPresent()) {
-            var res = this.gteuHandler.createWrapper(extractableOnly, callback);
-            if (res != null) {
-                return res;
-            }
-        }*/
-        var storage = this.apiCache.find(this.fromSide);
+        var storage = this.apiCache.getCapability();
         if (storage == null) {
             return null;
         }

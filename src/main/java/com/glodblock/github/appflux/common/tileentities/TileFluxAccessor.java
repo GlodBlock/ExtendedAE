@@ -19,12 +19,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTickable {
 
@@ -34,23 +31,12 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
         this.getMainNode().setIdlePowerUsage(1.0).addService(IGridTickable.class, this);
     }
 
-    @Override
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        /*if (ModList.get().isLoaded("gtceu")) {
-            if (cap == GTCapability.CAPABILITY_ENERGY_CONTAINER && this.getStorage() != null) {
-                return LazyOptional.of(() -> new NetworkGTEUPower(this.getStorage(), this.getSource(), this.getAsker(side), side != null ? side.getOpposite() : null)).cast();
-            }
-        }*/
-        if (cap == ForgeCapabilities.ENERGY) {
-            return LazyOptional.of(() -> {
-                if (this.getStorage() != null) {
-                    return new NetworkFEPower(this.getStorage(), this.getSource());
-                } else {
-                    return new EnergyStorage(0);
-                }
-            }).cast();
+    public IEnergyStorage getEnergyStorage() {
+        if (this.getStorage() != null) {
+            return new NetworkFEPower(this.getStorage(), this.getSource());
+        } else {
+            return new EnergyStorage(0);
         }
-        return super.getCapability(cap, side);
     }
 
     private BlockEntity getAsker(Direction side) {
@@ -73,7 +59,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(1, 1, false, false);
+        return new TickingRequest(1, 1, false);
     }
 
     @Override
@@ -85,7 +71,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
                 var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
                 var thatGrid = AFUtil.getGrid(te, d.getOpposite());
                 if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                    var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                    var accepter = AFUtil.findCapability(te, Capabilities.EnergyStorage.BLOCK, d.getOpposite());
                     if (accepter != null) {
                         var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
                         if (toAdd > 0) {

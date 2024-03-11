@@ -21,7 +21,7 @@ public class JadePlugin implements IWailaPlugin {
             var target = accessor.getTarget();
             for (var loc : ENERGY) {
                 if (target instanceof InterfaceLogicHost || target instanceof PatternProviderLogicHost) {
-                    tooltip.remove(loc);
+                    tooltip.getTooltip().remove(loc);
                 }
             }
         });

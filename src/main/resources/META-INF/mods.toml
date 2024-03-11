@@ -8,29 +8,30 @@ displayURL="https://github.com/GlodBlock/ExtendedAE"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
+logoFile="logo.png"
 
 description='''${mod_description}'''
 [[dependencies.appflux]]
-    modId="forge"
-    mandatory=true
-    versionRange="${forge_version_range}"
+    modId="neoforge"
+    type="REQUIRED"
+    versionRange="${neo_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.appflux]]
     modId="minecraft"
-    mandatory=true
+    type="REQUIRED"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.appflux]]
     modId="ae2"
-    mandatory=true
-    versionRange="[15.0.12,)"
+    type="REQUIRED"
+    versionRange="[17.8.0-beta,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.appflux]]
     modId="glodium"
-    mandatory=true
-    versionRange="[1.0,)"
+    type="REQUIRED"
+    versionRange="[1.20-2.1,)"
     ordering="AFTER"
     side="BOTH"

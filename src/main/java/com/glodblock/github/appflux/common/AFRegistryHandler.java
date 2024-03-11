@@ -4,6 +4,7 @@ import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.StorageCellModels;
 import appeng.api.parts.PartModels;
+import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
 import appeng.block.AEBaseBlockItem;
@@ -14,8 +15,8 @@ import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.items.AEBaseItem;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
+import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
-import com.glodblock.github.appflux.common.me.cell.GTEUCellHandler;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.strategy.FEContainerItemStrategy;
@@ -23,9 +24,11 @@ import com.glodblock.github.appflux.common.me.strategy.FEExternalStorageStrategy
 import com.glodblock.github.appflux.common.me.strategy.FEStackExportStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEStackImportStrategy;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
+import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -33,9 +36,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class AFRegistryHandler extends RegistryHandler {
@@ -78,7 +81,7 @@ public class AFRegistryHandler extends RegistryHandler {
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
         for (Pair<String, Block> entry : blocks) {
-            Block block = ForgeRegistries.BLOCKS.getValue(AppFlux.id(entry.getKey()));
+            Block block = BuiltInRegistries.BLOCK.get(AppFlux.id(entry.getKey()));
             if (block instanceof AEBaseEntityBlock<?>) {
                 AEBaseBlockEntity.registerBlockEntityItem(
                         ((AEBaseEntityBlock<?>) block).getBlockEntityType(),
@@ -86,20 +89,37 @@ public class AFRegistryHandler extends RegistryHandler {
                 );
             }
         }
-        /*if (ModList.get().isLoaded("gtceu")) {
-            StorageCells.addCellHandler(GTEUCellHandler.HANDLER);
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_1k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_4k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_16k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_64k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_256k, AppFlux.id("block/drive/gteu_cell"));
-        }*/
     }
 
-    public void register(RegisterEvent event) {
-        super.register(event);
+    @Override
+    public void runRegister() {
+        super.runRegister();
         AEKeyTypes.register(FluxKeyType.TYPE);
         PartModels.registerModels(PartFluxAccessor.RL);
+    }
+
+    @SubscribeEvent
+    public void registerCap(RegisterCapabilitiesEvent event) {
+        for (var e : this.items) {
+            var item = e.getRight();
+            if (item instanceof IFluxCell cell) {
+                event.registerItem(Capabilities.EnergyStorage.ITEM, cell, item);
+            }
+        }
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                GlodUtil.getTileType(TileFluxAccessor.class),
+                (te, side) -> te.getEnergyStorage()
+        );
+    }
+
+    @SubscribeEvent
+    public void registerPartCap(RegisterPartCapabilitiesEvent event) {
+        event.register(
+                Capabilities.EnergyStorage.BLOCK,
+                (part, direction) -> part.getEnergyStorage(),
+                PartFluxAccessor.class
+        );
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

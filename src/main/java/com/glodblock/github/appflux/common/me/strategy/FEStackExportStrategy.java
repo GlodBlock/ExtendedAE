@@ -5,23 +5,21 @@ import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEKey;
 import appeng.api.storage.StorageHelper;
-import appeng.util.BlockApiCache;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FEStackExportStrategy implements StackExportStrategy {
-    private final BlockApiCache<? extends IEnergyStorage> apiCache;
-    private final Direction fromSide;
+    private final BlockCapabilityCache<? extends IEnergyStorage, Direction> apiCache;
 
     public FEStackExportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        this.apiCache = BlockApiCache.create(ForgeCapabilities.ENERGY, level, fromPos);
-        this.fromSide = fromSide;
+        this.apiCache = BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, level, fromPos, fromSide);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class FEStackExportStrategy implements StackExportStrategy {
         if (!(what instanceof FluxKey)) {
             return 0;
         }
-        var storage = this.apiCache.find(this.fromSide);
+        var storage = this.apiCache.getCapability();
         if (storage == null) {
             return 0;
         }
@@ -56,7 +54,7 @@ public class FEStackExportStrategy implements StackExportStrategy {
         if (!(what instanceof FluxKey)) {
             return 0;
         }
-        var storage = this.apiCache.find(this.fromSide);
+        var storage = this.apiCache.getCapability();
         if (storage == null) {
             return 0;
         }

@@ -12,27 +12,16 @@ import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, ItemContext> {
 
-    private boolean isGTPresent() {
-        return ModList.get().isLoaded("gtceu");
-    }
-
     @Override
     public @Nullable GenericStack getContainedStack(ItemStack stack) {
-        /*if (isGTPresent()) {
-            var res =  GTEUContainerItemStrategy.BRIDGE.getContainedStack(stack);
-            if (res != null) {
-                return res;
-            }
-        }*/
-        var energy = AFUtil.findCapability(stack, ForgeCapabilities.ENERGY);
+        var energy = AFUtil.findCapability(stack, Capabilities.EnergyStorage.ITEM);
         if (energy != null && energy.getEnergyStored() > 0) {
             return new GenericStack(FluxKey.of(EnergyType.FE), energy.getEnergyStored());
         }
@@ -41,13 +30,7 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public @Nullable ItemContext findCarriedContext(Player player, AbstractContainerMenu menu) {
-        /*if (isGTPresent()) {
-            var res = GTEUContainerItemStrategy.BRIDGE.findCarriedContext(player, menu);
-            if (res != null) {
-                return res;
-            }
-        }*/
-        if (menu.getCarried().getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+        if (menu.getCarried().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
             return new CarriedContext(player, menu);
         }
         return null;
@@ -55,13 +38,7 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public @Nullable ItemContext findPlayerSlotContext(Player player, int slot) {
-        /*if (isGTPresent()) {
-            var res = GTEUContainerItemStrategy.BRIDGE.findPlayerSlotContext(player, slot);
-            if (res != null) {
-                return res;
-            }
-        }*/
-        if (player.getInventory().getItem(slot).getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+        if (player.getInventory().getItem(slot).getCapability(Capabilities.EnergyStorage.ITEM) != null) {
             return new PlayerInvContext(player, slot);
         }
         return null;
@@ -69,15 +46,9 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public long extract(ItemContext context, FluxKey what, long amount, Actionable mode) {
-        /*if (isGTPresent()) {
-            var res = GTEUContainerItemStrategy.BRIDGE.extract(context, what, amount, mode);
-            if (res > 0) {
-                return res;
-            }
-        }*/
         var stack = context.getStack();
         var copy = ItemHandlerHelper.copyStackWithSize(stack, 1);
-        var handler = AFUtil.findCapability(copy, ForgeCapabilities.ENERGY);
+        var handler = AFUtil.findCapability(copy, Capabilities.EnergyStorage.ITEM);
         if (handler == null) {
             return 0;
         }
@@ -91,15 +62,9 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public long insert(ItemContext context, FluxKey what, long amount, Actionable mode) {
-        /*if (isGTPresent()) {
-            var res = GTEUContainerItemStrategy.BRIDGE.insert(context, what, amount, mode);
-            if (res > 0) {
-                return res;
-            }
-        }*/
         var stack = context.getStack();
         var copy = ItemHandlerHelper.copyStackWithSize(stack, 1);
-        var handler = AFUtil.findCapability(copy, ForgeCapabilities.ENERGY);
+        var handler = AFUtil.findCapability(copy, Capabilities.EnergyStorage.ITEM);
         if (handler == null) {
             return 0;
         }

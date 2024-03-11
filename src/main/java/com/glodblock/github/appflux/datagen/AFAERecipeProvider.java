@@ -13,8 +13,8 @@ import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.util.AFTags;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -37,7 +37,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
     }
 
     @Override
-    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(@NotNull RecipeOutput consumer) {
         TransformRecipeBuilder.transform(consumer,
                 AppFlux.id("transform/redstone_crystal"),
                 AFItemAndBlock.REDSTONE_CRYSTAL, 1,
@@ -191,24 +191,9 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.FE_CELL_64k, "64k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.FE_CELL_256k, "256k");
-        /*ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, AFItemAndBlock.GTEU_HOUSING)
-                .pattern("GDG")
-                .pattern("D D")
-                .pattern("III")
-                .define('D', AFItemAndBlock.CHARGED_REDSTONE)
-                .define('G', AEBlocks.QUARTZ_GLASS)
-                .define('I', ConventionTags.IRON_INGOT)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
-                .save(consumer, AppFlux.id("gteu_housing"));
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_1k, AFItemAndBlock.GTEU_CELL_1k, "1k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.GTEU_CELL_4k, "4k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.GTEU_CELL_16k, "16k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.GTEU_CELL_64k, "64k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.GTEU_CELL_256k, "256k");*/
     }
 
-    private void addFECellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
+    private void addFECellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, result)
                 .pattern("GDG")
@@ -228,7 +213,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
     }
 
-    private void addGTEUCellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
+    private void addGTEUCellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, result)
                 .pattern("GDG")

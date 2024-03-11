@@ -6,7 +6,7 @@ import com.glodblock.github.appflux.common.me.cell.FluxCellInventory;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public record CellFEPower(FluxCellInventory inv) implements IEnergyStorage {
 

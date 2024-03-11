@@ -1,15 +1,8 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         gradlePluginPortal()
-        mavenCentral()
-        maven {
-            name = 'NeoForge'
-            url = 'https://maven.neoforged.net/releases'
-        }
-        maven {
-            name = "Mixin"
-            url = 'https://repo.spongepowered.org/maven'
-        }
+        maven { url = 'https://maven.neoforged.net/releases' }
     }
 }
 

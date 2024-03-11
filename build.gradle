@@ -1,18 +1,17 @@
-buildscript {
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
+    id 'java-library'
+    id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'net.neoforged.gradle.userdev' version '7.0.80'
 }
 
-version = "${mod_version}"
-group = 'com.glodblock.github.appflux'
+version = mod_version
+group = mod_group_id
+
+repositories {
+    mavenLocal()
+}
 
 base {
     archivesName = mod_name
@@ -20,109 +19,94 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-    copyIdeResources = true
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
 
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
 
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
 
-        data {
-            workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
+    gameTestServer {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    data {
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
     maven {
-        url = "https://cursemaven.com"
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+        content {
+            includeGroup "dev.emi"
+        }
+    }
+    maven {
+        name 'cursemaven'
+        url "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
     }
     maven {
-        url = "https://maven.blamejared.com/"
-    }
-    maven {
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
         name = "Modmaven"
-        url = "https://modmaven.dev/"
+        url = uri("https://modmaven.dev/")
+        content {
+            includeGroup("appeng")
+        }
     }
 }
 
 dependencies {
-    minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
-    implementation fg.deobf("curse.maven:glodium-957920:5024300")
-    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4777696")
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
-    // for some reason this deobf jar fails to load at file correctly
-    compileOnly fg.deobf("curse.maven:jade-324717:4768593")
-    compileOnly fg.deobf("curse.maven:gregtechceu-modern-890405:5041060")
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    implementation "net.neoforged:neoforge:${neo_version}"
+    implementation "curse.maven:glodium-957920:5173720"
+    implementation "appeng:appliedenergistics2-neoforge:17.8.0-beta"
+    compileOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
+    compileOnly "curse.maven:jade-324717:5109393"
     // runtime test
-    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
-    runtimeOnly fg.deobf("curse.maven:jade-324717:4768593")
-    runtimeOnly fg.deobf("curse.maven:ender-io-64578:4920828")
+    runtimeOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
+    runtimeOnly "curse.maven:jade-324717:5109393"
 }
 
-tasks.named('processResources', ProcessResources).configure {
+tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            neo_version: forge_version, forge_version_range: forge_version_range,
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version         : neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['META-INF/mods.toml']) {
         expand replaceProperties + [project: project]
     }
 }
 
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'TweakClass': "org.spongepowered.asm.launch.MixinTweaker",
-                'TweakOrder': 0
-        ])
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
     }
-    finalizedBy 'reobfJar'
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -8,11 +8,13 @@ import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface IFluxCell extends ICellWorkbenchItem {
+public interface IFluxCell extends ICellWorkbenchItem, ICapabilityProvider<ItemStack, Void, IEnergyStorage> {
 
     AEKeyType getKeyType();
 

@@ -20,10 +20,9 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class PartFluxAccessor extends AEBasePart implements IGridTickable {
 
@@ -63,23 +62,17 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
         return IActionSource.ofMachine(this);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return LazyOptional.of(() -> {
-                if (this.getStorage() != null) {
-                    return new NetworkFEPower(this.getStorage(), this.getSource());
-                } else {
-                    return new EnergyStorage(0);
-                }
-            }).cast();
+    public IEnergyStorage getEnergyStorage() {
+        if (this.getStorage() != null) {
+            return new NetworkFEPower(this.getStorage(), this.getSource());
+        } else {
+            return new EnergyStorage(0);
         }
-        return super.getCapability(cap);
     }
 
     @Override
     public TickingRequest getTickingRequest(IGridNode iGridNode) {
-        return new TickingRequest(1, 1, false, false);
+        return new TickingRequest(1, 1, false);
     }
 
     @Override
@@ -91,7 +84,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
             var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
             var thatGrid = AFUtil.getGrid(te, d.getOpposite());
             if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                var accepter = AFUtil.findCapability(te, Capabilities.EnergyStorage.BLOCK, d.getOpposite());
                 if (accepter != null) {
                     var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
                     if (toAdd > 0) {
