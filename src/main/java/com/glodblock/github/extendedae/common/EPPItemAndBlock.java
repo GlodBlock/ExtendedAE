@@ -116,7 +116,7 @@ public class EPPItemAndBlock {
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
-        regHandler.block("crystal_growth_chamber",CRYSTAL_GROWTH_CHAMBER, TileCrystalGrowthChamber.class,TileCrystalGrowthChamber::new);
+        regHandler.block("crystal_growth_chamber", CRYSTAL_GROWTH_CHAMBER, TileCrystalGrowthChamber.class, TileCrystalGrowthChamber::new);
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);

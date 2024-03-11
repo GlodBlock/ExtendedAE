@@ -10,6 +10,7 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class CrystalGrowthChamberTooltip implements IBlockComponentProvider {
     static final CrystalGrowthChamberTooltip INSTANCE = new CrystalGrowthChamberTooltip();
+
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig iPluginConfig) {
         var target = accessor.getServerData();
@@ -17,10 +18,11 @@ public class CrystalGrowthChamberTooltip implements IBlockComponentProvider {
             var data = target.getCompound(ExtendedAE.MODID);
             if (data.contains("state")) {
                 var progress = data.getCompound("state").getInt("progress");
-                tooltip.add(Component.translatable("jade.crystal_chamber.progress",progress));
+                tooltip.add(Component.translatable("jade.crystal_chamber.progress", progress));
             }
         }
     }
+
     @Override
     public ResourceLocation getUid() {
         return ExtendedAE.id("jade_chamber");

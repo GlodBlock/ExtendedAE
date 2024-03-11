@@ -30,6 +30,7 @@ public class TileCrystalGrowthChamber extends AENetworkInvBlockEntity implements
                 .setIdlePowerUsage(10)
                 .addService(IGridTickable.class, this);
     }
+
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
         return new TickingRequest(TickRates.Charger, false, true);
@@ -38,30 +39,32 @@ public class TileCrystalGrowthChamber extends AENetworkInvBlockEntity implements
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
         doWork(ticksSinceLastCall);
-        return TickRateModulation.SLOWER;
+        return TickRateModulation.SAME;
+    }
+
+    private boolean needGrowth(BlockState blockState) {
+        Block block = blockState.getBlock();
+        return block instanceof BuddingCertusQuartzBlock && (blockState.is(AEBlocks.DAMAGED_BUDDING_QUARTZ.block()) || blockState.is(AEBlocks.CHIPPED_BUDDING_QUARTZ.block()));
     }
 
     private void doWork(int ticksSinceLastCall) {
-        BlockPos blockPos = this.getBlockPos().offset(0,1,0);
+        BlockPos blockPos = this.getBlockPos().offset(0, 1, 0);
         BlockState blockState;
         try {
-            blockState =  this.getLevel().getBlockState(blockPos);
-        }catch (NullPointerException e){
+            blockState = this.getLevel().getBlockState(blockPos);
+        } catch (NullPointerException e) {
             blockState = null;
         }
-        if(blockState == null) return;
-        Block block = blockState.getBlock();
-        if(block.getClass().equals(BuddingCertusQuartzBlock.class) && !blockState.is(AEBlocks.FLAWLESS_BUDDING_QUARTZ.block())){
-            if(this.userPower(ticksSinceLastCall * 50)>0){
+        if (blockState == null) return;
+        if (needGrowth(blockState)) {
+            if (this.userPower(ticksSinceLastCall * 50) > 0) {
                 this.progress += Platform.getRandom().nextInt(5);
             }
-            if(this.progress >= 100){
+            if (this.progress >= 100) {
                 if (blockState.is(AEBlocks.DAMAGED_BUDDING_QUARTZ.block())) {
-                    this.getLevel().setBlockAndUpdate(blockPos,AEBlocks.CHIPPED_BUDDING_QUARTZ.block().defaultBlockState());
+                    this.getLevel().setBlockAndUpdate(blockPos, AEBlocks.CHIPPED_BUDDING_QUARTZ.block().defaultBlockState());
                 } else if (blockState.is(AEBlocks.CHIPPED_BUDDING_QUARTZ.block())) {
-                    this.getLevel().setBlockAndUpdate(blockPos,AEBlocks.FLAWED_BUDDING_QUARTZ.block().defaultBlockState());
-                } else if (blockState.is(AEBlocks.FLAWED_BUDDING_QUARTZ.block())) {
-                    this.getLevel().setBlockAndUpdate(blockPos,AEBlocks.FLAWLESS_BUDDING_QUARTZ.block().defaultBlockState());
+                    this.getLevel().setBlockAndUpdate(blockPos, AEBlocks.FLAWED_BUDDING_QUARTZ.block().defaultBlockState());
                 }
                 this.progress = 0;
             }
@@ -69,14 +72,15 @@ public class TileCrystalGrowthChamber extends AENetworkInvBlockEntity implements
             this.progress = 0;
         }
     }
-    public int getProgress(){
+
+    public int getProgress() {
         return this.progress;
     }
 
     private int userPower(int value) {
         var grid = this.getGridNode().getGrid();
         if (grid != null) {
-            return (int) (grid.getEnergyService().extractAEPower(value,Actionable.MODULATE, PowerMultiplier.CONFIG));
+            return (int) (grid.getEnergyService().extractAEPower(value, Actionable.MODULATE, PowerMultiplier.CONFIG));
         } else {
             return 0;
         }
@@ -85,7 +89,7 @@ public class TileCrystalGrowthChamber extends AENetworkInvBlockEntity implements
     @Override
     public void saveAdditional(CompoundTag data) {
         super.saveAdditional(data);
-        data.putInt("progress",this.progress);
+        data.putInt("progress", this.progress);
     }
 
     @Override

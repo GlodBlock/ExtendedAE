@@ -24,7 +24,7 @@ public class JadeDateSender implements IServerDataProvider<BlockAccessor> {
         } else if (tile instanceof TileCrystalGrowthChamber tgc) {
             CompoundTag state = new CompoundTag();
             state.putInt("progress", tgc.getProgress());
-            epp.put("state",state);
+            epp.put("state", state);
         }
         if (!epp.isEmpty()) {
             data.put(ExtendedAE.MODID, epp);

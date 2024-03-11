@@ -280,7 +280,7 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .pattern("FAF")
                 .define('F', AEBlocks.CHARGER)
                 .define('A', AEBlocks.GROWTH_ACCELERATOR)
-                .define('E',  EPPItemAndBlock.EX_CHARGER)
+                .define('E', EPPItemAndBlock.EX_CHARGER)
                 .unlockedBy(C, has(EPPItemAndBlock.CRYSTAL_GROWTH_CHAMBER))
                 .save(c, ExtendedAE.id("crystal_growth_chamber"));
 
