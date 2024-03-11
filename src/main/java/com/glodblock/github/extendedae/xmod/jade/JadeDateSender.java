@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.xmod.jade;
 
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.tileentities.TileCrystalGrowthChamber;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -20,6 +21,10 @@ public class JadeDateSender implements IServerDataProvider<BlockAccessor> {
             CompoundTag color = new CompoundTag();
             color.putString("color", connector.getColor().name());
             epp.put("wireless", color);
+        } else if (tile instanceof TileCrystalGrowthChamber tgc) {
+            CompoundTag state = new CompoundTag();
+            state.putInt("progress", tgc.getProgress());
+            epp.put("state",state);
         }
         if (!epp.isEmpty()) {
             data.put(ExtendedAE.MODID, epp);

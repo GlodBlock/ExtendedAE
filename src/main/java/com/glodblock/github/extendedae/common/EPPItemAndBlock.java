@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.common;
 
 import appeng.items.parts.PartItem;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
+import com.glodblock.github.extendedae.common.blocks.BlockCrystalGrowthChamber;
 import com.glodblock.github.extendedae.common.blocks.BlockExCharger;
 import com.glodblock.github.extendedae.common.blocks.BlockExDrive;
 import com.glodblock.github.extendedae.common.blocks.BlockExInscriber;
@@ -24,6 +25,7 @@ import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.items.tools.ItemWirelessExPAT;
 import com.glodblock.github.extendedae.common.parts.*;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
+import com.glodblock.github.extendedae.common.tileentities.TileCrystalGrowthChamber;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
@@ -59,6 +61,7 @@ public class EPPItemAndBlock {
     public static BlockExMolecularAssembler EX_ASSEMBLER;
     public static BlockExInscriber EX_INSCRIBER;
     public static BlockExCharger EX_CHARGER;
+    public static BlockCrystalGrowthChamber CRYSTAL_GROWTH_CHAMBER;
     public static PartItem<PartTagStorageBus> TAG_STORAGE_BUS;
     public static PartItem<PartTagExportBus> TAG_EXPORT_BUS;
     public static PartItem<PartThresholdLevelEmitter> THRESHOLD_LEVEL_EMITTER;
@@ -94,6 +97,7 @@ public class EPPItemAndBlock {
         EX_ASSEMBLER = new BlockExMolecularAssembler();
         EX_INSCRIBER = new BlockExInscriber();
         EX_CHARGER = new BlockExCharger();
+        CRYSTAL_GROWTH_CHAMBER = new BlockCrystalGrowthChamber();
         TAG_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartTagStorageBus.class, PartTagStorageBus::new);
         TAG_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartTagExportBus.class, PartTagExportBus::new);
         THRESHOLD_LEVEL_EMITTER = new PartItem<>(new Item.Properties(), PartThresholdLevelEmitter.class, PartThresholdLevelEmitter::new);
@@ -112,6 +116,7 @@ public class EPPItemAndBlock {
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
+        regHandler.block("crystal_growth_chamber",CRYSTAL_GROWTH_CHAMBER, TileCrystalGrowthChamber.class,TileCrystalGrowthChamber::new);
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
