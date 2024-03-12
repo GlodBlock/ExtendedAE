@@ -2,6 +2,7 @@ package com.glodblock.github.appflux.datagen;
 
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.AFSingletons;
+import com.glodblock.github.appflux.util.AFTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -20,12 +21,12 @@ public class AFBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        var pickaxe = BlockTags.MINEABLE_WITH_PICKAXE;
-        tag(pickaxe)
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(AFSingletons.FLUX_ACCESSOR)
                 .add(AFSingletons.CHARGED_REDSTONE_BLOCK);
-        var block = Tags.Blocks.STORAGE_BLOCKS;
-        tag(block)
+        tag(Tags.Blocks.STORAGE_BLOCKS)
+                .add(AFSingletons.CHARGED_REDSTONE_BLOCK);
+        tag(AFTags.CHARGED_REDSTONE_GEM_BLOCK_BLOCK)
                 .add(AFSingletons.CHARGED_REDSTONE_BLOCK);
     }
 }

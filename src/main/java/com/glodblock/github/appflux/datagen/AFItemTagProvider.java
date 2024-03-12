@@ -26,10 +26,13 @@ public class AFItemTagProvider extends ItemTagsProvider {
         tag(Tags.Items.INGOTS).add(AFSingletons.HARDEN_INSULATING_RESIN);
         tag(AFTags.REDSTONE_GEM).add(AFSingletons.REDSTONE_CRYSTAL);
         tag(Tags.Items.GEMS).add(AFSingletons.REDSTONE_CRYSTAL);
+        tag(Tags.Items.GEMS).add(AFSingletons.CHARGED_REDSTONE);
+        tag(AFTags.CHARGED_REDSTONE_GEM).add(AFSingletons.CHARGED_REDSTONE);
         tag(AFTags.DIAMOND_DUST).add(AFSingletons.DIAMOND_DUST);
         tag(Tags.Items.DUSTS).add(AFSingletons.DIAMOND_DUST);
         tag(AFTags.EMERALD_DUST).add(AFSingletons.EMERALD_DUST);
         tag(Tags.Items.DUSTS).add(AFSingletons.EMERALD_DUST);
         tag(Tags.Items.STORAGE_BLOCKS).add(AFSingletons.CHARGED_REDSTONE_BLOCK.asItem());
+        tag(AFTags.CHARGED_REDSTONE_GEM_BLOCK).add(AFSingletons.CHARGED_REDSTONE_BLOCK.asItem());
     }
 }
