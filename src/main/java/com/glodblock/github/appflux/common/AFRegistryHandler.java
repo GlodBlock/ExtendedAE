@@ -6,16 +6,18 @@ import appeng.api.client.StorageCellModels;
 import appeng.api.parts.PartModels;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.Upgrades;
 import appeng.block.AEBaseBlockItem;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.GuiText;
 import appeng.items.AEBaseItem;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
-import com.glodblock.github.appflux.common.me.cell.GTEUCellHandler;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.strategy.FEContainerItemStrategy;
@@ -33,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -86,14 +87,11 @@ public class AFRegistryHandler extends RegistryHandler {
                 );
             }
         }
-        /*if (ModList.get().isLoaded("gtceu")) {
-            StorageCells.addCellHandler(GTEUCellHandler.HANDLER);
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_1k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_4k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_16k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_64k, AppFlux.id("block/drive/gteu_cell"));
-            StorageCellModels.registerModel(AFItemAndBlock.GTEU_CELL_256k, AppFlux.id("block/drive/gteu_cell"));
-        }*/
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
     }
 
     public void register(RegisterEvent event) {

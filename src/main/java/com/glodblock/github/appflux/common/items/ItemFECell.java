@@ -2,6 +2,9 @@ package com.glodblock.github.appflux.common.items;
 
 import appeng.api.stacks.AEKeyType;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.UpgradeInventories;
+import appeng.core.localization.PlayerMessages;
 import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
 import com.glodblock.github.appflux.api.IFluxCell;
@@ -49,6 +52,11 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
     }
 
     @Override
+    public IUpgradeInventory getUpgrades(ItemStack is) {
+        return UpgradeInventories.forItem(is, 1);
+    }
+
+    @Override
     public AEKeyType getKeyType() {
         return FluxKeyType.TYPE;
     }
@@ -76,7 +84,12 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
 
     @Override
     public Optional<TooltipComponent> getCellTooltipImage(ItemStack is) {
-        return Optional.empty();
+        return FECellHandler.HANDLER.getTooltipImage(is);
+    }
+
+    @Override
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
+        return this.getCellTooltipImage(stack);
     }
 
     @Override
@@ -100,8 +113,13 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
                 if (list.isEmpty()) {
                     playerInventory.setItem(playerInventory.selected, ItemStack.EMPTY);
                     playerInventory.placeItemBackInInventory(new ItemStack(this.coreItem));
+                    for (var upgrade : this.getUpgrades(stack)) {
+                        playerInventory.placeItemBackInInventory(upgrade);
+                    }
                     playerInventory.placeItemBackInInventory(new ItemStack(AFItemAndBlock.FE_HOUSING));
                     return true;
+                } else {
+                    player.displayClientMessage(PlayerMessages.OnlyEmptyCellsCanBeDisassembled.text(), true);
                 }
             }
         }

@@ -22,12 +22,12 @@ public interface IFluxCell extends ICellWorkbenchItem {
 
     @Override
     default boolean isEditable(ItemStack is) {
-        return false;
+        return true;
     }
 
     @Override
     default ConfigInventory getConfigInventory(ItemStack is) {
-        return null;
+        return ConfigInventory.EMPTY_TYPES;
     }
 
     @Override
