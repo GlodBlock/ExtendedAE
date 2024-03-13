@@ -10,6 +10,7 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.container.ContainerModExportBus;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
+import com.glodblock.github.extendedae.util.FCClientUtil;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import com.glodblock.github.glodium.network.packet.sync.Paras;
@@ -33,7 +34,10 @@ public class GuiModExportBus extends UpgradeableScreen<ContainerModExportBus> im
         this.filterInputs = widgets.addTextField("filter_input");
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.expatternprovider.mod_storage_bus.tooltip"));
-        this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s)));
+        this.filterInputs.setResponder(s -> {
+            this.filterInputs.setSuggestion(FCClientUtil.getModName(s));
+            EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s));
+        });
         this.actions.put("init", o -> this.filterInputs.setValue(o.get(0)));
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
     }
