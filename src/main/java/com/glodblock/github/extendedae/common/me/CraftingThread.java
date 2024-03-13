@@ -122,6 +122,8 @@ public class CraftingThread {
         }
 
         if (this.myPlan == null) {
+            // clear possible jammed stuffs
+            this.ejectHeldItems();
             this.updateSleepiness();
             return TickRateModulation.SLEEP;
         }
@@ -305,10 +307,6 @@ public class CraftingThread {
                 }
             });
         }
-    }
-
-    public void forceWake() {
-        this.isAwake = true;
     }
 
     private boolean hasMats() {

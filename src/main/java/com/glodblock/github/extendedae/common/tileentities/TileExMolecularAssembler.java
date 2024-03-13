@@ -194,11 +194,6 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
             t.updateSleepiness();
             isAwake |= t.isAwake();
         }
-        if (isAwake) {
-            for (var t : this.threads) {
-                t.forceWake();
-            }
-        }
         return new TickingRequest(1, 1, !isAwake, false);
     }
 
