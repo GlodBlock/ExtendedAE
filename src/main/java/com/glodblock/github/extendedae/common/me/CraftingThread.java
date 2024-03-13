@@ -16,6 +16,7 @@ import appeng.menu.AutoCraftingMenu;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
+import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -168,9 +169,16 @@ public class CraftingThread {
                 this.saveChanges();
                 this.updateSleepiness();
                 return this.isAwake ? TickRateModulation.IDLE : TickRateModulation.SLEEP;
+            } else {
+                ExtendedAE.LOGGER.warn("Molecular Assembler failed to craft, the crafting ingredients are returned.");
+                this.forcePlan = false;
+                this.myPlan = null;
+                this.pushDirection = null;
+                this.ejectHeldItems();
+                this.saveChanges();
+                this.updateSleepiness();
             }
         }
-
         return TickRateModulation.FASTER;
     }
 
@@ -212,7 +220,8 @@ public class CraftingThread {
     private int userPower(int ticksPassed, int bonusValue, double acceleratorTax) {
         var grid = this.host.getMainNode().getGrid();
         if (grid != null) {
-            return (int) (grid.getEnergyService().extractAEPower(ticksPassed * bonusValue * acceleratorTax, Actionable.MODULATE, PowerMultiplier.CONFIG) / acceleratorTax);
+            var safePower = Math.min(ticksPassed * bonusValue * acceleratorTax, 5000);
+            return (int) (grid.getEnergyService().extractAEPower(safePower, Actionable.MODULATE, PowerMultiplier.CONFIG) / acceleratorTax);
         } else {
             return 0;
         }
@@ -296,6 +305,10 @@ public class CraftingThread {
                 }
             });
         }
+    }
+
+    public void forceWake() {
+        this.isAwake = true;
     }
 
     private boolean hasMats() {
