@@ -7,11 +7,14 @@ import appeng.api.parts.PartModels;
 import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.Upgrades;
 import appeng.block.AEBaseBlockItem;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.GuiText;
 import appeng.items.AEBaseItem;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
@@ -89,6 +92,11 @@ public class AFRegistryHandler extends RegistryHandler {
                 );
             }
         }
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
     }
 
     @Override

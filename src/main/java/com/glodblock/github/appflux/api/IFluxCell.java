@@ -3,7 +3,6 @@ package com.glodblock.github.appflux.api;
 import appeng.api.config.FuzzyMode;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.storage.cells.ICellWorkbenchItem;
-import appeng.util.ConfigInventory;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -24,12 +23,7 @@ public interface IFluxCell extends ICellWorkbenchItem, ICapabilityProvider<ItemS
 
     @Override
     default boolean isEditable(ItemStack is) {
-        return false;
-    }
-
-    @Override
-    default ConfigInventory getConfigInventory(ItemStack is) {
-        return null;
+        return true;
     }
 
     @Override

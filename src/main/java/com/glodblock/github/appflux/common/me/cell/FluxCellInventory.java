@@ -7,6 +7,8 @@ import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.core.definitions.AEItems;
 import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
@@ -25,6 +27,7 @@ public abstract class FluxCellInventory implements StorageCell {
 
     protected long storedEnergy = 0;
     protected boolean isPersisted = true;
+    protected final boolean hasVoidUpgrade;
 
     public FluxCellInventory(IFluxCell cellType, ItemStack o, @Nullable ISaveProvider container) {
         this.cellType = cellType;
@@ -34,6 +37,7 @@ public abstract class FluxCellInventory implements StorageCell {
         if (tag != null) {
             storedEnergy = tag.getLong(DATA);
         }
+        this.hasVoidUpgrade = this.getUpgrades().isInstalled(AEItems.VOID_CARD);
     }
 
     @Override
@@ -78,6 +82,10 @@ public abstract class FluxCellInventory implements StorageCell {
         }
     }
 
+    public IUpgradeInventory getUpgrades() {
+        return this.cellType.getUpgrades(this.stack);
+    }
+
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
         if (!(what instanceof FluxKey)) {
@@ -91,7 +99,7 @@ public abstract class FluxCellInventory implements StorageCell {
             saveChanges();
         }
 
-        return inserted;
+        return this.hasVoidUpgrade ? amount : inserted;
     }
 
     @Override
