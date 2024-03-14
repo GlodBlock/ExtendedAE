@@ -9,6 +9,7 @@ public class ExternalTypes {
     public static AEKeyType GAS;
     public static AEKeyType MANA;
     public static AEKeyType FLUX;
+    public static AEKeyType SOURCE;
 
     static {
         try {
@@ -25,6 +26,11 @@ public class ExternalTypes {
             FLUX = AEKeyTypes.get(new ResourceLocation("appflux:flux"));
         } catch (Exception e) {
             FLUX = null;
+        }
+        try {
+            SOURCE = AEKeyTypes.get(new ResourceLocation("arseng:source"));
+        } catch (Exception e) {
+            SOURCE = null;
         }
     }
 

@@ -184,6 +184,10 @@ public class CraftingThread {
         return TickRateModulation.FASTER;
     }
 
+    public void forceAwake() {
+        this.isAwake = true;
+    }
+
     public void recalculatePlan() {
         this.reboot = true;
         if (this.forcePlan) {
