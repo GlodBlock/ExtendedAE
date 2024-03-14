@@ -83,6 +83,11 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
     }
 
     @Override
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
+        return this.getCellTooltipImage(stack);
+    }
+
+    @Override
     @ParametersAreNonnullByDefault
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         this.disassembleDrive(player.getItemInHand(hand), level, player);
