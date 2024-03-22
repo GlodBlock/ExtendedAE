@@ -15,6 +15,7 @@ public class HostUWirelessExPAT extends WTMenuHost {
         this.readFromNbt();
     }
 
+    @Override
     public ItemStack getMainMenuIcon() {
         return new ItemStack(EPPItemAndBlock.WIRELESS_EX_PAT);
     }

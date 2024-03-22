@@ -13,6 +13,7 @@ public class ItemUWirelessExPAT extends ItemWT {
     public ItemUWirelessExPAT() {
     }
 
+    @Override
     public @NotNull MenuType<?> getMenuType(@NotNull ItemStack stack) {
         return ContainerUWirelessExPAT.TYPE;
     }
