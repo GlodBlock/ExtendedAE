@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.common;
 
 import appeng.items.parts.PartItem;
+import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
 import com.glodblock.github.extendedae.common.blocks.BlockExCharger;
 import com.glodblock.github.extendedae.common.blocks.BlockExDrive;
@@ -22,7 +23,18 @@ import com.glodblock.github.extendedae.common.items.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.items.tools.ItemWirelessExPAT;
-import com.glodblock.github.extendedae.common.parts.*;
+import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
+import com.glodblock.github.extendedae.common.parts.PartExExportBus;
+import com.glodblock.github.extendedae.common.parts.PartExImportBus;
+import com.glodblock.github.extendedae.common.parts.PartExInterface;
+import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
+import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
+import com.glodblock.github.extendedae.common.parts.PartModExportBus;
+import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
+import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
+import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
@@ -33,6 +45,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.fml.ModList;
 
 public class EPPItemAndBlock {
 
@@ -68,7 +81,7 @@ public class EPPItemAndBlock {
     public static BlockFishbig FISHBIG;
     public static BlockCaner CANER;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
-    public static ItemWirelessExPAT WIRELESS_EX_PAT;
+    public static WirelessTerminalItem WIRELESS_EX_PAT;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -103,7 +116,18 @@ public class EPPItemAndBlock {
         CANER = new BlockCaner();
         FISHBIG = new BlockFishbig();
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
-        WIRELESS_EX_PAT = new ItemWirelessExPAT();
+        if (ModList.get().isLoaded("ae2wtlib")) {
+            try {
+                //To prevent classloader issue
+                WIRELESS_EX_PAT = (WirelessTerminalItem) Class.forName("com.glodblock.github.extendedae.xmod.wt.ItemUWirelessExPAT")
+                        .getDeclaredConstructor()
+                        .newInstance();
+            } catch (Exception e) {
+                WIRELESS_EX_PAT = new ItemWirelessExPAT();
+            }
+        } else {
+            WIRELESS_EX_PAT = new ItemWirelessExPAT();
+        }
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);

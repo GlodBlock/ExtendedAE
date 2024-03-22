@@ -57,6 +57,7 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
+import com.glodblock.github.extendedae.xmod.wt.CommonLoad;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
@@ -67,6 +68,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -126,6 +128,9 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
+        if (ModList.get().isLoaded("ae2wtlib")) {
+            CommonLoad.container();
+        }
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -154,6 +159,9 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerStorageHandler();
         this.registerRandomAPI();
         this.initPackageList();
+        if (ModList.get().isLoaded("ae2wtlib")) {
+            CommonLoad.init();
+        }
     }
 
     private void registerAEUpgrade() {

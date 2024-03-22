@@ -120,9 +120,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
         @Override
         public int hashCode(ItemStack o) {
-            return o.getItem().hashCode()
-                    ^ o.getDamageValue()
-                    ^ (o.hasTag() ? o.getTag().hashCode() : 0xFFFFFFFF);
+            return o.getItem().hashCode() ^ (o.hasTag() ? o.getTag().hashCode() : 0xFFFFFFFF);
         }
 
         @Override

@@ -23,9 +23,7 @@ public class ItemWirelessExPAT extends WirelessTerminalItem {
 
     @Override
     public IConfigManager getConfigManager(ItemStack target) {
-        var out = new ConfigManager((manager, settingName) -> {
-            manager.writeToNBT(target.getOrCreateTag());
-        });
+        var out = new ConfigManager((manager, settingName) -> manager.writeToNBT(target.getOrCreateTag()));
         out.registerSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS, ShowPatternProviders.VISIBLE);
         out.readFromNBT(target.getOrCreateTag().copy());
         return out;

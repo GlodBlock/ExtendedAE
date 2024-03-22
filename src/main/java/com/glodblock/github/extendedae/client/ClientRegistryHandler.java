@@ -30,6 +30,7 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
+import com.glodblock.github.extendedae.xmod.wt.ClientLoad;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -37,6 +38,7 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 
 public class ClientRegistryHandler {
 
@@ -44,6 +46,9 @@ public class ClientRegistryHandler {
 
     public void init() {
         this.registerGui();
+        if (ModList.get().isLoaded("ae2wtlib")) {
+            ClientLoad.init();
+        }
     }
 
     public void registerGui() {
