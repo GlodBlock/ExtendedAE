@@ -17,10 +17,5 @@ An easy water and cobblestone sink but in storage cell form.
 <ItemImage id="expatternprovider:infinity_cell" scale="4"></ItemImage>
 </Row>
 
-They hold 2.1 billion items/fluids, and you can extract infinity cobblestone/water from them.
-
-# Upgrade
-
-ME Infinity Cell supports <ItemLink id="ae2:void_card" />. You can inject infinity cobblestone/water into the cell with 
-overflow card. So you also can make it a trash bin for cobblestone/water.
-
+They hold 2.1 billion items/fluids, and you can extract infinity cobblestone/water from them or inject infinity 
+cobblestone/water into them.

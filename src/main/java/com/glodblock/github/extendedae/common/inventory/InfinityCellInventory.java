@@ -8,7 +8,6 @@ import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
-import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.common.items.InfinityCell;
 import com.glodblock.github.extendedae.config.EPPConfig;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,6 @@ public class InfinityCellInventory implements StorageCell {
 
     private final ItemStack stack;
     private final AEKey record;
-    private final boolean isVoid;
     public static final ICellHandler HANDLER = new Handler();
 
     public InfinityCellInventory(ItemStack stack) {
@@ -28,7 +26,6 @@ public class InfinityCellInventory implements StorageCell {
         }
         this.stack = stack;
         this.record = cell.getRecord(stack);
-        this.isVoid = cell.getUpgrades(stack).isInstalled(AEItems.VOID_CARD);
     }
 
     @Override
@@ -43,7 +40,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (this.isVoid && this.record.equals(what)) {
+        if (this.record.equals(what)) {
             return amount;
         }
         return 0;
@@ -74,7 +71,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public boolean isPreferredStorageFor(AEKey what, IActionSource source) {
-        return this.isVoid && this.record.equals(what);
+        return this.record.equals(what);
     }
 
     private static class Handler implements ICellHandler {

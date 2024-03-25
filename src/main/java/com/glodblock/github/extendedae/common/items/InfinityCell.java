@@ -6,9 +6,6 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.cells.ICellWorkbenchItem;
-import appeng.api.upgrades.IUpgradeInventory;
-import appeng.api.upgrades.UpgradeInventories;
-import appeng.core.AEConfig;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
@@ -17,12 +14,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -72,19 +71,8 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     @NotNull
     @Override
     public Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
-        var upgrades = new ArrayList<ItemStack>();
-        if (AEConfig.instance().isTooltipShowCellUpgrades()) {
-            for (var upgrade : this.getUpgrades(stack)) {
-                upgrades.add(upgrade);
-            }
-        }
         var content = Collections.singletonList(new GenericStack(this.getRecord(stack), getAsIntMax(this.getRecord(stack))));
-        return Optional.of(new StorageCellTooltipComponent(upgrades, content, false, true));
-    }
-
-    @Override
-    public IUpgradeInventory getUpgrades(ItemStack is) {
-        return UpgradeInventories.forItem(is, 1);
+        return Optional.of(new StorageCellTooltipComponent(List.of(), content, false, true));
     }
 
     @Override
