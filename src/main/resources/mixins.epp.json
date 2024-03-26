@@ -11,9 +11,7 @@
     "MixinAbstractContainerScreen",
     "MixinClearPatternAccessTerminalPacket",
     "MixinPatternAccessTerminalPacket",
-    "mek.MixinRenderMechanicalPipe",
-    "mek.MixinRenderPressurizedTube",
-    "mek.MixinRenderUniversalCable"
+    "MixinGuidebookLevelRenderer"
   ],
   "server": []
 }
