@@ -22,7 +22,7 @@ public class CommonLoad {
                 HostUWirelessExPAT::new,
                 ContainerUWirelessExPAT.TYPE,
                 (IUniversalWirelessTerminalItem) EPPItemAndBlock.WIRELESS_EX_PAT,
-                "wireless_terminal",
+                "wireless_pattern_access_terminal",
                 "item.expatternprovider.wireless_ex_pat"
         );
         Upgrades.add(AE2wtlib.QUANTUM_BRIDGE_CARD, EPPItemAndBlock.WIRELESS_EX_PAT, 1, GuiText.WirelessTerminals.getTranslationKey());
