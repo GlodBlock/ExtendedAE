@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.MenuType;
 
 public class ContainerUWirelessExPAT extends ContainerExPatternTerminal {
 
-    public static final String ID = "u_wireless_pattern_access_terminal";
     public static final MenuType<ContainerUWirelessExPAT> TYPE = MenuTypeBuilder
             .create(ContainerUWirelessExPAT::new, HostUWirelessExPAT.class)
             .build("u_wireless_ex_pattern_access_terminal");

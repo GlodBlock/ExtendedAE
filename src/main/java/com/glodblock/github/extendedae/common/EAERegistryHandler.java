@@ -225,7 +225,11 @@ public class EAERegistryHandler extends RegistryHandler {
 
     private void registerRandomAPI() {
         GridLinkables.register(EPPItemAndBlock.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
-        HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+        if (!ModList.get().isLoaded("ae2wtlib")) {
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+        } else {
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
+        }
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {
