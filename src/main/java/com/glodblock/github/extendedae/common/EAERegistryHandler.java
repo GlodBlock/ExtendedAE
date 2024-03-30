@@ -200,6 +200,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
         Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_IO_PORT, 5, "block.expatternprovider.ex_io_port");
+        Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.EX_IO_PORT, 1, "block.expatternprovider.ex_io_port");
     }
 
     private void registerStorageHandler() {

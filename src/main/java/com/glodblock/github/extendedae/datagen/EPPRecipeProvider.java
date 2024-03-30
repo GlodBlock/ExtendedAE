@@ -378,6 +378,19 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.EX_PATTERN_TERMINAL))
                 .save(c, ExtendedAE.id("wireless_ex_pat"));
 
+        // Extended IO Port
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_IO_PORT)
+                .pattern("ACB")
+                .pattern("CMC")
+                .pattern("BCA")
+                .define('A', AEItems.LOGIC_PROCESSOR)
+                .define('B', AEItems.ENGINEERING_PROCESSOR)
+                .define('C', AEItems.SPEED_CARD)
+                .define('M', AEBlocks.IO_PORT)
+                .unlockedBy(C, has(AEBlocks.IO_PORT))
+                .save(c, ExtendedAE.id("ex_io_port"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)
