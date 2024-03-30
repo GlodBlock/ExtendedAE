@@ -1,17 +1,22 @@
 package com.glodblock.github.extendedae.util;
 
 import appeng.api.behaviors.StackTransferContext;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.storage.cells.CellState;
+import appeng.api.storage.cells.StorageCell;
+import appeng.api.upgrades.IUpgradeInventory;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.storage.DriveBlockEntity;
+import appeng.blockentity.storage.IOPortBlockEntity;
 import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
+import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.glodium.reflect.ReflectKit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -34,10 +39,14 @@ public class Ae2Reflect {
     private static final Field fAEBaseBlockEntity_customName;
     private static final Field fAEBasePart_customName;
     private static final Field fAECraftingPattern_recipe;
+    private static final Field fIOPortBlockEntity_inputCells;
+    private static final Field fIOPortBlockEntity_upgrades;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
     private static final Method mIOBusPart_updateState;
     private static final Method mExportBusPart_createTransferContext;
+    private static final Method mIOPortBlockEntity_transferContents;
+    private static final Method mIOPortBlockEntity_moveSlot;
 
     static {
         try {
@@ -51,10 +60,14 @@ public class Ae2Reflect {
             fAEBaseBlockEntity_customName = ReflectKit.reflectField(AEBaseBlockEntity.class, "customName");
             fAEBasePart_customName = ReflectKit.reflectField(AEBasePart.class, "customName");
             fAECraftingPattern_recipe = ReflectKit.reflectField(AECraftingPattern.class, "recipe");
+            fIOPortBlockEntity_inputCells = ReflectKit.reflectField(IOPortBlockEntity.class, "inputCells");
+            fIOPortBlockEntity_upgrades = ReflectKit.reflectField(IOPortBlockEntity.class, "upgrades");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
             mIOBusPart_updateState = ReflectKit.reflectMethod(IOBusPart.class, "updateState");
             mExportBusPart_createTransferContext = ReflectKit.reflectMethod(ExportBusPart.class, "createTransferContext", IStorageService.class, IEnergyService.class);
+            mIOPortBlockEntity_transferContents = ReflectKit.reflectMethod(IOPortBlockEntity.class, "transferContents", IGrid.class, StorageCell.class, long.class);
+            mIOPortBlockEntity_moveSlot = ReflectKit.reflectMethod(IOPortBlockEntity.class, "moveSlot", int.class);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -119,6 +132,22 @@ public class Ae2Reflect {
 
     public static CraftingRecipe getCraftRecipe(AECraftingPattern owner) {
         return ReflectKit.readField(owner, fAECraftingPattern_recipe);
+    }
+
+    public static AppEngInternalInventory getInputCellInv(IOPortBlockEntity owner) {
+        return ReflectKit.readField(owner, fIOPortBlockEntity_inputCells);
+    }
+
+    public static void setIOPortUpgrade(IOPortBlockEntity owner, IUpgradeInventory val) {
+        ReflectKit.writeField(owner, fIOPortBlockEntity_upgrades, val);
+    }
+
+    public static long transferItemsFromCell(IOPortBlockEntity owner, IGrid grid, StorageCell cellInv, long itemsToMove) {
+        return ReflectKit.executeMethod2(owner, mIOPortBlockEntity_transferContents, grid, cellInv, itemsToMove);
+    }
+
+    public static boolean moveSlotInCell(IOPortBlockEntity owner, int x) {
+        return ReflectKit.executeMethod2(owner, mIOPortBlockEntity_moveSlot, x);
     }
 
 }

@@ -73,6 +73,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
         InitScreens.register(ContainerPreciseExportBus.TYPE, GuiPreciseExportBus::new, "/screens/precise_export_bus.json");
         InitScreens.register(ContainerWirelessExPAT.TYPE, GuiWirelessExPAT::new, "/screens/ex_pattern_access_terminal.json");
+        InitScreens.register(ContainerExIOPort.TYPE, GuiExIOPort::new, "/screens/ex_io_port.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);

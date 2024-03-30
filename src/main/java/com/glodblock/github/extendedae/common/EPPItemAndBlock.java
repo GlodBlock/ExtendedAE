@@ -5,6 +5,7 @@ import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
 import com.glodblock.github.extendedae.common.blocks.BlockExCharger;
 import com.glodblock.github.extendedae.common.blocks.BlockExDrive;
+import com.glodblock.github.extendedae.common.blocks.BlockExIOPort;
 import com.glodblock.github.extendedae.common.blocks.BlockExInscriber;
 import com.glodblock.github.extendedae.common.blocks.BlockExInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockExMolecularAssembler;
@@ -38,6 +39,7 @@ import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
+import com.glodblock.github.extendedae.common.tileentities.TileExIOPort;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
 import com.glodblock.github.extendedae.common.tileentities.TileExInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
@@ -80,6 +82,7 @@ public class EPPItemAndBlock {
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
     public static BlockFishbig FISHBIG;
     public static BlockCaner CANER;
+    public static BlockExIOPort EX_IO_PORT;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
     public static WirelessTerminalItem WIRELESS_EX_PAT;
 
@@ -114,6 +117,7 @@ public class EPPItemAndBlock {
         MOD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartModExportBus.class, PartModExportBus::new);
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         CANER = new BlockCaner();
+        EX_IO_PORT = new BlockExIOPort();
         FISHBIG = new BlockFishbig();
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
         if (ModList.get().isLoaded("ae2wtlib")) {
@@ -137,6 +141,7 @@ public class EPPItemAndBlock {
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
+        regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);

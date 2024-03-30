@@ -37,6 +37,7 @@ import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerCaner;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
+import com.glodblock.github.extendedae.container.ContainerExIOPort;
 import com.glodblock.github.extendedae.container.ContainerExInscriber;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
@@ -124,6 +125,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("caner"), ContainerCaner.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("precise_export_bus"), ContainerPreciseExportBus.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("wireless_ex_pat"), ContainerWirelessExPAT.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_ioport"), ContainerExIOPort.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -197,6 +199,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
         Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_IO_PORT, 5, "block.expatternprovider.ex_io_port");
     }
 
     private void registerStorageHandler() {
