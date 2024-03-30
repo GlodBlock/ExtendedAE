@@ -11,6 +11,7 @@
   "block.expatternprovider.caner": "ME Caner",
   "block.expatternprovider.ex_io_port": "ME Extended IO Port",
   "block.expatternprovider.fishbig": "Fishbig",
+  "block.expatternprovider.crystal_growth_chamber": "Crystal Growth Chamber",
   "item.expatternprovider.ex_pattern_provider_part": "ME Extended Pattern Provider",
   "item.expatternprovider.ex_interface_part": "ME Extended Interface",
   "item.expatternprovider.pattern_provider_upgrade": "Pattern Provider Upgrade",
@@ -130,6 +131,8 @@
   "chat.pattern_view.error": "This pattern isn't supported by ExtendedAE, please report it to Github: %s",
   "group.ex_io_bus_part": "ME Extended Import/Export Bus",
   "jade.wireless_connector.color": "Color: %s",
+  "jade.crystal_chamber.progress": "Progress: %s",
+  "config.jade.plugin_expatternprovider.jade_chamber": "ME Crystal Growth Chamber",
   "config.jade.plugin_expatternprovider.jade_wireless": "ME Wireless Connector Color",
   "key.epp.viewpattern": "View Pattern",
   "key.epp.category": "Extended AE"

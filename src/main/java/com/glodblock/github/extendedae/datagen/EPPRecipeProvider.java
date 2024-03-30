@@ -272,6 +272,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('E', ConventionTags.INTERFACE)
                 .unlockedBy(C, has(EPPItemAndBlock.EX_CHARGER))
                 .save(c, ExtendedAE.id("ex_charger"));
+        // Crystal Growth Chamber
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.CRYSTAL_GROWTH_CHAMBER)
+                .pattern("FAF")
+                .pattern("AEA")
+                .pattern("FAF")
+                .define('F', AEBlocks.CHARGER)
+                .define('A', AEBlocks.GROWTH_ACCELERATOR)
+                .define('E', EPPItemAndBlock.EX_CHARGER)
+                .unlockedBy(C, has(EPPItemAndBlock.CRYSTAL_GROWTH_CHAMBER))
+                .save(c, ExtendedAE.id("crystal_growth_chamber"));
 
         // Tag Storage Bus
         ShapedRecipeBuilder

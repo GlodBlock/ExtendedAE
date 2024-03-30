@@ -28,6 +28,7 @@ public class JadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(WirelessConnectorTooltip.INSTANCE, Block.class);
+        registration.registerBlockComponent(CrystalGrowthChamberTooltip.INSTANCE, Block.class);
         registration.addTooltipCollectedCallback((tooltip, accessor) -> {
             var target = accessor.getTarget();
             for (var loc : CHEMICALS) {
