@@ -272,17 +272,6 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('E', ConventionTags.INTERFACE)
                 .unlockedBy(C, has(EPPItemAndBlock.EX_CHARGER))
                 .save(c, ExtendedAE.id("ex_charger"));
-        // Crystal Growth Chamber
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, EPPItemAndBlock.CRYSTAL_GROWTH_CHAMBER)
-                .pattern("FAF")
-                .pattern("AEA")
-                .pattern("FAF")
-                .define('F', AEBlocks.CHARGER)
-                .define('A', AEBlocks.GROWTH_ACCELERATOR)
-                .define('E', EPPItemAndBlock.EX_CHARGER)
-                .unlockedBy(C, has(EPPItemAndBlock.CRYSTAL_GROWTH_CHAMBER))
-                .save(c, ExtendedAE.id("crystal_growth_chamber"));
 
         // Tag Storage Bus
         ShapedRecipeBuilder
@@ -401,6 +390,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('M', AEBlocks.IO_PORT)
                 .unlockedBy(C, has(AEBlocks.IO_PORT))
                 .save(c, ExtendedAE.id("ex_io_port"));
+
+        // Crystal Fixer
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.CRYSTAL_FIXER)
+                .pattern("C C")
+                .pattern("I I")
+                .pattern("IFI")
+                .define('C', ConventionTags.CERTUS_QUARTZ)
+                .define('I', ConventionTags.IRON_INGOT)
+                .define('F', ConventionTags.FLUIX_CRYSTAL)
+                .unlockedBy(C, has(AEItems.FLUIX_CRYSTAL))
+                .save(c, ExtendedAE.id("crystal_fixer"));
 
         // Fishbig
         ShapedRecipeBuilder

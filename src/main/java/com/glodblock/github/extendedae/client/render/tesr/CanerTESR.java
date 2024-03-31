@@ -12,13 +12,14 @@ import org.joml.Vector3f;
 
 public class CanerTESR extends ModularTESR<TileCaner> {
 
+    private static final Transformation T = new Transformation(new Vector3f(0.5f, 0.375f, 0.5f), null, null, null);
+
     public CanerTESR(BlockEntityRendererProvider.Context context) {
         super(new ItemRenderable<>(CanerTESR::renderItem));
     }
 
     private static Pair<ItemStack, Transformation> renderItem(TileCaner te) {
-        Transformation transform = new Transformation(new Vector3f(0.5f, 0.375f, 0.5f), null, null, null);
-        return new ImmutablePair<>(te.getContainer().getStackInSlot(0), transform);
+        return new ImmutablePair<>(te.getContainer().getStackInSlot(0), T);
     }
 
 }
