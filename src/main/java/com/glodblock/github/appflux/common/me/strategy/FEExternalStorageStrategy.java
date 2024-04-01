@@ -18,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -26,28 +25,14 @@ public class FEExternalStorageStrategy implements ExternalStorageStrategy {
 
     private final Direction fromSide;
     private final BlockApiCache<IEnergyStorage> apiCache;
-    private GTEUExternalStorageStrategy gteuHandler;
-
-    private boolean isGTPresent() {
-        return ModList.get().isLoaded("gtceu");
-    }
 
     public FEExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
         this.apiCache = BlockApiCache.create(ForgeCapabilities.ENERGY, level, fromPos);
         this.fromSide = fromSide;
-        /*if (isGTPresent()) {
-            this.gteuHandler = new GTEUExternalStorageStrategy(level, fromPos, fromSide);
-        }*/
     }
 
     @Override
     public @Nullable MEStorage createWrapper(boolean extractableOnly, Runnable callback) {
-        /*if (isGTPresent()) {
-            var res = this.gteuHandler.createWrapper(extractableOnly, callback);
-            if (res != null) {
-                return res;
-            }
-        }*/
         var storage = this.apiCache.find(this.fromSide);
         if (storage == null) {
             return null;

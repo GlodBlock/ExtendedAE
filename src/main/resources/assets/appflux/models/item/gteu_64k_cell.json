@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "appflux:item/gteu_64k_cell",
-    "layer1": "ae2:item/storage_cell_led"
-  }
-}

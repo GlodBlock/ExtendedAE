@@ -81,16 +81,15 @@ repositories {
 dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("curse.maven:glodium-957920:5024300")
-    implementation fg.deobf("curse.maven:applied-energistics-2-223794:4777696")
+    implementation fg.deobf("appeng:appliedenergistics2-forge:15.0.12")
+    compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.0.14:all")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("curse.maven:jade-324717:4768593")
-    compileOnly fg.deobf("curse.maven:gregtechceu-modern-890405:5041060")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     // runtime test
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     runtimeOnly fg.deobf("curse.maven:jade-324717:4768593")
-    runtimeOnly fg.deobf("curse.maven:ender-io-64578:4920828")
 }
 
 tasks.named('processResources', ProcessResources).configure {

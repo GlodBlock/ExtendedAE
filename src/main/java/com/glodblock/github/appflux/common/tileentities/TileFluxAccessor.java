@@ -36,11 +36,6 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        /*if (ModList.get().isLoaded("gtceu")) {
-            if (cap == GTCapability.CAPABILITY_ENERGY_CONTAINER && this.getStorage() != null) {
-                return LazyOptional.of(() -> new NetworkGTEUPower(this.getStorage(), this.getSource(), this.getAsker(side), side != null ? side.getOpposite() : null)).cast();
-            }
-        }*/
         if (cap == ForgeCapabilities.ENERGY) {
             return LazyOptional.of(() -> {
                 if (this.getStorage() != null) {

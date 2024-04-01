@@ -191,21 +191,6 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.FE_CELL_64k, "64k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.FE_CELL_256k, "256k");
-        /*ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, AFItemAndBlock.GTEU_HOUSING)
-                .pattern("GDG")
-                .pattern("D D")
-                .pattern("III")
-                .define('D', AFItemAndBlock.CHARGED_REDSTONE)
-                .define('G', AEBlocks.QUARTZ_GLASS)
-                .define('I', ConventionTags.IRON_INGOT)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
-                .save(consumer, AppFlux.id("gteu_housing"));
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_1k, AFItemAndBlock.GTEU_CELL_1k, "1k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.GTEU_CELL_4k, "4k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.GTEU_CELL_16k, "16k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.GTEU_CELL_64k, "64k");
-        addGTEUCellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.GTEU_CELL_256k, "256k");*/
     }
 
     private void addFECellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
@@ -226,26 +211,6 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(core)
                 .unlockedBy(C, has(AFItemAndBlock.FE_HOUSING))
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
-    }
-
-    private void addGTEUCellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, result)
-                .pattern("GDG")
-                .pattern("DXD")
-                .pattern("III")
-                .define('D', AFItemAndBlock.CHARGED_REDSTONE)
-                .define('G', AEBlocks.QUARTZ_GLASS)
-                .define('I', ConventionTags.IRON_INGOT)
-                .define('X', core)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
-                .save(consumer, AppFlux.id(id + "_gteu_cell"));
-        ShapelessRecipeBuilder
-                .shapeless(RecipeCategory.MISC, result)
-                .requires(AFItemAndBlock.GTEU_HOUSING)
-                .requires(core)
-                .unlockedBy(C, has(AFItemAndBlock.GTEU_HOUSING))
-                .save(consumer, AppFlux.id(id + "_gteu_cell_assemble"));
     }
 
 }

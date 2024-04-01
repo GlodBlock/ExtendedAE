@@ -4,7 +4,6 @@ import appeng.items.materials.MaterialItem;
 import appeng.items.parts.PartItem;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
-import com.glodblock.github.appflux.common.items.ItemGTEUCell;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import net.minecraft.ChatFormatting;
@@ -38,11 +37,6 @@ public class AFItemAndBlock {
     public static ItemFECell FE_CELL_64k;
     public static ItemFECell FE_CELL_256k;
     public static MaterialItem GTEU_HOUSING;
-    public static ItemGTEUCell GTEU_CELL_1k;
-    public static ItemGTEUCell GTEU_CELL_4k;
-    public static ItemGTEUCell GTEU_CELL_16k;
-    public static ItemGTEUCell GTEU_CELL_64k;
-    public static ItemGTEUCell GTEU_CELL_256k;
     public static BlockFluxAccessor FLUX_ACCESSOR;
     public static PartItem<PartFluxAccessor> PART_FLUX_ACCESSOR;
 
@@ -93,20 +87,6 @@ public class AFItemAndBlock {
         regHandler.item("fe_256k_cell", FE_CELL_256k);
         regHandler.item("part_flux_accessor", PART_FLUX_ACCESSOR);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
-        /*if (ModList.get().isLoaded("gtceu")) {
-            GTEU_HOUSING = new MaterialItem(new Item.Properties());
-            GTEU_CELL_1k = new ItemGTEUCell(CORE_1k, 1, 0.5);
-            GTEU_CELL_4k = new ItemGTEUCell(CORE_4k, 4, 1.0);
-            GTEU_CELL_16k = new ItemGTEUCell(CORE_16k, 16, 1.5);
-            GTEU_CELL_64k = new ItemGTEUCell(CORE_64k, 64, 2.0);
-            GTEU_CELL_256k = new ItemGTEUCell(CORE_256k, 256, 2.5);
-            regHandler.item("gteu_cell_housing", GTEU_HOUSING);
-            regHandler.item("gteu_1k_cell", GTEU_CELL_1k);
-            regHandler.item("gteu_4k_cell", GTEU_CELL_4k);
-            regHandler.item("gteu_16k_cell", GTEU_CELL_16k);
-            regHandler.item("gteu_64k_cell", GTEU_CELL_64k);
-            regHandler.item("gteu_256k_cell", GTEU_CELL_256k);
-        }*/
     }
 
 }
