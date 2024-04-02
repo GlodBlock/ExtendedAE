@@ -135,6 +135,9 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
         var wasWorking = this.working;
         this.working = false;
         var changed = false;
+        if (this.level == null) {
+            return;
+        }
         for (int x = 0; x < MAX_THREAD; x ++) {
             var myItem = this.inv.getStackInSlot(x);
             if (!myItem.isEmpty()) {
@@ -162,7 +165,7 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
                     }
                 } else if (this.getInternalCurrentPower() > POWER_THRESHOLD && ChargerRecipes.findRecipe(level, myItem) != null) {
                     this.working = true;
-                    if (Platform.getRandomFloat() > 0.8f) {
+                    if (this.level.getRandom().nextFloat() > 0.8f) {
                         this.extractAEPower(this.getInternalMaxPower(), Actionable.MODULATE, PowerMultiplier.CONFIG);
                         Item charged = Objects.requireNonNull(ChargerRecipes.findRecipe(level, myItem)).result;
                         this.inv.setItemDirect(x, new ItemStack(charged));

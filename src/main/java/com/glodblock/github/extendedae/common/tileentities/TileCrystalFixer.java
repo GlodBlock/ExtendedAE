@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,12 +66,13 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         if (this.getLevel() == null || !checkFuel()) {
             return false;
         }
-        BlockPos blockPos = this.getBlockPos().offset(this.getFront().getNormal());
-        BlockState blockState = this.getLevel().getBlockState(blockPos);
+        var blockPos = this.getBlockPos().offset(this.getFront().getNormal());
+        var blockState = this.getLevel().getBlockState(blockPos);
+        var random = this.getLevel().getRandom();
         if (needGrowth(blockState)) {
             if (this.userPower(ticksSinceLastCall * 50) > 0) {
-                this.progress += Platform.getRandom().nextInt(5);
-                this.consumeFuel();
+                this.progress += random.nextInt(5);
+                this.consumeFuel(random);
             }
             if (this.progress >= 100) {
                 if (blockState.is(AEBlocks.QUARTZ_BLOCK.block())) {
@@ -93,8 +95,8 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         return !this.inv.getStackInSlot(0).isEmpty();
     }
 
-    private void consumeFuel() {
-        if (Platform.getRandom().nextInt(10) < 1) {
+    private void consumeFuel(RandomSource random) {
+        if (random.nextInt(10) < 1) {
             this.inv.extractItem(0, 1, false);
         }
     }
