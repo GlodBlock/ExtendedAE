@@ -26,11 +26,6 @@ public interface IFluxCell extends ICellWorkbenchItem {
     }
 
     @Override
-    default ConfigInventory getConfigInventory(ItemStack is) {
-        return ConfigInventory.EMPTY_TYPES;
-    }
-
-    @Override
     default FuzzyMode getFuzzyMode(ItemStack is) {
         return null;
     }
