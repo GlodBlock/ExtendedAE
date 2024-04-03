@@ -76,6 +76,7 @@ public class InscriberThread {
         this.topItemHandler.setMaxStackSize(0, size);
         this.bottomItemHandler.setMaxStackSize(0, size);
         this.sideItemHandler.setMaxStackSize(0, size);
+        this.sideItemHandler.setMaxStackSize(1, size);
     }
 
     public boolean containsInv(InternalInventory inv) {
