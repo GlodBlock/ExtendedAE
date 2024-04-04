@@ -19,6 +19,7 @@
   "item.appflux.printed_energy_processor": "Printed Energy Circuit",
   "item.appflux.energy_processor_press": "Inscriber Energy Press",
   "item.appflux.part_flux_accessor": "Flux Accessor",
+  "item.appflux.part_fe_storage_monitor": "FE Storage Monitor",
   "block.appflux.flux_accessor": "Flux Accessor",
   "block.appflux.flux_accessor.tooltip.1": "Pull energy from network.",
   "block.appflux.flux_accessor.tooltip.2": "Need external cable to push energy",

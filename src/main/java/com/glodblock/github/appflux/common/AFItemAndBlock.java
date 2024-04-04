@@ -4,6 +4,7 @@ import appeng.items.materials.MaterialItem;
 import appeng.items.parts.PartItem;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
+import com.glodblock.github.appflux.common.parts.PartFEStorageMonitor;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import net.minecraft.ChatFormatting;
@@ -39,6 +40,7 @@ public class AFItemAndBlock {
     public static MaterialItem GTEU_HOUSING;
     public static BlockFluxAccessor FLUX_ACCESSOR;
     public static PartItem<PartFluxAccessor> PART_FLUX_ACCESSOR;
+    public static PartItem<PartFEStorageMonitor> PART_FE_STORAGE_MONITOR;
 
     public static void init(AFRegistryHandler regHandler) {
         CORE_1k = new MaterialItem(new Item.Properties());
@@ -67,6 +69,7 @@ public class AFItemAndBlock {
                 tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.2").withStyle(ChatFormatting.GRAY));
             }
         };
+        PART_FE_STORAGE_MONITOR = new PartItem<>(new Item.Properties(), PartFEStorageMonitor.class, PartFEStorageMonitor::new);
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
         regHandler.item("core_16k", CORE_16k);
@@ -86,6 +89,7 @@ public class AFItemAndBlock {
         regHandler.item("fe_64k_cell", FE_CELL_64k);
         regHandler.item("fe_256k_cell", FE_CELL_256k);
         regHandler.item("part_flux_accessor", PART_FLUX_ACCESSOR);
+        regHandler.item("part_fe_storage_monitor", PART_FE_STORAGE_MONITOR);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
     }
 
