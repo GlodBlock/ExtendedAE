@@ -38,11 +38,13 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            arg "-mixin.config=" + "mixins.appflux.json"
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
+            arg "-mixin.config=" + "mixins.appflux.json"
         }
         gameTestServer {
             property 'forge.enabledGameTestNamespaces', mod_id
@@ -82,6 +84,7 @@ dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("curse.maven:glodium-957920:5024300")
     implementation fg.deobf("appeng:appliedenergistics2-forge:15.0.12")
+    compileOnly fg.deobf("curse.maven:wireless-chargers-510656:4591907")
     compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.0.14:all")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
     // for some reason this deobf jar fails to load at file correctly
@@ -118,10 +121,15 @@ tasks.named('jar', Jar).configure {
                 'Implementation-Vendor'   : mod_authors,
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 'TweakClass': "org.spongepowered.asm.launch.MixinTweaker",
-                'TweakOrder': 0
+                'TweakOrder': 0,
+                'MixinConfigs': "mixins.appflux.json"
         ])
     }
     finalizedBy 'reobfJar'
+}
+
+mixin {
+    add sourceSets.main, "mixins.appflux.refmap.json"
 }
 
 tasks.withType(JavaCompile).configureEach {
