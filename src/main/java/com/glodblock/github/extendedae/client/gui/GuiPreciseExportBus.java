@@ -5,28 +5,21 @@ import appeng.api.config.SchedulingMode;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.stacks.GenericStack;
-import appeng.client.gui.AESubScreen;
-import appeng.client.gui.NumberEntryType;
 import appeng.client.gui.implementations.UpgradeableScreen;
-import appeng.client.gui.me.common.ClientDisplaySlot;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.widgets.NumberEntryWidget;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
-import appeng.client.gui.widgets.TabButton;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
-import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
-import appeng.menu.SlotSemantics;
+import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
-import com.google.common.primitives.Longs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExportBus> {
 
@@ -86,8 +78,9 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
             if (isValidSlot(slot)) {
                 var currentStack = GenericStack.fromItemStack(slot.getItem());
                 if (currentStack != null) {
-                    var screen = new SetAmount(
+                    var screen = new SetAmount<>(
                             this,
+                            new ItemStack(EPPItemAndBlock.PRECISE_EXPORT_BUS),
                             currentStack,
                             newStack -> NetworkHandler.instance().sendToServer(new InventoryActionPacket(
                                     InventoryAction.SET_FILTER, slot.index,
@@ -129,59 +122,6 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
 
     private boolean isValidSlot(Slot slot) {
         return slot != null && slot.isActive() && slot.hasItem() && this.menu.isConfigSlot(slot);
-    }
-
-    private static class SetAmount extends AESubScreen<ContainerPreciseExportBus, GuiPreciseExportBus> {
-        private final NumberEntryWidget amount;
-
-        private final GenericStack currentStack;
-
-        private final Consumer<GenericStack> setter;
-
-        public SetAmount(GuiPreciseExportBus parentScreen, GenericStack currentStack, Consumer<GenericStack> setter) {
-            super(parentScreen, "/screens/set_precise_bus_amount.json");
-
-            this.currentStack = currentStack;
-            this.setter = setter;
-
-            this.widgets.addButton("save", GuiText.Set.text(), this::confirm);
-
-            var icon = new ItemStack(EPPItemAndBlock.PRECISE_EXPORT_BUS);
-            var button = new TabButton(icon, icon.getHoverName(), btn -> returnToParent());
-            this.widgets.add("back", button);
-
-            this.amount = widgets.addNumberEntryWidget("amountToStock", NumberEntryType.of(currentStack.what()));
-            this.amount.setLongValue(currentStack.amount());
-            this.amount.setMaxValue(getMaxAmount());
-            this.amount.setTextFieldStyle(style.getWidget("amountToStockInput"));
-            this.amount.setMinValue(0);
-            this.amount.setHideValidationIcon(true);
-            this.amount.setOnConfirm(this::confirm);
-            addClientSideSlot(new ClientDisplaySlot(currentStack), SlotSemantics.MACHINE_OUTPUT);
-        }
-
-        @Override
-        protected void init() {
-            super.init();
-            setSlotsHidden(SlotSemantics.TOOLBOX, true);
-        }
-
-        @SuppressWarnings("UnstableApiUsage")
-        private void confirm() {
-            this.amount.getLongValue().ifPresent(newAmount -> {
-                newAmount = Longs.constrainToRange(newAmount, 0, getMaxAmount());
-                if (newAmount <= 0) {
-                    setter.accept(null);
-                } else {
-                    setter.accept(new GenericStack(currentStack.what(), newAmount));
-                }
-                returnToParent();
-            });
-        }
-
-        private long getMaxAmount() {
-            return 64L * (long) currentStack.what().getAmountPerUnit();
-        }
     }
 
 }

@@ -403,6 +403,15 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(AEItems.FLUIX_CRYSTAL))
                 .save(c, ExtendedAE.id("crystal_fixer"));
 
+        // Precise Storage Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.PRECISE_STORAGE_BUS)
+                .pattern("PBP")
+                .define('B', AEParts.STORAGE_BUS)
+                .define('P', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(AEParts.STORAGE_BUS))
+                .save(c, ExtendedAE.id("precise_storage_bus"));
+
         // Fishbig
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.FISHBIG)

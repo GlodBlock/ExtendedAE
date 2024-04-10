@@ -62,7 +62,7 @@ import java.util.Map;
 public abstract class PartSpecialStorageBus extends UpgradeablePart implements IGridTickable, IStorageProvider, IPriorityHost {
 
     protected final IActionSource source;
-    protected final StorageBusInventory handler = new StorageBusInventory(NullInventory.of());
+    protected final StorageBusInventory handler = this.createHandler();
     @Nullable
     protected Component handlerDescription;
     protected final PartAdjacentApi<MEStorage> adjacentStorageAccessor;
@@ -106,7 +106,7 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     }
 
     @Override
-    public final void upgradesChanged() {
+    public void upgradesChanged() {
         super.upgradesChanged();
         this.forceUpdate();
     }
@@ -370,6 +370,10 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
 
     public abstract MenuType<?> getMenuType();
 
+    protected StorageBusInventory createHandler() {
+        return new StorageBusInventory(NullInventory.of());
+    }
+
     protected void scheduleUpdate() {
         if (isClientSide()) {
             return;
@@ -384,12 +388,12 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
         }
 
         @Override
-        protected MEStorage getDelegate() {
+        public MEStorage getDelegate() {
             return super.getDelegate();
         }
 
         @Override
-        protected void setDelegate(MEStorage delegate) {
+        public void setDelegate(MEStorage delegate) {
             super.setDelegate(delegate);
         }
 

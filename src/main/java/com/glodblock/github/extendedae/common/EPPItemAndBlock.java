@@ -34,6 +34,7 @@ import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
 import com.glodblock.github.extendedae.common.parts.PartModExportBus;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
+import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
@@ -88,6 +89,7 @@ public class EPPItemAndBlock {
     public static BlockExIOPort EX_IO_PORT;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
     public static WirelessTerminalItem WIRELESS_EX_PAT;
+    public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -124,6 +126,7 @@ public class EPPItemAndBlock {
         EX_IO_PORT = new BlockExIOPort();
         FISHBIG = new BlockFishbig();
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
+        PRECISE_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartPreciseStorageBus.class, PartPreciseStorageBus::new);
         if (ModList.get().isLoaded("ae2wtlib")) {
             try {
                 //To prevent classloader issue
@@ -171,6 +174,7 @@ public class EPPItemAndBlock {
         regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
         regHandler.item("precise_export_bus", PRECISE_EXPORT_BUS);
         regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
+        regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
     }
 
 }
