@@ -10,8 +10,9 @@
   "client": [
     "MixinAbstractContainerScreen",
     "MixinClearPatternAccessTerminalPacket",
+    "MixinGuidebookLevelRenderer",
     "MixinPatternAccessTerminalPacket",
-    "MixinGuidebookLevelRenderer"
+    "MixinScreen"
   ],
   "server": []
 }
