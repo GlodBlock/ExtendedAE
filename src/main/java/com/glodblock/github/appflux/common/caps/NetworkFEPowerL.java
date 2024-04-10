@@ -7,9 +7,10 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraftforge.energy.IEnergyStorage;
+import sonar.fluxnetworks.api.energy.IFNEnergyStorage;
 
 
-public record NetworkFEPower(IStorageService storage, IActionSource source) implements IEnergyStorage{
+public record NetworkFEPowerL(IStorageService storage, IActionSource source) implements IEnergyStorage,IFNEnergyStorage{
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
@@ -30,6 +31,26 @@ public record NetworkFEPower(IStorageService storage, IActionSource source) impl
     public int getMaxEnergyStored() {
         var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
         return AFUtil.clampLong(space + this.getEnergyStored());
+    }
+
+
+    public long receiveEnergyL(long l, boolean b) {
+        return this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), l, Actionable.ofSimulate(b), this.source);
+    }
+
+
+    public long extractEnergyL(long l, boolean b) {
+        return this.storage.getInventory().extract(FluxKey.of(EnergyType.FE), l, Actionable.ofSimulate(b), this.source);
+    }
+
+
+    public long getEnergyStoredL() {
+        return this.storage.getCachedInventory().get(FluxKey.of(EnergyType.FE));
+    }
+
+    public long getMaxEnergyStoredL() {
+        var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
+        return space + this.getEnergyStored();
     }
 
 

@@ -11,6 +11,7 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
+import com.glodblock.github.appflux.common.caps.NetworkFEPowerL;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
@@ -23,10 +24,16 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sonar.fluxnetworks.api.FluxCapabilities;
+import appeng.api.config.PowerUnits;
+import java.lang.reflect.InvocationTargetException;
 
 public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTickable {
+    Boolean IsFnLoad = ModList.get().isLoaded("fluxnetworks");
 
     public TileFluxAccessor(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFItemAndBlock.FLUX_ACCESSOR), pos, blockState);
@@ -36,9 +43,13 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) {
+        if (cap == ForgeCapabilities.ENERGY ||
+                (IsFnLoad && cap == FluxCapabilities.FN_ENERGY_STORAGE)) {
             return LazyOptional.of(() -> {
                 if (this.getStorage() != null) {
+                    if (ModList.get().isLoaded("fluxnetworks")) {
+                        return new NetworkFEPowerL(this.getStorage(), this.getSource());
+                    }
                     return new NetworkFEPower(this.getStorage(), this.getSource());
                 } else {
                     return new EnergyStorage(0);
@@ -80,24 +91,55 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
                 var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
                 var thatGrid = AFUtil.getGrid(te, d.getOpposite());
                 if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                    var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
-                    if (accepter != null) {
-                        var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
-                        if (toAdd > 0) {
-                            var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, this.getSource());
-                            if (drained > 0) {
-                                var actuallyDrained = accepter.receiveEnergy((int) drained, false);
-                                var differ = drained - actuallyDrained;
-                                if (differ > 0) {
-                                    storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, this.getSource());
-                                }
+                    long canAdd = Long.MAX_VALUE;
+                    var toAdd = 0L;
+                    if (IsFnLoad) {
+                        var accepterL = AFUtil.findCapability(te, d.getOpposite(), FluxCapabilities.FN_ENERGY_STORAGE);
+                        if (accepterL != null) {
+                            toAdd += accepterL.receiveEnergyL(canAdd, true);
+                        } else {
+                            var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                            if (accepter != null) {
+                                toAdd += accepter.receiveEnergy(AFUtil.clampLong(canAdd), true);
                             }
                         }
+                    } else {
+                        var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                        if (accepter != null) {
+                            toAdd += accepter.receiveEnergy(AFUtil.clampLong(canAdd), true);
+                        }
                     }
+                    canAdd=storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, this.getSource());
+                    toAdd=0L;
+                    if(IsFnLoad){
+                        var accepterL = AFUtil.findCapability(te, d.getOpposite(), FluxCapabilities.FN_ENERGY_STORAGE);
+                        if(accepterL!=null){
+                            toAdd+=accepterL.receiveEnergyL(canAdd,false);
+                        }else{
+                            var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                            if(accepter!=null){
+                                toAdd+=accepter.receiveEnergy(AFUtil.clampLong(canAdd),false);
+                            }
+                        }
+                    }else{
+                        var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
+                        if(accepter!=null){
+                            toAdd+=accepter.receiveEnergy(AFUtil.clampLong(canAdd),false);
+                        }
+                    }
+                    storage.getInventory().insert(FluxKey.of(EnergyType.FE), canAdd-toAdd, Actionable.MODULATE, this.getSource());
                 }
+
             }
+            if (gird != null) {
+                var to_input = gird.getEnergyService().injectPower(9007199254740990L, Actionable.SIMULATE);
+                var can_input = storage.getInventory().extract(FluxKey.of(EnergyType.FE), Math.round(PowerUnits.AE.convertTo(PowerUnits.RF,9007199254740990L-to_input)), Actionable.MODULATE, this.getSource());
+                gird.getEnergyService().injectPower(PowerUnits.RF.convertTo(PowerUnits.AE,can_input), Actionable.MODULATE);
+            }
+
         }
         return TickRateModulation.SAME;
     }
+
 
 }

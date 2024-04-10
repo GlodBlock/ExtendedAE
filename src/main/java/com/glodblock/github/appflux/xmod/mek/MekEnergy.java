@@ -19,7 +19,6 @@ public interface MekEnergy {
     long output(long power, Actionable mode, Direction side);
 
     interface Factory {
-
         MekEnergy create(ServerLevel level, BlockPos pos);
 
     }
