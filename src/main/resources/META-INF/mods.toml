@@ -25,7 +25,7 @@ description='''${mod_description}'''
 [[dependencies.appflux]]
     modId="ae2"
     mandatory=true
-    versionRange="[15.0.12,)"
+    versionRange="[15.1.1,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.appflux]]

@@ -1,6 +1,7 @@
 package com.glodblock.github.appflux.common.tileentities;
 
 import appeng.api.config.Actionable;
+import appeng.api.config.PowerUnits;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
@@ -24,13 +25,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sonar.fluxnetworks.api.FluxCapabilities;
-import appeng.api.config.PowerUnits;
-import java.lang.reflect.InvocationTargetException;
 
 public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTickable {
     Boolean IsFnLoad = ModList.get().isLoaded("fluxnetworks");
@@ -133,8 +131,8 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
             }
             if (gird != null) {
                 var to_input = gird.getEnergyService().injectPower(9007199254740990L, Actionable.SIMULATE);
-                var can_input = storage.getInventory().extract(FluxKey.of(EnergyType.FE), Math.round(PowerUnits.AE.convertTo(PowerUnits.RF,9007199254740990L-to_input)), Actionable.MODULATE, this.getSource());
-                gird.getEnergyService().injectPower(PowerUnits.RF.convertTo(PowerUnits.AE,can_input), Actionable.MODULATE);
+                var can_input = storage.getInventory().extract(FluxKey.of(EnergyType.FE), Math.round(PowerUnits.AE.convertTo(PowerUnits.FE,9007199254740990L-to_input)), Actionable.MODULATE, this.getSource());
+                gird.getEnergyService().injectPower(PowerUnits.FE.convertTo(PowerUnits.AE,can_input), Actionable.MODULATE);
             }
 
         }
