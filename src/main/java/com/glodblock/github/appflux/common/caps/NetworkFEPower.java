@@ -6,9 +6,19 @@ import appeng.api.networking.storage.IStorageService;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 public record NetworkFEPower(IStorageService storage, IActionSource source) implements IEnergyStorage {
+
+    public static IEnergyStorage of(@Nullable IStorageService storage, IActionSource source) {
+        if (storage != null) {
+            return new NetworkFEPower(storage, source);
+        } else {
+            return new EnergyStorage(0);
+        }
+    }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {

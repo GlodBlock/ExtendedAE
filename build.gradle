@@ -87,6 +87,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:wireless-chargers-510656:4591907")
     compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.0.14:all")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
+    compileOnly fg.deobf("curse.maven:flux-networks-248020:5234697")
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("curse.maven:jade-324717:4768593")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'

@@ -1,6 +1,5 @@
 package com.glodblock.github.appflux.common.parts;
 
-import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
@@ -15,15 +14,12 @@ import appeng.api.util.AECableType;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import com.glodblock.github.appflux.AppFlux;
-import com.glodblock.github.appflux.common.caps.NetworkFEPower;
-import com.glodblock.github.appflux.common.me.key.FluxKey;
-import com.glodblock.github.appflux.common.me.key.type.EnergyType;
+import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
+import com.glodblock.github.appflux.common.me.energy.EnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 
 public class PartFluxAccessor extends AEBasePart implements IGridTickable {
 
@@ -65,14 +61,9 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return LazyOptional.of(() -> {
-                if (this.getStorage() != null) {
-                    return new NetworkFEPower(this.getStorage(), this.getSource());
-                } else {
-                    return new EnergyStorage(0);
-                }
-            }).cast();
+        CapAdaptor.Factory<T> handler = CapAdaptor.find(cap);
+        if (handler != null) {
+            return LazyOptional.of(() -> handler.create(this.getStorage(), this.getSource()));
         }
         return super.getCapability(cap);
     }
@@ -91,20 +82,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
             var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
             var thatGrid = AFUtil.getGrid(te, d.getOpposite());
             if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
-                if (accepter != null) {
-                    var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
-                    if (toAdd > 0) {
-                        var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, this.getSource());
-                        if (drained > 0) {
-                            var actuallyDrained = accepter.receiveEnergy((int) drained, false);
-                            var differ = drained - actuallyDrained;
-                            if (differ > 0) {
-                                storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, this.getSource());
-                            }
-                        }
-                    }
-                }
+                EnergyDistributor.send(te, d.getOpposite(), storage, this.getSource());
             }
         }
         return TickRateModulation.SAME;

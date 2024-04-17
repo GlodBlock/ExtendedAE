@@ -1,6 +1,5 @@
 package com.glodblock.github.appflux.common.tileentities;
 
-import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
@@ -10,19 +9,15 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
-import com.glodblock.github.appflux.common.caps.NetworkFEPower;
-import com.glodblock.github.appflux.common.me.key.FluxKey;
-import com.glodblock.github.appflux.common.me.key.type.EnergyType;
+import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
+import com.glodblock.github.appflux.common.me.energy.EnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,23 +31,11 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return LazyOptional.of(() -> {
-                if (this.getStorage() != null) {
-                    return new NetworkFEPower(this.getStorage(), this.getSource());
-                } else {
-                    return new EnergyStorage(0);
-                }
-            }).cast();
+        CapAdaptor.Factory<T> handler = CapAdaptor.find(cap);
+        if (handler != null) {
+            return LazyOptional.of(() -> handler.create(this.getStorage(), this.getSource()));
         }
         return super.getCapability(cap, side);
-    }
-
-    private BlockEntity getAsker(Direction side) {
-        if (this.level != null && side != null) {
-            this.level.getBlockEntity(this.worldPosition.offset(side.getNormal()));
-        }
-        return null;
     }
 
     private IStorageService getStorage() {
@@ -80,20 +63,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
                 var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
                 var thatGrid = AFUtil.getGrid(te, d.getOpposite());
                 if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                    var accepter = AFUtil.findCapability(te, d.getOpposite(), ForgeCapabilities.ENERGY);
-                    if (accepter != null) {
-                        var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
-                        if (toAdd > 0) {
-                            var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, this.getSource());
-                            if (drained > 0) {
-                                var actuallyDrained = accepter.receiveEnergy((int) drained, false);
-                                var differ = drained - actuallyDrained;
-                                if (differ > 0) {
-                                    storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, this.getSource());
-                                }
-                            }
-                        }
-                    }
+                    EnergyDistributor.send(te, d.getOpposite(), storage, this.getSource());
                 }
             }
         }
