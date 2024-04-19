@@ -2,6 +2,7 @@ package com.glodblock.github.appflux.common.tileentities;
 
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.IGridTickable;
@@ -11,6 +12,7 @@ import appeng.blockentity.grid.AENetworkBlockEntity;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
 import com.glodblock.github.appflux.common.me.energy.EnergyDistributor;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -65,6 +67,9 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IGridTicka
                 if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
                     EnergyDistributor.send(te, d.getOpposite(), storage, this.getSource());
                 }
+            }
+            if (AFConfig.selfCharge() && gird != null) {
+                EnergyDistributor.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
         }
         return TickRateModulation.SAME;
