@@ -4,6 +4,7 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
+import com.glodblock.github.appflux.config.AFConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ public class FluxKeyType extends AEKeyType {
 
     @Override
     public int getAmountPerByte() {
-        return 1024 * 1024 * 4;
+        return AFConfig.getFluxPerByte();
     }
 
     @Override

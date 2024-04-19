@@ -5,6 +5,7 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,7 +24,7 @@ public final class EnergyDistributor {
 
     private static final ArrayList<Pair<Capability<?>, Handler<?>>> HANDLERS = new ArrayList<>();
     private static final Handler<IEnergyStorage> DEFAULT = (accepter, storage, source) -> {
-        var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
+        var toAdd = accepter.receiveEnergy(AFUtil.clampLong(AFConfig.getFluxAccessorIO()), true);
         if (toAdd > 0) {
             var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
             if (drained > 0) {
@@ -39,7 +40,7 @@ public final class EnergyDistributor {
     static {
         if (ModList.get().isLoaded("fluxnetworks")) {
             addHandler(FluxCapabilities.FN_ENERGY_STORAGE, (accepter, storage, source) -> {
-                var toAdd = accepter.receiveEnergyL(Long.MAX_VALUE, true);
+                var toAdd = accepter.receiveEnergyL(AFConfig.getFluxAccessorIO(), true);
                 if (toAdd > 0) {
                     var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
                     if (drained > 0) {
