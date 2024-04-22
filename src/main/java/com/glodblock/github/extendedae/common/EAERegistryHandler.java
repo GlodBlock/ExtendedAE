@@ -12,7 +12,6 @@ import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
 import appeng.core.localization.GuiText;
 import appeng.hotkeys.HotkeyActions;
 import appeng.hotkeys.InventoryHotkeyAction;
@@ -61,7 +60,8 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
-import com.glodblock.github.extendedae.xmod.wt.CommonLoad;
+import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
+import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
@@ -135,7 +135,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
         if (ModList.get().isLoaded("ae2wtlib")) {
-            CommonLoad.container();
+            WTCommonLoad.container();
         }
     }
 
@@ -166,7 +166,10 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerRandomAPI();
         this.initPackageList();
         if (ModList.get().isLoaded("ae2wtlib")) {
-            CommonLoad.init();
+            WTCommonLoad.init();
+        }
+        if (ModList.get().isLoaded("appflux")) {
+            AFCommonLoad.init();
         }
     }
 

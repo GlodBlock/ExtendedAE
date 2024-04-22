@@ -93,6 +93,7 @@ dependencies {
     implementation fg.deobf("curse.maven:glodium-957920:5006780")
     compileOnly fg.deobf("curse.maven:applied-energistics-2-wireless-terminals-459929:5162352")
     compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
+    compileOnly fg.deobf("curse.maven:applied-flux-965012:5274173")
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.21")
     compileOnly fg.deobf("curse.maven:jade-324717:4768593")

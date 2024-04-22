@@ -9,7 +9,7 @@ import de.mari_023.ae2wtlib.terminal.IUniversalWirelessTerminalItem;
 import de.mari_023.ae2wtlib.wut.WUTHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CommonLoad {
+public class WTCommonLoad {
 
     public static void container() {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("u_wireless_ex_pattern_access_terminal"), ContainerUWirelessExPAT.TYPE);
