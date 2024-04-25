@@ -528,19 +528,22 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             Collections.sort(containers);
             for (var container : containers) {
                 var inventory = container.getInventory();
+                //noinspection SizeReplaceableByIsEmpty
                 if (inventory.size() > 0) {
                     var info = this.infoMap.get(container.getServerId());
-                    var btn = new HighlightButton();
-                    btn.setMultiplier(this.playerToBlockDis(info.pos()));
-                    btn.setTarget(info.pos, info.playerWorld);
-                    btn.setSuccessJob(() -> {
-                        if (this.getPlayer() != null && info.pos != null && info.playerWorld != null) {
-                            this.getPlayer().displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", info.pos.toShortString(), info.playerWorld.location().getPath()), false);
-                        }
-                    });
-                    btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.03")));
-                    btn.setVisibility(false);
-                    this.highlightBtns.put(this.rows.size(), this.addRenderableWidget(btn));
+                    if (info != null) {
+                        var btn = new HighlightButton();
+                        btn.setMultiplier(this.playerToBlockDis(info.pos()));
+                        btn.setTarget(info.pos, info.playerWorld);
+                        btn.setSuccessJob(() -> {
+                            if (this.getPlayer() != null && info.pos != null && info.playerWorld != null) {
+                                this.getPlayer().displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", info.pos.toShortString(), info.playerWorld.location().getPath()), false);
+                            }
+                        });
+                        btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.03")));
+                        btn.setVisibility(false);
+                        this.highlightBtns.put(this.rows.size(), this.addRenderableWidget(btn));
+                    }
                 }
                 for (var offset = 0; offset < inventory.size(); offset += COLUMNS) {
                     var slots = Math.min(inventory.size() - offset, COLUMNS);
