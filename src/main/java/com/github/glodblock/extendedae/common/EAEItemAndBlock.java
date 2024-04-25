@@ -35,6 +35,7 @@ import com.github.glodblock.extendedae.common.parts.PartExPatternProvider;
 import com.github.glodblock.extendedae.common.parts.PartModExportBus;
 import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartPreciseExportBus;
+import com.github.glodblock.extendedae.common.parts.PartPreciseStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
@@ -87,6 +88,7 @@ public class EAEItemAndBlock {
     public static BlockExIOPort EX_IO_PORT;
     public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
+    public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
     public static BlockFishbig FISHBIG;
 
     public static void init(RegistryHandler regHandler) {
@@ -135,6 +137,7 @@ public class EAEItemAndBlock {
             WIRELESS_EX_PAT = new ItemWirelessExPAT();
         }
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
+        PRECISE_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartPreciseStorageBus.class, PartPreciseStorageBus::new);
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -171,6 +174,7 @@ public class EAEItemAndBlock {
         regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
         regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
         regHandler.item("precise_export_bus", PRECISE_EXPORT_BUS);
+        regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
     }
 
 }

@@ -34,6 +34,7 @@ import com.github.glodblock.extendedae.common.parts.PartExPatternProvider;
 import com.github.glodblock.extendedae.common.parts.PartModExportBus;
 import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartPreciseExportBus;
+import com.github.glodblock.extendedae.common.parts.PartPreciseStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
@@ -60,6 +61,7 @@ import com.github.glodblock.extendedae.container.ContainerModExportBus;
 import com.github.glodblock.extendedae.container.ContainerModStorageBus;
 import com.github.glodblock.extendedae.container.ContainerPatternModifier;
 import com.github.glodblock.extendedae.container.ContainerPreciseExportBus;
+import com.github.glodblock.extendedae.container.ContainerPreciseStorageBus;
 import com.github.glodblock.extendedae.container.ContainerRenamer;
 import com.github.glodblock.extendedae.container.ContainerTagExportBus;
 import com.github.glodblock.extendedae.container.ContainerTagStorageBus;
@@ -182,6 +184,7 @@ public class RegistryHandler {
         registerMenuType("wireless_ex_pat", ContainerWirelessExPAT.TYPE);
         registerMenuType("ex_ioport", ContainerExIOPort.TYPE);
         registerMenuType("precise_export_bus", ContainerPreciseExportBus.TYPE);
+        registerMenuType("precise_storage_bus", ContainerPreciseStorageBus.TYPE);
         if (EAE.checkMod("ae2wtlib")) {
             WTCommonLoad.container();
         }
@@ -238,25 +241,28 @@ public class RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 4, "group.ex_io_bus_part");
         Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_CONNECTOR, 4, "gui.extendedae.wireless_connect");
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_ASSEMBLER, 5, "gui.extendedae.ex_molecular_assembler");
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_INSCRIBER, 4, "gui.extendedae.ex_inscriber");
-        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1, "item.extendedae.tag_storage_bus");
-        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1, "item.extendedae.tag_storage_bus");
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 1, "item.extendedae.tag_export_bus");
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 4, "item.extendedae.tag_export_bus");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.THRESHOLD_LEVEL_EMITTER, 1, "item.extendedae.threshold_level_emitter");
-        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1, "item.extendedae.mod_storage_bus");
-        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1, "item.extendedae.mod_storage_bus");
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 1, "item.extendedae.mod_export_bus");
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 4, "item.extendedae.mod_export_bus");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 1, "item.extendedae.active_formation_plane");
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 5, "item.extendedae.active_formation_plane");
+        Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_CONNECTOR, 4);
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_ASSEMBLER, 5);
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_INSCRIBER, 4);
+        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 4);
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.THRESHOLD_LEVEL_EMITTER, 1);
+        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 4);
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 5);
         Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IO_PORT, 5, "block.extendedae.ex_io_port");
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 5, "item.expatternprovider.precise_export_bus");
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IO_PORT, 5);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_IO_PORT, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 5);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_STORAGE_BUS, 5);
+        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.PRECISE_STORAGE_BUS, 1);
     }
 
     @SuppressWarnings("all")
@@ -320,6 +326,7 @@ public class RegistryHandler {
         PartModels.registerModels(PartModExportBus.MODEL_BASE);
         PartModels.registerModels(PartActiveFormationPlane.MODELS);
         PartModels.registerModels(PartPreciseExportBus.MODELS);
+        PartModels.registerModels(PartPreciseStorageBus.MODEL_BASE);
     }
 
     private void onRegisterRandomAPI() {

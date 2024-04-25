@@ -16,7 +16,20 @@
       }
     }
   },
+  "slots": {
+    "TOOLBOX": {
+      "bottom": 47,
+      "right": -10,
+      "grid": "BREAK_AFTER_3COLS"
+    }
+  },
   "widgets": {
+    "toolbox": {
+      "right": -2,
+      "bottom": 55,
+      "width": 68,
+      "height": 68
+    },
     "filter_input": {
       "left": 8,
       "top": 27,
