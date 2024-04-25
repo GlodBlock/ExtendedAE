@@ -17,6 +17,7 @@ import com.github.glodblock.extendedae.container.ContainerModStorageBus;
 import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.CGenericPacket;
 import com.github.glodblock.extendedae.network.packet.sync.IActionHolder;
+import com.github.glodblock.extendedae.util.FCClientUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -47,7 +48,10 @@ public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> 
         this.filterInputs = widgets.addTextField("filter_input");
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.extendedae.mod_storage_bus.tooltip"));
-        this.filterInputs.setResponder(s -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", s)));
+        this.filterInputs.setResponder(s -> {
+            this.filterInputs.setSuggestion(FCClientUtil.getModName(s));
+            EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", s));
+        });
         this.actions.put("init", o -> this.filterInputs.setValue((String) o[0]));
         EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("update"));
     }

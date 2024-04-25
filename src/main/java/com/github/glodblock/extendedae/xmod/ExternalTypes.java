@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 public class ExternalTypes {
 
     public static AEKeyType MANA;
-    public static AEKeyType FLUX;
+    public static AEKeyType SOURCE;
 
     static {
         try {
@@ -16,9 +16,9 @@ public class ExternalTypes {
             MANA = null;
         }
         try {
-            FLUX = AEKeyTypes.get(new ResourceLocation("appflux:flux"));
+            SOURCE = AEKeyTypes.get(new ResourceLocation("arseng:source"));
         } catch (Exception e) {
-            FLUX = null;
+            SOURCE = null;
         }
     }
 

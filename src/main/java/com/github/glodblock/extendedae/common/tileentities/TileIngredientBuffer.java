@@ -2,14 +2,13 @@ package com.github.glodblock.extendedae.common.tileentities;
 
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEKeyType;
-import appeng.api.stacks.AEKeyTypes;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.helpers.externalstorage.GenericStackInv;
 import com.github.glodblock.extendedae.common.EAEItemAndBlock;
 import com.github.glodblock.extendedae.util.FCUtil;
+import com.github.glodblock.extendedae.xmod.ExternalTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,31 +19,15 @@ public class TileIngredientBuffer extends AEBaseBlockEntity {
 
     private final GenericStackInv buffer;
 
-    private static AEKeyType MEK;
-    private static AEKeyType BOT;
-
-    static {
-        try {
-            MEK = AEKeyTypes.get(new ResourceLocation("appmek:chemical"));
-        } catch (Exception e) {
-            MEK = null;
-        }
-        try {
-            BOT = AEKeyTypes.get(new ResourceLocation("appbot:mana"));
-        } catch (Exception e) {
-            BOT = null;
-        }
-    }
-
     public TileIngredientBuffer(BlockPos pos, BlockState blockState) {
         super(FCUtil.getTileType(TileIngredientBuffer.class, TileIngredientBuffer::new, EAEItemAndBlock.INGREDIENT_BUFFER), pos, blockState);
         this.buffer = new GenericStackInv(this::setChanged, 36);
         this.buffer.setCapacity(AEKeyType.fluids(), 64L * AEFluidKey.AMOUNT_BUCKET);
-        if (MEK != null) {
-            this.buffer.setCapacity(MEK, 64000);
+        if (ExternalTypes.MANA != null) {
+            this.buffer.setCapacity(ExternalTypes.MANA, 1000);
         }
-        if (BOT != null) {
-            this.buffer.setCapacity(BOT, 1000);
+        if (ExternalTypes.SOURCE != null) {
+            this.buffer.setCapacity(ExternalTypes.SOURCE, 1000);
         }
     }
 

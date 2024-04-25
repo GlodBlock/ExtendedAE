@@ -12,6 +12,7 @@ import com.github.glodblock.extendedae.container.ContainerModExportBus;
 import com.github.glodblock.extendedae.network.EAENetworkServer;
 import com.github.glodblock.extendedae.network.packet.CGenericPacket;
 import com.github.glodblock.extendedae.network.packet.sync.IActionHolder;
+import com.github.glodblock.extendedae.util.FCClientUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +34,10 @@ public class GuiModExportBus extends UpgradeableScreen<ContainerModExportBus> im
         this.filterInputs = widgets.addTextField("filter_input");
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.extendedae.mod_storage_bus.tooltip"));
-        this.filterInputs.setResponder(s -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", s)));
+        this.filterInputs.setResponder(s -> {
+            this.filterInputs.setSuggestion(FCClientUtil.getModName(s));
+            EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", s));
+        });
         this.actions.put("init", o -> this.filterInputs.setValue((String) o[0]));
         EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("update"));
     }
