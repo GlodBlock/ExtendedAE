@@ -7,6 +7,7 @@ import com.github.glodblock.extendedae.common.blocks.BlockCaner;
 import com.github.glodblock.extendedae.common.blocks.BlockCrystalFixer;
 import com.github.glodblock.extendedae.common.blocks.BlockExCharger;
 import com.github.glodblock.extendedae.common.blocks.BlockExDrive;
+import com.github.glodblock.extendedae.common.blocks.BlockExIOPort;
 import com.github.glodblock.extendedae.common.blocks.BlockExInscriber;
 import com.github.glodblock.extendedae.common.blocks.BlockExInterface;
 import com.github.glodblock.extendedae.common.blocks.BlockExMolecularAssembler;
@@ -40,6 +41,7 @@ import com.github.glodblock.extendedae.common.tileentities.TileCaner;
 import com.github.glodblock.extendedae.common.tileentities.TileCrystalFixer;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
 import com.github.glodblock.extendedae.common.tileentities.TileExDrive;
+import com.github.glodblock.extendedae.common.tileentities.TileExIOPort;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
 import com.github.glodblock.extendedae.common.tileentities.TileExInterface;
 import com.github.glodblock.extendedae.common.tileentities.TileExMolecularAssembler;
@@ -81,6 +83,7 @@ public class EAEItemAndBlock {
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
     public static BlockCaner CANER;
     public static BlockCrystalFixer CRYSTAL_FIXER;
+    public static BlockExIOPort EX_IO_PORT;
     public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static BlockFishbig FISHBIG;
 
@@ -116,6 +119,7 @@ public class EAEItemAndBlock {
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         CANER = new BlockCaner();
         CRYSTAL_FIXER = new BlockCrystalFixer();
+        EX_IO_PORT = new BlockExIOPort();
         if (EAE.checkMod("ae2wtlib")) {
             try {
                 //To prevent classloader issue
@@ -139,6 +143,7 @@ public class EAEItemAndBlock {
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("crystal_fixer", CRYSTAL_FIXER, TileCrystalFixer.class, TileCrystalFixer::new);
+        regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);

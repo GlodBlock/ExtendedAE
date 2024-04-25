@@ -13,6 +13,7 @@
   "client": [
     "MixinAbstractContainerScreen",
     "MixinClearPatternAccessTerminalPacket",
-    "MixinPatternAccessTerminalPacket"
+    "MixinPatternAccessTerminalPacket",
+    "MixinScreen"
   ]
 }

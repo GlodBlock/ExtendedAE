@@ -1,12 +1,17 @@
 package com.github.glodblock.extendedae.util;
 
+import appeng.api.networking.IGrid;
 import appeng.api.storage.cells.CellState;
+import appeng.api.storage.cells.StorageCell;
+import appeng.api.upgrades.IUpgradeInventory;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.storage.DriveBlockEntity;
+import appeng.blockentity.storage.IOPortBlockEntity;
 import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AbstractLevelEmitterPart;
+import appeng.util.inv.AppEngInternalInventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 
@@ -25,8 +30,12 @@ public class Ae2Reflect {
     private static final Field fAbstractLevelEmitterPart_prevState;
     private static final Field fAEBaseBlockEntity_customName;
     private static final Field fAEBasePart_customName;
+    private static final Field fIOPortBlockEntity_inputCells;
+    private static final Field fIOPortBlockEntity_upgrades;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
+    private static final Method mIOPortBlockEntity_transferContents;
+    private static final Method mIOPortBlockEntity_moveSlot;
 
     static {
         try {
@@ -38,8 +47,12 @@ public class Ae2Reflect {
             fAbstractLevelEmitterPart_prevState = reflectField(AbstractLevelEmitterPart.class, "prevState");
             fAEBaseBlockEntity_customName = reflectField(AEBaseBlockEntity.class, "customName");
             fAEBasePart_customName = reflectField(AEBasePart.class, "customName");
+            fIOPortBlockEntity_inputCells = reflectField(IOPortBlockEntity.class, "inputCells");
+            fIOPortBlockEntity_upgrades = reflectField(IOPortBlockEntity.class, "upgrades");
             mDriveBlockEntity_updateClientSideState = reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
+            mIOPortBlockEntity_transferContents = reflectMethod(IOPortBlockEntity.class, "transferContents", IGrid.class, StorageCell.class, long.class);
+            mIOPortBlockEntity_moveSlot = reflectMethod(IOPortBlockEntity.class, "moveSlot", int.class);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -157,6 +170,22 @@ public class Ae2Reflect {
         } else if (owner instanceof AEBasePart) {
             Ae2Reflect.writeField(owner, fAEBasePart_customName, name);
         }
+    }
+
+    public static AppEngInternalInventory getInputCellInv(IOPortBlockEntity owner) {
+        return readField(owner, fIOPortBlockEntity_inputCells);
+    }
+
+    public static void setIOPortUpgrade(IOPortBlockEntity owner, IUpgradeInventory val) {
+        writeField(owner, fIOPortBlockEntity_upgrades, val);
+    }
+
+    public static long transferItemsFromCell(IOPortBlockEntity owner, IGrid grid, StorageCell cellInv, long itemsToMove) {
+        return executeMethod2(owner, mIOPortBlockEntity_transferContents, grid, cellInv, itemsToMove);
+    }
+
+    public static boolean moveSlotInCell(IOPortBlockEntity owner, int x) {
+        return executeMethod2(owner, mIOPortBlockEntity_moveSlot, x);
     }
 
 }
