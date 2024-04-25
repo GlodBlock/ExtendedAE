@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "extendedae:ingredient_buffer"
+    },
+    "E": {
+      "item": "ae2:export_bus"
+    },
+    "I": {
+      "item": "ae2:import_bus"
+    },
+    "P": {
+      "item": "ae2:calculation_processor"
+    }
+  },
+  "pattern": [
+    "IBE",
+    " P "
+  ],
+  "result": {
+    "item": "extendedae:caner"
+  },
+  "show_notification": true
+}

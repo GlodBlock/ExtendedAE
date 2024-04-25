@@ -8,6 +8,10 @@
     "extendedae:ex_drive",
     "extendedae:ex_molecular_assembler",
     "extendedae:ex_inscriber",
-    "extendedae:ex_charger"
+    "extendedae:ex_charger",
+    "extendedae:caner",
+    "extendedae:crystal_fixer",
+    "extendedae:ex_io_port",
+    "extendedae:fishbig"
   ]
 }

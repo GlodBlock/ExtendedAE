@@ -338,7 +338,7 @@ public class EAERecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(C, has(EAEItemAndBlock.MOD_EXPORT_BUS))
                 .save(c, EAE.id("mod_export_bus"));
 
-        // Mod Export Bus
+        // Active Formation Plane
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, EAEItemAndBlock.ACTIVE_FORMATION_PLANE)
                 .requires(AEParts.FORMATION_PLANE)
@@ -346,6 +346,73 @@ public class EAERecipeProvider extends FabricRecipeProvider {
                 .requires(AEItems.ENGINEERING_PROCESSOR)
                 .unlockedBy(C, has(EAEItemAndBlock.ACTIVE_FORMATION_PLANE))
                 .save(c, EAE.id("active_formation_plane"));
+
+        // ME Caner
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.CANER)
+                .pattern("IBE")
+                .pattern(" P ")
+                .define('I', AEParts.IMPORT_BUS)
+                .define('E', AEParts.EXPORT_BUS)
+                .define('B', EAEItemAndBlock.INGREDIENT_BUFFER)
+                .define('P', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EAEItemAndBlock.INGREDIENT_BUFFER))
+                .save(c, EAE.id("caner"));
+
+        // ME Precise Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.PRECISE_EXPORT_BUS)
+                .pattern("PBP")
+                .define('B', EAEItemAndBlock.EX_EXPORT_BUS)
+                .define('P', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(EAEItemAndBlock.EX_EXPORT_BUS))
+                .save(c, EAE.id("pre_bus"));
+
+        // Wireless Ex PAT
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.WIRELESS_EX_PAT)
+                .pattern("A")
+                .pattern("B")
+                .pattern("C")
+                .define('A', AEItems.WIRELESS_RECEIVER)
+                .define('B', EAEItemAndBlock.EX_PATTERN_TERMINAL)
+                .define('C', AEBlocks.DENSE_ENERGY_CELL)
+                .unlockedBy(C, has(EAEItemAndBlock.EX_PATTERN_TERMINAL))
+                .save(c, EAE.id("wireless_ex_pat"));
+
+        // Extended IO Port
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.EX_IO_PORT)
+                .pattern("ACB")
+                .pattern("CMC")
+                .pattern("BCA")
+                .define('A', AEItems.LOGIC_PROCESSOR)
+                .define('B', AEItems.ENGINEERING_PROCESSOR)
+                .define('C', AEItems.SPEED_CARD)
+                .define('M', AEBlocks.IO_PORT)
+                .unlockedBy(C, has(AEBlocks.IO_PORT))
+                .save(c, EAE.id("ex_io_port"));
+
+        // Crystal Fixer
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.CRYSTAL_FIXER)
+                .pattern("C C")
+                .pattern("I I")
+                .pattern("IFI")
+                .define('C', ConventionTags.CERTUS_QUARTZ)
+                .define('I', ConventionTags.IRON_INGOT)
+                .define('F', ConventionTags.FLUIX_CRYSTAL)
+                .unlockedBy(C, has(AEItems.FLUIX_CRYSTAL))
+                .save(c, EAE.id("crystal_fixer"));
+
+        // Precise Storage Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.PRECISE_STORAGE_BUS)
+                .pattern("PBP")
+                .define('B', AEParts.STORAGE_BUS)
+                .define('P', AEItems.CALCULATION_PROCESSOR)
+                .unlockedBy(C, has(AEParts.STORAGE_BUS))
+                .save(c, EAE.id("precise_storage_bus"));
 
         // Fishbig
         ShapedRecipeBuilder

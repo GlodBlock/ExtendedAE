@@ -88,6 +88,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static appeng.api.features.HotkeyAction.WIRELESS_TERMINAL;
@@ -336,6 +337,10 @@ public class RegistryHandler {
         } else {
             HotkeyActions.register(new InventoryHotkeyAction(EAEItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EAEItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
         }
+    }
+
+    public Collection<Block> getBlocks() {
+        return this.blocks.stream().map(Pair::getRight).toList();
     }
 
     private void bindItemTab() {

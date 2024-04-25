@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:certus_quartz"
+    },
+    "F": {
+      "tag": "c:fluix"
+    },
+    "I": {
+      "tag": "c:iron_ingots"
+    }
+  },
+  "pattern": [
+    "C C",
+    "I I",
+    "IFI"
+  ],
+  "result": {
+    "item": "extendedae:crystal_fixer"
+  },
+  "show_notification": true
+}

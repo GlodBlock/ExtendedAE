@@ -1,6 +1,6 @@
 package com.github.glodblock.extendedae.datagen;
 
-import com.github.glodblock.extendedae.common.EAEItemAndBlock;
+import com.github.glodblock.extendedae.common.RegistryHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -16,14 +16,9 @@ public class EAEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(EAEItemAndBlock.EX_PATTERN_PROVIDER)
-                .add(EAEItemAndBlock.EX_INTERFACE)
-                .add(EAEItemAndBlock.WIRELESS_CONNECTOR)
-                .add(EAEItemAndBlock.INGREDIENT_BUFFER)
-                .add(EAEItemAndBlock.EX_DRIVE)
-                .add(EAEItemAndBlock.EX_ASSEMBLER)
-                .add(EAEItemAndBlock.EX_INSCRIBER)
-                .add(EAEItemAndBlock.EX_CHARGER);
+        var pickaxe = this.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
+        for (var block : RegistryHandler.INSTANCE.getBlocks()) {
+            pickaxe.add(block);
+        }
     }
 }
