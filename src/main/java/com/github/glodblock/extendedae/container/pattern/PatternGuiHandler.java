@@ -6,18 +6,21 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PatternGuiHandler {
 
@@ -31,12 +34,33 @@ public class PatternGuiHandler {
             return;
         }
         var title = Component.translatable("epp.pattern." + id);
-        MenuProvider menu = new SimpleMenuProvider((wnd, p, pl) -> {
+        MenuProvider menu = warp(internal.inverse().get(id), pattern, (wnd, p, pl) -> {
             var f = factory.get(id);
             var t = types.get(id);
             return f.create(t, wnd, player.level(), pattern);
         }, title);
         player.openMenu(menu);
+    }
+
+    private static ExtendedScreenHandlerFactory warp(int id, ItemStack pattern, MenuConstructor con, Component name) {
+        return new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+                buf.writeVarInt(id);
+                buf.writeItem(pattern);
+            }
+
+            @Override
+            public @NotNull Component getDisplayName() {
+                return name;
+            }
+
+            @Nullable
+            @Override
+            public AbstractContainerMenu createMenu(int i, Inventory inv, Player player) {
+                return con.createMenu(i, inv, player);
+            }
+        };
     }
 
     private static AbstractContainerMenu from(int containerId, Inventory inv, FriendlyByteBuf packetBuf) {

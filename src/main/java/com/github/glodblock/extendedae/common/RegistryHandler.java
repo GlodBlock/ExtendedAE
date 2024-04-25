@@ -33,6 +33,7 @@ import com.github.glodblock.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.github.glodblock.extendedae.common.parts.PartExPatternProvider;
 import com.github.glodblock.extendedae.common.parts.PartModExportBus;
 import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartPreciseExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
@@ -58,6 +59,7 @@ import com.github.glodblock.extendedae.container.ContainerIngredientBuffer;
 import com.github.glodblock.extendedae.container.ContainerModExportBus;
 import com.github.glodblock.extendedae.container.ContainerModStorageBus;
 import com.github.glodblock.extendedae.container.ContainerPatternModifier;
+import com.github.glodblock.extendedae.container.ContainerPreciseExportBus;
 import com.github.glodblock.extendedae.container.ContainerRenamer;
 import com.github.glodblock.extendedae.container.ContainerTagExportBus;
 import com.github.glodblock.extendedae.container.ContainerTagStorageBus;
@@ -179,6 +181,7 @@ public class RegistryHandler {
         registerMenuType("caner", ContainerCaner.TYPE);
         registerMenuType("wireless_ex_pat", ContainerWirelessExPAT.TYPE);
         registerMenuType("ex_ioport", ContainerExIOPort.TYPE);
+        registerMenuType("precise_export_bus", ContainerPreciseExportBus.TYPE);
         if (EAE.checkMod("ae2wtlib")) {
             WTCommonLoad.container();
         }
@@ -251,6 +254,9 @@ public class RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 5, "item.extendedae.active_formation_plane");
         Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
         Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IO_PORT, 5, "block.extendedae.ex_io_port");
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 5, "item.expatternprovider.precise_export_bus");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1, "item.expatternprovider.precise_export_bus");
     }
 
     @SuppressWarnings("all")
@@ -313,6 +319,7 @@ public class RegistryHandler {
         PartModels.registerModels(PartModStorageBus.MODEL_BASE);
         PartModels.registerModels(PartModExportBus.MODEL_BASE);
         PartModels.registerModels(PartActiveFormationPlane.MODELS);
+        PartModels.registerModels(PartPreciseExportBus.MODELS);
     }
 
     private void onRegisterRandomAPI() {

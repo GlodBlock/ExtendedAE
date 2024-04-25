@@ -2,8 +2,10 @@ package com.github.glodblock.extendedae.container;
 
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.core.definitions.AEItems;
+import appeng.crafting.pattern.AECraftingPattern;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.menu.AEBaseMenu;
@@ -18,6 +20,7 @@ import com.github.glodblock.extendedae.client.ExSemantics;
 import com.github.glodblock.extendedae.client.gui.widget.SingleFakeSlot;
 import com.github.glodblock.extendedae.common.inventory.PatternModifierInventory;
 import com.github.glodblock.extendedae.network.packet.sync.IActionHolder;
+import com.github.glodblock.extendedae.util.Ae2Reflect;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -98,12 +101,51 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
                     var output = process.getOutputs();
                     var replaceInput = new GenericStack[input.length];
                     var replaceOutput = new GenericStack[output.length];
-                    this.replace(input, replaceInput, new GenericStack(AEItemKey.of(replace), 1), new GenericStack(AEItemKey.of(with), 1));
-                    this.replace(output, replaceOutput, new GenericStack(AEItemKey.of(replace), 1), new GenericStack(AEItemKey.of(with), 1));
+                    this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
+                    this.replace(output, replaceOutput, AEItemKey.of(replace), AEItemKey.of(with));
                     var newPattern = PatternDetailsHelper.encodeProcessingPattern(replaceInput, replaceOutput);
                     slot.set(newPattern);
+                } else if (detail instanceof AECraftingPattern craft) {
+                    var input = craft.getSparseInputs();
+                    var output = craft.getPrimaryOutput();
+                    var replaceInput = new GenericStack[input.length];
+                    this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
+                    try {
+                        var newPattern = PatternDetailsHelper.encodeCraftingPattern(
+                                Ae2Reflect.getCraftRecipe(craft),
+                                itemize(replaceInput),
+                                itemize(output),
+                                craft.canSubstitute,
+                                craft.canSubstituteFluids
+                        );
+                        //noinspection DataFlowIssue
+                        var check = new AECraftingPattern(AEItemKey.of(newPattern), this.getPlayer().level());
+                        //noinspection ConstantValue
+                        if (check != null) {
+                            slot.set(newPattern);
+                        }
+                    } catch (Exception e) {
+                        // It is an invalid change
+                        return;
+                    }
                 }
             }
+        }
+    }
+
+    private ItemStack[] itemize(GenericStack[] stacks) {
+        var items = new ItemStack[stacks.length];
+        for (int i = 0; i < stacks.length; i ++) {
+            items[i] = itemize(stacks[i]);
+        }
+        return items;
+    }
+
+    private ItemStack itemize(GenericStack stack) {
+        if (stack != null && stack.what() instanceof AEItemKey what) {
+            return what.toStack((int) stack.amount());
+        } else {
+            return ItemStack.EMPTY;
         }
     }
 
@@ -189,11 +231,11 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
     }
 
-    private void replace(GenericStack[] stacks, GenericStack[] des, GenericStack replace, GenericStack with) {
+    private void replace(GenericStack[] stacks, GenericStack[] des, AEKey replace, AEKey with) {
         for (int i = 0; i < stacks.length; i ++) {
             if (stacks[i] != null) {
-                if (stacks[i].what().matches(replace)) {
-                    des[i] = new GenericStack(with.what(), stacks[i].amount());
+                if (stacks[i].what().equals(replace)) {
+                    des[i] = new GenericStack(with, stacks[i].amount());
                 } else {
                     des[i] = new GenericStack(stacks[i].what(), stacks[i].amount());
                 }
