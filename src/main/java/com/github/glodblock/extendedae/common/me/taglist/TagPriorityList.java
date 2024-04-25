@@ -2,10 +2,12 @@ package com.github.glodblock.extendedae.common.me.taglist;
 
 import appeng.api.stacks.AEKey;
 import appeng.util.prioritylist.IPartitionList;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
+import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -13,30 +15,21 @@ import java.util.Set;
 
 public class TagPriorityList implements IPartitionList {
 
-    private final Set<TagKey<?>> tagKeys;
+    private final Set<TagKey<?>> whiteSet;
+    private final Set<TagKey<?>> blackSet;
     private final String tagExp;
-    private final LoadingCache<AEKey, Boolean> accept = CacheBuilder.newBuilder().build(
-            new CacheLoader<>() {
-                @Override
-                public @NotNull Boolean load(@NotNull AEKey key) {
-                    for (var tag : tagKeys) {
-                        if (key.isTagged(tag)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
-    );
+    private final Reference2BooleanMap<Object> memory = new Reference2BooleanOpenHashMap<>();
 
-    public TagPriorityList(Set<TagKey<?>> tagKeys, String tagExp) {
-        this.tagKeys = tagKeys;
+    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, String tagExp) {
+        this.whiteSet = whiteKeys;
+        this.blackSet = blackKeys;
         this.tagExp = tagExp;
     }
 
     @Override
     public boolean isListed(AEKey input) {
-        return this.accept.getUnchecked(input);
+        Object key = input.getPrimaryKey();
+        return this.memory.computeIfAbsent(key, this::eval);
     }
 
     @Override
@@ -47,6 +40,29 @@ public class TagPriorityList implements IPartitionList {
     @Override
     public Iterable<AEKey> getItems() {
         return List.of();
+    }
+
+    @SuppressWarnings("deprecation")
+    private boolean eval(@NotNull Object obj) {
+        Holder<?> refer = null;
+        if (obj instanceof Item item) {
+            refer = item.builtInRegistryHolder();
+        } else if (obj instanceof Fluid fluid) {
+            refer = fluid.builtInRegistryHolder();
+        }
+        if (refer != null) {
+            if (whiteSet.isEmpty()) {
+                return false;
+            }
+            boolean pass = refer.tags().anyMatch(whiteSet::contains);
+            if (pass) {
+                if (!blackSet.isEmpty()) {
+                    return refer.tags().noneMatch(blackSet::contains);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
 }

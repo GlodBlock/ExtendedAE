@@ -23,13 +23,7 @@ Here are some examples:
 
 c:raw_materials
 
-- Deny all ingots:
+- Accept all ingots and gems
 
-!(c:ingots)
-
-- Accept all dyes but cyan dye
-
-c:dyes && !(c:cyan_dyes)
-
-
+c:ingots/* | c:gems/*
 

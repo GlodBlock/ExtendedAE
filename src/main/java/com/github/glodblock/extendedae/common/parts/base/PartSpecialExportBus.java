@@ -11,7 +11,6 @@ import appeng.core.settings.TickRates;
 import appeng.parts.automation.IOBusPart;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.prioritylist.IPartitionList;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,13 +40,13 @@ public abstract class PartSpecialExportBus extends IOBusPart {
         var storageService = grid.getStorageService();
         var filter = this.createFilter();
         var context = createTransferContext(storageService, grid.getEnergyService());
-        for (var what : ImmutableList.copyOf(storageService.getCachedInventory())) {
-            if (!filter.isListed(what.getKey())) {
+        for (var what : storageService.getCachedInventory().keySet()) {
+            if (!filter.isListed(what)) {
                 continue;
             }
-            var transferFactory = what.getKey().getAmountPerOperation();
+            var transferFactory = what.getAmountPerOperation();
             long amount = (long) context.getOperationsRemaining() * transferFactory;
-            amount = getExportStrategy().transfer(context, what.getKey(), amount);
+            amount = getExportStrategy().transfer(context, what, amount);
             context.reduceOperationsRemaining(Math.max(1, amount / transferFactory));
             if (!context.hasOperationsLeft()) {
                 break;

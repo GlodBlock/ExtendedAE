@@ -78,7 +78,7 @@
   "gui.extendedae.tag_storage_bus": "Шина хранения по тегам",
   "gui.extendedae.tag_storage_bus.tooltip": "Входные теги",
   "gui.extendedae.tag_storage_bus.desc.01": "& = И               | = ИЛИ",
-  "gui.extendedae.tag_storage_bus.desc.02": "^ = ИСКЛ. ИЛИ    ! = НЕ",
+  "gui.extendedae.tag_storage_bus.desc.02": "^ = ИСКЛ. ИЛИ",
   "gui.extendedae.tag_storage_bus.desc.03": "() Для приоритета * Для совпадений",
   "gui.extendedae.tag_export_bus": "МЭ Шина экспорта по тегам",
   "gui.extendedae.threshold_level_emitter": "МЭ Порог. излучатель уровня",

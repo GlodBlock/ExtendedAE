@@ -1,6 +1,7 @@
 package com.github.glodblock.extendedae.common;
 
 import appeng.items.parts.PartItem;
+import com.github.glodblock.extendedae.common.blocks.BlockCaner;
 import com.github.glodblock.extendedae.common.blocks.BlockExCharger;
 import com.github.glodblock.extendedae.common.blocks.BlockExDrive;
 import com.github.glodblock.extendedae.common.blocks.BlockExInscriber;
@@ -31,6 +32,7 @@ import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
+import com.github.glodblock.extendedae.common.tileentities.TileCaner;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
 import com.github.glodblock.extendedae.common.tileentities.TileExDrive;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
@@ -72,6 +74,7 @@ public class EAEItemAndBlock {
     public static PartItem<PartModStorageBus> MOD_STORAGE_BUS;
     public static PartItem<PartModExportBus> MOD_EXPORT_BUS;
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
+    public static BlockCaner CANER;
     public static BlockFishbig FISHBIG;
 
     public static void init(RegistryHandler regHandler) {
@@ -104,6 +107,7 @@ public class EAEItemAndBlock {
         MOD_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartModStorageBus.class, PartModStorageBus::new);
         MOD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartModExportBus.class, PartModExportBus::new);
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
+        CANER = new BlockCaner();
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -113,6 +117,7 @@ public class EAEItemAndBlock {
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
         regHandler.block("ex_inscriber", EX_INSCRIBER, TileExInscriber.class, TileExInscriber::new);
         regHandler.block("ex_charger", EX_CHARGER, TileExCharger.class, TileExCharger::new);
+        regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);

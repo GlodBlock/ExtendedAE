@@ -28,6 +28,7 @@ import com.github.glodblock.extendedae.common.parts.PartModStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
+import com.github.glodblock.extendedae.common.tileentities.TileCaner;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
 import com.github.glodblock.extendedae.common.tileentities.TileExInterface;
@@ -36,6 +37,7 @@ import com.github.glodblock.extendedae.common.tileentities.TileExPatternProvider
 import com.github.glodblock.extendedae.common.tileentities.TileIngredientBuffer;
 import com.github.glodblock.extendedae.config.EPPConfig;
 import com.github.glodblock.extendedae.container.ContainerActiveFormationPlane;
+import com.github.glodblock.extendedae.container.ContainerCaner;
 import com.github.glodblock.extendedae.container.ContainerExDrive;
 import com.github.glodblock.extendedae.container.ContainerExIOBus;
 import com.github.glodblock.extendedae.container.ContainerExInscriber;
@@ -156,7 +158,8 @@ public class RegistryHandler {
                 ContainerRenamer.TYPE,
                 ContainerModStorageBus.TYPE,
                 ContainerModExportBus.TYPE,
-                ContainerActiveFormationPlane.TYPE
+                ContainerActiveFormationPlane.TYPE,
+                ContainerCaner.TYPE
         };
     }
 
@@ -220,6 +223,14 @@ public class RegistryHandler {
         GenericInternalInventory.SIDED.registerForBlockEntity(
                 (blockEntity, context) -> blockEntity.getInventory(),
                 FCUtil.getTileType(TileIngredientBuffer.class)
+        );
+        ICraftingMachine.SIDED.registerForBlockEntity(
+                (blockEntity, context) -> blockEntity,
+                FCUtil.getTileType(TileCaner.class)
+        );
+        GenericInternalInventory.SIDED.registerForBlockEntity(
+                (blockEntity, context) -> blockEntity.getStuff(),
+                FCUtil.getTileType(TileCaner.class)
         );
     }
 
