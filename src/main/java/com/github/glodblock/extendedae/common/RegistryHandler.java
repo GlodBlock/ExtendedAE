@@ -2,18 +2,26 @@ package com.github.glodblock.extendedae.common;
 
 import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.client.StorageCellModels;
+import appeng.api.features.GridLinkables;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.api.implementations.blockentities.ICrankable;
 import appeng.api.inventories.PartApiLookup;
 import appeng.api.parts.PartModels;
 import appeng.api.storage.MEStorage;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.Upgrades;
 import appeng.block.AEBaseBlockItem;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.GuiText;
+import appeng.hotkeys.HotkeyActions;
+import appeng.hotkeys.InventoryHotkeyAction;
 import appeng.items.AEBaseItem;
+import appeng.items.tools.powered.WirelessTerminalItem;
 import com.github.glodblock.extendedae.EAE;
 import com.github.glodblock.extendedae.common.inventory.InfinityCellInventory;
 import com.github.glodblock.extendedae.common.items.ItemMEPackingTape;
@@ -54,11 +62,13 @@ import com.github.glodblock.extendedae.container.ContainerTagExportBus;
 import com.github.glodblock.extendedae.container.ContainerTagStorageBus;
 import com.github.glodblock.extendedae.container.ContainerThresholdLevelEmitter;
 import com.github.glodblock.extendedae.container.ContainerWirelessConnector;
+import com.github.glodblock.extendedae.container.ContainerWirelessExPAT;
 import com.github.glodblock.extendedae.container.pattern.ContainerCraftingPattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerProcessingPattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerStonecuttingPattern;
 import com.github.glodblock.extendedae.util.FCUtil;
+import com.github.glodblock.extendedae.xmod.wt.WTCommonLoad;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -74,6 +84,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static appeng.api.features.HotkeyAction.WIRELESS_TERMINAL;
 
 public class RegistryHandler {
 
@@ -109,6 +121,10 @@ public class RegistryHandler {
         this.onRegisterTileEntities();
         this.onRegisterContainer();
         this.onRegisterModels();
+        this.onRegisterRandomAPI();
+        if (EAE.checkMod("ae2wtlib")) {
+            WTCommonLoad.init();
+        }
     }
 
     private void onRegisterBlocks() {
@@ -141,26 +157,35 @@ public class RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
-        var wake = new MenuType[] {
-                ContainerExPatternProvider.TYPE,
-                ContainerExInterface.TYPE,
-                ContainerExIOBus.EXPORT_TYPE,
-                ContainerExPatternTerminal.TYPE,
-                ContainerWirelessConnector.TYPE,
-                ContainerIngredientBuffer.TYPE,
-                ContainerExDrive.TYPE,
-                ContainerPatternModifier.TYPE,
-                ContainerExMolecularAssembler.TYPE,
-                ContainerExInscriber.TYPE,
-                ContainerTagStorageBus.TYPE,
-                ContainerTagExportBus.TYPE,
-                ContainerThresholdLevelEmitter.TYPE,
-                ContainerRenamer.TYPE,
-                ContainerModStorageBus.TYPE,
-                ContainerModExportBus.TYPE,
-                ContainerActiveFormationPlane.TYPE,
-                ContainerCaner.TYPE
-        };
+        registerMenuType("ex_pattern_provider", ContainerExPatternProvider.TYPE);
+        registerMenuType("ex_interface", ContainerExInterface.TYPE);
+        registerMenuType("ex_export_bus", ContainerExIOBus.EXPORT_TYPE);
+        registerMenuType("ex_import_bus", ContainerExIOBus.IMPORT_TYPE);
+        registerMenuType("ex_pattern_access_terminal", ContainerExPatternTerminal.TYPE);
+        registerMenuType("wireless_connector", ContainerWirelessConnector.TYPE);
+        registerMenuType("ingredient_buffer", ContainerIngredientBuffer.TYPE);
+        registerMenuType("ex_drive", ContainerExDrive.TYPE);
+        registerMenuType("pattern_modifier", ContainerPatternModifier.TYPE);
+        registerMenuType("ex_molecular_assembler", ContainerExMolecularAssembler.TYPE);
+        registerMenuType("ex_inscriber", ContainerExInscriber.TYPE);
+        registerMenuType("tag_storage_bus", ContainerTagStorageBus.TYPE);
+        registerMenuType("tag_export_bus", ContainerTagExportBus.TYPE);
+        registerMenuType("threshold_level_emitter", ContainerThresholdLevelEmitter.TYPE);
+        registerMenuType("renamer", ContainerRenamer.TYPE);
+        registerMenuType("mod_storage_bus", ContainerModStorageBus.TYPE);
+        registerMenuType("mod_export_bus", ContainerModExportBus.TYPE);
+        registerMenuType("active_formation_plane", ContainerActiveFormationPlane.TYPE);
+        registerMenuType("caner", ContainerCaner.TYPE);
+        registerMenuType("wireless_ex_pat", ContainerWirelessExPAT.TYPE);
+        if (EAE.checkMod("ae2wtlib")) {
+            WTCommonLoad.container();
+        }
+    }
+    
+    private void registerMenuType(String id, MenuType<?> menuType) {
+        if (!BuiltInRegistries.MENU.containsKey(AppEng.makeId(id))) {
+            Registry.register(BuiltInRegistries.MENU, AppEng.makeId(id), menuType);
+        }
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -187,8 +212,43 @@ public class RegistryHandler {
         }
         this.registerStorageHandler();
         this.registerCapabilities();
+        this.registerUpgrade();
         this.initPackageList();
         this.bindItemTab();
+    }
+
+    private void registerUpgrade() {
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE_PART.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE_PART.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.INFINITY_CELL, 1, "item.expatternprovider.infinity_cell");
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 5, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 4, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 5, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 4, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_CONNECTOR, 4, "gui.expatternprovider.wireless_connect");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_ASSEMBLER, 5, "gui.expatternprovider.ex_molecular_assembler");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_INSCRIBER, 4, "gui.expatternprovider.ex_inscriber");
+        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
+        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1, "item.expatternprovider.tag_storage_bus");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 1, "item.expatternprovider.tag_export_bus");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 4, "item.expatternprovider.tag_export_bus");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.THRESHOLD_LEVEL_EMITTER, 1, "item.expatternprovider.threshold_level_emitter");
+        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1, "item.expatternprovider.mod_storage_bus");
+        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1, "item.expatternprovider.mod_storage_bus");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 1, "item.expatternprovider.mod_export_bus");
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 4, "item.expatternprovider.mod_export_bus");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 1, "item.expatternprovider.active_formation_plane");
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 5, "item.expatternprovider.active_formation_plane");
+        Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
     }
 
     @SuppressWarnings("all")
@@ -251,6 +311,15 @@ public class RegistryHandler {
         PartModels.registerModels(PartModStorageBus.MODEL_BASE);
         PartModels.registerModels(PartModExportBus.MODEL_BASE);
         PartModels.registerModels(PartActiveFormationPlane.MODELS);
+    }
+
+    private void onRegisterRandomAPI() {
+        GridLinkables.register(EAEItemAndBlock.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
+        if (!EAE.checkMod("ae2wtlib")) {
+            HotkeyActions.register(new InventoryHotkeyAction(EAEItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EAEItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+        } else {
+            HotkeyActions.register(new InventoryHotkeyAction(EAEItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EAEItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
+        }
     }
 
     private void bindItemTab() {

@@ -1,6 +1,8 @@
 package com.github.glodblock.extendedae.common;
 
 import appeng.items.parts.PartItem;
+import appeng.items.tools.powered.WirelessTerminalItem;
+import com.github.glodblock.extendedae.EAE;
 import com.github.glodblock.extendedae.common.blocks.BlockCaner;
 import com.github.glodblock.extendedae.common.blocks.BlockCrystalFixer;
 import com.github.glodblock.extendedae.common.blocks.BlockExCharger;
@@ -22,6 +24,7 @@ import com.github.glodblock.extendedae.common.items.ItemPatternAccessTerminalUpg
 import com.github.glodblock.extendedae.common.items.ItemPatternModifier;
 import com.github.glodblock.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.github.glodblock.extendedae.common.items.ItemWirelessConnectTool;
+import com.github.glodblock.extendedae.common.items.tools.ItemWirelessExPAT;
 import com.github.glodblock.extendedae.common.parts.PartActiveFormationPlane;
 import com.github.glodblock.extendedae.common.parts.PartExExportBus;
 import com.github.glodblock.extendedae.common.parts.PartExImportBus;
@@ -78,6 +81,7 @@ public class EAEItemAndBlock {
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
     public static BlockCaner CANER;
     public static BlockCrystalFixer CRYSTAL_FIXER;
+    public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static BlockFishbig FISHBIG;
 
     public static void init(RegistryHandler regHandler) {
@@ -112,6 +116,18 @@ public class EAEItemAndBlock {
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         CANER = new BlockCaner();
         CRYSTAL_FIXER = new BlockCrystalFixer();
+        if (EAE.checkMod("ae2wtlib")) {
+            try {
+                //To prevent classloader issue
+                WIRELESS_EX_PAT = (WirelessTerminalItem) Class.forName("com.github.glodblock.extendedae.xmod.wt.ItemUWirelessExPAT")
+                        .getDeclaredConstructor()
+                        .newInstance();
+            } catch (Exception e) {
+                WIRELESS_EX_PAT = new ItemWirelessExPAT();
+            }
+        } else {
+            WIRELESS_EX_PAT = new ItemWirelessExPAT();
+        }
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -145,6 +161,7 @@ public class EAEItemAndBlock {
         regHandler.item("mod_storage_bus", MOD_STORAGE_BUS);
         regHandler.item("mod_export_bus", MOD_EXPORT_BUS);
         regHandler.item("active_formation_plane", ACTIVE_FORMATION_PLANE);
+        regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
     }
 
 }

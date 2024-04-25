@@ -33,6 +33,7 @@
   "item.extendedae.mod_storage_bus": "ME Mod Storage Bus",
   "item.extendedae.mod_export_bus": "ME Mod Export Bus",
   "item.extendedae.active_formation_plane": "ME Active Formation Plane",
+  "item.extendedae.wireless_ex_pat": "Wireless Extended Pattern Access Terminal",
   "infinity.tooltip": "It is an infinity source.",
   "packaged_device.error.tooltip": "Invalid",
   "packaged_device.tooltip": "Device: %s",

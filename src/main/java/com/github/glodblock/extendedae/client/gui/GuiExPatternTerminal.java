@@ -25,7 +25,6 @@ import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
 import com.github.glodblock.extendedae.client.button.HighlightButton;
 import com.github.glodblock.extendedae.container.ContainerExPatternTerminal;
-import com.github.glodblock.extendedae.util.Ae2ReflectClient;
 import com.google.common.collect.HashMultimap;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -49,11 +48,21 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 // 1.12holic
-public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTerminal> {
+public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends AEBaseScreen<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiExPatternTerminal.class);
 
     private static final int GUI_WIDTH = 209;
@@ -120,9 +129,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
     private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
         @Override
         public int hashCode(ItemStack o) {
-            return o.getItem().hashCode()
-                    ^ o.getDamageValue()
-                    ^ (o.hasTag() ? o.getTag().hashCode() : 0xFFFFFFFF);
+            return o.getItem().hashCode() ^ (o.hasTag() ? o.getTag().hashCode() : 0xFFFFFFFF);
         }
 
         @Override
@@ -139,8 +146,7 @@ public class GuiExPatternTerminal extends AEBaseScreen<ContainerExPatternTermina
 
     private final ServerSettingToggleButton<ShowPatternProviders> showPatternProviders;
 
-    public GuiExPatternTerminal(ContainerExPatternTerminal menu, Inventory playerInventory,
-                                   Component title, ScreenStyle style) {
+    public GuiExPatternTerminal(T menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.scrollbar = widgets.addScrollBar("scrollbar");
         this.imageWidth = GUI_WIDTH;

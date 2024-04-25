@@ -24,6 +24,7 @@ import com.github.glodblock.extendedae.client.gui.GuiTagStorageBus;
 import com.github.glodblock.extendedae.client.gui.GuiThresholdLevelEmitter;
 import com.github.glodblock.extendedae.client.gui.GuiWirelessConnector;
 import com.github.glodblock.extendedae.client.gui.GuiCaner;
+import com.github.glodblock.extendedae.client.gui.GuiWirelessExPAT;
 import com.github.glodblock.extendedae.client.gui.pattern.GuiCraftingPattern;
 import com.github.glodblock.extendedae.client.gui.pattern.GuiProcessingPattern;
 import com.github.glodblock.extendedae.client.gui.pattern.GuiSmithingTablePattern;
@@ -63,11 +64,13 @@ import com.github.glodblock.extendedae.container.ContainerTagExportBus;
 import com.github.glodblock.extendedae.container.ContainerTagStorageBus;
 import com.github.glodblock.extendedae.container.ContainerThresholdLevelEmitter;
 import com.github.glodblock.extendedae.container.ContainerWirelessConnector;
+import com.github.glodblock.extendedae.container.ContainerWirelessExPAT;
 import com.github.glodblock.extendedae.container.pattern.ContainerCraftingPattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerProcessingPattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.github.glodblock.extendedae.container.pattern.ContainerStonecuttingPattern;
 import com.github.glodblock.extendedae.util.FCUtil;
+import com.github.glodblock.extendedae.xmod.wt.WTClientLoad;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -84,6 +87,9 @@ public class ClientRegistryHandler {
         this.registerModels();
         this.registerColorHandler();
         this.setBlockRenderLayer();
+        if (EAE.checkMod("ae2wtlib")) {
+            WTClientLoad.init();
+        }
     }
 
     private void registerGui() {
@@ -91,7 +97,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExInterface.TYPE, GuiExInterface::new, "/screens/ex_interface.json");
         InitScreens.register(ContainerExIOBus.EXPORT_TYPE, GuiExIOBus::new, "/screens/ex_export_bus.json");
         InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
-        InitScreens.register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
+        InitScreens.<ContainerExPatternTerminal, GuiExPatternTerminal<ContainerExPatternTerminal>>register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
         InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
         InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
         InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
@@ -106,6 +112,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerModExportBus.TYPE, GuiModExportBus::new, "/screens/mod_export_bus.json");
         InitScreens.register(ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
         InitScreens.register(ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
+        InitScreens.register(ContainerWirelessExPAT.TYPE, GuiWirelessExPAT::new, "/screens/ex_pattern_access_terminal.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);

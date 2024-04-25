@@ -16,10 +16,10 @@
 	"icon": "assets/extendedae/logo.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"ae2": [
 			"com.github.glodblock.extendedae.EAEServer"
 		],
-		"client": [
+		"ae2:client": [
 			"com.github.glodblock.extendedae.EAEClient"
 		],
 		"fabric-datagen": [
