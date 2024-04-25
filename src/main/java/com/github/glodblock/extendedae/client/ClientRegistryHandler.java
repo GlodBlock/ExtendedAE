@@ -30,6 +30,7 @@ import com.github.glodblock.extendedae.client.gui.pattern.GuiSmithingTablePatter
 import com.github.glodblock.extendedae.client.gui.pattern.GuiStonecuttingPattern;
 import com.github.glodblock.extendedae.client.model.ExDriveModel;
 import com.github.glodblock.extendedae.client.model.ExPlaneModel;
+import com.github.glodblock.extendedae.client.render.tesr.CrystalFixerTESR;
 import com.github.glodblock.extendedae.client.render.tesr.ExChargerTESR;
 import com.github.glodblock.extendedae.client.render.tesr.ExDriveTESR;
 import com.github.glodblock.extendedae.client.render.tesr.ExInscriberTESR;
@@ -38,6 +39,7 @@ import com.github.glodblock.extendedae.client.render.tesr.IngredientBufferTESR;
 import com.github.glodblock.extendedae.client.render.tesr.CanerTESR;
 import com.github.glodblock.extendedae.common.EAEItemAndBlock;
 import com.github.glodblock.extendedae.common.tileentities.TileCaner;
+import com.github.glodblock.extendedae.common.tileentities.TileCrystalFixer;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
 import com.github.glodblock.extendedae.common.tileentities.TileExDrive;
 import com.github.glodblock.extendedae.common.tileentities.TileExInscriber;
@@ -122,6 +124,7 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(FCUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
         BlockEntityRenderers.register(FCUtil.getTileType(TileCaner.class), CanerTESR::new);
+        BlockEntityRenderers.register(FCUtil.getTileType(TileCrystalFixer.class), CrystalFixerTESR::new);
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new SimpleModelLoader<>(EAE.id("block/ex_drive"), ExDriveModel::new));
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new SimpleModelLoader<>(EAE.id("part/active_formation_plane"), () -> new ExPlaneModel(EAE.id("part/active_formation_plane"))));
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new SimpleModelLoader<>(EAE.id("part/active_formation_plane_on"), () -> new ExPlaneModel(EAE.id("part/active_formation_plane_on"))));
