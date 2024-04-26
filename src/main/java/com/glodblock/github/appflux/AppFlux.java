@@ -1,6 +1,6 @@
 package com.glodblock.github.appflux;
 
-import appeng.capabilities.AppEngCapabilities;
+import appeng.api.AECapabilities;
 import com.glodblock.github.appflux.client.AFClientRegistryHandler;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
@@ -49,11 +49,11 @@ public class AppFlux {
         }
         bus.addListener(EventPriority.LOWEST, (RegisterCapabilitiesEvent event) -> {
             for (var block : BuiltInRegistries.BLOCK) {
-                if (event.isBlockRegistered(AppEngCapabilities.GENERIC_INTERNAL_INV, block)) {
+                if (event.isBlockRegistered(AECapabilities.GENERIC_INTERNAL_INV, block)) {
                     event.registerBlock(
                             Capabilities.EnergyStorage.BLOCK,
                             (level, pos, state, blockEntity, context) -> {
-                                var genericInv = level.getCapability(AppEngCapabilities.GENERIC_INTERNAL_INV, pos, state, blockEntity, context);
+                                var genericInv = level.getCapability(AECapabilities.GENERIC_INTERNAL_INV, pos, state, blockEntity, context);
                                 if (genericInv != null) {
                                     return new FEGenericStackInvStorage(genericInv);
                                 }
