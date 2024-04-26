@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public enum EnergyType {
 
-    FE("forge"), GTEU("gtceu");
+    FE("neoforge"), GTEU("gtceu");
 
     private final String mod;
 
@@ -23,7 +23,7 @@ public enum EnergyType {
     }
 
     public Component translate() {
-        return Component.translatable("appfkux.type." + this.name().toLowerCase() + ".name");
+        return Component.translatable("appflux.type." + this.name().toLowerCase() + ".name");
     }
 
     public ResourceLocation getIcon() {

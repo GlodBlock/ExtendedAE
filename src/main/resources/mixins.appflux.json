@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.glodblock.github.appflux.mixins",
+  "refmap": "mixins.appflux.refmap.json",
+  "plugin": "com.glodblock.github.appflux.mixins.MixinConfig",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinChargerBlockEntity"
+  ],
+  "client": [],
+  "server": []
+}

@@ -10,6 +10,9 @@ displayName="${mod_name}"
 authors="${mod_authors}"
 logoFile="logo.png"
 
+[[mixins]]
+    config="mixins.appflux.json"
+
 description='''${mod_description}'''
 [[dependencies.appflux]]
     modId="neoforge"
