@@ -6,7 +6,8 @@
   "plugin": "com.glodblock.github.appflux.mixins.MixinConfig",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinChargerBlockEntity"
+    "MixinChargerBlockEntity",
+    "MixinCreativeEnergyCellBlockEntity"
   ],
   "client": [],
   "server": []

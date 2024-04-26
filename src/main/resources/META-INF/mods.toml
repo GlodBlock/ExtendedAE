@@ -9,11 +9,11 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 logoFile="logo.png"
+description='''${mod_description}'''
 
 [[mixins]]
     config="mixins.appflux.json"
 
-description='''${mod_description}'''
 [[dependencies.appflux]]
     modId="neoforge"
     type="REQUIRED"

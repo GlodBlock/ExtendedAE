@@ -3,6 +3,7 @@ package com.glodblock.github.appflux.common.parts;
 import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.IGridTickable;
@@ -16,8 +17,10 @@ import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
+import com.glodblock.github.appflux.common.me.energy.EnergyDistributor;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -86,7 +89,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
             if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
                 var accepter = AFUtil.findCapability(te, Capabilities.EnergyStorage.BLOCK, d.getOpposite());
                 if (accepter != null) {
-                    var toAdd = accepter.receiveEnergy(Integer.MAX_VALUE, true);
+                    var toAdd = accepter.receiveEnergy(AFUtil.clampLong(AFConfig.getFluxAccessorIO()), true);
                     if (toAdd > 0) {
                         var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, this.getSource());
                         if (drained > 0) {
@@ -98,6 +101,9 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
                         }
                     }
                 }
+            }
+            if (AFConfig.selfCharge() && gird != null) {
+                EnergyDistributor.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
         }
         return TickRateModulation.SAME;

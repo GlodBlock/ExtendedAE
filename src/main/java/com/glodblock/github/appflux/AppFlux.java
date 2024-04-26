@@ -5,13 +5,16 @@ import com.glodblock.github.appflux.client.AFClientRegistryHandler;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -31,6 +34,7 @@ public class AppFlux {
     public AppFlux(IEventBus bus) {
         assert INSTANCE == null;
         INSTANCE = this;
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AFConfig.SPEC);
         bus.addListener((RegisterEvent e) -> {
             if (e.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
                 AFRegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));
