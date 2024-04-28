@@ -37,6 +37,7 @@ import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
@@ -90,6 +91,7 @@ public class EPPItemAndBlock {
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
     public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
+    public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -127,6 +129,7 @@ public class EPPItemAndBlock {
         FISHBIG = new BlockFishbig();
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
         PRECISE_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartPreciseStorageBus.class, PartPreciseStorageBus::new);
+        THRESHOLD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartThresholdExportBus.class, PartThresholdExportBus::new);
         if (ModList.get().isLoaded("ae2wtlib")) {
             try {
                 //To prevent classloader issue
@@ -175,6 +178,7 @@ public class EPPItemAndBlock {
         regHandler.item("precise_export_bus", PRECISE_EXPORT_BUS);
         regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
         regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
+        regHandler.item("threshold_export_bus", THRESHOLD_EXPORT_BUS);
     }
 
 }

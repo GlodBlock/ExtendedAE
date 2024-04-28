@@ -519,6 +519,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             Collections.sort(containers);
             for (var container : containers) {
                 var inventory = container.getInventory();
+                //noinspection SizeReplaceableByIsEmpty
                 if (inventory.size() > 0) {
                     var info = this.infoMap.get(container.getServerId());
                     var btn = new HighlightButton();
