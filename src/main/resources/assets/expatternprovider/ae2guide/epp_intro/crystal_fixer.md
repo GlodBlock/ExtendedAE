@@ -1,7 +1,7 @@
 ---
 navigation:
     parent: epp_intro/epp_intro-index.md
-    title: ME Crystal Growth Chamber
+    title: ME Crystal Fixer
     icon: expatternprovider:crystal_fixer
 categories:
 - extended devices
