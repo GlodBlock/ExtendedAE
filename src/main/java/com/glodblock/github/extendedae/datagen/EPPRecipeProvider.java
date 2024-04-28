@@ -29,7 +29,7 @@ public class EPPRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> c) {
-        // Extended Parttern Provider
+        // Extended Pattern Provider
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_PATTERN_PROVIDER)
                 .pattern("PC")
@@ -336,7 +336,7 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.MOD_EXPORT_BUS))
                 .save(c, ExtendedAE.id("mod_export_bus"));
 
-        // Mod Export Bus
+        // Active Formation Plane
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, EPPItemAndBlock.ACTIVE_FORMATION_PLANE)
                 .requires(AEParts.FORMATION_PLANE)
@@ -411,6 +411,16 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('P', AEItems.CALCULATION_PROCESSOR)
                 .unlockedBy(C, has(AEParts.STORAGE_BUS))
                 .save(c, ExtendedAE.id("precise_storage_bus"));
+
+        // Threshold Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.THRESHOLD_EXPORT_BUS)
+                .pattern("LCE")
+                .define('L', AEParts.LEVEL_EMITTER)
+                .define('C', AEItems.LOGIC_PROCESSOR)
+                .define('E', AEParts.EXPORT_BUS)
+                .unlockedBy(C, has(AEParts.LEVEL_EMITTER))
+                .save(c, ExtendedAE.id("threshold_export_bus"));
 
         // Fishbig
         ShapedRecipeBuilder
