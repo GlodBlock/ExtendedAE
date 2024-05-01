@@ -20,6 +20,9 @@ public class AFConfig {
     private static final ForgeConfigSpec.BooleanValue NETWORK_CHARGE = BUILDER
             .comment("Allow Flux Accessor to charge ME network with stored FE.")
             .define("enable", false);
+    private static final ForgeConfigSpec.BooleanValue FE_IMPORT = BUILDER
+            .comment("Allow ME Import Bus to pull FE.")
+            .define("enable_FE_pull", false);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
@@ -35,15 +38,21 @@ public class AFConfig {
         return selfCharge;
     }
 
+    public static boolean pullFE() {
+        return pullFE;
+    }
+
     private static int fluxPerByte;
     private static long fluxAccessorIO;
     private static boolean selfCharge;
+    private static boolean pullFE;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         fluxPerByte = FLUX_PER_BYTE.get();
         fluxAccessorIO = FLUX_ACCESSOR_IO.get();
         selfCharge = NETWORK_CHARGE.get();
+        pullFE = FE_IMPORT.get();
     }
 
 }
