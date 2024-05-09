@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(CreativeEnergyCellBlockEntity.class)
-public class MixinCreativeEnergyCellBlockEntity {
+public abstract class MixinCreativeEnergyCellBlockEntity {
 
     /**
      * @author GlodBlock

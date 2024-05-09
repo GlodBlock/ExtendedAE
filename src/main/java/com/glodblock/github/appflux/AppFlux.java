@@ -6,6 +6,7 @@ import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.util.AFUtil;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -60,7 +61,7 @@ public class AppFlux {
                 @NotNull
                 @Override
                 public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction side) {
-                    if (capability == ForgeCapabilities.ENERGY) {
+                    if (capability == ForgeCapabilities.ENERGY && AFUtil.shouldTryCast(blockEntity, side)) {
                         return blockEntity.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
                                 .lazyMap(FEGenericStackInvStorage::new)
                                 .cast();

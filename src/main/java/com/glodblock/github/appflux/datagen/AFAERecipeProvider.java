@@ -186,6 +186,12 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .define('I', AFTags.RESIN_INGOT)
                 .unlockedBy(C, has(AFItemAndBlock.HARDEN_INSULATING_RESIN))
                 .save(consumer, AppFlux.id("fe_housing"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AFItemAndBlock.INDUCTION_CARD)
+                .requires(AFItemAndBlock.REDSTONE_CRYSTAL)
+                .requires(AEItems.BASIC_CARD)
+                .unlockedBy(C, has(AEItems.BASIC_CARD))
+                .save(consumer, AppFlux.id("induction_card"));
         addFECellRecipe(consumer, AFItemAndBlock.CORE_1k, AFItemAndBlock.FE_CELL_1k, "1k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.FE_CELL_4k, "4k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");

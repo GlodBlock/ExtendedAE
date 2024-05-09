@@ -24,6 +24,7 @@ public class AFClientRegistryHandler {
 
     public void init() {
         AEKeyRendering.register(FluxKeyType.TYPE, FluxKey.class, FluxKeyRenderHandler.INSTANCE);
+
     }
 
 }
