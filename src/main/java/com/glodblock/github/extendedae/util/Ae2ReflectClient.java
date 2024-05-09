@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.util;
 
 import appeng.client.gui.widgets.NumberEntryWidget;
 import appeng.recipes.handlers.InscriberRecipe;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.xmod.LoadList;
 import com.glodblock.github.glodium.reflect.ReflectKit;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -59,7 +60,7 @@ public class Ae2ReflectClient {
         try {
             return (ServerLevelAccessor) cFakeForwardingServerLevel.newInstance(world);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            ExtendedAE.LOGGER.error("Fail to construct fake world!", e);
         }
         return null;
     }

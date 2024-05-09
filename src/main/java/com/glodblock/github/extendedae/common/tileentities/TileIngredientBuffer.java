@@ -4,22 +4,15 @@ import appeng.api.stacks.AEKeyType;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.capabilities.Capabilities;
 import appeng.helpers.externalstorage.GenericStackInv;
-import appeng.util.SettingsFrom;
-import appeng.util.helpers.ItemComparisonHelper;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.xmod.ExternalTypes;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -50,39 +43,6 @@ public class TileIngredientBuffer extends AEBaseBlockEntity {
     }
 
     @Override
-    public InteractionResult disassembleWithWrench(Player player, Level level, BlockHitResult hitResult, ItemStack wrench) {
-        var pos = hitResult.getBlockPos();
-        var state = level.getBlockState(pos);
-        var block = state.getBlock();
-
-        if (level instanceof ServerLevel serverLevel) {
-            // Drops of the block itself (without extra block entity inventory)
-            var drops = Block.getDrops(state, serverLevel, pos, this, player, wrench);
-
-            var op = new ItemStack(state.getBlock());
-            for (var ol : drops) {
-                if (ItemComparisonHelper.isEqualItemType(ol, op)) {
-                    var tag = new CompoundTag();
-                    exportSettings(SettingsFrom.DISMANTLE_ITEM, tag, player);
-                    if (!tag.isEmpty()) {
-                        ol.setTag(tag);
-                    }
-                    break;
-                }
-            }
-            for (var item : drops) {
-                player.getInventory().placeItemBackInInventory(item);
-            }
-        }
-
-        block.playerWillDestroy(level, pos, state, player);
-        level.removeBlock(pos, false);
-        block.destroy(level, pos, getBlockState());
-
-        return InteractionResult.sidedSuccess(level.isClientSide());
-    }
-
-    @Override
     public void addAdditionalDrops(Level level, BlockPos pos, List<ItemStack> drops) {
         super.addAdditionalDrops(level, pos, drops);
         for (int index = 0; index < this.buffer.size(); index ++) {
@@ -97,6 +57,12 @@ public class TileIngredientBuffer extends AEBaseBlockEntity {
     public void saveAdditional(CompoundTag data) {
         super.saveAdditional(data);
         this.buffer.writeToChildTag(data, "buffer");
+    }
+
+    @Override
+    public void clearContent() {
+        super.clearContent();
+        this.buffer.clear();
     }
 
     @Override
