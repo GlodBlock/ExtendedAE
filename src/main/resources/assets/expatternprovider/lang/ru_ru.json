@@ -17,7 +17,7 @@
   "item.expatternprovider.pattern_provider_upgrade": "Улучшение поставщика шаблонов",
   "item.expatternprovider.interface_upgrade": "Улучшение интерфейса",
   "item.expatternprovider.io_bus_upgrade": "Улучшение шины импорта/экспорта",
-  "item.expatternprovider.infinity_cell_name": "МЭ Бесконечная %s ячейка",
+  "item.expatternprovider.infinity_cell_name": "МЭ Бесконечная ячейка (%s)",
   "item.expatternprovider.infinity_cell": "МЭ Бесконечная ячейка",
   "item.expatternprovider.ex_export_bus_part": "МЭ Расширенная шина экспорта",
   "item.expatternprovider.ex_import_bus_part": "МЭ Расширенная шина импорта",
