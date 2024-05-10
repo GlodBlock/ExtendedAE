@@ -43,6 +43,12 @@ public class TileIngredientBuffer extends AEBaseBlockEntity {
     }
 
     @Override
+    public void clearContent() {
+        super.clearContent();
+        this.buffer.clear();
+    }
+
+    @Override
     public void saveAdditional(CompoundTag data) {
         super.saveAdditional(data);
         this.buffer.writeToChildTag(data, "buffer");

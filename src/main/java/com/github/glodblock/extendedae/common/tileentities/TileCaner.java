@@ -222,6 +222,12 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     }
 
     @Override
+    public void clearContent() {
+        super.clearContent();
+        this.stuff.clear();
+    }
+
+    @Override
     protected boolean readFromStream(FriendlyByteBuf data) {
         var changed = super.readFromStream(data);
         this.container.setItemDirect(0, data.readItem());

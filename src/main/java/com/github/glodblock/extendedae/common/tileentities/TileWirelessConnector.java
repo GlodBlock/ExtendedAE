@@ -181,6 +181,12 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     }
 
     @Override
+    public void clearContent() {
+        super.clearContent();
+        this.upgrades.clear();
+    }
+
+    @Override
     public @NotNull AEColor getColor() {
         return this.color;
     }
