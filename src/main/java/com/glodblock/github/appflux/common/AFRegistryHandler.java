@@ -1,8 +1,10 @@
 package com.glodblock.github.appflux.common;
 
+import appeng.api.AECapabilities;
 import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.StorageCellModels;
+import appeng.api.networking.IInWorldGridNodeHost;
 import appeng.api.parts.PartModels;
 import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import appeng.api.stacks.AEKeyTypes;
@@ -50,6 +52,9 @@ public class AFRegistryHandler extends RegistryHandler {
 
     public AFRegistryHandler() {
         super(AppFlux.MODID);
+        this.cap(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST, (object, context) -> object);
+        this.cap(TileFluxAccessor.class, Capabilities.EnergyStorage.BLOCK, (te, side) -> te.getEnergyStorage());
+        this.cap(IFluxCell.class, Capabilities.EnergyStorage.ITEM, (cell, v) -> ((IFluxCell) cell.getItem()).getCapability(cell, v));
     }
 
     public <T extends AEBaseBlockEntity> void block(String name, AEBaseEntityBlock<T> block, Class<T> clazz, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -107,18 +112,9 @@ public class AFRegistryHandler extends RegistryHandler {
     }
 
     @SubscribeEvent
-    public void registerCap(RegisterCapabilitiesEvent event) {
-        for (var e : this.items) {
-            var item = e.getRight();
-            if (item instanceof IFluxCell cell) {
-                event.registerItem(Capabilities.EnergyStorage.ITEM, cell, item);
-            }
-        }
-        event.registerBlockEntity(
-                Capabilities.EnergyStorage.BLOCK,
-                GlodUtil.getTileType(TileFluxAccessor.class),
-                (te, side) -> te.getEnergyStorage()
-        );
+    @Override
+    public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        super.onRegisterCapabilities(event);
     }
 
     @SubscribeEvent

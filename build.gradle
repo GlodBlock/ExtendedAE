@@ -72,7 +72,7 @@ repositories {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
-    implementation "curse.maven:glodium-957920:5173720"
+    implementation "curse.maven:glodium-957920:5337083"
     implementation "appeng:appliedenergistics2-neoforge:17.13.0-beta"
     compileOnly "curse.maven:mekanism-268560:5257006"
     compileOnly "curse.maven:wireless-chargers-510656:4985608"
