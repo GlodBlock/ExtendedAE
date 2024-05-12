@@ -7,7 +7,6 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.me.helpers.IGridConnectedBlockEntity;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import net.minecraft.core.Direction;
@@ -60,16 +59,16 @@ public class AFUtil {
         return null;
     }
 
-    public static boolean shouldTryCast(BlockEntity tile, Direction side) {
+    public static IUpgradeableObject isUpgradeable(BlockEntity tile, Direction side) {
         if (tile instanceof IUpgradeableObject upgradeable) {
-            return upgradeable.isUpgradedWith(AFItemAndBlock.INDUCTION_CARD);
+            return upgradeable;
         }
         if (tile instanceof IPartHost host) {
             if (host.getPart(side) instanceof IUpgradeableObject upgradeable) {
-                return upgradeable.isUpgradedWith(AFItemAndBlock.INDUCTION_CARD);
+                return upgradeable;
             }
         }
-        return true;
+        return null;
     }
 
 }
