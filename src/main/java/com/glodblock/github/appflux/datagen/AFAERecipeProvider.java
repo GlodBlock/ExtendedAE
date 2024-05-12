@@ -200,6 +200,12 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .define('I', AFTags.RESIN_INGOT)
                 .unlockedBy(C, has(AFItemAndBlock.HARDEN_INSULATING_RESIN))
                 .save(consumer, AppFlux.id("fe_housing"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AFItemAndBlock.INDUCTION_CARD)
+                .requires(AFItemAndBlock.REDSTONE_CRYSTAL)
+                .requires(AEItems.BASIC_CARD)
+                .unlockedBy(C, has(AEItems.BASIC_CARD))
+                .save(consumer, AppFlux.id("induction_card"));
         addFECellRecipe(consumer, AFItemAndBlock.CORE_1k, AFItemAndBlock.FE_CELL_1k, "1k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.FE_CELL_4k, "4k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");
@@ -225,26 +231,6 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(core)
                 .unlockedBy(C, has(AFItemAndBlock.FE_HOUSING))
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
-    }
-
-    private void addGTEUCellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, result)
-                .pattern("GDG")
-                .pattern("DXD")
-                .pattern("III")
-                .define('D', AFItemAndBlock.CHARGED_REDSTONE)
-                .define('G', AEBlocks.QUARTZ_GLASS)
-                .define('I', ConventionTags.IRON_INGOT)
-                .define('X', core)
-                .unlockedBy(C, has(AFItemAndBlock.CHARGED_REDSTONE))
-                .save(consumer, AppFlux.id(id + "_gteu_cell"));
-        ShapelessRecipeBuilder
-                .shapeless(RecipeCategory.MISC, result)
-                .requires(AFItemAndBlock.GTEU_HOUSING)
-                .requires(core)
-                .unlockedBy(C, has(AFItemAndBlock.GTEU_HOUSING))
-                .save(consumer, AppFlux.id(id + "_gteu_cell_assemble"));
     }
 
 }

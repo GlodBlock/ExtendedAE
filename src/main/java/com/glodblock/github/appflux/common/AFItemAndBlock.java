@@ -3,6 +3,7 @@ package com.glodblock.github.appflux.common;
 import appeng.items.parts.PartItem;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
+import com.glodblock.github.appflux.common.items.ItemInductionCard;
 import com.glodblock.github.appflux.common.items.NormalItem;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
@@ -38,9 +39,9 @@ public class AFItemAndBlock {
     public static ItemFECell FE_CELL_16k;
     public static ItemFECell FE_CELL_64k;
     public static ItemFECell FE_CELL_256k;
-    public static NormalItem GTEU_HOUSING;
     public static BlockFluxAccessor FLUX_ACCESSOR;
     public static PartItem<PartFluxAccessor> PART_FLUX_ACCESSOR;
+    public static ItemInductionCard INDUCTION_CARD;
 
     public static void init(AFRegistryHandler regHandler) {
         CORE_1k = new NormalItem();
@@ -71,6 +72,7 @@ public class AFItemAndBlock {
                 tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.2").withStyle(ChatFormatting.GRAY));
             }
         };
+        INDUCTION_CARD = new ItemInductionCard();
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
         regHandler.item("core_16k", CORE_16k);
@@ -92,6 +94,7 @@ public class AFItemAndBlock {
         regHandler.item("part_flux_accessor", PART_FLUX_ACCESSOR);
         regHandler.item("diamond_dust", DIAMOND_DUST);
         regHandler.item("emerald_dust", EMERALD_DUST);
+        regHandler.item("induction_card", INDUCTION_CARD);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
     }
 

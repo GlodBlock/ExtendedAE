@@ -6,8 +6,14 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinChargerBlockEntity",
-    "MixinCreativeEnergyCellBlockEntity"
+    "MixinCreativeEnergyCellBlockEntity",
+    "MixinInterfaceLogic",
+    "MixinPatternProviderLogic",
+    "MixinPatternProviderLogicHost",
+    "MixinPatternProviderMenu"
   ],
-  "client": [],
+  "client": [
+    "MixinPatternProviderScreen"
+  ],
   "server": []
 }

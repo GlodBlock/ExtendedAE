@@ -6,6 +6,7 @@ import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.util.AFUtil;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -56,10 +57,12 @@ public class AppFlux {
                 if (event.isBlockRegistered(AECapabilities.GENERIC_INTERNAL_INV, block)) {
                     event.registerBlock(
                             Capabilities.EnergyStorage.BLOCK,
-                            (level, pos, state, blockEntity, context) -> {
-                                var genericInv = level.getCapability(AECapabilities.GENERIC_INTERNAL_INV, pos, state, blockEntity, context);
-                                if (genericInv != null) {
-                                    return new FEGenericStackInvStorage(genericInv);
+                            (level, pos, state, tile, side) -> {
+                                if (AFUtil.shouldTryCast(tile, side)) {
+                                    var genericInv = level.getCapability(AECapabilities.GENERIC_INTERNAL_INV, pos, state, tile, side);
+                                    if (genericInv != null) {
+                                        return new FEGenericStackInvStorage(genericInv);
+                                    }
                                 }
                                 return null;
                             },
