@@ -3,8 +3,10 @@ package com.glodblock.github.extendedae.common;
 import appeng.items.parts.PartItem;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.blocks.BlockBuddingEntro;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
 import com.glodblock.github.extendedae.common.blocks.BlockCrystalFixer;
+import com.glodblock.github.extendedae.common.blocks.BlockEntroCluster;
 import com.glodblock.github.extendedae.common.blocks.BlockExCharger;
 import com.glodblock.github.extendedae.common.blocks.BlockExDrive;
 import com.glodblock.github.extendedae.common.blocks.BlockExIOPort;
@@ -15,8 +17,10 @@ import com.glodblock.github.extendedae.common.blocks.BlockExPatternProvider;
 import com.glodblock.github.extendedae.common.blocks.BlockFishbig;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
+import com.glodblock.github.extendedae.common.items.CommonItem;
 import com.glodblock.github.extendedae.common.items.InfinityCell;
 import com.glodblock.github.extendedae.common.items.ItemDriveUpgrade;
+import com.glodblock.github.extendedae.common.items.ItemEntroSeed;
 import com.glodblock.github.extendedae.common.items.ItemIOBusUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemInterfaceUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
@@ -56,6 +60,17 @@ import net.minecraft.world.item.Item;
 
 public class EAEItemAndBlock {
 
+    public static CommonItem ENTRO_CRYSTAL;
+    public static ItemEntroSeed ENTRO_SEED;
+    public static CommonItem ENTRO_DUST;
+    public static BlockEntroCluster ENTRO_BUD_SMALL;
+    public static BlockEntroCluster ENTRO_BUD_MEDIUM;
+    public static BlockEntroCluster ENTRO_BUD_LARGE;
+    public static BlockEntroCluster ENTRO_CLUSTER;
+    public static BlockBuddingEntro FULLY_ENTROIZED_FLUIX_BUDDING;
+    public static BlockBuddingEntro MOSTLY_ENTROIZED_FLUIX_BUDDING;
+    public static BlockBuddingEntro HALF_ENTROIZED_FLUIX_BUDDING;
+    public static BlockBuddingEntro HARDLY_ENTROIZED_FLUIX_BUDDING;
     public static BlockExPatternProvider EX_PATTERN_PROVIDER;
     public static PartItem<PartExPatternProvider> EX_PATTERN_PROVIDER_PART;
     public static BlockExInterface EX_INTERFACE;
@@ -95,6 +110,17 @@ public class EAEItemAndBlock {
     public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
 
     public static void init(EAERegistryHandler regHandler) {
+        ENTRO_CRYSTAL = new CommonItem();
+        ENTRO_SEED = new ItemEntroSeed();
+        ENTRO_DUST = new CommonItem();
+        ENTRO_BUD_SMALL = new BlockEntroCluster(0, 3, 4);
+        ENTRO_BUD_MEDIUM = new BlockEntroCluster(1, 4, 3);
+        ENTRO_BUD_LARGE = new BlockEntroCluster(2, 5, 3);
+        ENTRO_CLUSTER = new BlockEntroCluster(3, 7, 3);
+        FULLY_ENTROIZED_FLUIX_BUDDING = new BlockBuddingEntro();
+        MOSTLY_ENTROIZED_FLUIX_BUDDING = new BlockBuddingEntro();
+        HALF_ENTROIZED_FLUIX_BUDDING = new BlockBuddingEntro();
+        HARDLY_ENTROIZED_FLUIX_BUDDING = new BlockBuddingEntro();
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
         EX_PATTERN_PROVIDER_PART = new PartItem<>(new Item.Properties(), PartExPatternProvider.class, PartExPatternProvider::new);
         EX_INTERFACE = new BlockExInterface();
@@ -143,6 +169,14 @@ public class EAEItemAndBlock {
         } else {
             WIRELESS_EX_PAT = new ItemWirelessExPAT();
         }
+        regHandler.block("entro_cluster_small", ENTRO_BUD_SMALL);
+        regHandler.block("entro_cluster_medium", ENTRO_BUD_MEDIUM);
+        regHandler.block("entro_cluster_large", ENTRO_BUD_LARGE);
+        regHandler.block("entro_cluster", ENTRO_CLUSTER);
+        regHandler.block("entro_budding_fully", FULLY_ENTROIZED_FLUIX_BUDDING);
+        regHandler.block("entro_budding_mostly", MOSTLY_ENTROIZED_FLUIX_BUDDING);
+        regHandler.block("entro_budding_half", HALF_ENTROIZED_FLUIX_BUDDING);
+        regHandler.block("entro_budding_hardly", HARDLY_ENTROIZED_FLUIX_BUDDING);
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -155,6 +189,9 @@ public class EAEItemAndBlock {
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
         regHandler.block("fishbig", FISHBIG);
+        regHandler.item("entro_crystal", ENTRO_CRYSTAL);
+        regHandler.item("entro_seed", ENTRO_SEED);
+        regHandler.item("entro_dust", ENTRO_DUST);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);

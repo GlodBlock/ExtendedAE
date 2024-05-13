@@ -1,5 +1,13 @@
 {
   "values": [
+    "extendedae:entro_cluster_small",
+    "extendedae:entro_cluster_medium",
+    "extendedae:entro_cluster_large",
+    "extendedae:entro_cluster",
+    "extendedae:entro_budding_fully",
+    "extendedae:entro_budding_mostly",
+    "extendedae:entro_budding_half",
+    "extendedae:entro_budding_hardly",
     "extendedae:ex_pattern_provider",
     "extendedae:ex_interface",
     "extendedae:wireless_connect",
