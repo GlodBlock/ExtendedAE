@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "ae2:storage_bus"
+    },
+    "P": {
+      "item": "ae2:calculation_processor"
+    }
+  },
+  "pattern": [
+    "PBP"
+  ],
+  "result": {
+    "item": "extendedae:precise_storage_bus"
+  }
+}

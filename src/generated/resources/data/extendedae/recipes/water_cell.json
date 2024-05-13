@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ae2:quartz_glass"
+    },
+    "I": {
+      "tag": "forge:gems/diamond"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
+    },
+    "X": {
+      "item": "ae2:cell_component_16k"
+    }
+  },
+  "pattern": [
+    "CWC",
+    "WXW",
+    "III"
+  ],
+  "result": {
+    "item": "extendedae:infinity_cell",
+    "nbt": "{record:{\"#c\":\"ae2:f\",id:\"minecraft:water\"}}"
+  }
+}

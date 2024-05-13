@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:item/storage_bus",
+  "textures": {
+    "front": "extendedae:part/tag_storage_bus_base"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:item/cable_pattern_provider",
+  "textures": {
+    "front": "extendedae:part/ex_pattern_provider"
+  }
+}

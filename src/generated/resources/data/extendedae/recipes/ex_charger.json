@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ae2:storage_bus"
+    },
+    "E": {
+      "tag": "ae2:interface"
+    },
+    "F": {
+      "item": "ae2:charger"
+    }
+  },
+  "pattern": [
+    "FAF",
+    "AEA",
+    "FAF"
+  ],
+  "result": {
+    "item": "extendedae:ex_charger"
+  }
+}

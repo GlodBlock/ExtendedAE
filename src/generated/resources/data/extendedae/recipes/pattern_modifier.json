@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "forge:dyes/green"
+    },
+    "L": {
+      "item": "ae2:logic_processor"
+    },
+    "P": {
+      "item": "ae2:blank_pattern"
+    }
+  },
+  "pattern": [
+    "GPG",
+    " L "
+  ],
+  "result": {
+    "item": "extendedae:pattern_modifier"
+  }
+}

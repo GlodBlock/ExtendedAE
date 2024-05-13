@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2wtlib"
+    }
+  ],
+  "type": "ae2wtlib:upgrade",
+  "terminal": {
+    "item": "extendedae:wireless_ex_pat"
+  },
+  "terminalName": "ex_pattern_access"
+}

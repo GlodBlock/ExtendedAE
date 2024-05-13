@@ -1,0 +1,132 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.80'
+}
+
+version = mod_version
+group = mod_group_id
+
+repositories {
+    mavenLocal()
+}
+
+base {
+    archivesName = mod_name
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
+}
+
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
+
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
+
+    gameTestServer {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    data {
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+        content {
+            includeGroup "dev.emi"
+        }
+    }
+    maven {
+        name 'cursemaven'
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "Modmaven"
+        url = uri("https://modmaven.dev/")
+        content {
+            includeGroup("appeng")
+        }
+    }
+    maven {
+        url "https://maven.shedaniel.me/"
+        content {
+            includeGroup "me.shedaniel"
+            includeGroup "me.shedaniel.cloth"
+            includeGroup "dev.architectury"
+        }
+    }
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+    implementation "curse.maven:glodium-957920:5337083"
+    implementation "appeng:appliedenergistics2-neoforge:17.13.0-beta"
+    compileOnly "curse.maven:curios-309927:5302407"
+    compileOnly "curse.maven:applied-flux-965012:5292934"
+    compileOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:5211370"
+    compileOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
+    compileOnly "curse.maven:jade-324717:5109393"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
+    // runtime test
+    runtimeOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
+    runtimeOnly "curse.maven:jade-324717:5109393"
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version         : neo_version, neo_version_range: neo_version_range,
+            loader_version_range: loader_version_range,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}

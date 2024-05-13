@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2wtlib"
+    }
+  ],
+  "type": "ae2wtlib:combine",
+  "terminalA": {
+    "item": "extendedae:wireless_ex_pat"
+  },
+  "terminalB": {
+    "item": "ae2:wireless_crafting_terminal"
+  },
+  "terminalAName": "ex_pattern_access",
+  "terminalBName": "crafting"
+}

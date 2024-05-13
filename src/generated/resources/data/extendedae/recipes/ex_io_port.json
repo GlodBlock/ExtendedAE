@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ae2:logic_processor"
+    },
+    "B": {
+      "item": "ae2:engineering_processor"
+    },
+    "C": {
+      "item": "ae2:speed_card"
+    },
+    "M": {
+      "item": "ae2:io_port"
+    }
+  },
+  "pattern": [
+    "ACB",
+    "CMC",
+    "BCA"
+  ],
+  "result": {
+    "item": "extendedae:ex_io_port"
+  }
+}

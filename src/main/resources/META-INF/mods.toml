@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+[[mods]]
+    modId="extendedae"
+    issueTrackerURL="https://github.com/GlodBlock/ExtendedAE/issues"
+    displayURL="https://github.com/GlodBlock/ExtendedAE"
+    version="${mod_version}"
+    displayName="${mod_name}"
+    authors="${mod_authors}"
+    credits="Sea_Kerman for models, gt147532689 for Chinese(simplified) translation, nekitbrush for Russian translation"
+    logoFile="logo.png"
+    description='''${mod_description}'''
+
+[[mixins]]
+    config="mixins.extendedae.json"
+
+[[dependencies.extendedae]]
+    modId="neoforge"
+    type="REQUIRED"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.extendedae]]
+    modId="minecraft"
+    type="REQUIRED"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.extendedae]]
+    modId="ae2"
+    type="REQUIRED"
+    versionRange="[17.8.0-beta,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.extendedae]]
+    modId="glodium"
+    type="REQUIRED"
+    versionRange="[1.20-2.2,)"
+    ordering="AFTER"
+    side="BOTH"

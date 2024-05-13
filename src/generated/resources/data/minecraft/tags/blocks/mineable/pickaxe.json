@@ -1,0 +1,16 @@
+{
+  "values": [
+    "extendedae:ex_pattern_provider",
+    "extendedae:ex_interface",
+    "extendedae:wireless_connect",
+    "extendedae:ingredient_buffer",
+    "extendedae:ex_drive",
+    "extendedae:ex_molecular_assembler",
+    "extendedae:ex_inscriber",
+    "extendedae:ex_charger",
+    "extendedae:crystal_fixer",
+    "extendedae:caner",
+    "extendedae:ex_io_port",
+    "extendedae:fishbig"
+  ]
+}
