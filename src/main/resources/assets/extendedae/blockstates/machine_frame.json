@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "extendedae:block/machine_frame"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json", "common/player_inventory.json"],
+  "background": {
+    "texture": "guis/crystal_assembler.png",
+    "srcRect": [0, 0, 176, 181]
+  },
+  "slots": {
+    "MACHINE_INPUT": {
+      "left": 26,
+      "top": 22,
+      "grid": "BREAK_AFTER_3COLS"
+    },
+    "STORAGE": {
+      "left": 80,
+      "top": 58
+    },
+    "MACHINE_OUTPUT": {
+      "left": 130,
+      "top": 40
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.extendedae.crystal_assembler"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    }
+  },
+  "images": {
+    "progressBar": {
+      "texture": "guis/crystal_assembler.png",
+      "srcRect": [179, 39, 6, 18]
+    }
+  },
+  "widgets": {
+    "progressBar": {
+      "left": 152,
+      "top": 39
+    }
+  }
+}

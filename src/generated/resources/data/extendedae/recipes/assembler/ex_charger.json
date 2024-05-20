@@ -1,0 +1,23 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "ae2:charger"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:capacity_card"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "extendedae:concurrent_processor"
+      }
+    }
+  ],
+  "output": {
+    "item": "extendedae:ex_charger"
+  }
+}

@@ -1,20 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "C": {
-      "tag": "ae2:glass_cable"
+  "ingredients": [
+    {
+      "item": "extendedae:ex_drive"
     },
-    "E": {
-      "item": "ae2:capacity_card"
-    },
-    "F": {
-      "tag": "forge:dusts/fluix"
+    {
+      "tag": "forge:ingots"
     }
-  },
-  "pattern": [
-    "C C",
-    "FEF"
   ],
   "result": {
     "item": "extendedae:drive_upgrade"

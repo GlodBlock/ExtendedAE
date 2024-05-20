@@ -6,6 +6,7 @@ import appeng.init.client.InitScreens;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.GuiActiveFormationPlane;
 import com.glodblock.github.extendedae.client.gui.GuiCaner;
+import com.glodblock.github.extendedae.client.gui.GuiCrystalAssembler;
 import com.glodblock.github.extendedae.client.gui.GuiExDrive;
 import com.glodblock.github.extendedae.client.gui.GuiExIOBus;
 import com.glodblock.github.extendedae.client.gui.GuiExIOPort;
@@ -51,6 +52,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssemb
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerCaner;
+import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
 import com.glodblock.github.extendedae.container.ContainerExIOPort;
@@ -122,6 +124,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExIOPort.TYPE, GuiExIOPort::new, "/screens/ex_io_port.json");
         InitScreens.register(ContainerPreciseStorageBus.TYPE, GuiPreciseStorageBus::new, "/screens/precise_storage_bus.json");
         InitScreens.register(ContainerThresholdExportBus.TYPE, GuiThresholdExportBus::new, "/screens/threshold_export_bus.json");
+        InitScreens.register(ContainerCrystalAssembler.TYPE, GuiCrystalAssembler::new, "/screens/crystal_assembler.json");
         event.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);

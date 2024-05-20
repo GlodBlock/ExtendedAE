@@ -1,0 +1,38 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_fluid": {
+    "amount": 100,
+    "ingredient": {
+      "fluid_ingredient": {
+        "fluid": {
+          "Amount": 100,
+          "FluidName": "minecraft:water"
+        }
+      }
+    }
+  },
+  "input_items": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:charged_certus_quartz_crystal"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "forge:dusts/redstone"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "forge:gems/quartz"
+      }
+    }
+  ],
+  "output": {
+    "count": 8,
+    "item": "ae2:fluix_crystal"
+  }
+}

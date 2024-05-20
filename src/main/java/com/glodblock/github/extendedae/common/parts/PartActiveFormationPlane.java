@@ -102,8 +102,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
             var pos = self.getBlockPos().relative(this.getSide());
             var side = getSide().getOpposite();
             var owningPlayerId = getMainNode().getNode().getOwningPlayerProfileId();
-            placementStrategies = StackWorldBehaviors.createPlacementStrategies(
-                    (ServerLevel) self.getLevel(), pos, side, self, owningPlayerId);
+            placementStrategies = StackWorldBehaviors.createPlacementStrategies((ServerLevel) self.getLevel(), pos, side, self, owningPlayerId);
         }
         return placementStrategies;
     }

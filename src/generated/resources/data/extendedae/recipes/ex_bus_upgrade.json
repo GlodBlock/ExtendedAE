@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "extendedae:ex_import_bus_part"
+    },
+    {
+      "tag": "forge:ingots"
+    }
+  ],
+  "result": {
+    "item": "extendedae:io_bus_upgrade"
+  }
+}

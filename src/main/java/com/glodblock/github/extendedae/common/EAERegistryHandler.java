@@ -48,6 +48,7 @@ import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerCaner;
+import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
 import com.glodblock.github.extendedae.container.ContainerExIOPort;
@@ -73,6 +74,8 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
+import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
+import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
 import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
@@ -124,6 +127,7 @@ public class EAERegistryHandler extends RegistryHandler {
         super.runRegister();
         this.onRegisterContainer();
         this.onRegisterModels();
+        this.onRegisterRecipe();
     }
 
     public Collection<Block> getBlocks() {
@@ -139,6 +143,11 @@ public class EAERegistryHandler extends RegistryHandler {
     @SubscribeEvent
     public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         super.onRegisterCapabilities(event);
+    }
+
+    private void onRegisterRecipe() {
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipe.TYPE);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipeSerializer.INSTANCE);
     }
 
     private void onRegisterContainer() {
@@ -166,6 +175,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, AppEng.makeId("ex_ioport"), ContainerExIOPort.TYPE);
         Registry.register(BuiltInRegistries.MENU, AppEng.makeId("precise_storage_bus"), ContainerPreciseStorageBus.TYPE);
         Registry.register(BuiltInRegistries.MENU, AppEng.makeId("threshold_export_bus"), ContainerThresholdExportBus.TYPE);
+        Registry.register(BuiltInRegistries.MENU, AppEng.makeId("crystal_assembler"), ContainerCrystalAssembler.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -210,10 +220,10 @@ public class EAERegistryHandler extends RegistryHandler {
     }
 
     private void registerAEUpgrade() {
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.expatternprovider.ex_interface");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE_PART.asItem(), 1, "gui.expatternprovider.ex_interface");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE_PART.asItem(), 1, "gui.expatternprovider.ex_interface");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE.asItem(), 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE_PART.asItem(), 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE_PART.asItem(), 1, "gui.extendedae.ex_interface");
         Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 5, "group.ex_io_bus_part");
         Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 4, "group.ex_io_bus_part");
@@ -249,6 +259,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 1);
         Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 4);
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.CRYSTAL_ASSEMBLER, 4);
     }
 
     private void registerStorageHandler() {

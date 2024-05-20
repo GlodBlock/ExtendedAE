@@ -1,0 +1,28 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "extendedae:machine_frame"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "extendedae:ingredient_buffer"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:formation_core"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:annihilation_core"
+      }
+    }
+  ],
+  "output": {
+    "item": "extendedae:caner"
+  }
+}

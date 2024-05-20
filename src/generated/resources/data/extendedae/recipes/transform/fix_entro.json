@@ -1,0 +1,14 @@
+{
+  "type": "ae2:transform",
+  "ingredients": [
+    {
+      "tag": "forge:dusts/entro"
+    },
+    {
+      "item": "ae2:fluix_crystal"
+    }
+  ],
+  "result": {
+    "item": "extendedae:entro_crystal"
+  }
+}

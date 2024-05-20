@@ -1,0 +1,25 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "extendedae:machine_frame"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "ae2:all_certus_quartz"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ae2:quartz_fiber"
+      }
+    }
+  ],
+  "output": {
+    "item": "extendedae:crystal_fixer"
+  }
+}

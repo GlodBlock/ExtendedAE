@@ -1,0 +1,18 @@
+{
+  "type": "ae2:inscriber",
+  "ingredients": {
+    "bottom": {
+      "item": "ae2:printed_silicon"
+    },
+    "middle": {
+      "tag": "forge:dusts/redstone"
+    },
+    "top": {
+      "item": "extendedae:concurrent_processor_print"
+    }
+  },
+  "mode": "press",
+  "result": {
+    "item": "extendedae:concurrent_processor"
+  }
+}

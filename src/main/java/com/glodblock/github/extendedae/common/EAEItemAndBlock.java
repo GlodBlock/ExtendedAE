@@ -5,6 +5,7 @@ import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.blocks.BlockBuddingEntro;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
+import com.glodblock.github.extendedae.common.blocks.BlockCrystalAssembler;
 import com.glodblock.github.extendedae.common.blocks.BlockCrystalFixer;
 import com.glodblock.github.extendedae.common.blocks.BlockEntroCluster;
 import com.glodblock.github.extendedae.common.blocks.BlockExCharger;
@@ -45,6 +46,7 @@ import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
+import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
@@ -57,12 +59,23 @@ import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+
+import static appeng.block.AEBaseBlock.metalProps;
+import static appeng.block.AEBaseBlock.stoneProps;
 
 public class EAEItemAndBlock {
 
     public static CommonItem ENTRO_CRYSTAL;
     public static ItemEntroSeed ENTRO_SEED;
     public static CommonItem ENTRO_DUST;
+    public static CommonItem ENTRO_INGOT;
+    public static CommonItem CONCURRENT_PROCESSOR;
+    public static CommonItem CONCURRENT_PROCESSOR_PRINT;
+    public static CommonItem CONCURRENT_PROCESSOR_PRESS;
+    public static Block ENTRO_BLOCK;
+    public static Block MACHINE_FRAME;
+    public static BlockCrystalAssembler CRYSTAL_ASSEMBLER;
     public static BlockEntroCluster ENTRO_BUD_SMALL;
     public static BlockEntroCluster ENTRO_BUD_MEDIUM;
     public static BlockEntroCluster ENTRO_BUD_LARGE;
@@ -113,6 +126,7 @@ public class EAEItemAndBlock {
         ENTRO_CRYSTAL = new CommonItem();
         ENTRO_SEED = new ItemEntroSeed();
         ENTRO_DUST = new CommonItem();
+        ENTRO_INGOT = new CommonItem();
         ENTRO_BUD_SMALL = new BlockEntroCluster(0, 3, 4);
         ENTRO_BUD_MEDIUM = new BlockEntroCluster(1, 4, 3);
         ENTRO_BUD_LARGE = new BlockEntroCluster(2, 5, 3);
@@ -157,6 +171,12 @@ public class EAEItemAndBlock {
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
         PRECISE_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartPreciseStorageBus.class, PartPreciseStorageBus::new);
         THRESHOLD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartThresholdExportBus.class, PartThresholdExportBus::new);
+        CONCURRENT_PROCESSOR = new CommonItem();
+        CONCURRENT_PROCESSOR_PRESS = new CommonItem();
+        CONCURRENT_PROCESSOR_PRINT = new CommonItem();
+        ENTRO_BLOCK = new Block(stoneProps().strength(3, 8).requiresCorrectToolForDrops());
+        MACHINE_FRAME = new Block(metalProps().requiresCorrectToolForDrops());
+        CRYSTAL_ASSEMBLER = new BlockCrystalAssembler();
         if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
             try {
                 //To prevent classloader issue
@@ -177,6 +197,9 @@ public class EAEItemAndBlock {
         regHandler.block("entro_budding_mostly", MOSTLY_ENTROIZED_FLUIX_BUDDING);
         regHandler.block("entro_budding_half", HALF_ENTROIZED_FLUIX_BUDDING);
         regHandler.block("entro_budding_hardly", HARDLY_ENTROIZED_FLUIX_BUDDING);
+        regHandler.block("entro_block", ENTRO_BLOCK);
+        regHandler.block("machine_frame", MACHINE_FRAME);
+        regHandler.block("crystal_assembler", CRYSTAL_ASSEMBLER, TileCrystalAssembler.class, TileCrystalAssembler::new);
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
@@ -192,6 +215,10 @@ public class EAEItemAndBlock {
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);
         regHandler.item("entro_seed", ENTRO_SEED);
         regHandler.item("entro_dust", ENTRO_DUST);
+        regHandler.item("entro_ingot", ENTRO_INGOT);
+        regHandler.item("concurrent_processor", CONCURRENT_PROCESSOR);
+        regHandler.item("concurrent_processor_press", CONCURRENT_PROCESSOR_PRESS);
+        regHandler.item("concurrent_processor_print", CONCURRENT_PROCESSOR_PRINT);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_cell", INFINITY_CELL);

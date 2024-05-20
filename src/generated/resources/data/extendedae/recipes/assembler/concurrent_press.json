@@ -1,0 +1,25 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "amount": 3,
+      "ingredient": {
+        "item": "minecraft:ender_eye"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "forge:gems/entro"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:silicon_press"
+      }
+    }
+  ],
+  "output": {
+    "item": "extendedae:concurrent_processor_press"
+  }
+}

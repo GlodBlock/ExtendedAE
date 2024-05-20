@@ -1,0 +1,32 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "extendedae:machine_frame"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "tag": "ae2:smart_dense_cable"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ae2:wireless_receiver"
+      }
+    },
+    {
+      "amount": 3,
+      "ingredient": {
+        "item": "ae2:wireless_booster"
+      }
+    }
+  ],
+  "output": {
+    "count": 2,
+    "item": "extendedae:wireless_connect"
+  }
+}
