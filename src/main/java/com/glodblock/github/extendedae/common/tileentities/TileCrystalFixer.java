@@ -58,7 +58,7 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     }
 
     private boolean canFixCrystal(BlockState blockState) {
-        for (ICrystalFixer fixer : ExtendedAEAPI.getCrystalFixers()) {
+        for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {
             if (fixer.isCrystal(blockState.getBlock()) && fixer.canFix(blockState, this.inv.getStackInSlot(0))) {
                 return true;
             }
@@ -67,7 +67,7 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     }
 
     private Block getNextCrystalBlock(BlockState crystal) {
-        for (ICrystalFixer fixer : ExtendedAEAPI.getCrystalFixers()) {
+        for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {
             if (fixer.isCrystal(crystal.getBlock())) {
                 return fixer.getNextCrystalBlock(crystal);
             }
@@ -189,7 +189,7 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         }
     }
 
-    private class Filter implements IAEItemFilter {
+    private static class Filter implements IAEItemFilter {
 
         @Override
         public boolean allowExtract(InternalInventory inv, int slot, int amount) {
@@ -198,7 +198,7 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
 
         @Override
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
-            for (ICrystalFixer fixer : ExtendedAEAPI.getCrystalFixers()) {
+            for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {
                 if (fixer.getFuelType().equals(stack.getItem())) {
                     return true;
                 }
