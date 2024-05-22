@@ -12,11 +12,11 @@ import appeng.api.orientation.RelativeSide;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalBlockPos;
 import appeng.blockentity.grid.AENetworkInvBlockEntity;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
 import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
-import appeng.util.inv.filter.AEItemDefinitionFilter;
+import appeng.util.inv.filter.IAEItemFilter;
+import com.glodblock.github.extendedae.api.ExtendedAEAPI;
+import com.glodblock.github.extendedae.api.ICrystalFixer;
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -26,6 +26,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.EnumSet;
@@ -33,14 +34,14 @@ import java.util.Set;
 
 
 public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTickable {
-    
-    private int progress = 0;
+
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, 1);
+    private int progress = 0;
 
     public TileCrystalFixer(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCrystalFixer.class, TileCrystalFixer::new, EAEItemAndBlock.CRYSTAL_FIXER), pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
-        this.inv.setFilter(new AEItemDefinitionFilter(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED));
+        this.inv.setFilter(new Filter());
     }
 
     @Override
@@ -56,10 +57,22 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         return TickRateModulation.SLOWER;
     }
 
-    private boolean needGrowth(BlockState blockState) {
-        return blockState.is(AEBlocks.DAMAGED_BUDDING_QUARTZ.block()) ||
-                blockState.is(AEBlocks.CHIPPED_BUDDING_QUARTZ.block()) ||
-                blockState.is(AEBlocks.QUARTZ_BLOCK.block());
+    private boolean canFixCrystal(BlockState blockState) {
+        for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {
+            if (fixer.isCrystal(blockState.getBlock()) && fixer.canFix(blockState, this.inv.getStackInSlot(0))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Block getNextCrystalBlock(BlockState crystal) {
+        for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {
+            if (fixer.isCrystal(crystal.getBlock())) {
+                return fixer.getNextCrystalBlock(crystal);
+            }
+        }
+        return null;
     }
 
     private boolean doWork(int ticksSinceLastCall) {
@@ -69,18 +82,15 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         var blockPos = this.getBlockPos().offset(this.getFront().getNormal());
         var blockState = this.getLevel().getBlockState(blockPos);
         var random = this.getLevel().getRandom();
-        if (needGrowth(blockState)) {
+        if (canFixCrystal(blockState)) {
             if (this.userPower(ticksSinceLastCall * 50) > 0) {
                 this.progress += random.nextInt(5);
                 this.consumeFuel(random);
             }
             if (this.progress >= 100) {
-                if (blockState.is(AEBlocks.QUARTZ_BLOCK.block())) {
-                    this.getLevel().setBlockAndUpdate(blockPos, AEBlocks.DAMAGED_BUDDING_QUARTZ.block().defaultBlockState());
-                } else if (blockState.is(AEBlocks.DAMAGED_BUDDING_QUARTZ.block())) {
-                    this.getLevel().setBlockAndUpdate(blockPos, AEBlocks.CHIPPED_BUDDING_QUARTZ.block().defaultBlockState());
-                } else if (blockState.is(AEBlocks.CHIPPED_BUDDING_QUARTZ.block())) {
-                    this.getLevel().setBlockAndUpdate(blockPos, AEBlocks.FLAWED_BUDDING_QUARTZ.block().defaultBlockState());
+                Block block = getNextCrystalBlock(blockState);
+                if (block != null) {
+                    this.getLevel().setBlockAndUpdate(blockPos, block.defaultBlockState());
                 }
                 this.progress = 0;
             }
@@ -176,6 +186,24 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         } else {
             var notAdded = this.inv.insertItem(0, held, false);
             playerInv.setItem(playerInv.selected, notAdded);
+        }
+    }
+
+    private static class Filter implements IAEItemFilter {
+
+        @Override
+        public boolean allowExtract(InternalInventory inv, int slot, int amount) {
+            return true;
+        }
+
+        @Override
+        public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
+            for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {
+                if (fixer.getFuelType().equals(stack.getItem())) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
