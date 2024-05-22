@@ -24,6 +24,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.externalstorage.GenericStackInv;
@@ -63,17 +64,14 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     private final CombinedInternalInventory inv = new CombinedInternalInventory(input, output);
     private final IUpgradeInventory upgrades;
     private final ConfigManager configManager;
-    private final GenericStackInv tank = new GenericStackInv(Set.of(AEKeyType.fluids()), this::onChangeTank, GenericStackInv.Mode.STORAGE, 1);
     private final CrystalRecipeContext ctx = new CrystalRecipeContext(this);
+    private final GenericStackInv tank = new GenericStackInv(Set.of(AEKeyType.fluids()), this::onChangeTank, GenericStackInv.Mode.STORAGE, 1);
     private boolean isWorking = false;
     private int progress = 0;
 
     public TileCrystalAssembler(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCrystalAssembler.class, TileCrystalAssembler::new, EAEItemAndBlock.CRYSTAL_ASSEMBLER), pos, blockState);
-        this.getMainNode()
-                .setFlags()
-                .setIdlePowerUsage(0)
-                .addService(IGridTickable.class, this);
+        this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
         this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.CRYSTAL_ASSEMBLER, 4, this::saveChanges);
@@ -378,7 +376,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
                 fluidStack = key.toStack((int) fluid.amount());
             }
             for (var tester : sample) {
-                for (int x = 0; x < this.host.input.size(); x ++) {
+                for (int x = 0; x < this.host.input.size(); x++) {
                     var item = this.host.input.getStackInSlot(x);
                     if (tester.checkType(item)) {
                         tester.consume(item);
@@ -428,18 +426,18 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
 
         public void load(CompoundTag tag) {
             var nbt = tag.getCompound("recipeCtx");
-            if (tag.contains("current")) {
+            if (nbt.contains("current")) {
                 try {
-                    var id = new ResourceLocation(tag.getString("current"));
-                    this.currentRecipe = this.host.level.getRecipeManager().byType(CrystalAssemblerRecipe.TYPE).get(id);
+                    var id = new ResourceLocation(nbt.getString("current"));
+                    this.currentRecipe = AppEng.instance().getCurrentServer().getLevel(Level.OVERWORLD).getRecipeManager().byType(CrystalAssemblerRecipe.TYPE).get(id);
                 } catch (Throwable e) {
                     this.currentRecipe = null;
                 }
             }
-            if (tag.contains("last")) {
+            if (nbt.contains("last")) {
                 try {
-                    var id = new ResourceLocation(tag.getString("last"));
-                    this.lastRecipe = this.host.level.getRecipeManager().byType(CrystalAssemblerRecipe.TYPE).get(id);
+                    var id = new ResourceLocation(nbt.getString("last"));
+                    this.lastRecipe = AppEng.instance().getCurrentServer().getLevel(Level.OVERWORLD).getRecipeManager().byType(CrystalAssemblerRecipe.TYPE).get(id);
                 } catch (Throwable e) {
                     this.lastRecipe = null;
                 }
