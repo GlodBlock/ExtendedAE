@@ -5,6 +5,7 @@ import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.blocks.BlockBuddingEntro;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
+import com.glodblock.github.extendedae.common.blocks.BlockCircuitCutter;
 import com.glodblock.github.extendedae.common.blocks.BlockCrystalAssembler;
 import com.glodblock.github.extendedae.common.blocks.BlockCrystalFixer;
 import com.glodblock.github.extendedae.common.blocks.BlockEntroCluster;
@@ -46,6 +47,7 @@ import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
+import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
@@ -121,6 +123,7 @@ public class EAEItemAndBlock {
     public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
     public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
+    public static BlockCircuitCutter CIRCUIT_CUTTER;
 
     public static void init(EAERegistryHandler regHandler) {
         ENTRO_CRYSTAL = new CommonItem();
@@ -177,6 +180,7 @@ public class EAEItemAndBlock {
         ENTRO_BLOCK = new Block(stoneProps().strength(3, 8).requiresCorrectToolForDrops());
         MACHINE_FRAME = new Block(metalProps().requiresCorrectToolForDrops());
         CRYSTAL_ASSEMBLER = new BlockCrystalAssembler();
+        CIRCUIT_CUTTER = new BlockCircuitCutter();
         if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
             try {
                 //To prevent classloader issue
@@ -211,6 +215,7 @@ public class EAEItemAndBlock {
         regHandler.block("crystal_fixer", CRYSTAL_FIXER, TileCrystalFixer.class, TileCrystalFixer::new);
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
+        regHandler.block("circuit_cutter", CIRCUIT_CUTTER, TileCircuitCutter.class, TileCircuitCutter::new);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);
         regHandler.item("entro_seed", ENTRO_SEED);

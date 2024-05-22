@@ -23,6 +23,7 @@ public class CrystalAssemblerRecipe implements Recipe<Container> {
     public static final RecipeType<CrystalAssemblerRecipe> TYPE = RecipeType.simple(ID);
 
     protected final List<IngredientStack.Item> inputs;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected final Optional<IngredientStack.Fluid> fluid;
     public final ItemStack output;
 
@@ -84,6 +85,11 @@ public class CrystalAssemblerRecipe implements Recipe<Container> {
     @Override
     public @NotNull RecipeType<?> getType() {
         return TYPE;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
 }

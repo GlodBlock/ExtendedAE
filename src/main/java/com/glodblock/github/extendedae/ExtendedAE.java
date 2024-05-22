@@ -2,8 +2,8 @@ package com.glodblock.github.extendedae;
 
 import com.glodblock.github.extendedae.client.ClientRegistryHandler;
 import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
-import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.common.hooks.CutterHook;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;

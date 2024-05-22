@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench by Sea_Kerman",
 	"parent": "block/orientable",
 	"textures": {
-		"Inside2": "extendedae:block/ex_inscriber_inside_2",
-		"particle": "extendedae:block/ex_inscriber",
-		"Main": "extendedae:block/ex_inscriber",
-		"Inside": "extendedae:block/ex_inscriber_inside"
+		"Inside2": "extendedae:block/extended_inscriber/ex_inscriber_inside_2",
+		"particle": "extendedae:block/extended_inscriber/ex_inscriber",
+		"Main": "extendedae:block/extended_inscriber/ex_inscriber",
+		"Inside": "extendedae:block/extended_inscriber/ex_inscriber_inside"
 	},
 	"elements": [
 		{

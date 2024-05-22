@@ -1,0 +1,12 @@
+{
+  "type": "extendedae:circuit_cutter",
+  "input": {
+    "ingredient": {
+      "tag": "forge:storage_blocks/gold"
+    }
+  },
+  "output": {
+    "count": 9,
+    "item": "ae2:printed_logic_processor"
+  }
+}

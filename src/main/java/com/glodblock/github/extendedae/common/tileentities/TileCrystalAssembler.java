@@ -1,13 +1,11 @@
 package com.glodblock.github.extendedae.common.tileentities;
 
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyService;
+import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -30,16 +28,22 @@ import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.util.ConfigManager;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
+import appeng.util.inv.FilteredInternalInventory;
+import appeng.util.inv.filter.AEItemFilters;
+import com.glodblock.github.extendedae.api.IRecipeMachine;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
-import com.glodblock.github.extendedae.util.async.RecipeSearchContext;
+import com.glodblock.github.extendedae.util.FCUtil;
+import com.glodblock.github.extendedae.util.recipe.ContainerRecipeContext;
+import com.glodblock.github.extendedae.util.recipe.RecipeExecutor;
+import com.glodblock.github.extendedae.util.recipe.RecipeSearchContext;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -52,7 +56,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IGenericInvHost {
+public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IGenericInvHost, IRecipeMachine<Container, CrystalAssemblerRecipe> {
 
     public static final int SLOTS = 9;
     public static final int TANK_CAP = 16000;
@@ -61,10 +65,14 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     private final AppEngInternalInventory input = new AppEngInternalInventory(this, SLOTS, 64);
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1, 64);
     private final CombinedInternalInventory inv = new CombinedInternalInventory(input, output);
+    private final FilteredInternalInventory outputExposed = new FilteredInternalInventory(output, AEItemFilters.EXTRACT_ONLY);
+    private final FilteredInternalInventory inputExposed = new FilteredInternalInventory(input, AEItemFilters.INSERT_ONLY);
+    private final CombinedInternalInventory invExposed = new CombinedInternalInventory(inputExposed, outputExposed);
     private final IUpgradeInventory upgrades;
     private final ConfigManager configManager;
     private final GenericStackInv tank = new GenericStackInv(Set.of(AEKeyType.fluids()), this::onChangeTank, GenericStackInv.Mode.STORAGE, 1);
-    private final CrystalRecipeContext ctx = new CrystalRecipeContext(this);
+    private final ContainerRecipeContext<CrystalAssemblerRecipe> ctx = new CrystalRecipeContext(this);
+    private final RecipeExecutor<CrystalAssemblerRecipe> exec;
     private boolean isWorking = false;
     private int progress = 0;
 
@@ -79,16 +87,13 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.CRYSTAL_ASSEMBLER, 4, this::saveChanges);
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
-        tank.setCapacity(AEKeyType.fluids(), TANK_CAP);
+        this.tank.setCapacity(AEKeyType.fluids(), TANK_CAP);
+        this.exec = new RecipeExecutor<>(this, r -> r.output, MAX_PROGRESS);
     }
 
     @Override
     protected InternalInventory getExposedInventoryForSide(Direction facing) {
-        if (facing == getOrientation().getSide(RelativeSide.BOTTOM)) {
-            return this.output;
-        } else {
-            return this.input;
-        }
+        return this.invExposed;
     }
 
     private void onConfigChanged(IConfigManager manager, Setting<?> setting) {
@@ -101,8 +106,29 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         return this.isWorking;
     }
 
+    @Override
     public int getProgress() {
         return this.progress;
+    }
+
+    @Override
+    public void addProgress(int delta) {
+        this.progress += delta;
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public RecipeSearchContext<Container, CrystalAssemblerRecipe> getContext() {
+        return this.ctx;
+    }
+
+    @Override
+    public void setWorking(boolean work) {
+        this.isWorking = work;
     }
 
     public AppEngInternalInventory getInput() {
@@ -113,6 +139,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         return this.tank;
     }
 
+    @Override
     public AppEngInternalInventory getOutput() {
         return this.output;
     }
@@ -203,7 +230,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick());
+        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && !this.hasAutoExportWork());
     }
 
     @Override
@@ -212,67 +239,24 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
             return TickRateModulation.URGENT;
         }
         this.markForUpdate();
-        var runRecipe = this.ctx.currentRecipe;
-        if (runRecipe != null) {
-            this.getMainNode().ifPresent(grid -> {
-                this.isWorking = true;
-                this.markForUpdate();
-                var speed = switch (this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)) {
-                    default -> 2; // 116 ticks
-                    case 1 -> 3; // 83 ticks
-                    case 2 -> 5; // 56 ticks
-                    case 3 -> 10; // 36 ticks
-                    case 4 -> 50; // 20 ticks
-                };
-                IEnergyService eg = grid.getEnergyService();
-                IEnergySource src = this;
-                final int powerConsumption = 10 * speed;
-                final double powerThreshold = powerConsumption - 0.01;
-                double powerReq = this.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
-                if (powerReq <= powerThreshold) {
-                    src = eg;
-                    powerReq = eg.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
-                }
-                if (powerReq > powerThreshold) {
-                    src.extractAEPower(powerConsumption, Actionable.MODULATE, PowerMultiplier.CONFIG);
-                    this.progress += speed;
-                }
-                if (this.progress >= MAX_PROGRESS) {
-                    this.progress = 0;
-                    var outputStack = runRecipe.value().output.copy();
-                    if (this.ctx.testRecipe(runRecipe) && this.output.insertItem(0, outputStack, true).isEmpty()) {
-                        this.ctx.runRecipe(runRecipe);
-                        this.output.insertItem(0, outputStack, false);
-                    }
-                    this.ctx.currentRecipe = null;
-                }
-            });
-            return TickRateModulation.URGENT;
-        } else {
-            this.isWorking = false;
-            if (this.ctx.shouldTick()) {
-                this.ctx.findRecipe();
-            }
-            return TickRateModulation.FASTER;
-        }
+        return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)), true);
     }
 
     private boolean pushOutResult() {
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        for (var dir : Direction.values()) {
-            var target = InternalInventory.wrapExternal(level, getBlockPos().relative(dir), dir.getOpposite());
-            if (target != null) {
-                int startItems = this.output.getStackInSlot(0).getCount();
-                this.output.insertItem(0, target.addItems(this.output.extractItem(0, 64, false)), false);
-                int endItems = this.output.getStackInSlot(0).getCount();
-                if (startItems != endItems) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output);
+    }
+
+    @Override
+    public IManagedGridNode getNode() {
+        return this.getMainNode();
+    }
+
+    @Override
+    public IEnergySource getEnergy() {
+        return this;
     }
 
     @Override
@@ -296,19 +280,12 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         return this.tank;
     }
 
-    @Override
-    public GenericStackInv getGenericInv(@Nullable Direction side) {
-        if (side != getOrientation().getSide(RelativeSide.BOTTOM)) {
-            return this.tank;
-        }
-        return null;
-    }
-
-    private static class CrystalRecipeContext extends RecipeSearchContext<CrystalAssemblerRecipe> {
+    private static class CrystalRecipeContext extends ContainerRecipeContext<CrystalAssemblerRecipe> {
 
         private final TileCrystalAssembler host;
 
         protected CrystalRecipeContext(TileCrystalAssembler host) {
+            super(() -> host.level, CrystalAssemblerRecipe.TYPE);
             this.host = host;
         }
 
@@ -321,23 +298,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         @Override
         public void onFind(@Nullable RecipeHolder<CrystalAssemblerRecipe> recipe) {
             super.onFind(recipe);
-            if (recipe != null) {
-                this.host.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
-            }
-        }
-
-        @Override
-        public RecipeHolder<CrystalAssemblerRecipe> searchRecipe() {
-            if (this.host.level == null) {
-                return null;
-            }
-            var recipes = this.host.level.getRecipeManager().byType(CrystalAssemblerRecipe.TYPE);
-            for (var recipe : recipes.values()) {
-                if (testRecipe(recipe)) {
-                    return recipe;
-                }
-            }
-            return null;
+            this.host.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
         }
 
         @Override
@@ -413,37 +374,6 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
                 inv.add(key.toStack((int) fluid.amount()));
             }
             return inv;
-        }
-
-        public void save(CompoundTag tag) {
-            var nbt = new CompoundTag();
-            if (this.currentRecipe != null) {
-                nbt.putString("current", this.currentRecipe.id().toString());
-            }
-            if (this.lastRecipe != null) {
-                nbt.putString("last", this.lastRecipe.id().toString());
-            }
-            tag.put("recipeCtx", nbt);
-        }
-
-        public void load(CompoundTag tag) {
-            var nbt = tag.getCompound("recipeCtx");
-            if (tag.contains("current")) {
-                try {
-                    var id = new ResourceLocation(tag.getString("current"));
-                    this.currentRecipe = this.host.level.getRecipeManager().byType(CrystalAssemblerRecipe.TYPE).get(id);
-                } catch (Throwable e) {
-                    this.currentRecipe = null;
-                }
-            }
-            if (tag.contains("last")) {
-                try {
-                    var id = new ResourceLocation(tag.getString("last"));
-                    this.lastRecipe = this.host.level.getRecipeManager().byType(CrystalAssemblerRecipe.TYPE).get(id);
-                } catch (Throwable e) {
-                    this.lastRecipe = null;
-                }
-            }
         }
 
     }

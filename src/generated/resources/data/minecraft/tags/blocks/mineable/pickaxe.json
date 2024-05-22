@@ -22,6 +22,7 @@
     "extendedae:crystal_fixer",
     "extendedae:caner",
     "extendedae:ex_io_port",
+    "extendedae:circuit_cutter",
     "extendedae:fishbig"
   ]
 }

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExtendedAEAPI {
-    public static ExtendedAEAPI INSTANCE = new ExtendedAEAPI();
+    public static final ExtendedAEAPI INSTANCE = new ExtendedAEAPI();
     private final List<ICrystalFixer> crystalFixers = new ArrayList<>();
 
     public ExtendedAEAPI() {

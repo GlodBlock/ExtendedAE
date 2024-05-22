@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "extendedae:block/wireless_connect_magenta"
+    "all": "extendedae:block/wireless_connector/wireless_connect_magenta"
   }
 }

@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench by Sea_Kerman",
 	"parent": "block/block",
 	"textures": {
-		"particle": "extendedae:block/ex_charger_inside",
-		"inside": "extendedae:block/ex_charger_inside",
-		"outside": "extendedae:block/ex_charger",
-		"side": "extendedae:block/ex_charger_side"
+		"particle": "extendedae:block/extended_charger/ex_charger_inside",
+		"inside": "extendedae:block/extended_charger/ex_charger_inside",
+		"outside": "extendedae:block/extended_charger/ex_charger",
+		"side": "extendedae:block/extended_charger/ex_charger_side"
 	},
 	"elements": [
 		{

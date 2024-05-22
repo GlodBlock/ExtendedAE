@@ -12,6 +12,7 @@ import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
 import net.minecraft.data.PackOutput;
@@ -525,6 +526,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .save(c, ExtendedAE.id("assembler/budding"));
 
         transformation(c);
+        circuit(c);
     }
 
     private void transformation(@NotNull RecipeOutput c) {
@@ -536,6 +538,22 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.NETHER_QUARTZ, 4)
                 .fluid(Fluids.WATER, 100)
                 .save(c, ExtendedAE.id("assembler/fluix_transformation"));
+    }
+
+    private void circuit(@NotNull RecipeOutput c) {
+        // Four AE Processors
+        CircuitCutterRecipeBuilder
+                .cut(AEItems.ENGINEERING_PROCESSOR_PRINT, 9)
+                .input(Tags.Items.STORAGE_BLOCKS_DIAMOND)
+                .save(c, ExtendedAE.id("cutter/engineering_processor"));
+        CircuitCutterRecipeBuilder
+                .cut(AEItems.LOGIC_PROCESSOR_PRINT, 9)
+                .input(Tags.Items.STORAGE_BLOCKS_GOLD)
+                .save(c, ExtendedAE.id("cutter/logic_processor"));
+        CircuitCutterRecipeBuilder
+                .cut(AEItems.CALCULATION_PROCESSOR_PRINT, 4)
+                .input(AEBlocks.QUARTZ_BLOCK)
+                .save(c, ExtendedAE.id("cutter/calculation_processor"));
     }
 
 }

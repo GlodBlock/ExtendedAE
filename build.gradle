@@ -89,7 +89,7 @@ dependencies {
     implementation "curse.maven:glodium-957920:5337083"
     implementation "appeng:appliedenergistics2-neoforge:17.13.0-beta"
     compileOnly "curse.maven:curios-309927:5302407"
-    compileOnly "curse.maven:applied-flux-965012:5292934"
+    compileOnly "curse.maven:applied-flux-965012:5337685"
     compileOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:5211370"
     compileOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
     compileOnly "curse.maven:jade-324717:5109393"
