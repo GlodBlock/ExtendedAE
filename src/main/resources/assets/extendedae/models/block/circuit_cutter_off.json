@@ -1,6 +1,7 @@
 {
 	"parent": "block/block",
 	"render_type": "cutout",
+	"ambientocclusion": false,
 	"textures": {
 		"0": "extendedae:block/circuit_cutter/frame",
 		"1": "extendedae:block/circuit_cutter/saw_off",

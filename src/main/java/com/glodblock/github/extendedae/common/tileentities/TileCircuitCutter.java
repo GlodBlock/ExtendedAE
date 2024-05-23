@@ -66,6 +66,7 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     private final ConfigManager configManager;
     private boolean isWorking = false;
     private int progress = 0;
+    private ItemStack renderOutput = ItemStack.EMPTY;
 
     public TileCircuitCutter(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCircuitCutter.class, TileCircuitCutter::new, EAEItemAndBlock.CIRCUIT_CUTTER), pos, blockState);
@@ -84,6 +85,11 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     @Override
     protected InternalInventory getExposedInventoryForSide(Direction facing) {
         return this.invExposed;
+    }
+
+    @Override
+    public IUpgradeInventory getUpgrades() {
+        return this.upgrades;
     }
 
     public boolean isWorking() {
@@ -124,6 +130,10 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
         return this.output;
     }
 
+    public ItemStack getRenderOutput() {
+        return this.renderOutput;
+    }
+
     @Override
     public @Nullable IManagedGridNode getNode() {
         return this.getMainNode();
@@ -152,19 +162,22 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
 
     @Override
     protected boolean readFromStream(FriendlyByteBuf data) {
-        var changed = super.readFromStream(data);
-        boolean newWork = data.readBoolean();
-        if (newWork != this.isWorking) {
-            this.isWorking = newWork;
-            changed = true;
-        }
-        return changed;
+        super.readFromStream(data);
+        this.isWorking = data.readBoolean();
+        this.progress = data.readInt();
+        this.input.setItemDirect(0, data.readItem());
+        this.renderOutput = data.readItem();
+        return true;
     }
 
     @Override
     protected void writeToStream(FriendlyByteBuf data) {
         super.writeToStream(data);
         data.writeBoolean(this.isWorking);
+        data.writeInt(this.progress);
+        data.writeItem(this.input.getStackInSlot(0));
+        this.renderOutput = this.ctx.currentRecipe == null ? ItemStack.EMPTY : this.ctx.currentRecipe.value().output;
+        data.writeItem(this.renderOutput);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.glodblock.github.extendedae.xmod.emi;
 
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
+import com.glodblock.github.extendedae.xmod.emi.recipes.EMICircuitCutterRecipe;
 import com.glodblock.github.extendedae.xmod.emi.recipes.EMICrystalAssemblerRecipe;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
@@ -36,6 +38,9 @@ public class EMIPlugin implements EmiPlugin {
         registry.addCategory(EMICrystalAssemblerRecipe.CATEGORY);
         registry.addWorkstation(EMICrystalAssemblerRecipe.CATEGORY, EmiStack.of(EAEItemAndBlock.CRYSTAL_ASSEMBLER));
         adaptRecipeType(registry, CrystalAssemblerRecipe.TYPE, EMICrystalAssemblerRecipe::new);
+        registry.addCategory(EMICircuitCutterRecipe.CATEGORY);
+        registry.addWorkstation(EMICircuitCutterRecipe.CATEGORY, EmiStack.of(EAEItemAndBlock.CIRCUIT_CUTTER));
+        adaptRecipeType(registry, CircuitCutterRecipe.TYPE, EMICircuitCutterRecipe::new);
 
         addInfo(registry, EAEItemAndBlock.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
         addInfo(registry, EAEItemAndBlock.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));

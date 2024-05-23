@@ -17,6 +17,7 @@ public class BlockCircuitCutter extends BlockBaseGui<TileCircuitCutter> {
     public final static BooleanProperty WORKING = BooleanProperty.create("working");
 
     public BlockCircuitCutter() {
+        super(metalProps().noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(WORKING, false));
     }
 

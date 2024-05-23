@@ -42,7 +42,8 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
         tag(EAETags.ENTRO_INGOT)
                 .add(EAEItemAndBlock.ENTRO_INGOT);
         tag(Tags.Items.STORAGE_BLOCKS)
-                .add(EAEItemAndBlock.ENTRO_BLOCK.asItem());
+                .add(EAEItemAndBlock.ENTRO_BLOCK.asItem())
+                .add(EAEItemAndBlock.SILICON_BLOCK.asItem());
         tag(EAETags.ENTRO_BLOCK)
                 .add(EAEItemAndBlock.ENTRO_BLOCK.asItem());
         tag(ConventionTags.INSCRIBER_PRESSES)
@@ -56,5 +57,7 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
                 .add(EAEItemAndBlock.ENTRO_BUD_SMALL.asItem())
                 .add(EAEItemAndBlock.ENTRO_BUD_MEDIUM.asItem())
                 .add(EAEItemAndBlock.ENTRO_BUD_LARGE.asItem());
+        tag(EAETags.SILICON_BLOCK)
+                .add(EAEItemAndBlock.SILICON_BLOCK.asItem());
     }
 }

@@ -87,6 +87,7 @@ public class EAEItemAndBlock {
     public static BlockBuddingEntro HALF_ENTROIZED_FLUIX_BUDDING;
     public static BlockBuddingEntro HARDLY_ENTROIZED_FLUIX_BUDDING;
     public static BlockExPatternProvider EX_PATTERN_PROVIDER;
+    public static Block SILICON_BLOCK;
     public static PartItem<PartExPatternProvider> EX_PATTERN_PROVIDER_PART;
     public static BlockExInterface EX_INTERFACE;
     public static PartItem<PartExInterface> EX_INTERFACE_PART;
@@ -181,6 +182,7 @@ public class EAEItemAndBlock {
         MACHINE_FRAME = new Block(metalProps().requiresCorrectToolForDrops());
         CRYSTAL_ASSEMBLER = new BlockCrystalAssembler();
         CIRCUIT_CUTTER = new BlockCircuitCutter();
+        SILICON_BLOCK = new Block(metalProps().requiresCorrectToolForDrops());
         if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
             try {
                 //To prevent classloader issue
@@ -216,6 +218,7 @@ public class EAEItemAndBlock {
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
         regHandler.block("circuit_cutter", CIRCUIT_CUTTER, TileCircuitCutter.class, TileCircuitCutter::new);
+        regHandler.block("silicon_block", SILICON_BLOCK);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);
         regHandler.item("entro_seed", ENTRO_SEED);

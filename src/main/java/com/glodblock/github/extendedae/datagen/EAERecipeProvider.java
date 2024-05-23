@@ -525,6 +525,34 @@ public class EAERecipeProvider extends RecipeProvider {
                 .fluid(Fluids.WATER, 200)
                 .save(c, ExtendedAE.id("assembler/budding"));
 
+        // Silicon BLock
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.SILICON_BLOCK)
+                .pattern("SSS")
+                .pattern("SSS")
+                .pattern("SSS")
+                .define('S', ConventionTags.SILICON)
+                .unlockedBy(C, has(ConventionTags.SILICON))
+                .save(c, ExtendedAE.id("silicon_block"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AEItems.SILICON, 9)
+                .requires(EAETags.SILICON_BLOCK)
+                .unlockedBy(C, has(EAETags.SILICON_BLOCK))
+                .save(c, ExtendedAE.id("silicon_decompress"));
+
+        // Circuit Cutter
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAEItemAndBlock.CIRCUIT_CUTTER)
+                .input(EAEItemAndBlock.MACHINE_FRAME)
+                .input(AEItems.ENGINEERING_PROCESSOR, 8)
+                .input(AEItems.CALCULATION_PROCESSOR_PRESS)
+                .input(AEItems.ENGINEERING_PROCESSOR_PRESS)
+                .input(AEItems.LOGIC_PROCESSOR_PRESS)
+                .input(AEItems.SILICON_PRESS)
+                .input(EAEItemAndBlock.CONCURRENT_PROCESSOR_PRESS)
+                .input(Blocks.STONECUTTER)
+                .save(c, ExtendedAE.id("assembler/circuit_cutter"));
+
         transformation(c);
         circuit(c);
     }
@@ -554,6 +582,23 @@ public class EAERecipeProvider extends RecipeProvider {
                 .cut(AEItems.CALCULATION_PROCESSOR_PRINT, 4)
                 .input(AEBlocks.QUARTZ_BLOCK)
                 .save(c, ExtendedAE.id("cutter/calculation_processor"));
+        CircuitCutterRecipeBuilder
+                .cut(AEItems.SILICON_PRINT, 9)
+                .input(EAETags.SILICON_BLOCK)
+                .save(c, ExtendedAE.id("cutter/silicon_print"));
+
+        // Entro Processor
+        CircuitCutterRecipeBuilder
+                .cut(EAEItemAndBlock.CONCURRENT_PROCESSOR_PRINT, 4)
+                .input(EAETags.ENTRO_BLOCK)
+                .save(c, ExtendedAE.id("cutter/concurrent_processor"));
+
+        // Troll
+        CircuitCutterRecipeBuilder
+                .cut(Items.PUFFERFISH, 8)
+                .input(EAEItemAndBlock.FISHBIG)
+                .save(c, ExtendedAE.id("cutter/fishbig_destroy"));
+
     }
 
 }

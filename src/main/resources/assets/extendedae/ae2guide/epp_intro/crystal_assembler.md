@@ -17,4 +17,6 @@ item_ids:
 
 Those extended devices are too complex for crafting table to craft, and you will need Crystal Assembler to craft most of them.
 
+**Notice: The screen face can't connect to network.**
+
 It also can perform certain in-world transformation recipes, like fluix transformation.

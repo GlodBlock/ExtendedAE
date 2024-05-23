@@ -37,6 +37,7 @@ import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
 import com.glodblock.github.extendedae.client.model.ExPlaneModel;
 import com.glodblock.github.extendedae.client.render.tesr.CanerTESR;
+import com.glodblock.github.extendedae.client.render.tesr.CircuitCutterTESR;
 import com.glodblock.github.extendedae.client.render.tesr.CrystalFixerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExChargerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExDriveTESR;
@@ -45,6 +46,7 @@ import com.glodblock.github.extendedae.client.render.tesr.ExMolecularAssemblerTE
 import com.glodblock.github.extendedae.client.render.tesr.IngredientBufferTESR;
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
+import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
 import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
@@ -148,6 +150,7 @@ public class ClientRegistryHandler {
         BlockEntityRenderers.register(GlodUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
         BlockEntityRenderers.register(GlodUtil.getTileType(TileCaner.class), CanerTESR::new);
         BlockEntityRenderers.register(GlodUtil.getTileType(TileCrystalFixer.class), CrystalFixerTESR::new);
+        BlockEntityRenderers.register(GlodUtil.getTileType(TileCircuitCutter.class), CircuitCutterTESR::new);
         event.register(ExtendedAE.id("ex_drive"), new ExDriveModel.Loader());
         event.register(ExtendedAE.id("active_formation_plane"), new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane")));
         event.register(ExtendedAE.id("active_formation_plane_on"), new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane_on")));
