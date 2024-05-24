@@ -15,5 +15,6 @@ public class EAETags {
     public static final TagKey<Item> ENTRO_INGOT = TagKey.create(Registries.ITEM, Glodium.id("forge", "ingots/infused_entro"));
     public static final TagKey<Item> ENTRO_BLOCK = TagKey.create(Registries.ITEM, Glodium.id("forge", "storage_blocks/entro"));
     public static final TagKey<Item> SILICON_BLOCK = TagKey.create(Registries.ITEM, Glodium.id("forge", "storage_blocks/silicon"));
+    public static final TagKey<Item> OVERSIZE_INTERFACE = TagKey.create(Registries.ITEM, ExtendedAE.id("oversize_interface"));
 
 }

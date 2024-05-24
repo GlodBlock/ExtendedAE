@@ -130,6 +130,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerThresholdExportBus.TYPE, GuiThresholdExportBus::new, "/screens/threshold_export_bus.json");
         InitScreens.register(ContainerCrystalAssembler.TYPE, GuiCrystalAssembler::new, "/screens/crystal_assembler.json");
         InitScreens.register(ContainerCircuitCutter.TYPE, GuiCircuitCutter::new, "/screens/circuit_cutter.json");
+        InitScreens.register(ContainerExInterface.TYPE_OVERSIZE, GuiExInterface::new, "/screens/oversize_interface.json");
         event.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);

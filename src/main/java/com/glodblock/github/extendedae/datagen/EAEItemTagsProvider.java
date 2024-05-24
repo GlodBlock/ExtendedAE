@@ -29,6 +29,9 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
         tag(EAETags.EX_INTERFACE)
                 .add(EAEItemAndBlock.EX_INTERFACE_PART)
                 .add(EAEItemAndBlock.EX_INTERFACE.asItem());
+        tag(EAETags.OVERSIZE_INTERFACE)
+                .add(EAEItemAndBlock.OVERSIZE_INTERFACE_PART)
+                .add(EAEItemAndBlock.OVERSIZE_INTERFACE.asItem());
         tag(Tags.Items.DUSTS)
                 .add(EAEItemAndBlock.ENTRO_DUST);
         tag(Tags.Items.GEMS)

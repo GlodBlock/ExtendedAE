@@ -89,7 +89,7 @@ public class EAERecipeProvider extends RecipeProvider {
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, EAEItemAndBlock.EX_INTERFACE)
                 .requires(EAEItemAndBlock.EX_INTERFACE_PART)
-                .unlockedBy(C, has(EAEItemAndBlock.EX_INTERFACE))
+                .unlockedBy(C, has(EAEItemAndBlock.EX_INTERFACE_PART))
                 .save(c, ExtendedAE.id("ex_interface_alt"));
 
         // Infinity Cell
@@ -552,6 +552,26 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAEItemAndBlock.CONCURRENT_PROCESSOR_PRESS)
                 .input(Blocks.STONECUTTER)
                 .save(c, ExtendedAE.id("assembler/circuit_cutter"));
+
+        // Oversize Interface
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAEItemAndBlock.OVERSIZE_INTERFACE)
+                .input(EAETags.EX_INTERFACE)
+                .input(EAEItemAndBlock.INGREDIENT_BUFFER)
+                .input(EAEItemAndBlock.CONCURRENT_PROCESSOR, 2)
+                .input(AEItems.ANNIHILATION_CORE, 2)
+                .input(AEItems.FORMATION_CORE, 2)
+                .save(c, ExtendedAE.id("assembler/oversize_interface"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EAEItemAndBlock.OVERSIZE_INTERFACE_PART)
+                .requires(EAEItemAndBlock.OVERSIZE_INTERFACE)
+                .unlockedBy(C, has(EAEItemAndBlock.OVERSIZE_INTERFACE))
+                .save(c, ExtendedAE.id("oversize_interface_part"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EAEItemAndBlock.OVERSIZE_INTERFACE)
+                .requires(EAEItemAndBlock.OVERSIZE_INTERFACE_PART)
+                .unlockedBy(C, has(EAEItemAndBlock.OVERSIZE_INTERFACE_PART))
+                .save(c, ExtendedAE.id("oversize_interface_alt"));
 
         transformation(c);
         circuit(c);

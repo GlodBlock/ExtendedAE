@@ -18,6 +18,7 @@ import com.glodblock.github.extendedae.common.blocks.BlockExMolecularAssembler;
 import com.glodblock.github.extendedae.common.blocks.BlockExPatternProvider;
 import com.glodblock.github.extendedae.common.blocks.BlockFishbig;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
+import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.extendedae.common.items.CommonItem;
 import com.glodblock.github.extendedae.common.items.InfinityCell;
@@ -40,6 +41,7 @@ import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
 import com.glodblock.github.extendedae.common.parts.PartModExportBus;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartOversizeInterface;
 import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
@@ -58,6 +60,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
 import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
+import com.glodblock.github.extendedae.common.tileentities.TileOversizeInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import net.minecraft.world.item.Item;
@@ -125,6 +128,8 @@ public class EAEItemAndBlock {
     public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
     public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
     public static BlockCircuitCutter CIRCUIT_CUTTER;
+    public static BlockOversizeInterface OVERSIZE_INTERFACE;
+    public static PartItem<PartOversizeInterface> OVERSIZE_INTERFACE_PART;
 
     public static void init(EAERegistryHandler regHandler) {
         ENTRO_CRYSTAL = new CommonItem();
@@ -183,6 +188,8 @@ public class EAEItemAndBlock {
         CRYSTAL_ASSEMBLER = new BlockCrystalAssembler();
         CIRCUIT_CUTTER = new BlockCircuitCutter();
         SILICON_BLOCK = new Block(metalProps().requiresCorrectToolForDrops());
+        OVERSIZE_INTERFACE = new BlockOversizeInterface();
+        OVERSIZE_INTERFACE_PART = new PartItem<>(new Item.Properties(), PartOversizeInterface.class, PartOversizeInterface::new);
         if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
             try {
                 //To prevent classloader issue
@@ -218,6 +225,7 @@ public class EAEItemAndBlock {
         regHandler.block("caner", CANER, TileCaner.class, TileCaner::new);
         regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
         regHandler.block("circuit_cutter", CIRCUIT_CUTTER, TileCircuitCutter.class, TileCircuitCutter::new);
+        regHandler.block("oversize_interface", OVERSIZE_INTERFACE, TileOversizeInterface.class, TileOversizeInterface::new);
         regHandler.block("silicon_block", SILICON_BLOCK);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);
@@ -252,6 +260,7 @@ public class EAEItemAndBlock {
         regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
         regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
         regHandler.item("threshold_export_bus", THRESHOLD_EXPORT_BUS);
+        regHandler.item("oversize_interface_part", OVERSIZE_INTERFACE_PART);
     }
 
 }

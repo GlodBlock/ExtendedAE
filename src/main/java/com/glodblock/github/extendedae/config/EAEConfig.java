@@ -55,6 +55,10 @@ public class EAEConfig {
             .comment("Disable Extended Inscriber's item render, it only works in client side.")
             .define("disableItemRender", false);
 
+    private static final ModConfigSpec.IntValue OVERSIZE_MULTIPLIER = BUILDER
+            .comment("Size multiplier of oversize interface")
+            .defineInRange("oversize_multiplier", 16, 2, 4096);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean checkRL(Object o) {
@@ -68,6 +72,7 @@ public class EAEConfig {
     public static List<Item> infCellItem;
     public static List<ResourceLocation> tapeWhitelist;
     public static boolean disableInscriberRender;
+    public static int oversizeMultiplier;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -87,6 +92,7 @@ public class EAEConfig {
                 });
         tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::new).collect(Collectors.toList());
         disableInscriberRender = INSCRIBER_RENDER.get();
+        oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
     }
 
 }

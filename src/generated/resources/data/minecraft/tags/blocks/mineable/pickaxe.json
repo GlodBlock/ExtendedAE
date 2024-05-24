@@ -23,6 +23,7 @@
     "extendedae:caner",
     "extendedae:ex_io_port",
     "extendedae:circuit_cutter",
+    "extendedae:oversize_interface",
     "extendedae:silicon_block",
     "extendedae:fishbig"
   ]

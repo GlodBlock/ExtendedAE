@@ -58,9 +58,13 @@ public class RecipeExecutor<T extends Recipe<?>> {
             if (this.machine.getProgress() >= this.maxTime) {
                 this.machine.setProgress(0);
                 var outputStack = this.outputGetter.apply(runRecipe.value()).copy();
-                if (ctx.testRecipe(runRecipe) && output.insertItem(0, outputStack, true).isEmpty()) {
-                    ctx.runRecipe(runRecipe);
-                    output.insertItem(0, outputStack, false);
+                if (ctx.testRecipe(runRecipe)) {
+                    if (output.insertItem(0, outputStack, true).isEmpty()) {
+                        ctx.runRecipe(runRecipe);
+                        output.insertItem(0, outputStack, false);
+                    } else {
+                        ctx.stuck = true;
+                    }
                 }
                 ctx.currentRecipe = null;
             }
