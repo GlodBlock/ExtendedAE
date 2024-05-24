@@ -92,10 +92,13 @@ dependencies {
     compileOnly "curse.maven:applied-flux-965012:5337685"
     compileOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:5211370"
     compileOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
+    compileOnly "curse.maven:mega-cells-622112:5310776"
     compileOnly "curse.maven:jade-324717:5109393"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:14.0.688"
     // runtime test
     runtimeOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
+    runtimeOnly "curse.maven:applied-flux-965012:5337685"
+    runtimeOnly "curse.maven:mega-cells-622112:5310776"
     runtimeOnly "curse.maven:jade-324717:5109393"
 }
 

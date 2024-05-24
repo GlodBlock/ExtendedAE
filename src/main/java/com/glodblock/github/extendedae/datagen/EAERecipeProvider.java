@@ -10,11 +10,16 @@ import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipeBuilder;
 import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
+import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.util.AFTags;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAEItemAndBlock;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
+import com.glodblock.github.extendedae.xmod.ModConstants;
+import gripe._90.megacells.definition.MEGAItems;
+import gripe._90.megacells.definition.MEGATags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -28,6 +33,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import org.jetbrains.annotations.NotNull;
 
 public class EAERecipeProvider extends RecipeProvider {
@@ -575,6 +582,14 @@ public class EAERecipeProvider extends RecipeProvider {
 
         transformation(c);
         circuit(c);
+
+        if (ExtendedAE.isLoad(ModConstants.MEGA)) {
+            maga(c);
+        }
+        if (ExtendedAE.isLoad(ModConstants.APPFLUX)) {
+            appflux(c);
+        }
+
     }
 
     private void transformation(@NotNull RecipeOutput c) {
@@ -619,6 +634,38 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAEItemAndBlock.FISHBIG)
                 .save(c, ExtendedAE.id("cutter/fishbig_destroy"));
 
+    }
+
+    private void appflux(@NotNull RecipeOutput c) {
+        // Redstone Crystal
+        CrystalAssemblerRecipeBuilder
+                .assemble(AFItemAndBlock.REDSTONE_CRYSTAL, 4)
+                .input(Tags.Items.STORAGE_BLOCKS_REDSTONE, 4)
+                .input(AEBlocks.FLUIX_BLOCK, 4)
+                .input(AFTags.DIAMOND_DUST, 4)
+                .fluid(Fluids.WATER, 100)
+                .save(c.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/redstone_crystal"));
+    }
+
+    private void maga(@NotNull RecipeOutput c) {
+        // Sky steel
+        CrystalAssemblerRecipeBuilder
+                .assemble(MEGAItems.SKY_STEEL_INGOT, 8)
+                .input(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED, 4)
+                .input(ConventionTags.IRON_INGOT, 4)
+                .input(AEItems.SKY_DUST, 4)
+                .fluid(Fluids.LAVA, 100)
+                .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("assembler/sky_steel"));
+
+        // Accumulation Processor
+        CircuitCutterRecipeBuilder
+                .cut(MEGAItems.ACCUMULATION_PROCESSOR_PRINT, 9)
+                .input(MEGATags.SKY_STEEL_BLOCK_ITEM)
+                .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("cutter/accumulation_processor"));
+    }
+
+    private ICondition mod(String modid) {
+        return new ModLoadedCondition(modid);
     }
 
 }
