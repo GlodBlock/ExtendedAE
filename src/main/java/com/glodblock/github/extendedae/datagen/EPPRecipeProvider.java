@@ -9,12 +9,20 @@ import appeng.datagen.providers.tags.ConventionTags;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.glodium.datagen.NBTRecipeBuilder;
+import gripe._90.appliede.AppliedE;
+import moze_intel.projecte.gameObjs.registries.PEItems;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -431,6 +439,48 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .define('F', Items.PUFFERFISH)
                 .unlockedBy(C, has(EPPItemAndBlock.FISHBIG))
                 .save(c, ExtendedAE.id("fishbig"));
+
+        if (ModList.get().isLoaded("appliede")) {
+            var interfaceTag = TagKey.create(Registries.ITEM, new ResourceLocation("appliede", "emc_interface"));
+            // Extended EMC Interface
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_EMC_INTERFACE)
+                                    .pattern("PC")
+                                    .pattern("CZ")
+                                    .define('P', interfaceTag)
+                                    .define('C', AEItems.CAPACITY_CARD)
+                                    .define('Z', PEItems.RED_MATTER)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EX_EMC_INTERFACE))::save)
+                    .build(c, ExtendedAE.id("ex_emc_interface"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapelessRecipeBuilder
+                                    .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EX_EMC_INTERFACE_PART)
+                                    .requires(EPPItemAndBlock.EX_EMC_INTERFACE)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EX_EMC_INTERFACE_PART))::save)
+                    .build(c, ExtendedAE.id("ex_emc_interface_part"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapelessRecipeBuilder
+                                    .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EX_EMC_INTERFACE)
+                                    .requires(EPPItemAndBlock.EX_EMC_INTERFACE_PART)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EX_EMC_INTERFACE))::save)
+                    .build(c, ExtendedAE.id("ex_emc_interface_alt"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapelessRecipeBuilder
+                                    .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EMC_INTERFACE_UPGRADE)
+                                    .requires(AEItems.CAPACITY_CARD, 2)
+                                    .requires(PEItems.RED_MATTER)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EMC_INTERFACE_UPGRADE))::save)
+                    .build(c, ExtendedAE.id("ex_emc_interface_upgrade"));
+        }
 
     }
 }

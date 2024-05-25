@@ -32,6 +32,7 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
+import com.glodblock.github.extendedae.xmod.appliede.APEClientLoad;
 import com.glodblock.github.extendedae.xmod.wt.WTClientLoad;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -50,6 +51,9 @@ public class ClientRegistryHandler {
         this.registerGui();
         if (ModList.get().isLoaded("ae2wtlib")) {
             WTClientLoad.init();
+        }
+        if (ModList.get().isLoaded("appliede")) {
+            APEClientLoad.init();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.common;
 
+import appeng.block.AEBaseBlock;
 import appeng.items.parts.PartItem;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
@@ -23,6 +24,7 @@ import com.glodblock.github.extendedae.common.items.ItemPackedDevice;
 import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
+import com.glodblock.github.extendedae.common.items.ItemUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.items.tools.ItemWirelessExPAT;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
@@ -50,6 +52,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssemb
 import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
+import com.glodblock.github.extendedae.xmod.appliede.APECommonLoad;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.ModList;
 
@@ -92,6 +95,10 @@ public class EPPItemAndBlock {
     public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
     public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
+    // AppliedE Support
+    public static AEBaseBlock EX_EMC_INTERFACE;
+    public static PartItem<?> EX_EMC_INTERFACE_PART;
+    public static ItemUpgrade EMC_INTERFACE_UPGRADE;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -179,6 +186,9 @@ public class EPPItemAndBlock {
         regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
         regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
         regHandler.item("threshold_export_bus", THRESHOLD_EXPORT_BUS);
+        if (ModList.get().isLoaded("appliede")) {
+            APECommonLoad.initSingleton(regHandler);
+        }
     }
 
 }

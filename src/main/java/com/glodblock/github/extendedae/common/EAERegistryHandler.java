@@ -63,6 +63,7 @@ import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPatt
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
+import com.glodblock.github.extendedae.xmod.appliede.APECommonLoad;
 import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -140,6 +141,9 @@ public class EAERegistryHandler extends RegistryHandler {
         if (ModList.get().isLoaded("ae2wtlib")) {
             WTCommonLoad.container();
         }
+        if (ModList.get().isLoaded("appliede")) {
+            APECommonLoad.container();
+        }
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -173,6 +177,9 @@ public class EAERegistryHandler extends RegistryHandler {
         }
         if (ModList.get().isLoaded("appflux")) {
             AFCommonLoad.init();
+        }
+        if (ModList.get().isLoaded("appliede")) {
+            APECommonLoad.init();
         }
     }
 

@@ -1,0 +1,6 @@
+{
+  "parent": "appliede:part/emc_interface",
+  "textures": {
+    "front": "expatternprovider:part/ex_emc_interface"
+  }
+}
