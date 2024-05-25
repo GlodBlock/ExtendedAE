@@ -480,6 +480,41 @@ public class EPPRecipeProvider extends RecipeProvider {
                                     .requires(PEItems.RED_MATTER)
                                     .unlockedBy(C, has(EPPItemAndBlock.EMC_INTERFACE_UPGRADE))::save)
                     .build(c, ExtendedAE.id("ex_emc_interface_upgrade"));
+
+            // Extended EMC IO Bus
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_EMC_EXPORT_BUS)
+                                    .pattern("PC")
+                                    .pattern("CZ")
+                                    .define('P', AppliedE.EMC_EXPORT_BUS.get())
+                                    .define('C', AEItems.SPEED_CARD)
+                                    .define('Z', PEItems.RED_MATTER)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EX_EMC_EXPORT_BUS))::save)
+                    .build(c, ExtendedAE.id("ex_emc_export_bus"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, EPPItemAndBlock.EX_EMC_IMPORT_BUS)
+                                    .pattern("PC")
+                                    .pattern("CZ")
+                                    .define('P', AppliedE.EMC_IMPORT_BUS.get())
+                                    .define('C', AEItems.SPEED_CARD)
+                                    .define('Z', PEItems.RED_MATTER)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EX_EMC_IMPORT_BUS))::save)
+                    .build(c, ExtendedAE.id("ex_emc_import_bus"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("appliede"))
+                    .addRecipe(
+                            ShapelessRecipeBuilder
+                                    .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EMC_IO_BUS_UPGRADE)
+                                    .requires(AEItems.SPEED_CARD, 2)
+                                    .requires(PEItems.RED_MATTER)
+                                    .unlockedBy(C, has(EPPItemAndBlock.EMC_IO_BUS_UPGRADE))::save)
+                    .build(c, ExtendedAE.id("ex_emc_import_bus_upgrade"));
         }
 
     }

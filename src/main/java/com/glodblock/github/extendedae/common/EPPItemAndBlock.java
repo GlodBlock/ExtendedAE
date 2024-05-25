@@ -99,6 +99,9 @@ public class EPPItemAndBlock {
     public static AEBaseBlock EX_EMC_INTERFACE;
     public static PartItem<?> EX_EMC_INTERFACE_PART;
     public static ItemUpgrade EMC_INTERFACE_UPGRADE;
+    public static PartItem<?> EX_EMC_IMPORT_BUS;
+    public static PartItem<?> EX_EMC_EXPORT_BUS;
+    public static ItemUpgrade EMC_IO_BUS_UPGRADE;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();

@@ -8,6 +8,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,7 @@ public class EPPItemTagsProvider extends ItemTagsProvider {
         super(p, lookupProvider, block, ExtendedAE.MODID, existingFileHelper);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(EPPTags.EX_PATTERN_PROVIDER)
@@ -27,5 +29,10 @@ public class EPPItemTagsProvider extends ItemTagsProvider {
         tag(EPPTags.EX_INTERFACE)
                 .add(EPPItemAndBlock.EX_INTERFACE_PART)
                 .add(EPPItemAndBlock.EX_INTERFACE.asItem());
+        if (ModList.get().isLoaded("appliede")) {
+            tag(EPPTags.EX_EMC_INTERFACE)
+                    .addOptional(EPPItemAndBlock.EX_EMC_INTERFACE.getRegistryName())
+                    .addOptional(EPPItemAndBlock.EX_EMC_INTERFACE_PART.getRegistryName());
+        }
     }
 }

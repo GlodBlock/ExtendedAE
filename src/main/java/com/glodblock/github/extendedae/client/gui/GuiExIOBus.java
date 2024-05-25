@@ -17,8 +17,7 @@ public class GuiExIOBus extends UpgradeableScreen<ContainerExIOBus> {
     private final SettingToggleButton<YesNo> craftMode;
     private final SettingToggleButton<SchedulingMode> schedulingMode;
 
-    public GuiExIOBus(ContainerExIOBus menu, Inventory playerInventory, Component title,
-                       ScreenStyle style) {
+    public GuiExIOBus(ContainerExIOBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
 
         this.redstoneMode = new ServerSettingToggleButton<>(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);

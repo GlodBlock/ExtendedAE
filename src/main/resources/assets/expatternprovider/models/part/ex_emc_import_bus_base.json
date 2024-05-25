@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:part/import_bus_base",
+  "textures": {
+    "front": "expatternprovider:part/ex_emc_import_bus"
+  }
+}
