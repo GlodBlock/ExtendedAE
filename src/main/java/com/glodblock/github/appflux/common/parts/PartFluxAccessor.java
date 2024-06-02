@@ -1,13 +1,9 @@
 package com.glodblock.github.appflux.common.parts;
 
 import appeng.api.networking.GridFlags;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
@@ -16,14 +12,15 @@ import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
-import com.glodblock.github.appflux.common.me.energy.EnergyDistributor;
+import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class PartFluxAccessor extends AEBasePart implements IGridTickable {
+public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
     public static final ResourceLocation RL = AppFlux.id("part/flux_accessor");
     public static final IPartModel MODEL = new PartModel(RL);
@@ -31,7 +28,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
     public PartFluxAccessor(IPartItem<?> partItem) {
         super(partItem);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
-        this.getMainNode().setIdlePowerUsage(1.0).addService(IGridTickable.class, this);
+        this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
     }
 
     @Override
@@ -71,12 +68,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
     }
 
     @Override
-    public TickingRequest getTickingRequest(IGridNode iGridNode) {
-        return new TickingRequest(1, 1, false, false);
-    }
-
-    @Override
-    public TickRateModulation tickingRequest(IGridNode iGridNode, int i) {
+    public void distribute() {
         var storage = this.getStorage();
         var d = this.getSide();
         var gird = this.getGridNode() == null ? null : this.getGridNode().getGrid();
@@ -84,13 +76,21 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
             var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
             var thatGrid = AFUtil.getGrid(te, d.getOpposite());
             if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                EnergyDistributor.send(te, d.getOpposite(), storage, this.getSource());
-            }
-            if (AFConfig.selfCharge() && gird != null) {
-                EnergyDistributor.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
+                EnergyHandler.send(te, d.getOpposite(), storage, this.getSource());
             }
         }
-        return TickRateModulation.SAME;
+    }
+
+    @Override
+    public void charge() {
+        if (AFConfig.selfCharge()) {
+            var storage = this.getStorage();
+            var d = this.getSide();
+            var gird = this.getGridNode() == null ? null : this.getGridNode().getGrid();
+            if (storage != null && d != null && this.getLevel() != null && gird != null) {
+                EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
+            }
+        }
     }
 
 }

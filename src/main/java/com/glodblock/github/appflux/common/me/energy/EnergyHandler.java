@@ -22,7 +22,7 @@ import sonar.fluxnetworks.api.FluxCapabilities;
 
 import java.util.ArrayList;
 
-public final class EnergyDistributor {
+public final class EnergyHandler {
 
     private static final ArrayList<Pair<Capability<?>, Handler<?>>> HANDLERS = new ArrayList<>();
     private static final Handler<IEnergyStorage> DEFAULT = (accepter, storage, source) -> {

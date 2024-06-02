@@ -20,7 +20,7 @@
   "item.appflux.energy_processor_press": "Inscriber Energy Press",
   "item.appflux.part_flux_accessor": "Flux Accessor",
   "item.appflux.induction_card": "Induction Card",
-  "item.appflux.induction_card.tooltip": "Allow AE machines to accept energy",
+  "item.appflux.induction_card.tooltip": "Allow AE devices to accept energy",
   "block.appflux.flux_accessor": "Flux Accessor",
   "block.appflux.flux_accessor.tooltip.1": "Pull energy from network.",
   "block.appflux.flux_accessor.tooltip.2": "Need external cable to push energy",
