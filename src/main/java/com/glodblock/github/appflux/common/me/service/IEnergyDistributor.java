@@ -4,7 +4,9 @@ import appeng.api.networking.IGridNodeService;
 
 public interface IEnergyDistributor extends IGridNodeService {
 
-    void distribute();
+    default void distribute() {
+
+    }
 
     default void charge() {
 

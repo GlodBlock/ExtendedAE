@@ -7,6 +7,7 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.me.helpers.IGridConnectedBlockEntity;
+import appeng.parts.AEBasePart;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
@@ -15,6 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class AFUtil {
 
@@ -69,6 +73,19 @@ public class AFUtil {
             }
         }
         return true;
+    }
+
+    public static Set<Direction> getSides(Object host) {
+        if (host instanceof BlockEntity) {
+            return EnumSet.allOf(Direction.class);
+        } else if (host instanceof AEBasePart part) {
+            if (part.getSide() == null) {
+                return EnumSet.noneOf(Direction.class);
+            }
+            return EnumSet.of(part.getSide());
+        } else {
+            return EnumSet.noneOf(Direction.class);
+        }
     }
 
 }

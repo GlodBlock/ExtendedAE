@@ -188,7 +188,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .save(consumer, AppFlux.id("fe_housing"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, AFItemAndBlock.INDUCTION_CARD)
-                .requires(AFItemAndBlock.REDSTONE_CRYSTAL)
+                .requires(AFItemAndBlock.FLUX_ACCESSOR)
                 .requires(AEItems.BASIC_CARD)
                 .unlockedBy(C, has(AEItems.BASIC_CARD))
                 .save(consumer, AppFlux.id("induction_card"));
