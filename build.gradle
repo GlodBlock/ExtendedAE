@@ -105,6 +105,9 @@ dependencies {
     // project e
     compileOnly fg.deobf("curse.maven:projecte-226410:4901949")
     compileOnly fg.deobf("curse.maven:appliede-1009940:5364294")
+    // gregtech
+    compileOnly fg.deobf("curse.maven:gregtechceu-modern-890405:5369020")
+    compileOnly fg.deobf("curse.maven:ldlib-626676:5394816")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     // runtime test
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")

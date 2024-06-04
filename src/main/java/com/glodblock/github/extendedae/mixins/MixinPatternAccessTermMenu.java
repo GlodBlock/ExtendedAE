@@ -8,6 +8,8 @@ import appeng.parts.AEBasePart;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SExPatternInfo;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import com.glodblock.github.extendedae.xmod.LoadList;
+import com.glodblock.github.extendedae.xmod.gregtech.MetaTileResolver;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -43,6 +45,8 @@ public abstract class MixinPatternAccessTermMenu extends AEBaseMenu {
                     EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, te.getBlockPos(), Objects.requireNonNull(te.getLevel()).dimension()), player);
                 } else if (container instanceof AEBasePart part) {
                     EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, part.getBlockEntity().getBlockPos(), Objects.requireNonNull(part.getLevel()).dimension(), part.getSide()), player);
+                } else if (LoadList.GT && MetaTileResolver.check(container)) {
+                    EPPNetworkHandler.INSTANCE.sendTo(new SExPatternInfo(id, MetaTileResolver.getBlockPos(container), MetaTileResolver.getLevel(container).dimension()), player);
                 }
             }
         }

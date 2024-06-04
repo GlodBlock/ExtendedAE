@@ -10,6 +10,7 @@ public final class LoadList {
 
     public static boolean JEI = false;
     public static boolean REI = false;
+    public static boolean GT = false;
 
     public static Set<String> MOD_NAME = ModList.get().getMods().stream().flatMap(x -> Stream.of(x.getModId(), x.getDisplayName())).collect(Collectors.toSet());
 
@@ -20,6 +21,9 @@ public final class LoadList {
         }
         if (list.isLoaded("roughlyenoughitems")) {
             REI = true;
+        }
+        if (list.isLoaded("gtceu")) {
+            GT = true;
         }
     }
 }
