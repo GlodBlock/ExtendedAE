@@ -37,6 +37,7 @@ import com.github.glodblock.extendedae.common.parts.PartPreciseExportBus;
 import com.github.glodblock.extendedae.common.parts.PartPreciseStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartThresholdExportBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.github.glodblock.extendedae.common.tileentities.TileCaner;
 import com.github.glodblock.extendedae.common.tileentities.TileExCharger;
@@ -65,6 +66,7 @@ import com.github.glodblock.extendedae.container.ContainerPreciseStorageBus;
 import com.github.glodblock.extendedae.container.ContainerRenamer;
 import com.github.glodblock.extendedae.container.ContainerTagExportBus;
 import com.github.glodblock.extendedae.container.ContainerTagStorageBus;
+import com.github.glodblock.extendedae.container.ContainerThresholdExportBus;
 import com.github.glodblock.extendedae.container.ContainerThresholdLevelEmitter;
 import com.github.glodblock.extendedae.container.ContainerWirelessConnector;
 import com.github.glodblock.extendedae.container.ContainerWirelessExPAT;
@@ -186,6 +188,7 @@ public class RegistryHandler {
         registerMenuType("ex_ioport", ContainerExIOPort.TYPE);
         registerMenuType("precise_export_bus", ContainerPreciseExportBus.TYPE);
         registerMenuType("precise_storage_bus", ContainerPreciseStorageBus.TYPE);
+        registerMenuType("threshold_export_bus", ContainerThresholdExportBus.TYPE);
         if (EAE.checkMod("ae2wtlib")) {
             WTCommonLoad.container();
         }
@@ -264,6 +267,9 @@ public class RegistryHandler {
         Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1);
         Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_STORAGE_BUS, 5);
         Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.PRECISE_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 5);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 4);
     }
 
     @SuppressWarnings("all")
@@ -328,6 +334,7 @@ public class RegistryHandler {
         PartModels.registerModels(PartActiveFormationPlane.MODELS);
         PartModels.registerModels(PartPreciseExportBus.MODELS);
         PartModels.registerModels(PartPreciseStorageBus.MODEL_BASE);
+        PartModels.registerModels(PartThresholdExportBus.MODELS);
     }
 
     private void onRegisterRandomAPI() {

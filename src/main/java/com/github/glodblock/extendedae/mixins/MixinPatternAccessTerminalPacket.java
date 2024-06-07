@@ -36,7 +36,7 @@ public abstract class MixinPatternAccessTerminalPacket {
             cancellable = true
     )
     private void handleExGui(Player player, CallbackInfo ci) {
-        if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal patternAccessTerminal) {
+        if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal<?> patternAccessTerminal) {
             if (fullUpdate) {
                 patternAccessTerminal.postFullUpdate(this.inventoryId, sortBy, group, inventorySize, slots);
             } else {

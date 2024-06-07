@@ -20,15 +20,22 @@ import java.util.function.Consumer;
 public class GuiCaner extends AEBaseScreen<ContainerCaner> implements IActionHolder {
 
     private final Map<String, Consumer<Object[]>> actions = new Object2ObjectOpenHashMap<>();
+    private final CycleEPPButton modeBtn;
 
     public GuiCaner(ContainerCaner menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        var modeBtn = new CycleEPPButton();
-        modeBtn.addActionPair(EPPIcon.FILLED, Component.translatable("gui.extendedae.caner.fill"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", CanerMode.EMPTY.ordinal())));
-        modeBtn.addActionPair(EPPIcon.BUCKET, Component.translatable("gui.extendedae.caner.empty"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", CanerMode.FILL.ordinal())));
-        this.actions.put("init", o -> modeBtn.setState((Integer) o[0]));
+        this.modeBtn = new CycleEPPButton();
+        this.modeBtn.addActionPair(EPPIcon.FILLED, Component.translatable("gui.extendedae.caner.fill"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", CanerMode.EMPTY.ordinal())));
+        this.modeBtn.addActionPair(EPPIcon.BUCKET, Component.translatable("gui.extendedae.caner.empty"), b -> EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("set", CanerMode.FILL.ordinal())));
+        this.actions.put("init", o -> this.modeBtn.setState((Integer) o[0]));
         EAENetworkServer.INSTANCE.sendToServer(new CGenericPacket("update"));
-        addToLeftToolbar(modeBtn);
+        addToLeftToolbar(this.modeBtn);
+    }
+
+    @Override
+    protected void updateBeforeRender() {
+        super.updateBeforeRender();
+        this.modeBtn.setState(menu.getMode().ordinal());
     }
 
     @NotNull
