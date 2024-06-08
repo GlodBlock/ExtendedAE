@@ -58,6 +58,10 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
         this.broadcastChanges();
     }
 
+    public CanerMode getMode() {
+        return this.mode;
+    }
+
     @NotNull
     @Override
     public Map<String, Consumer<Object[]>> getActionMap() {

@@ -38,6 +38,7 @@ import com.github.glodblock.extendedae.common.parts.PartPreciseExportBus;
 import com.github.glodblock.extendedae.common.parts.PartPreciseStorageBus;
 import com.github.glodblock.extendedae.common.parts.PartTagExportBus;
 import com.github.glodblock.extendedae.common.parts.PartTagStorageBus;
+import com.github.glodblock.extendedae.common.parts.PartThresholdExportBus;
 import com.github.glodblock.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.github.glodblock.extendedae.common.tileentities.TileCaner;
 import com.github.glodblock.extendedae.common.tileentities.TileCrystalFixer;
@@ -89,6 +90,7 @@ public class EAEItemAndBlock {
     public static WirelessTerminalItem WIRELESS_EX_PAT;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
     public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
+    public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
     public static BlockFishbig FISHBIG;
 
     public static void init(RegistryHandler regHandler) {
@@ -138,6 +140,7 @@ public class EAEItemAndBlock {
         }
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
         PRECISE_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartPreciseStorageBus.class, PartPreciseStorageBus::new);
+        THRESHOLD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartThresholdExportBus.class, PartThresholdExportBus::new);
         FISHBIG = new BlockFishbig();
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
@@ -175,6 +178,7 @@ public class EAEItemAndBlock {
         regHandler.item("wireless_ex_pat", WIRELESS_EX_PAT);
         regHandler.item("precise_export_bus", PRECISE_EXPORT_BUS);
         regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
+        regHandler.item("threshold_export_bus", THRESHOLD_EXPORT_BUS);
     }
 
 }

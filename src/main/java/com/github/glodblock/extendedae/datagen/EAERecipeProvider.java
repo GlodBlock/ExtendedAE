@@ -31,7 +31,7 @@ public class EAERecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> c) {
-        // Extended Parttern Provider
+        // Extended Pattern Provider
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EAEItemAndBlock.EX_PATTERN_PROVIDER)
                 .pattern("PC")
@@ -413,6 +413,16 @@ public class EAERecipeProvider extends FabricRecipeProvider {
                 .define('P', AEItems.CALCULATION_PROCESSOR)
                 .unlockedBy(C, has(AEParts.STORAGE_BUS))
                 .save(c, EAE.id("precise_storage_bus"));
+
+        // Threshold Export Bus
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAEItemAndBlock.THRESHOLD_EXPORT_BUS)
+                .pattern("LCE")
+                .define('L', AEParts.LEVEL_EMITTER)
+                .define('C', AEItems.LOGIC_PROCESSOR)
+                .define('E', AEParts.EXPORT_BUS)
+                .unlockedBy(C, has(AEParts.LEVEL_EMITTER))
+                .save(c, EAE.id("threshold_export_bus"));
 
         // Fishbig
         ShapedRecipeBuilder
