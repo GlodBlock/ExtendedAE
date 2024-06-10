@@ -28,7 +28,6 @@
   "block.appflux.flux_accessor.tooltip.2": "Need external cable to push energy",
   "appflux.key.flux": "Energy",
   "appflux.type.fe.name": "FE",
-  "appflux.type.gteu.name": "EU(GT)",
   "appflux.cell.storage": "Contains: %s %s",
   "group.pattern_provider.name": "ME Pattern Provider"
 }
