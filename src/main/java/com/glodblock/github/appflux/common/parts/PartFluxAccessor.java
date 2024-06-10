@@ -2,13 +2,9 @@ package com.glodblock.github.appflux.common.parts;
 
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
@@ -19,13 +15,14 @@ import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public class PartFluxAccessor extends AEBasePart implements IGridTickable {
+public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
     public static final ResourceLocation RL = AppFlux.id("part/flux_accessor");
     public static final IPartModel MODEL = new PartModel(RL);
@@ -34,7 +31,7 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
     public PartFluxAccessor(IPartItem<?> partItem) {
         super(partItem);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
-        this.getMainNode().setIdlePowerUsage(1.0).addService(IGridTickable.class, this);
+        this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
     }
 
     private void initCache() {
@@ -84,14 +81,9 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
     }
 
     @Override
-    public TickingRequest getTickingRequest(IGridNode iGridNode) {
-        return new TickingRequest(1, 1, false);
-    }
-
-    @Override
-    public TickRateModulation tickingRequest(IGridNode iGridNode, int i) {
+    public void distribute() {
         if (this.getLevel() == null) {
-            return TickRateModulation.SAME;
+            return;
         }
         if (this.cacheApi == null) {
             this.initCache();
@@ -105,7 +97,6 @@ public class PartFluxAccessor extends AEBasePart implements IGridTickable {
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
         }
-        return TickRateModulation.SAME;
     }
 
 }
