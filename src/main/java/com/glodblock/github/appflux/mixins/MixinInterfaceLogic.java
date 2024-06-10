@@ -25,6 +25,10 @@ public abstract class MixinInterfaceLogic {
     @Shadow(remap = false)
     protected abstract void onUpgradesChanged();
 
+    @Final
+    @Shadow(remap = false)
+    protected InterfaceLogicHost host;
+
     @Inject(
             method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/InterfaceLogicHost;Lnet/minecraft/world/item/Item;I)V",
             at = @At("TAIL"),
@@ -32,6 +36,15 @@ public abstract class MixinInterfaceLogic {
     )
     private void expendUpgrades(IManagedGridNode gridNode, InterfaceLogicHost host, Item is, int slots, CallbackInfo ci) {
         this.upgrades = UpgradeInventories.forMachine(is, 2, this::onUpgradesChanged);
+    }
+
+    @Inject(
+            method = "onUpgradesChanged",
+            at = @At("TAIL"),
+            remap = false
+    )
+    private void notifyUpgrade(CallbackInfo ci) {
+        this.host.getBlockEntity().invalidateCapabilities();
     }
 
 }

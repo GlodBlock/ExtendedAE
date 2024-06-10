@@ -30,6 +30,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject {
     @Unique
     private void af_$onUpgradesChanged() {
         this.host.saveChanges();
+        this.host.getBlockEntity().invalidateCapabilities();
     }
 
     @Override

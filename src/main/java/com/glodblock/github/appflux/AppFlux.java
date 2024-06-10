@@ -4,7 +4,6 @@ import appeng.api.AECapabilities;
 import com.glodblock.github.appflux.client.AFClientRegistryHandler;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
-import com.glodblock.github.appflux.common.me.inventory.FEControllableInvStorage;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
@@ -60,13 +59,8 @@ public class AppFlux {
                             Capabilities.EnergyStorage.BLOCK,
                             (level, pos, state, tile, side) -> {
                                 var genericInv = level.getCapability(AECapabilities.GENERIC_INTERNAL_INV, pos, state, tile, side);
-                                if (genericInv != null) {
-                                    var obj = AFUtil.isUpgradeable(tile, side);
-                                    if (obj != null) {
-                                        return new FEControllableInvStorage(genericInv, obj);
-                                    } else {
-                                        return new FEGenericStackInvStorage(genericInv);
-                                    }
+                                if (genericInv != null && AFUtil.shouldTryCast(tile, side)) {
+                                    return new FEGenericStackInvStorage(genericInv);
                                 }
                                 return null;
                             },
