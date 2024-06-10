@@ -30,7 +30,7 @@ public abstract class MixinPatternProviderMenu extends AEBaseMenu implements IUp
 
     @Inject(
             method = "<init>(Lnet/minecraft/world/inventory/MenuType;ILnet/minecraft/world/entity/player/Inventory;Lappeng/helpers/patternprovider/PatternProviderLogicHost;)V",
-            at = @At("TAIL"),
+            at = @At(value = "INVOKE", target = "Lappeng/menu/implementations/PatternProviderMenu;createPlayerInventorySlots(Lnet/minecraft/world/entity/player/Inventory;)V"),
             remap = false
     )
     private void initToolbox(MenuType menuType, int id, Inventory playerInventory, PatternProviderLogicHost host, CallbackInfo ci) {
