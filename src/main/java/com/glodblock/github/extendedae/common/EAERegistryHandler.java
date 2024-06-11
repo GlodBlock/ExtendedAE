@@ -91,6 +91,7 @@ import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBCommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBRegister;
+import com.glodblock.github.extendedae.xmod.megacells.MEGACommonLoad;
 import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -236,6 +237,9 @@ public class EAERegistryHandler extends RegistryHandler {
         this.initPackageList();
         if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
             AFCommonLoad.init();
+        }
+        if (GlodUtil.checkMod(ModConstants.MEGA)) {
+            MEGACommonLoad.init();
         }
     }
 

@@ -15,7 +15,9 @@ import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.FreqGenerator;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.util.CacheHolder;
+import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodUtil;
+import gripe._90.megacells.definition.MEGAItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -65,7 +67,7 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
     }
 
     public void updatePowerUsage() {
-        var disc = 1 - 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
+        var disc = 1 - this.calculateDisc();
         if (this.connect.isConnected()) {
             var dis = Math.max(this.connect.getDistance(), Math.E);
             this.powerUse = Math.max(1.0, dis * Math.log(dis) * disc);
@@ -73,6 +75,14 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
             this.powerUse = 1.0;
         }
         this.getMainNode().setIdlePowerUsage(this.powerUse);
+    }
+
+    private double calculateDisc() {
+        double disc = 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
+        if (GlodUtil.checkMod(ModConstants.MEGA)) {
+            disc += 0.2 * this.upgrades.getInstalledUpgrades(MEGAItems.GREATER_ENERGY_CARD);
+        }
+        return disc;
     }
 
     public double getPowerUse() {
