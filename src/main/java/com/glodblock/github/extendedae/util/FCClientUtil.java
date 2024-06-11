@@ -16,8 +16,9 @@ public class FCClientUtil {
     }
 
     public static String getModName(String inputText) {
-        if (inputText.isEmpty()) return "";
+        if (inputText.isEmpty() || inputText.endsWith(",")) return "";
         for (String mod : LoadList.MOD_NAME) {
+            if(inputText.contains(mod)) continue;
             if (mod.startsWith(inputText)) {
                 int pos = mod.indexOf(inputText);
                 return mod.substring(pos + inputText.length());
