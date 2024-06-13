@@ -19,9 +19,11 @@ public class FCClientUtil {
         if (inputText.isEmpty() || inputText.endsWith(",")) return "";
         for (String mod : LoadList.MOD_NAME) {
             if(inputText.contains(mod)) continue;
-            if (mod.startsWith(inputText)) {
-                int pos = mod.indexOf(inputText);
-                return mod.substring(pos + inputText.length());
+            String[] modids = inputText.split(",");
+            String modid = modids[modids.length - 1];
+            if (mod.startsWith(modid)) {
+                int pos = mod.indexOf(modid);
+                return mod.substring(pos + modid.length());
             }
         }
         return "";
