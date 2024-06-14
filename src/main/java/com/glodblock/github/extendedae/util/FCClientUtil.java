@@ -16,11 +16,14 @@ public class FCClientUtil {
     }
 
     public static String getModName(String inputText) {
-        if (inputText.isEmpty()) return "";
+        if (inputText.isEmpty() || inputText.endsWith(",")) return "";
         for (String mod : LoadList.MOD_NAME) {
-            if (mod.startsWith(inputText)) {
-                int pos = mod.indexOf(inputText);
-                return mod.substring(pos + inputText.length());
+            if(inputText.contains(mod)) continue;
+            String[] modids = inputText.split(",");
+            String modid = modids[modids.length - 1];
+            if (mod.startsWith(modid)) {
+                int pos = mod.indexOf(modid);
+                return mod.substring(pos + modid.length());
             }
         }
         return "";
