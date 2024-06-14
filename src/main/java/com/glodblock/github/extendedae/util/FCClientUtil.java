@@ -28,7 +28,7 @@ public class FCClientUtil {
             if (set.contains(mod)) {
                 continue;
             }
-            String modid = ids[ids.length == 0 ? 0 : ids.length - 1];
+            String modid = ids[ids.length - 1];
             if (mod.startsWith(modid)) {
                 int pos = mod.indexOf(modid);
                 return mod.substring(pos + modid.length());
