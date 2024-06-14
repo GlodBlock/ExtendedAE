@@ -42,4 +42,12 @@ public class FCUtil {
         return registry.containsKey(rl);
     }
 
+    public static String[] trimSplit(String str) {
+        var sp = str.split(",");
+        for (int i = 0; i < sp.length; i ++) {
+            sp[i] = sp[i].trim();
+        }
+        return sp;
+    }
+
 }

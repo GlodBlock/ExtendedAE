@@ -3,15 +3,19 @@ package com.glodblock.github.extendedae.common.me.modlist;
 import appeng.api.stacks.AEKey;
 import appeng.util.Platform;
 import appeng.util.prioritylist.IPartitionList;
+import com.glodblock.github.extendedae.util.FCUtil;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public class ModPriorityList implements IPartitionList {
 
-    private final Set<String> modids = new HashSet<>();
+    private final ObjectSet<String> modids = new ObjectOpenHashSet<>();
 
     public ModPriorityList(String modid) {
-        Collections.addAll(this.modids, modid.split(","));
+        Collections.addAll(this.modids, FCUtil.trimSplit(modid));
     }
 
     @Override
