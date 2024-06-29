@@ -14,7 +14,7 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.ItemMenuHostLocator;
 import appeng.menu.locator.MenuLocators;
-import com.glodblock.github.ae2netanalyser.AEAnalyser;
+import com.glodblock.github.ae2netanalyser.common.AEAComponents;
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
 import com.glodblock.github.ae2netanalyser.common.inventory.DummyItemInventory;
 import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
@@ -28,17 +28,15 @@ import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.SNetworkDataUpdate;
 import com.glodblock.github.glodium.client.render.ColorData;
-import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,16 +48,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class ItemNetworkAnalyzer extends Item implements IMenuItem {
 
     public static final Reference2ObjectMap<Enum<?>, ColorData> defaultColors = new Reference2ObjectOpenHashMap<>();
+    public static final AnalyserConfig defaultConfig;
 
     // default colors
     static {
@@ -69,88 +71,11 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
         defaultColors.put(LinkFlag.NORMAL, new ColorData(0.8f, 0f, 0f, 1f));
         defaultColors.put(LinkFlag.DENSE, new ColorData(0.8f, 1f, 1f, 0f));
         defaultColors.put(LinkFlag.COMPRESSED, new ColorData(0.8f, 1f, 0f, 1f));
+        defaultConfig = new AnalyserConfig(AnalyserMode.FULL, 0.4f, defaultColors);
     }
 
     public ItemNetworkAnalyzer() {
         super(new Item.Properties().stacksTo(1));
-    }
-
-    public AnalyserConfig getConfig(ItemStack stack) {
-        var tag = stack.getTag();
-        var colors = new Reference2ObjectOpenHashMap<Enum<?>, ColorData>();
-        float nodeSize = 0.4f;
-        AnalyserMode mode = AnalyserMode.FULL;
-        colors.putAll(defaultColors);
-        if (tag != null) {
-            var colorTag = tag.getList("color_config", 10);
-            try {
-                for (var t : colorTag) {
-                    CompoundTag data = (CompoundTag) t;
-                    var type = FlagType.valueOf(data.getString("type"));
-                    var name = data.getString("name");
-                    var colorData = new ColorData(data.getInt("color"));
-                    switch (type) {
-                        case LINK -> colors.put(LinkFlag.valueOf(name), colorData);
-                        case NODE -> colors.put(NodeFlag.valueOf(name), colorData);
-                    }
-                }
-            } catch (IllegalArgumentException ignore) {
-                // NO-OP
-            }
-            if (tag.contains("node_size")) {
-                nodeSize = tag.getFloat("node_size");
-            }
-            if (tag.contains("mode")) {
-                mode = AnalyserMode.valueOf(tag.getString("mode"));
-            }
-        }
-        return new AnalyserConfig(mode, nodeSize, colors);
-    }
-
-    public void saveConfig(AnalyserConfig config, ItemStack stack) {
-        var tag = stack.getOrCreateTag();
-        tag.putFloat("node_size", config.nodeSize);
-        tag.putString("mode", config.mode.name());
-        var colorList = new ListTag();
-        for (var entry : config.colors.entrySet()) {
-            var type = entry.getKey();
-            var color = entry.getValue();
-            var colorRecord = new CompoundTag();
-            if (type.getClass() == LinkFlag.class) {
-                colorRecord.putString("type", FlagType.LINK.name());
-                colorRecord.putString("name", type.name());
-                colorRecord.putInt("color", color.toARGB());
-            }
-            if (type.getClass() == NodeFlag.class) {
-                colorRecord.putString("type", FlagType.NODE.name());
-                colorRecord.putString("name", type.name());
-                colorRecord.putInt("color", color.toARGB());
-            }
-            if (!colorRecord.isEmpty()) {
-                colorList.add(colorRecord);
-            }
-        }
-        if (!colorList.isEmpty()) {
-            tag.put("color_config", colorList);
-        }
-    }
-
-    @Nullable
-    public GlobalPos getPos(ItemStack stack) {
-        var tag = stack.getTag();
-        if (tag != null && tag.contains("pos")) {
-            return GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get("pos"))
-                    .resultOrPartial(Util.prefix("Network Position", AEAnalyser.LOGGER::error))
-                    .map(Pair::getFirst)
-                    .orElse(null);
-        }
-        return null;
-    }
-
-    public void savePos(ItemStack stack, GlobalPos pos) {
-        GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, pos)
-                .result()
-                .ifPresent(tag -> stack.getOrCreateTag().put("pos", tag));
     }
 
     @Override
@@ -166,7 +91,7 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
         if (!context.getLevel().isClientSide && context.getPlayer() instanceof ServerPlayer player) {
             var tool = player.getMainHandItem();
             if (tool.getItem() == AEAItems.ANALYSER) {
-                AEAItems.ANALYSER.savePos(tool, GlobalPos.of(context.getLevel().dimension(), context.getClickedPos()));
+                tool.set(AEAComponents.GLOBAL_POS, GlobalPos.of(context.getLevel().dimension(), context.getClickedPos()));
                 return InteractionResult.SUCCESS;
             }
         }
@@ -177,7 +102,7 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
         if (!world.isClientSide && entity instanceof ServerPlayer player) {
             if (stack == player.getMainHandItem() && player.getMainHandItem().getItem() == AEAItems.ANALYSER) {
-                var pos = AEAItems.ANALYSER.getPos(player.getMainHandItem());
+                var pos = stack.get(AEAComponents.GLOBAL_POS);
                 if (pos != null && pos.dimension().equals(world.dimension()) && PlayerTracker.needUpdate(player, pos)) {
                     var host = GridHelper.getNodeHost(world, pos.pos());
                     if (host != null) {
@@ -268,7 +193,43 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
         return new DummyItemInventory(this, player, locator);
     }
 
-    public record AnalyserConfig(AnalyserMode mode, float nodeSize, Reference2ObjectMap<Enum<?>, ColorData> colors) {
+    public record AnalyserConfig(AnalyserMode mode, float nodeSize, Map<Enum<?>, ColorData> colors) {
+
+        public static final Codec<ColorData> COLOR_CODEC = Codec.INT.xmap(
+                ColorData::new,
+                ColorData::toARGB
+        );
+
+        private static final Codec<Pair<Enum<?>, ColorData>> PAIR_CODEC = RecordCodecBuilder.create(
+                builder -> builder
+                        .group(
+                                FlagType.CODEC.fieldOf("flag_type").forGetter(Pair::getLeft),
+                                COLOR_CODEC.fieldOf("color").forGetter(Pair::getRight)
+                        ).apply(builder, Pair::of)
+        );
+
+        public static final Codec<AnalyserConfig> CODEC = RecordCodecBuilder.create(
+                builder -> builder
+                        .group(
+                                AnalyserMode.CODEC.fieldOf("analyzer_mode").forGetter(a -> a.mode),
+                                Codec.FLOAT.fieldOf("node_size").forGetter(a -> a.nodeSize),
+                                Codec.list(PAIR_CODEC)
+                                        .xmap(list -> {
+                                            Map<Enum<?>, ColorData> map = new Reference2ObjectOpenHashMap<>();
+                                            list.forEach(p -> map.put(p.getKey(), p.getValue()));
+                                            return map;
+                                        }, map -> {
+                                            var list = new ArrayList<Pair<Enum<?>, ColorData>>();
+                                            map.forEach((key, value) -> list.add(Pair.of(key, value)));
+                                            return list;
+                                        }).fieldOf("color_map").forGetter(a -> a.colors)
+                        ).apply(builder, AnalyserConfig::new)
+        );
+
+        public static final StreamCodec<FriendlyByteBuf, AnalyserConfig> STREAM_CODEC = StreamCodec.of(
+                (buf, config) -> config.writeToBytes(buf),
+                AnalyserConfig::readFromBytes
+        );
 
         public void writeToBytes(FriendlyByteBuf buf) {
             buf.writeByte(mode.ordinal());

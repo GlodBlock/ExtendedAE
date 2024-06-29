@@ -1,6 +1,8 @@
 package com.glodblock.github.ae2netanalyser.client.render;
 
+import com.glodblock.github.ae2netanalyser.common.AEAComponents;
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
+import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
 import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
 import com.glodblock.github.ae2netanalyser.common.me.netdata.LinkFlag;
@@ -10,6 +12,7 @@ import com.glodblock.github.glodium.client.render.ColorData;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
@@ -31,6 +34,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -83,9 +87,9 @@ public class NetworkRender extends RenderType {
             if (player != null && player.getMainHandItem().getItem() == AEAItems.ANALYSER) {
                 if (currentAnalyser != player.getMainHandItem()) {
                     currentAnalyser = player.getMainHandItem();
-                    NetworkDataHandler.updateConfig(AEAItems.ANALYSER.getConfig(currentAnalyser));
+                    NetworkDataHandler.updateConfig(currentAnalyser.getOrDefault(AEAComponents.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig));
                 }
-                var pos = AEAItems.ANALYSER.getPos(currentAnalyser);
+                var pos = currentAnalyser.get(AEAComponents.GLOBAL_POS);
                 if (pos != null && pos.dimension().equals(player.level().dimension())) {
                     INSTANCE.tick(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource(), event.getProjectionMatrix(), event.getCamera());
                 }
@@ -118,7 +122,7 @@ public class NetworkRender extends RenderType {
         stack.pushPose();
         stack.translate(c.x, c.y, c.z);
         stack.mulPose(camera.rotation());
-        stack.scale(-scale, -scale, scale);
+        stack.scale(scale, -scale, scale);
         var mat = stack.last().pose();
         fontRender.drawInBatch(text, -stringMiddle, 0, color.toARGB(), false, mat, multiBuf, Font.DisplayMode.SEE_THROUGH, 0, 0xF000F0);
         stack.popPose();
@@ -169,18 +173,17 @@ public class NetworkRender extends RenderType {
 
     private void drawSide(Vec3 tr, Vec3 tl, Vec3 br, Vec3 bl, ColorData color, VertexConsumer buf, PoseStack pose) {
         var mat = pose.last().pose();
-        buf.vertex(mat, (float) tr.x, (float) tr.y, (float) tr.z).color(color.getRf(), color.getGf(), color.getBf(), color.getAf()).endVertex();
-        buf.vertex(mat, (float) br.x, (float) br.y, (float) br.z).color(color.getRf(), color.getGf(), color.getBf(), color.getAf()).endVertex();
-        buf.vertex(mat, (float) bl.x, (float) bl.y, (float) bl.z).color(color.getRf(), color.getGf(), color.getBf(), color.getAf()).endVertex();
-        buf.vertex(mat, (float) tl.x, (float) tl.y, (float) tl.z).color(color.getRf(), color.getGf(), color.getBf(), color.getAf()).endVertex();
+        buf.addVertex(mat, (float) tr.x, (float) tr.y, (float) tr.z).setColor(color.getRf(), color.getGf(), color.getBf(), color.getAf());
+        buf.addVertex(mat, (float) br.x, (float) br.y, (float) br.z).setColor(color.getRf(), color.getGf(), color.getBf(), color.getAf());
+        buf.addVertex(mat, (float) bl.x, (float) bl.y, (float) bl.z).setColor(color.getRf(), color.getGf(), color.getBf(), color.getAf());
+        buf.addVertex(mat, (float) tl.x, (float) tl.y, (float) tl.z).setColor(color.getRf(), color.getGf(), color.getBf(), color.getAf());
     }
 
     public void createVBO(AnalyserMode mode, NetworkData data) {
         if (VBO != null) {
             VBO.close();
         }
-        var buf = new BufferBuilder(CUBE_RENDER.bufferSize() * 8);
-        buf.begin(CUBE_RENDER.mode(), CUBE_RENDER.format());
+        var buf = new BufferBuilder(new ByteBufferBuilder(CUBE_RENDER.bufferSize() * 8), CUBE_RENDER.mode(), CUBE_RENDER.format());
         var stack = new PoseStack();
         if (renderNodeModes.contains(mode)) {
             renderNodes(data, stack, buf);
@@ -188,9 +191,10 @@ public class NetworkRender extends RenderType {
         if (renderLinkModes.contains(mode)) {
             renderLinks(data, stack, buf, mode == AnalyserMode.P2P);
         }
-        var rendered = buf.end();
+        var rendered = buf.build();
         VBO = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
         VBO.bind();
+        //noinspection DataFlowIssue
         VBO.upload(rendered);
         VertexBuffer.unbind();
     }
@@ -215,6 +219,9 @@ public class NetworkRender extends RenderType {
                 );
                 RenderSystem.disableCull();
                 stack.pushPose();
+                var rotation = new Quaternionf(camera.rotation());
+                rotation.invert();
+                stack.mulPose(rotation);
                 stack.translate(offset.x, offset.y, offset.z);
                 VBO.bind();
                 VBO.drawWithShader(

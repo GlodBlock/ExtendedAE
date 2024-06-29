@@ -2,15 +2,15 @@ modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
 [[mods]]
-modId="ae2netanalyser"
-issueTrackerURL="https://github.com/GlodBlock/ExtendedAE/issues"
-displayURL="https://github.com/GlodBlock/ExtendedAE"
-version="${mod_version}"
-displayName="${mod_name}"
-authors="${mod_authors}"
-credits="bdew"
-logoFile="logo.png"
-description='''${mod_description}'''
+    modId="ae2netanalyser"
+    issueTrackerURL="https://github.com/GlodBlock/ExtendedAE/issues"
+    displayURL="https://github.com/GlodBlock/ExtendedAE"
+    version="${mod_version}"
+    displayName="${mod_name}"
+    authors="${mod_authors}"
+    credits="bdew"
+    logoFile="logo.png"
+    description='''${mod_description}'''
 
 [[dependencies.ae2netanalyser]]
     modId="neoforge"
@@ -27,12 +27,12 @@ description='''${mod_description}'''
 [[dependencies.ae2netanalyser]]
     modId="ae2"
     type="REQUIRED"
-    versionRange="[17.8.0-beta,)"
+    versionRange="[19.0.7-alpha,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.ae2netanalyser]]
     modId="glodium"
     type="REQUIRED"
-    versionRange="[1.20-2.1,)"
+    versionRange="[1.21-1.0-neoforge,)"
     ordering="AFTER"
     side="BOTH"

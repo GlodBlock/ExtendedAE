@@ -72,9 +72,8 @@ public class NetworkData {
                 data.links[i] = new ALink(data.nodes[a], data.nodes[b], stream.readShort(), new State<>(LinkFlag.byIndex(stream.readByte())));
             }
         } catch (IOException | NullPointerException e) {
-            AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!");
+            AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!", e);
             data.isCorrupt = true;
-            e.printStackTrace();
         }
         return data;
     }
@@ -96,9 +95,8 @@ public class NetworkData {
                 stream.writeByte(l.state.get().ordinal());
             }
         } catch (IOException | NullPointerException e) {
-            AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!");
+            AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!", e);
             this.isCorrupt = true;
-            e.printStackTrace();
         }
     }
 

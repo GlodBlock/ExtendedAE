@@ -4,7 +4,7 @@ import com.glodblock.github.ae2netanalyser.AEAnalyser;
 import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.glodium.network.packet.IMessage;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -22,12 +22,12 @@ public class CAnalyserConfigSave implements IMessage {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         this.config.writeToBytes(buf);
     }
 
     @Override
-    public void fromBytes(FriendlyByteBuf buf) {
+    public void fromBytes(RegistryFriendlyByteBuf buf) {
         this.config = ItemNetworkAnalyzer.AnalyserConfig.readFromBytes(buf);
     }
 

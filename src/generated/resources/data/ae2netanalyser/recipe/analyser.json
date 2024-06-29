@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "C": {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "L": {
       "item": "ae2:logic_processor"
@@ -21,6 +21,7 @@
     "MIM"
   ],
   "result": {
-    "item": "ae2netanalyser:network_analyser"
+    "count": 1,
+    "id": "ae2netanalyser:network_analyser"
   }
 }

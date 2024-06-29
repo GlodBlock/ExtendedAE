@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "ae2netanalyser:network_analyser"
-            ]
+            "items": "ae2netanalyser:network_analyser"
           }
         ]
       },

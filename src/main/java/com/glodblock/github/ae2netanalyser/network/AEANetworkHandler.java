@@ -6,8 +6,7 @@ import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserGeneric;
 import com.glodblock.github.ae2netanalyser.network.packets.SAnalyserConfigInit;
 import com.glodblock.github.ae2netanalyser.network.packets.SNetworkDataUpdate;
 import com.glodblock.github.glodium.network.NetworkHandler;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 public class AEANetworkHandler extends NetworkHandler {
 
@@ -15,13 +14,13 @@ public class AEANetworkHandler extends NetworkHandler {
 
     public AEANetworkHandler() {
         super(AEAnalyser.MODID);
-        registerPacket(AEAnalyser.id("data_update"), SNetworkDataUpdate::new);
-        registerPacket(AEAnalyser.id("config_save"), CAnalyserConfigSave::new);
-        registerPacket(AEAnalyser.id("config_init"), SAnalyserConfigInit::new);
-        registerPacket(AEAnalyser.id("client_generic"), CAnalyserGeneric::new);
+        registerPacket(SNetworkDataUpdate::new);
+        registerPacket(CAnalyserConfigSave::new);
+        registerPacket(SAnalyserConfigInit::new);
+        registerPacket(CAnalyserGeneric::new);
     }
 
-    public void onRegister(RegisterPayloadHandlerEvent event) {
+    public void onRegister(RegisterPayloadHandlersEvent event) {
         super.onRegister(event);
     }
 

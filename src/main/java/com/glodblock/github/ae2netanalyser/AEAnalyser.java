@@ -3,6 +3,7 @@ package com.glodblock.github.ae2netanalyser;
 import appeng.init.client.InitScreens;
 import com.glodblock.github.ae2netanalyser.client.gui.GuiAnalyser;
 import com.glodblock.github.ae2netanalyser.client.render.NetworkRender;
+import com.glodblock.github.ae2netanalyser.common.AEAComponents;
 import com.glodblock.github.ae2netanalyser.common.AEAItems;
 import com.glodblock.github.ae2netanalyser.common.AEARegistryHandler;
 import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
@@ -13,9 +14,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.slf4j.Logger;
@@ -35,13 +36,14 @@ public class AEAnalyser {
             NeoForge.EVENT_BUS.addListener(NetworkRender::hook);
         }
         bus.addListener(this::commonSetup);
-        bus.addListener(this::clientSetup);
+        bus.addListener(this::guiRegister);
         bus.addListener((RegisterEvent e) -> {
             if (e.getRegistryKey() == Registries.CREATIVE_MODE_TAB) {
                 AEARegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));
                 return;
             }
             if (e.getRegistryKey().equals(Registries.BLOCK)) {
+                AEAComponents.init(AEARegistryHandler.INSTANCE);
                 AEAItems.init(AEARegistryHandler.INSTANCE);
                 AEARegistryHandler.INSTANCE.runRegister();
             }
@@ -53,12 +55,12 @@ public class AEAnalyser {
         AEARegistryHandler.INSTANCE.init();
     }
 
-    public void clientSetup(FMLClientSetupEvent event) {
-        InitScreens.register(ContainerAnalyser.TYPE, GuiAnalyser::new, "/screens/network_analyser.json");
+    public void guiRegister(RegisterMenuScreensEvent event) {
+        InitScreens.register(event, ContainerAnalyser.TYPE, GuiAnalyser::new, "/screens/network_analyser.json");
     }
 
     public static ResourceLocation id(String id) {
-        return new ResourceLocation(MODID, id);
+        return ResourceLocation.fromNamespaceAndPath(MODID, id);
     }
 
 }
