@@ -1,7 +1,7 @@
 {
   "parent": "ae2:item/part_base",
   "textures": {
-    "emitter": "extendedae:part/threshold_level_emitter_off"
+    "emitter": "extendedae:part/threshold_emitter"
   },
   "elements": [
     {
