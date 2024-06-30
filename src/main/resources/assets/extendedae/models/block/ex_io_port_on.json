@@ -1,8 +1,9 @@
 {
-  "parent": "minecraft:block/cube_bottom_top",
+  "parent": "ae2:block/spatial_io_port",
   "textures": {
-    "bottom": "extendedae:block/ex_io_port_bottom",
-    "side": "extendedae:block/ex_io_port_side",
-    "top": "extendedae:block/ex_io_port_top"
+    "particle": "extendedae:block/ex_io_port_front",
+    "top": "extendedae:block/ex_io_port_top",
+    "front": "extendedae:block/ex_io_port_front",
+    "side": "extendedae:block/generics/side"
   }
 }
