@@ -192,11 +192,12 @@ public class NetworkRender extends RenderType {
             renderLinks(data, stack, buf, mode == AnalyserMode.P2P);
         }
         var rendered = buf.build();
-        VBO = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
-        VBO.bind();
-        //noinspection DataFlowIssue
-        VBO.upload(rendered);
-        VertexBuffer.unbind();
+        if (rendered != null) {
+            VBO = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
+            VBO.bind();
+            VBO.upload(rendered);
+            VertexBuffer.unbind();
+        }
     }
 
     public void tick(PoseStack stack, MultiBufferSource.BufferSource multiBuf, Matrix4f pro, Camera camera) {

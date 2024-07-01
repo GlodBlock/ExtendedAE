@@ -33,6 +33,6 @@ license="${mod_license}"
 [[dependencies.ae2netanalyser]]
     modId="glodium"
     type="REQUIRED"
-    versionRange="[1.21-1.0-neoforge,)"
+    versionRange="[1.21-1.2-neoforge,)"
     ordering="AFTER"
     side="BOTH"

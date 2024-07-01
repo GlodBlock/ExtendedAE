@@ -28,6 +28,7 @@ import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.SNetworkDataUpdate;
 import com.glodblock.github.glodium.client.render.ColorData;
+import com.glodblock.github.glodium.util.GlodCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -48,12 +49,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -195,34 +194,13 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
 
     public record AnalyserConfig(AnalyserMode mode, float nodeSize, Map<Enum<?>, ColorData> colors) {
 
-        public static final Codec<ColorData> COLOR_CODEC = Codec.INT.xmap(
-                ColorData::new,
-                ColorData::toARGB
-        );
-
-        private static final Codec<Pair<Enum<?>, ColorData>> PAIR_CODEC = RecordCodecBuilder.create(
-                builder -> builder
-                        .group(
-                                FlagType.CODEC.fieldOf("flag_type").forGetter(Pair::getLeft),
-                                COLOR_CODEC.fieldOf("color").forGetter(Pair::getRight)
-                        ).apply(builder, Pair::of)
-        );
 
         public static final Codec<AnalyserConfig> CODEC = RecordCodecBuilder.create(
                 builder -> builder
                         .group(
                                 AnalyserMode.CODEC.fieldOf("analyzer_mode").forGetter(a -> a.mode),
                                 Codec.FLOAT.fieldOf("node_size").forGetter(a -> a.nodeSize),
-                                Codec.list(PAIR_CODEC)
-                                        .xmap(list -> {
-                                            Map<Enum<?>, ColorData> map = new Reference2ObjectOpenHashMap<>();
-                                            list.forEach(p -> map.put(p.getKey(), p.getValue()));
-                                            return map;
-                                        }, map -> {
-                                            var list = new ArrayList<Pair<Enum<?>, ColorData>>();
-                                            map.forEach((key, value) -> list.add(Pair.of(key, value)));
-                                            return list;
-                                        }).fieldOf("color_map").forGetter(a -> a.colors)
+                                GlodCodecs.map(FlagType.CODEC, ColorData.CODEC).fieldOf("color_map").forGetter(a -> a.colors)
                         ).apply(builder, AnalyserConfig::new)
         );
 
