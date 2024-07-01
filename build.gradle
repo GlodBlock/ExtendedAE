@@ -23,7 +23,7 @@ neoForge {
     version = project.neoforge_version
 
     mods {
-        glodium {
+        appflux {
             sourceSet sourceSets.main
         }
     }
