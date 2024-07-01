@@ -3,8 +3,7 @@ package com.glodblock.github.ae2netanalyser;
 import appeng.init.client.InitScreens;
 import com.glodblock.github.ae2netanalyser.client.gui.GuiAnalyser;
 import com.glodblock.github.ae2netanalyser.client.render.NetworkRender;
-import com.glodblock.github.ae2netanalyser.common.AEAComponents;
-import com.glodblock.github.ae2netanalyser.common.AEAItems;
+import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.AEARegistryHandler;
 import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
@@ -43,8 +42,7 @@ public class AEAnalyser {
                 return;
             }
             if (e.getRegistryKey().equals(Registries.BLOCK)) {
-                AEAComponents.init(AEARegistryHandler.INSTANCE);
-                AEAItems.init(AEARegistryHandler.INSTANCE);
+                AEASingletons.init(AEARegistryHandler.INSTANCE);
                 AEARegistryHandler.INSTANCE.runRegister();
             }
         });

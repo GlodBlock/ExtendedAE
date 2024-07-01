@@ -53,7 +53,7 @@ public class AEARegistryHandler extends RegistryHandler {
 
     public void registerTab(Registry<CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
-                .icon(() -> new ItemStack(AEAItems.ANALYSER))
+                .icon(() -> new ItemStack(AEASingletons.ANALYSER))
                 .title(Component.translatable("itemGroup.ae2netanalyser"))
                 .displayItems((p, o) -> {
                     for (Pair<String, Item> entry : items) {

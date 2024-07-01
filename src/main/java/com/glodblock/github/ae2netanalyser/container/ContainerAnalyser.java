@@ -2,8 +2,7 @@ package com.glodblock.github.ae2netanalyser.container;
 
 import appeng.menu.AEBaseMenu;
 import appeng.menu.implementations.MenuTypeBuilder;
-import com.glodblock.github.ae2netanalyser.common.AEAComponents;
-import com.glodblock.github.ae2netanalyser.common.AEAItems;
+import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.inventory.DummyItemInventory;
 import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
@@ -27,15 +26,15 @@ public class ContainerAnalyser extends AEBaseMenu implements IActionHolder {
         super(TYPE, id, playerInventory, host);
         this.actions.put("update", o -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
-                AEANetworkHandler.INSTANCE.sendTo(new SAnalyserConfigInit(host.getItemStack().getOrDefault(AEAComponents.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig)), sp);
+                AEANetworkHandler.INSTANCE.sendTo(new SAnalyserConfigInit(host.getItemStack().getOrDefault(AEASingletons.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig)), sp);
             }
         });
     }
 
     public void saveConfig(ItemNetworkAnalyzer.AnalyserConfig config) {
         @SuppressWarnings("DataFlowIssue") var stack = this.itemMenuHost.getItemStack();
-        if (stack.getItem() == AEAItems.ANALYSER) {
-            stack.set(AEAComponents.ANALYZER_CONFIG, config);
+        if (stack.getItem() == AEASingletons.ANALYSER) {
+            stack.set(AEASingletons.ANALYZER_CONFIG, config);
         }
     }
 

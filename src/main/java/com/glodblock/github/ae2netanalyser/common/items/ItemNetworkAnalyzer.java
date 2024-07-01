@@ -14,8 +14,7 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.ItemMenuHostLocator;
 import appeng.menu.locator.MenuLocators;
-import com.glodblock.github.ae2netanalyser.common.AEAComponents;
-import com.glodblock.github.ae2netanalyser.common.AEAItems;
+import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.inventory.DummyItemInventory;
 import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
 import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
@@ -89,8 +88,8 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
     public @NotNull InteractionResult useOn(@Nonnull UseOnContext context) {
         if (!context.getLevel().isClientSide && context.getPlayer() instanceof ServerPlayer player) {
             var tool = player.getMainHandItem();
-            if (tool.getItem() == AEAItems.ANALYSER) {
-                tool.set(AEAComponents.GLOBAL_POS, GlobalPos.of(context.getLevel().dimension(), context.getClickedPos()));
+            if (tool.getItem() == AEASingletons.ANALYSER) {
+                tool.set(AEASingletons.GLOBAL_POS, GlobalPos.of(context.getLevel().dimension(), context.getClickedPos()));
                 return InteractionResult.SUCCESS;
             }
         }
@@ -100,8 +99,8 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
         if (!world.isClientSide && entity instanceof ServerPlayer player) {
-            if (stack == player.getMainHandItem() && player.getMainHandItem().getItem() == AEAItems.ANALYSER) {
-                var pos = stack.get(AEAComponents.GLOBAL_POS);
+            if (stack == player.getMainHandItem() && player.getMainHandItem().getItem() == AEASingletons.ANALYSER) {
+                var pos = stack.get(AEASingletons.GLOBAL_POS);
                 if (pos != null && pos.dimension().equals(world.dimension()) && PlayerTracker.needUpdate(player, pos)) {
                     var host = GridHelper.getNodeHost(world, pos.pos());
                     if (host != null) {

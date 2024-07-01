@@ -1,7 +1,6 @@
 package com.glodblock.github.ae2netanalyser.client.render;
 
-import com.glodblock.github.ae2netanalyser.common.AEAComponents;
-import com.glodblock.github.ae2netanalyser.common.AEAItems;
+import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
 import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
@@ -84,12 +83,12 @@ public class NetworkRender extends RenderType {
     public static void hook(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             var player = Minecraft.getInstance().player;
-            if (player != null && player.getMainHandItem().getItem() == AEAItems.ANALYSER) {
+            if (player != null && player.getMainHandItem().getItem() == AEASingletons.ANALYSER) {
                 if (currentAnalyser != player.getMainHandItem()) {
                     currentAnalyser = player.getMainHandItem();
-                    NetworkDataHandler.updateConfig(currentAnalyser.getOrDefault(AEAComponents.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig));
+                    NetworkDataHandler.updateConfig(currentAnalyser.getOrDefault(AEASingletons.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig));
                 }
-                var pos = currentAnalyser.get(AEAComponents.GLOBAL_POS);
+                var pos = currentAnalyser.get(AEASingletons.GLOBAL_POS);
                 if (pos != null && pos.dimension().equals(player.level().dimension())) {
                     INSTANCE.tick(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource(), event.getProjectionMatrix(), event.getCamera());
                 }
