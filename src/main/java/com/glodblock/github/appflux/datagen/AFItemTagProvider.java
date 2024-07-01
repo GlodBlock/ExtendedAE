@@ -1,7 +1,7 @@
 package com.glodblock.github.appflux.datagen;
 
 import com.glodblock.github.appflux.AppFlux;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.util.AFTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -22,13 +22,13 @@ public class AFItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        tag(AFTags.RESIN_INGOT).add(AFItemAndBlock.HARDEN_INSULATING_RESIN);
-        tag(Tags.Items.INGOTS).add(AFItemAndBlock.HARDEN_INSULATING_RESIN);
-        tag(AFTags.REDSTONE_GEM).add(AFItemAndBlock.REDSTONE_CRYSTAL);
-        tag(Tags.Items.GEMS).add(AFItemAndBlock.REDSTONE_CRYSTAL);
-        tag(AFTags.DIAMOND_DUST).add(AFItemAndBlock.DIAMOND_DUST);
-        tag(Tags.Items.DUSTS).add(AFItemAndBlock.DIAMOND_DUST);
-        tag(AFTags.EMERALD_DUST).add(AFItemAndBlock.EMERALD_DUST);
-        tag(Tags.Items.DUSTS).add(AFItemAndBlock.EMERALD_DUST);
+        tag(AFTags.RESIN_INGOT).add(AFSingletons.HARDEN_INSULATING_RESIN);
+        tag(Tags.Items.INGOTS).add(AFSingletons.HARDEN_INSULATING_RESIN);
+        tag(AFTags.REDSTONE_GEM).add(AFSingletons.REDSTONE_CRYSTAL);
+        tag(Tags.Items.GEMS).add(AFSingletons.REDSTONE_CRYSTAL);
+        tag(AFTags.DIAMOND_DUST).add(AFSingletons.DIAMOND_DUST);
+        tag(Tags.Items.DUSTS).add(AFSingletons.DIAMOND_DUST);
+        tag(AFTags.EMERALD_DUST).add(AFSingletons.EMERALD_DUST);
+        tag(Tags.Items.DUSTS).add(AFSingletons.EMERALD_DUST);
     }
 }

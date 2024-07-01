@@ -1,0 +1,13 @@
+{
+  "type": "ae2:inscriber",
+  "ingredients": {
+    "middle": {
+      "tag": "c:gems/diamond"
+    }
+  },
+  "mode": "inscribe",
+  "result": {
+    "count": 1,
+    "id": "appflux:diamond_dust"
+  }
+}

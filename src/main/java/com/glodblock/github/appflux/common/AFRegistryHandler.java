@@ -88,11 +88,11 @@ public class AFRegistryHandler extends RegistryHandler {
         GridServices.register(EnergyDistributeService.class, EnergyDistributeService.class);
         GenericSlotCapacities.register(FluxKeyType.TYPE, 1000000L);
         StorageCells.addCellHandler(FECellHandler.HANDLER);
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_1k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_4k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_16k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_1k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_4k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_16k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
         for (Pair<String, Block> entry : blocks) {
             Block block = BuiltInRegistries.BLOCK.get(AppFlux.id(entry.getKey()));
             if (block instanceof AEBaseEntityBlock<?>) {
@@ -102,15 +102,15 @@ public class AFRegistryHandler extends RegistryHandler {
                 );
             }
         }
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEBlocks.INTERFACE, 1, GuiText.Interface.getTranslationKey());
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEParts.INTERFACE, 1, GuiText.Interface.getTranslationKey());
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEBlocks.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEParts.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.INTERFACE, 1, GuiText.Interface.getTranslationKey());
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.INTERFACE, 1, GuiText.Interface.getTranslationKey());
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
     }
 
     @Override
@@ -137,12 +137,12 @@ public class AFRegistryHandler extends RegistryHandler {
 
     public void registerTab(Registry<CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
-                .icon(() -> new ItemStack(AFItemAndBlock.FE_CELL_1k))
+                .icon(() -> new ItemStack(AFSingletons.FE_CELL_1k))
                 .title(Component.translatable("itemGroup.af"))
-                .displayItems((__, o) -> {
+                .displayItems((p, o) -> {
                     for (Pair<String, Item> entry : items) {
                         if (entry.getRight() instanceof AEBaseItem aeItem) {
-                            aeItem.addToMainCreativeTab(o);
+                            aeItem.addToMainCreativeTab(p, o);
                         } else {
                             o.accept(entry.getRight());
                         }

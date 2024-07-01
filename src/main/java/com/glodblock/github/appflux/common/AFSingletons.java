@@ -7,17 +7,22 @@ import com.glodblock.github.appflux.common.items.ItemInductionCard;
 import com.glodblock.github.appflux.common.items.NormalItem;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import com.glodblock.github.glodium.util.GlodUtil;
+import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class AFItemAndBlock {
+public class AFSingletons {
+
+    public static DataComponentType<Long> FE_ENERGY;
 
     public static NormalItem CORE_1k;
     public static NormalItem CORE_4k;
@@ -44,6 +49,7 @@ public class AFItemAndBlock {
     public static ItemInductionCard INDUCTION_CARD;
 
     public static void init(AFRegistryHandler regHandler) {
+        FE_ENERGY = GlodUtil.getComponentType(Codec.LONG, ByteBufCodecs.VAR_LONG);
         CORE_1k = new NormalItem();
         CORE_4k = new NormalItem();
         CORE_16k = new NormalItem();
@@ -67,12 +73,13 @@ public class AFItemAndBlock {
         FLUX_ACCESSOR = new BlockFluxAccessor();
         PART_FLUX_ACCESSOR = new PartItem<>(new Item.Properties(), PartFluxAccessor.class, PartFluxAccessor::new) {
             @Override
-            public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag advancedTooltips) {
+            public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext ctx, @NotNull List<Component> tooltip, @NotNull TooltipFlag advancedTooltips) {
                 tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.1").withStyle(ChatFormatting.GRAY));
                 tooltip.add(Component.translatable("block.appflux.flux_accessor.tooltip.2").withStyle(ChatFormatting.GRAY));
             }
         };
         INDUCTION_CARD = new ItemInductionCard();
+        regHandler.comp("fe_energy", FE_ENERGY);
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
         regHandler.item("core_16k", CORE_16k);

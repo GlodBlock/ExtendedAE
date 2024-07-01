@@ -1,0 +1,19 @@
+{
+  "type": "ae2:inscriber",
+  "ingredients": {
+    "bottom": {
+      "item": "ae2:printed_silicon"
+    },
+    "middle": {
+      "item": "minecraft:redstone"
+    },
+    "top": {
+      "item": "appflux:printed_energy_processor"
+    }
+  },
+  "mode": "press",
+  "result": {
+    "count": 1,
+    "id": "appflux:energy_processor"
+  }
+}

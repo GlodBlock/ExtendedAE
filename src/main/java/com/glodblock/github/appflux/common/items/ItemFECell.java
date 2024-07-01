@@ -1,6 +1,5 @@
 package com.glodblock.github.appflux.common.items;
 
-import appeng.api.stacks.AEKeyType;
 import appeng.api.storage.StorageCells;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
@@ -8,11 +7,10 @@ import appeng.core.localization.PlayerMessages;
 import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
 import com.glodblock.github.appflux.api.IFluxCell;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.CellFEPower;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
-import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.google.common.base.Preconditions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +18,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -49,11 +48,6 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
     @Override
     public IUpgradeInventory getUpgrades(ItemStack is) {
         return UpgradeInventories.forItem(is, 1);
-    }
-
-    @Override
-    public AEKeyType getKeyType() {
-        return FluxKeyType.TYPE;
     }
 
     @Override
@@ -111,7 +105,7 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
                     for (var upgrade : this.getUpgrades(stack)) {
                         playerInventory.placeItemBackInInventory(upgrade);
                     }
-                    playerInventory.placeItemBackInInventory(new ItemStack(AFItemAndBlock.FE_HOUSING));
+                    playerInventory.placeItemBackInInventory(new ItemStack(AFSingletons.FE_HOUSING));
                     return true;
                 } else {
                     player.displayClientMessage(PlayerMessages.OnlyEmptyCellsCanBeDisassembled.text(), true);
@@ -130,7 +124,7 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void appendHoverText(ItemStack is, @Nullable Level level, List<Component> lines, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack is, @Nullable Item.TooltipContext level, List<Component> lines, TooltipFlag tooltipFlag) {
         addCellInformationToTooltip(is, lines);
     }
 

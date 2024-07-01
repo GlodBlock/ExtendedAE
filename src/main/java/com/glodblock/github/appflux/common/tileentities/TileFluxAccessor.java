@@ -6,7 +6,7 @@ import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.blockentity.grid.AENetworkBlockEntity;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
@@ -25,7 +25,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
     private EnergyCapCache cacheApi;
 
     public TileFluxAccessor(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFItemAndBlock.FLUX_ACCESSOR), pos, blockState);
+        super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFSingletons.FLUX_ACCESSOR), pos, blockState);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
     }

@@ -3,6 +3,7 @@ package com.glodblock.github.appflux.common.items;
 import appeng.items.materials.UpgradeCardItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -17,7 +18,7 @@ public class ItemInductionCard extends UpgradeCardItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag advancedTooltips) {
+    public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext level, @NotNull List<Component> tooltip, @NotNull TooltipFlag advancedTooltips) {
         tooltip.add(Component.translatable("item.appflux.induction_card.tooltip").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, level, tooltip, advancedTooltips);
     }

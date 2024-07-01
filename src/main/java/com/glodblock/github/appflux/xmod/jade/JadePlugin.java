@@ -6,14 +6,15 @@ import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.JadeIds;
 import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
 public class JadePlugin implements IWailaPlugin {
 
     private static final ResourceLocation[] ENERGY = {
-            new ResourceLocation("energy_storage"),
-            new ResourceLocation("gtceu", "electric_container_provider")
+            JadeIds.UNIVERSAL_ENERGY_STORAGE,
+            ResourceLocation.fromNamespaceAndPath("modern_industrialization", "machine")
     };
 
     @Override

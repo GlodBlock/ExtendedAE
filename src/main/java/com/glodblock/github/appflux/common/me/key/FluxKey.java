@@ -4,9 +4,14 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +22,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FluxKey extends AEKey {
+
+    public static final MapCodec<FluxKey> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            builder -> builder
+                    .group(EnergyType.CODEC.fieldOf("type").forGetter(o -> o.type))
+                    .apply(builder, FluxKey::of)
+    );
+    public static final Codec<FluxKey> CODEC = MAP_CODEC.codec();
 
     @NotNull
     private final EnergyType type;
@@ -48,10 +60,9 @@ public class FluxKey extends AEKey {
     }
 
     @Override
-    public CompoundTag toTag() {
-        var tag = new CompoundTag();
-        tag.putString("t", this.type.name());
-        return tag;
+    public CompoundTag toTag(HolderLookup.Provider registries) {
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        return (CompoundTag) CODEC.encodeStart(ops, this).getOrThrow();
     }
 
     @Override
@@ -65,7 +76,7 @@ public class FluxKey extends AEKey {
     }
 
     @Override
-    public void writeToPacket(FriendlyByteBuf data) {
+    public void writeToPacket(RegistryFriendlyByteBuf data) {
         data.writeEnum(this.type);
     }
 
@@ -82,6 +93,11 @@ public class FluxKey extends AEKey {
     @Override
     public void addDrops(long amount, List<ItemStack> drops, Level level, BlockPos pos) {
         // NO-OP
+    }
+
+    @Override
+    public boolean hasComponents() {
+        return false;
     }
 
     @Override

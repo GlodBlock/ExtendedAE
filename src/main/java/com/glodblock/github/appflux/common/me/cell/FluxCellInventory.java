@@ -10,6 +10,7 @@ import appeng.api.storage.cells.StorageCell;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.appflux.api.IFluxCell;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
@@ -25,7 +26,7 @@ public abstract class FluxCellInventory implements StorageCell {
     @Nullable
     protected final ISaveProvider container;
 
-    protected long storedEnergy = 0;
+    protected long storedEnergy;
     protected boolean isPersisted = true;
     protected final boolean hasVoidUpgrade;
 
@@ -33,10 +34,7 @@ public abstract class FluxCellInventory implements StorageCell {
         this.cellType = cellType;
         this.stack = o;
         this.container = container;
-        var tag = o.getTag();
-        if (tag != null) {
-            storedEnergy = tag.getLong(DATA);
-        }
+        this.storedEnergy = o.getOrDefault(AFSingletons.FE_ENERGY, 0L);
         this.hasVoidUpgrade = this.getUpgrades().isInstalled(AEItems.VOID_CARD);
     }
 
@@ -124,9 +122,9 @@ public abstract class FluxCellInventory implements StorageCell {
             return;
         }
         if (this.storedEnergy <= 0) {
-            this.stack.removeTagKey(DATA);
+            this.stack.remove(AFSingletons.FE_ENERGY);
         } else {
-            this.stack.getOrCreateTag().putLong(DATA, this.storedEnergy);
+            this.stack.set(AFSingletons.FE_ENERGY, this.storedEnergy);
         }
         this.isPersisted = true;
     }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "appflux:flux_accessor"
+    },
+    {
+      "item": "ae2:basic_card"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "appflux:induction_card"
+  }
+}

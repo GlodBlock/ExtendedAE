@@ -9,11 +9,12 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -71,16 +72,16 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
             method = "writeToNBT",
             at = @At("TAIL")
     )
-    private void saveUpgrade(CompoundTag tag, CallbackInfo ci) {
-        this.af_$upgrades.writeToNBT(tag, "upgrades");
+    private void saveUpgrade(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
+        this.af_$upgrades.writeToNBT(tag, "upgrades", registries);
     }
 
     @Inject(
             method = "readFromNBT",
             at = @At("TAIL")
     )
-    private void loadUpgrade(CompoundTag tag, CallbackInfo ci) {
-        this.af_$upgrades.readFromNBT(tag, "upgrades");
+    private void loadUpgrade(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
+        this.af_$upgrades.readFromNBT(tag, "upgrades", registries);
     }
 
     @Inject(
@@ -113,7 +114,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
         if (this.af_cacheApi == null) {
             this.af_initCache();
         }
-        if (this.af_$upgrades.isInstalled(AFItemAndBlock.INDUCTION_CARD)) {
+        if (this.af_$upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
             var storage = this.af_getStorage();
             if (storage != null) {
                 for (var d : AFUtil.getSides(this.host)) {
