@@ -9,6 +9,7 @@ license="${mod_license}"
     displayName="${mod_name}"
     authors="${mod_authors}"
     logoFile="logo.png"
+    credits="Ridanisaurus for the new textures."
     description='''${mod_description}'''
 
 [[mixins]]
