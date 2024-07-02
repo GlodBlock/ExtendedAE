@@ -41,11 +41,11 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
     protected void buildRecipes(@NotNull RecipeOutput consumer) {
         TransformRecipeBuilder.transform(consumer,
                 AppFlux.id("transform/redstone_crystal"),
-                AFSingletons.REDSTONE_CRYSTAL, 1,
+                AFSingletons.REDSTONE_CRYSTAL, 2,
                 TransformCircumstance.fluid(FluidTags.WATER),
                 Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE),
-                Ingredient.of(AEBlocks.FLUIX_BLOCK),
-                Ingredient.of(AFTags.DIAMOND_DUST)
+                Ingredient.of(ConventionTags.FLUIX_CRYSTAL),
+                Ingredient.of(ConventionTags.GLOWSTONE)
         );
         ChargerRecipeBuilder.charge(consumer,
                 AppFlux.id("charger/energy_press"),
@@ -76,17 +76,13 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .inscribe(Tags.Items.GEMS_EMERALD, AFSingletons.EMERALD_DUST, 1)
                 .setMode(InscriberProcessType.INSCRIBE)
                 .save(consumer, AppFlux.id("inscriber/crush_emerald"));
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, AFSingletons.CHARGED_REDSTONE)
-                .pattern("XYX")
-                .pattern("ZCZ")
-                .pattern("XYX")
-                .define('C', AFSingletons.REDSTONE_CRYSTAL)
-                .define('X', ConventionTags.GLOWSTONE)
-                .define('Y', AFTags.EMERALD_DUST)
-                .define('Z', ConventionTags.ENDER_PEARL_DUST)
-                .unlockedBy(C, has(AFSingletons.REDSTONE_CRYSTAL))
-                .save(consumer, AppFlux.id("charge_redstone"));
+        ChargerRecipeBuilder
+                .charge(
+                        consumer,
+                        AppFlux.id("charger/charge_redstone"),
+                        AFSingletons.REDSTONE_CRYSTAL,
+                        AFSingletons.CHARGED_REDSTONE
+                );
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, AFSingletons.INSULATING_RESIN)
                 .requires(Items.WATER_BUCKET)
@@ -135,41 +131,96 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .define('L', AFSingletons.CORE_1k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFSingletons.ENERGY_PROCESSOR)
-                .unlockedBy(C, has(AFSingletons.ENERGY_PROCESSOR))
+                .unlockedBy(C, has(AFSingletons.CORE_1k))
                 .save(consumer, AppFlux.id("4k_core"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFSingletons.CORE_16k)
                 .pattern("DPD")
                 .pattern("LGL")
                 .pattern("DLD")
-                .define('D', AFTags.DIAMOND_DUST)
+                .define('D', ConventionTags.FLUIX_DUST)
                 .define('L', AFSingletons.CORE_4k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFSingletons.ENERGY_PROCESSOR)
-                .unlockedBy(C, has(AFSingletons.ENERGY_PROCESSOR))
+                .unlockedBy(C, has(AFSingletons.CORE_4k))
                 .save(consumer, AppFlux.id("16k_core"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFSingletons.CORE_64k)
                 .pattern("DPD")
                 .pattern("LGL")
                 .pattern("DLD")
-                .define('D', AFTags.DIAMOND_DUST)
+                .define('D', ConventionTags.FLUIX_DUST)
                 .define('L', AFSingletons.CORE_16k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFSingletons.ENERGY_PROCESSOR)
-                .unlockedBy(C, has(AFSingletons.ENERGY_PROCESSOR))
+                .unlockedBy(C, has(AFSingletons.CORE_16k))
                 .save(consumer, AppFlux.id("64k_core"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFSingletons.CORE_256k)
                 .pattern("DPD")
                 .pattern("LGL")
                 .pattern("DLD")
-                .define('D', AFTags.EMERALD_DUST)
+                .define('D', ConventionTags.ENDER_PEARL_DUST)
                 .define('L', AFSingletons.CORE_64k)
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
                 .define('P', AFSingletons.ENERGY_PROCESSOR)
-                .unlockedBy(C, has(AFSingletons.ENERGY_PROCESSOR))
+                .unlockedBy(C, has(AFSingletons.CORE_64k))
                 .save(consumer, AppFlux.id("256k_core"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFSingletons.CORE_1M)
+                .pattern("DPD")
+                .pattern("LGL")
+                .pattern("DLD")
+                .define('D', ConventionTags.ENDER_PEARL_DUST)
+                .define('L', AFSingletons.CORE_256k)
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(AFSingletons.CORE_256k))
+                .save(consumer, AppFlux.id("1m_core"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFSingletons.CORE_4M)
+                .pattern("DPD")
+                .pattern("LGL")
+                .pattern("DLD")
+                .define('D', AFTags.DIAMOND_DUST)
+                .define('L', AFSingletons.CORE_1M)
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(AFSingletons.CORE_1M))
+                .save(consumer, AppFlux.id("4m_core"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFSingletons.CORE_16M)
+                .pattern("DPD")
+                .pattern("LGL")
+                .pattern("DLD")
+                .define('D', AFTags.DIAMOND_DUST)
+                .define('L', AFSingletons.CORE_4M)
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(AFSingletons.CORE_4M))
+                .save(consumer, AppFlux.id("16m_core"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFSingletons.CORE_64M)
+                .pattern("DPD")
+                .pattern("LGL")
+                .pattern("DLD")
+                .define('D', AFTags.EMERALD_DUST)
+                .define('L', AFSingletons.CORE_16M)
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(AFSingletons.CORE_16M))
+                .save(consumer, AppFlux.id("64m_core"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFSingletons.CORE_256M)
+                .pattern("DPD")
+                .pattern("LGL")
+                .pattern("DLD")
+                .define('D', AFTags.EMERALD_DUST)
+                .define('L', AFSingletons.CORE_64M)
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(AFSingletons.CORE_64M))
+                .save(consumer, AppFlux.id("256m_core"));
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFSingletons.FLUX_ACCESSOR)
                 .pattern("DPD")
@@ -212,6 +263,11 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFSingletons.CORE_16k, AFSingletons.FE_CELL_16k, "16k");
         addFECellRecipe(consumer, AFSingletons.CORE_64k, AFSingletons.FE_CELL_64k, "64k");
         addFECellRecipe(consumer, AFSingletons.CORE_256k, AFSingletons.FE_CELL_256k, "256k");
+        addFECellRecipe(consumer, AFSingletons.CORE_1M, AFSingletons.FE_CELL_1M, "1m");
+        addFECellRecipe(consumer, AFSingletons.CORE_4M, AFSingletons.FE_CELL_4M, "4m");
+        addFECellRecipe(consumer, AFSingletons.CORE_16M, AFSingletons.FE_CELL_16M, "16m");
+        addFECellRecipe(consumer, AFSingletons.CORE_64M, AFSingletons.FE_CELL_64M, "64m");
+        addFECellRecipe(consumer, AFSingletons.CORE_256M, AFSingletons.FE_CELL_256M, "256m");
     }
 
     private void addFECellRecipe(RecipeOutput consumer, Item core, Item result, String id) {

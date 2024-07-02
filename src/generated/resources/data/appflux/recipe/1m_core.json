@@ -9,10 +9,10 @@
       "item": "ae2:quartz_vibrant_glass"
     },
     "L": {
-      "item": "appflux:core_64k"
+      "item": "appflux:core_256k"
     },
     "P": {
-      "item": "appflux:energy_processor"
+      "item": "ae2:engineering_processor"
     }
   },
   "pattern": [
@@ -22,6 +22,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "appflux:core_256k"
+    "id": "appflux:core_1m"
   }
 }

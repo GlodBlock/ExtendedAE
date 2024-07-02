@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "appflux:redstone_crystal"
+            "items": "appflux:harden_insulating_resin"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:charge_redstone"
+        "recipe": "appflux:4m_fe_cell"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "appflux:charge_redstone"
+      "appflux:4m_fe_cell"
     ]
   }
 }

@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "appflux:core_16k"
+            "items": "appflux:fe_cell_housing"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:64k_core"
+        "recipe": "appflux:1m_fe_cell_assemble"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "appflux:64k_core"
+      "appflux:1m_fe_cell_assemble"
     ]
   }
 }

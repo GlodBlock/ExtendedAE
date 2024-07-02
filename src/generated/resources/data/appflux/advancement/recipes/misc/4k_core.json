@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "appflux:energy_processor"
+            "items": "appflux:core_1k"
           }
         ]
       },

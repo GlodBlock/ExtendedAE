@@ -3,16 +3,16 @@
   "category": "misc",
   "key": {
     "D": {
-      "tag": "c:dusts/ender_pearl"
+      "tag": "c:dusts/emerald"
     },
     "G": {
       "item": "ae2:quartz_vibrant_glass"
     },
     "L": {
-      "item": "appflux:core_64k"
+      "item": "appflux:core_64m"
     },
     "P": {
-      "item": "appflux:energy_processor"
+      "item": "ae2:engineering_processor"
     }
   },
   "pattern": [
@@ -22,6 +22,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "appflux:core_256k"
+    "id": "appflux:core_256m"
   }
 }
