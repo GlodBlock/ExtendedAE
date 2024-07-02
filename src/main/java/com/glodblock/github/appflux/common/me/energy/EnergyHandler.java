@@ -11,6 +11,7 @@ import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.appflux.xmod.ModConstants;
 import com.glodblock.github.appflux.xmod.mek.MekEnergyCap;
+import com.glodblock.github.appflux.xmod.mi.MIEnergyCap;
 import com.glodblock.github.glodium.util.GlodUtil;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.Direction;
@@ -41,6 +42,9 @@ public class EnergyHandler {
     static {
         if (GlodUtil.checkMod(ModConstants.MEK)) {
             addHandler(MekEnergyCap.CAP, MekEnergyCap::send);
+        }
+        if (GlodUtil.checkMod(ModConstants.MI)) {
+            addHandler(MIEnergyCap.CAP, MIEnergyCap::send);
         }
     }
 

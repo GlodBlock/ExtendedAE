@@ -89,6 +89,7 @@ dependencies {
     implementation "appeng:appliedenergistics2:19.0.7-alpha"
     compileOnly "curse.maven:mekanism-268560:5478403"
     compileOnly "curse.maven:modern-industrialization-405388:5482720"
+    compileOnly "curse.maven:grandpower-980156:5432440"
     compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
     compileOnly "curse.maven:jade-324717:5444008"
     // runtime test
