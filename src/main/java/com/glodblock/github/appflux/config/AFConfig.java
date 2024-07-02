@@ -13,7 +13,7 @@ public class AFConfig {
 
     private static final ModConfigSpec.IntValue FLUX_PER_BYTE = BUILDER
             .comment("FE can be stored per byte.")
-            .defineInRange("flux_cell.amount", 1024 * 1024 * 4, 1, Integer.MAX_VALUE);
+            .defineInRange("flux_cell.amount", 1024 * 32, 1, Integer.MAX_VALUE);
     private static final ModConfigSpec.LongValue FLUX_ACCESSOR_IO = BUILDER
             .comment("The I/O limit of Flux Accessor. 0 means no limitation.")
             .defineInRange("flux_accessor.io_limit", 0L, 0L, Integer.MAX_VALUE);

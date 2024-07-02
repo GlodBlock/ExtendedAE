@@ -91,11 +91,16 @@ public class AFRegistryHandler extends RegistryHandler {
         GridServices.register(EnergyDistributeService.class, EnergyDistributeService.class);
         GenericSlotCapacities.register(FluxKeyType.TYPE, 1000000L);
         StorageCells.addCellHandler(FECellHandler.HANDLER);
-        StorageCellModels.registerModel(AFSingletons.FE_CELL_1k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFSingletons.FE_CELL_4k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFSingletons.FE_CELL_16k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFSingletons.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFSingletons.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_1k, AppFlux.id("block/drive/fe_1k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_4k, AppFlux.id("block/drive/fe_4k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_16k, AppFlux.id("block/drive/fe_16k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_64k, AppFlux.id("block/drive/fe_64k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_256k, AppFlux.id("block/drive/fe_256k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_1M, AppFlux.id("block/drive/fe_1m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_4M, AppFlux.id("block/drive/fe_4m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_16M, AppFlux.id("block/drive/fe_16m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_64M, AppFlux.id("block/drive/fe_64m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_256M, AppFlux.id("block/drive/fe_256m_cell"));
         for (Pair<String, Block> entry : blocks) {
             Block block = BuiltInRegistries.BLOCK.get(AppFlux.id(entry.getKey()));
             if (block instanceof AEBaseEntityBlock<?>) {
@@ -110,6 +115,11 @@ public class AFRegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
         Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
         Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_1M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_4M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256M, 1, GuiText.StorageCells.getTranslationKey());
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.INTERFACE, 1, GuiText.Interface.getTranslationKey());
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.INTERFACE, 1, GuiText.Interface.getTranslationKey());
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.PATTERN_PROVIDER, 1, "group.pattern_provider.name");

@@ -22,6 +22,11 @@ public class AFClientRegistryHandler {
         event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_16k);
         event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_64k);
         event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_256k);
+        event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_1M);
+        event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_4M);
+        event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_16M);
+        event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_64M);
+        event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_256M);
     }
 
     public void init() {
