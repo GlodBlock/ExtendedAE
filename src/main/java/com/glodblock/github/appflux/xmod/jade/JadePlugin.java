@@ -14,7 +14,8 @@ public class JadePlugin implements IWailaPlugin {
 
     private static final ResourceLocation[] ENERGY = {
             JadeIds.UNIVERSAL_ENERGY_STORAGE,
-            ResourceLocation.fromNamespaceAndPath("modern_industrialization", "machine")
+            ResourceLocation.fromNamespaceAndPath("modern_industrialization", "machine"),
+            ResourceLocation.fromNamespaceAndPath("mekanism", "data_provider")
     };
 
     @Override

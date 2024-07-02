@@ -49,14 +49,14 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
         }
     }
 
-    private IStorageService getStorage() {
+    public IStorageService getStorage() {
         if (this.getGridNode() != null) {
             return this.getGridNode().getGrid().getStorageService();
         }
         return null;
     }
 
-    private IActionSource getSource() {
+    public IActionSource getSource() {
         return IActionSource.ofMachine(this);
     }
 

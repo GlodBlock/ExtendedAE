@@ -25,6 +25,7 @@ import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
+import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
@@ -33,7 +34,6 @@ import com.glodblock.github.appflux.common.me.strategy.FEExternalStorageStrategy
 import com.glodblock.github.appflux.common.me.strategy.FEStackExportStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEStackImportStrategy;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
-import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -58,8 +58,8 @@ public class AFRegistryHandler extends RegistryHandler {
     public AFRegistryHandler() {
         super(AppFlux.MODID);
         this.cap(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST, (object, context) -> object);
-        this.cap(TileFluxAccessor.class, Capabilities.EnergyStorage.BLOCK, (te, side) -> te.getEnergyStorage());
         this.cap(IFluxCell.class, Capabilities.EnergyStorage.ITEM, (cell, v) -> ((IFluxCell) cell.getItem()).getCapability(cell, v));
+        CapAdaptor.init(this);
     }
 
     public <T extends AEBaseBlockEntity> void block(String name, AEBaseEntityBlock<T> block, Class<T> clazz, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -141,11 +141,7 @@ public class AFRegistryHandler extends RegistryHandler {
 
     @SubscribeEvent
     public void registerPartCap(RegisterPartCapabilitiesEvent event) {
-        event.register(
-                Capabilities.EnergyStorage.BLOCK,
-                (part, direction) -> part.getEnergyStorage(),
-                PartFluxAccessor.class
-        );
+        CapAdaptor.init(event);
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

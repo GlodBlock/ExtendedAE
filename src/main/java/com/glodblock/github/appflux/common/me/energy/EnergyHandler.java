@@ -9,12 +9,14 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
+import com.glodblock.github.appflux.xmod.ModConstants;
+import com.glodblock.github.appflux.xmod.mek.MekEnergyCap;
+import com.glodblock.github.glodium.util.GlodUtil;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -36,16 +38,22 @@ public class EnergyHandler {
         }
     };
 
+    static {
+        if (GlodUtil.checkMod(ModConstants.MEK)) {
+            addHandler(MekEnergyCap.CAP, MekEnergyCap::send);
+        }
+    }
+
     public static <T> void addHandler(BlockCapability<T, Direction> cap, Handler<T> handler) {
-        HANDLERS.add(new ImmutablePair<>(cap, handler));
+        HANDLERS.add(Pair.of(cap, handler));
     }
 
     @SuppressWarnings("unchecked")
     public static <T> void send(@NotNull EnergyCapCache cache, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
         for (var entry : HANDLERS) {
-            T cap = cache.getEnergyCap((BlockCapability<T, Direction>) entry.getLeft(), side);
+            T cap = cache.getEnergyCap((BlockCapability<T, Direction>) entry.left(), side);
             if (cap != null) {
-                ((Handler<T>) entry.getRight()).send(cap, storage, source);
+                ((Handler<T>) entry.right()).send(cap, storage, source);
                 return;
             }
         }
