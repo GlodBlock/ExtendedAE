@@ -11,7 +11,6 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiInfoRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.stack.Comparison;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Recipe;
@@ -32,9 +31,6 @@ public class EMIPlugin implements EmiPlugin {
         registry.addGenericStackProvider(new PatternSlotProvider());
         registry.addWorkstation(Ae2ReflectClient.getInscribeRecipe(), EmiStack.of(EAESingletons.EX_INSCRIBER));
         registry.addWorkstation(Ae2ReflectClient.getChargerRecipe(), EmiStack.of(EAESingletons.EX_CHARGER));
-        registry.setDefaultComparison(EAESingletons.INFINITY_CELL,
-                Comparison.compareData(s -> s.getItemStack().get(EAESingletons.AE_KEY))
-        );
         registry.addCategory(EMICrystalAssemblerRecipe.CATEGORY);
         registry.addWorkstation(EMICrystalAssemblerRecipe.CATEGORY, EmiStack.of(EAESingletons.CRYSTAL_ASSEMBLER));
         adaptRecipeType(registry, CrystalAssemblerRecipe.TYPE, EMICrystalAssemblerRecipe::new);

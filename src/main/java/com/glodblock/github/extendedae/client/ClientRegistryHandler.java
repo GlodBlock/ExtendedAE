@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.client;
 import appeng.api.util.AEColor;
 import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
+import appeng.items.storage.BasicStorageCell;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.GuiActiveFormationPlane;
 import com.glodblock.github.extendedae.client.gui.GuiCaner;
@@ -85,7 +86,9 @@ import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPa
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.wt.WTClientLoad;
 import com.glodblock.github.glodium.util.GlodUtil;
+import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.util.FastColor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
@@ -136,7 +139,9 @@ public class ClientRegistryHandler {
 
     @SubscribeEvent
     public void registerColorHandler(RegisterColorHandlersEvent.Item event) {
-        event.register(new StaticItemColor(AEColor.TRANSPARENT), EAESingletons.EX_PATTERN_TERMINAL);
+        event.register(makeOpaque(new StaticItemColor(AEColor.TRANSPARENT)), EAESingletons.EX_PATTERN_TERMINAL);
+        event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.INFINITY_WATER_CELL);
+        event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.INFINITY_COBBLESTONE_CELL);
     }
 
     @SubscribeEvent
@@ -157,6 +162,10 @@ public class ClientRegistryHandler {
     @SubscribeEvent
     public void registerHotKey(RegisterKeyMappingsEvent e) {
         e.register(PatternHotKey.getHotKey());
+    }
+
+    private static ItemColor makeOpaque(ItemColor itemColor) {
+        return (stack, tintIndex) -> FastColor.ARGB32.opaque(itemColor.getColor(stack, tintIndex));
     }
 
 }

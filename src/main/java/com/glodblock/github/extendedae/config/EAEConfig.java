@@ -7,14 +7,11 @@ import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,10 +32,6 @@ public class EAEConfig {
     private static final ModConfigSpec.DoubleValue WIRELESS_CONNECTOR_RANGE = BUILDER
             .comment("The max range between two wireless connector")
             .defineInRange("range", 1000.0, 10.0, 10000.0);
-
-    private static final ModConfigSpec.ConfigValue<List<? extends String>> INFINITY_CELL_TYPES = BUILDER
-            .comment("ME Infinity Cell types (item or fluid's id)")
-            .defineList("types", Lists.newArrayList("minecraft:water", "minecraft:cobblestone"), EAEConfig::checkRL);
 
     private static final ModConfigSpec.ConfigValue<List<? extends Integer>> PATTERN_MODIFIER_NUMBER = BUILDER
             .comment("Pattern modifier multipliers")
@@ -80,8 +73,6 @@ public class EAEConfig {
     public static int busSpeed;
     public static double infCellCost;
     public static double wirelessMaxRange;
-    public static List<Fluid> infCellFluid;
-    public static List<Item> infCellItem;
     public static List<ResourceLocation> tapeWhitelist;
     public static boolean disableInscriberRender;
     public static int oversizeMultiplier;
@@ -100,17 +91,6 @@ public class EAEConfig {
         busSpeed = EX_BUS_SPEED.get();
         infCellCost = INFINITY_CELL_ENERGY.get();
         wirelessMaxRange = WIRELESS_CONNECTOR_RANGE.get();
-        infCellFluid = new ArrayList<>();
-        infCellItem = new ArrayList<>();
-        INFINITY_CELL_TYPES.get()
-                .forEach(s -> {
-                    if (GlodUtil.checkInvalidRL(s, BuiltInRegistries.ITEM)) {
-                        infCellItem.add(BuiltInRegistries.ITEM.get(ResourceLocation.parse(s)));
-                    }
-                    if (GlodUtil.checkInvalidRL(s, BuiltInRegistries.FLUID)) {
-                        infCellFluid.add(BuiltInRegistries.FLUID.get(ResourceLocation.parse(s)));
-                    }
-                });
         tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::parse).collect(Collectors.toList());
         disableInscriberRender = INSCRIBER_RENDER.get();
         oversizeMultiplier = OVERSIZE_MULTIPLIER.get();

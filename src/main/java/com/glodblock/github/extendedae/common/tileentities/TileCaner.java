@@ -188,7 +188,7 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
         super.saveAdditional(data, registries);
         this.stuff.writeToChildTag(data, "stuff", registries);
-        data.put("target", this.target.save(registries));
+        data.put("target", this.target.saveOptional(registries));
         if (this.ejectSide != null) {
             data.putString("ejectSide", this.ejectSide.name());
         }
@@ -253,14 +253,14 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     @Override
     protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
-        this.container.setItemDirect(0, ItemStack.STREAM_CODEC.decode(data));
+        this.container.setItemDirect(0, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         return changed;
     }
 
     @Override
     protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
-        ItemStack.STREAM_CODEC.encode(data, this.container.getStackInSlot(0));
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.container.getStackInSlot(0));
     }
 
     private void fill() {

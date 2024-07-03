@@ -24,13 +24,7 @@
     "III"
   ],
   "result": {
-    "components": {
-      "extendedae:ae_key": {
-        "#t": "ae2:i",
-        "id": "minecraft:cobblestone"
-      }
-    },
     "count": 1,
-    "id": "extendedae:infinity_cell"
+    "id": "extendedae:infinity_cobblestone_cell"
   }
 }

@@ -90,7 +90,7 @@ public class InscriberThread {
             setSmash(true);
         }
         for (int i = 0; i < this.inv.size(); i++) {
-            this.inv.setItemDirect(i, ItemStack.STREAM_CODEC.decode(data));
+            this.inv.setItemDirect(i, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         }
         this.cachedTask = null;
     }
@@ -98,7 +98,7 @@ public class InscriberThread {
     public void writeToStream(RegistryFriendlyByteBuf data) {
         data.writeBoolean(isSmash());
         for (int i = 0; i < this.inv.size(); i++) {
-            ItemStack.STREAM_CODEC.encode(data, inv.getStackInSlot(i));
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(data, inv.getStackInSlot(i));
         }
     }
 

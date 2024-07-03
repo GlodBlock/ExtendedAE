@@ -131,14 +131,14 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     @Override
     protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
-        this.inv.setItemDirect(0, ItemStack.STREAM_CODEC.decode(data));
+        this.inv.setItemDirect(0, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         return changed;
     }
 
     @Override
     protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
-        ItemStack.STREAM_CODEC.encode(data, this.inv.getStackInSlot(0));
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.inv.getStackInSlot(0));
     }
 
     @Override

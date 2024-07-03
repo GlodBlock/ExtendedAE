@@ -277,7 +277,8 @@ public class EAERegistryHandler extends RegistryHandler {
 
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
-        StorageCellModels.registerModel(EAESingletons.INFINITY_CELL, ExtendedAE.id("block/drive/infinity_cell"));
+        StorageCellModels.registerModel(EAESingletons.INFINITY_WATER_CELL, ExtendedAE.id("block/drive/infinity_water_cell"));
+        StorageCellModels.registerModel(EAESingletons.INFINITY_COBBLESTONE_CELL, ExtendedAE.id("block/drive/infinity_cobblestone_cell"));
     }
 
     private void onRegisterModels() {

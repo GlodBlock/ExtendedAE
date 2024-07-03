@@ -2,19 +2,16 @@ package com.glodblock.github.extendedae.common.inventory;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
-import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
-import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.items.ItemInfinityCell;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 public class InfinityCellInventory implements StorageCell {
@@ -28,7 +25,7 @@ public class InfinityCellInventory implements StorageCell {
             throw new IllegalArgumentException("Cell isn't an infinity cell!");
         }
         this.stack = stack;
-        this.record = stack.getOrDefault(EAESingletons.AE_KEY, AEFluidKey.of(Fluids.WATER));
+        this.record = ((ItemInfinityCell) stack.getItem()).getRecord();
     }
 
     @Override

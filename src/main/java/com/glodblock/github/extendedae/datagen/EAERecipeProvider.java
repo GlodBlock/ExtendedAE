@@ -1,7 +1,5 @@
 package com.glodblock.github.extendedae.datagen;
 
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.AEItemKey;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
@@ -101,7 +99,7 @@ public class EAERecipeProvider extends RecipeProvider {
 
         // Infinity Cell
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, EAESingletons.INFINITY_CELL.getRecordCell(AEFluidKey.of(Fluids.WATER)))
+                .shaped(RecipeCategory.MISC, EAESingletons.INFINITY_WATER_CELL)
                 .pattern("CWC")
                 .pattern("WXW")
                 .pattern("III")
@@ -109,10 +107,10 @@ public class EAERecipeProvider extends RecipeProvider {
                 .define('W', Items.WATER_BUCKET)
                 .define('X', AEItems.CELL_COMPONENT_16K)
                 .define('I', ConventionTags.DIAMOND)
-                .unlockedBy(C, has(EAESingletons.INFINITY_CELL))
+                .unlockedBy(C, has(EAESingletons.INFINITY_WATER_CELL))
                 .save(c, ExtendedAE.id("water_cell"));
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, EAESingletons.INFINITY_CELL.getRecordCell(AEItemKey.of(Blocks.COBBLESTONE)))
+                .shaped(RecipeCategory.MISC, EAESingletons.INFINITY_COBBLESTONE_CELL)
                 .pattern("CLC")
                 .pattern("WXW")
                 .pattern("III")
@@ -121,7 +119,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .define('W', Items.WATER_BUCKET)
                 .define('X', AEItems.CELL_COMPONENT_16K)
                 .define('I', ConventionTags.DIAMOND)
-                .unlockedBy(C, has(EAESingletons.INFINITY_CELL))
+                .unlockedBy(C, has(EAESingletons.INFINITY_COBBLESTONE_CELL))
                 .save(c, ExtendedAE.id("cobblestone_cell"));
 
         // Extended IO Bus

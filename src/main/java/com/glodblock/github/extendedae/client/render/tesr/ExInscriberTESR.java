@@ -36,7 +36,7 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
             {0.1875f, 0.1875f}, {0.1875f, -0.1875f}, {-0.1875f, 0.1875f}, {-0.1875f, -0.1875f}
     };
 
-    private static final Material TEXTURE_INSIDE = new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/ex_inscriber_inside"));
+    private static final Material TEXTURE_INSIDE = new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/extended_inscriber/ex_inscriber_inside"));
 
     public ExInscriberTESR(BlockEntityRendererProvider.Context context) {
     }

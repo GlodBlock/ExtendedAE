@@ -174,12 +174,12 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
             this.progress = newProgress;
             changed = true;
         }
-        var inputStack = ItemStack.STREAM_CODEC.decode(data);
+        var inputStack = ItemStack.OPTIONAL_STREAM_CODEC.decode(data);
         if (!ItemStack.isSameItem(inputStack, this.input.getStackInSlot(0))) {
             this.input.setItemDirect(0, inputStack);
             changed = true;
         }
-        var outputStack = ItemStack.STREAM_CODEC.decode(data);
+        var outputStack = ItemStack.OPTIONAL_STREAM_CODEC.decode(data);
         if (!ItemStack.isSameItem(outputStack, this.renderOutput)) {
             this.renderOutput = outputStack;
             changed = true;
@@ -192,9 +192,9 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
         super.writeToStream(data);
         data.writeBoolean(this.isWorking);
         data.writeInt(this.progress);
-        ItemStack.STREAM_CODEC.encode(data, this.input.getStackInSlot(0));
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.input.getStackInSlot(0));
         this.renderOutput = this.ctx.currentRecipe == null ? ItemStack.EMPTY : this.ctx.currentRecipe.value().output;
-        ItemStack.STREAM_CODEC.encode(data, this.renderOutput);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.renderOutput);
     }
 
     @Override

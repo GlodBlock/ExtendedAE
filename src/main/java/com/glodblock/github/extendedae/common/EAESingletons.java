@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.common;
 
-import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AEFluidKey;
+import appeng.api.stacks.AEItemKey;
 import appeng.items.parts.PartItem;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.common.blocks.BlockBuddingEntro;
@@ -21,10 +22,10 @@ import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.extendedae.common.items.CommonItem;
-import com.glodblock.github.extendedae.common.items.ItemInfinityCell;
 import com.glodblock.github.extendedae.common.items.ItemDriveUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemEntroSeed;
 import com.glodblock.github.extendedae.common.items.ItemIOBusUpgrade;
+import com.glodblock.github.extendedae.common.items.ItemInfinityCell;
 import com.glodblock.github.extendedae.common.items.ItemInterfaceUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
 import com.glodblock.github.extendedae.common.items.ItemPackedDevice;
@@ -73,13 +74,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 
 import static appeng.block.AEBaseBlock.metalProps;
 import static appeng.block.AEBaseBlock.stoneProps;
 
 public class EAESingletons {
 
-    public static DataComponentType<AEKey> AE_KEY;
     public static DataComponentType<Boolean> IS_PART;
     public static DataComponentType<ItemMEPackingTape.PartPackageData> TAPE_PART_DATA;
     public static DataComponentType<ItemMEPackingTape.TilePackageData> TAPE_TILE_DATA;
@@ -113,7 +115,8 @@ public class EAESingletons {
     public static PartItem<PartExPatternProvider> EX_PATTERN_PROVIDER_PART;
     public static BlockExInterface EX_INTERFACE;
     public static PartItem<PartExInterface> EX_INTERFACE_PART;
-    public static ItemInfinityCell INFINITY_CELL;
+    public static ItemInfinityCell INFINITY_WATER_CELL;
+    public static ItemInfinityCell INFINITY_COBBLESTONE_CELL;
     public static PartItem<PartExExportBus> EX_EXPORT_BUS;
     public static PartItem<PartExImportBus> EX_IMPORT_BUS;
     public static PartItem<PartExPatternAccessTerminal> EX_PATTERN_TERMINAL;
@@ -151,7 +154,6 @@ public class EAESingletons {
     public static PartItem<PartOversizeInterface> OVERSIZE_INTERFACE_PART;
 
     public static void init(EAERegistryHandler regHandler) {
-        AE_KEY = GlodUtil.getComponentType(AEKey.CODEC, AEKey.STREAM_CODEC);
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
         TAPE_PART_DATA = GlodUtil.getComponentType(ItemMEPackingTape.PartPackageData.CODEC, ItemMEPackingTape.PartPackageData.STREAM_CODEC);
         TAPE_TILE_DATA = GlodUtil.getComponentType(ItemMEPackingTape.TilePackageData.CODEC, ItemMEPackingTape.TilePackageData.STREAM_CODEC);
@@ -177,7 +179,8 @@ public class EAESingletons {
         EX_PATTERN_PROVIDER_PART = new PartItem<>(new Item.Properties(), PartExPatternProvider.class, PartExPatternProvider::new);
         EX_INTERFACE = new BlockExInterface();
         EX_INTERFACE_PART = new PartItem<>(new Item.Properties(), PartExInterface.class, PartExInterface::new);
-        INFINITY_CELL = new ItemInfinityCell();
+        INFINITY_WATER_CELL = new ItemInfinityCell(AEFluidKey.of(Fluids.WATER));
+        INFINITY_COBBLESTONE_CELL = new ItemInfinityCell(AEItemKey.of(Blocks.COBBLESTONE));
         EX_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartExExportBus.class, PartExExportBus::new);
         EX_IMPORT_BUS = new PartItem<>(new Item.Properties(), PartExImportBus.class, PartExImportBus::new);
         EX_PATTERN_TERMINAL = new PartItem<>(new Item.Properties(), PartExPatternAccessTerminal.class, PartExPatternAccessTerminal::new);
@@ -231,7 +234,6 @@ public class EAESingletons {
         } else {
             WIRELESS_EX_PAT = new ItemWirelessExPAT();
         }
-        regHandler.comp("ae_key", AE_KEY);
         regHandler.comp("is_part", IS_PART);
         regHandler.comp("tape_part_data", TAPE_PART_DATA);
         regHandler.comp("tape_tile_data", TAPE_TILE_DATA);
@@ -276,7 +278,8 @@ public class EAESingletons {
         regHandler.item("concurrent_processor_print", CONCURRENT_PROCESSOR_PRINT);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
-        regHandler.item("infinity_cell", INFINITY_CELL);
+        regHandler.item("infinity_water_cell", INFINITY_WATER_CELL);
+        regHandler.item("infinity_cobblestone_cell", INFINITY_COBBLESTONE_CELL);
         regHandler.item("ex_export_bus_part", EX_EXPORT_BUS);
         regHandler.item("ex_import_bus_part", EX_IMPORT_BUS);
         regHandler.item("ex_pattern_access_part", EX_PATTERN_TERMINAL);
