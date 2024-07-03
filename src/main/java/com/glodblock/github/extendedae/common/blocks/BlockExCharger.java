@@ -18,7 +18,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -38,7 +37,6 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
         return OrientationStrategies.full();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return 2;
@@ -85,7 +83,7 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
 
                 if (AppEngClient.instance().shouldAddParticles(r)) {
                     Minecraft.getInstance().particleEngine.createParticle(
-                            new LightningArcParticleData(new Vec3(target)),
+                            new LightningArcParticleData(target),
                             origin.x(),
                             origin.y(),
                             origin.z(),
@@ -95,7 +93,6 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         var orientation = getOrientation(state);
@@ -125,7 +122,6 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
         return Shapes.create(bb.getBoundingBox());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return Shapes.create(new AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0));

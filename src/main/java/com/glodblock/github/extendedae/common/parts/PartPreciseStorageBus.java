@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.common.parts;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.Setting;
+import appeng.api.ids.AEComponents;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
@@ -19,6 +20,8 @@ import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +30,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class PartPreciseStorageBus extends PartSpecialStorageBus implements IConfigInvHost {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/precise_storage_bus_base");
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_off"));
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_on"));
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/precise_storage_bus_base");
+    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_off"));
+    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_on"));
+    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_has_channel"));
     private final ConfigInventory config = ConfigInventory.configStacks(63)
             .changeListener(this::onConfigurationChanged)
             .allowOverstacking(true)
@@ -59,28 +62,31 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
-        this.config.readFromChildTag(data, "config");
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
+        this.config.readFromChildTag(data, "config", registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
-        this.config.writeToChildTag(data, "config");
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
+        this.config.writeToChildTag(data, "config", registries);
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        this.config.readFromChildTag(input, "config");
+        var configInv = input.get(AEComponents.EXPORTED_CONFIG_INV);
+        if (configInv != null) {
+            this.config.readFromList(configInv);
+        }
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            this.config.writeToChildTag(output, "config");
+            output.set(AEComponents.EXPORTED_CONFIG_INV, this.config.toList());
         }
     }
 

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "extendedae:ex_drive"
+    },
+    {
+      "tag": "c:ingots"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:drive_upgrade"
+  }
+}

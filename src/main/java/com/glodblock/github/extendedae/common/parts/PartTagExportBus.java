@@ -8,34 +8,38 @@ import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
+import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.common.me.taglist.TagStackTransferContext;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PartTagExportBus extends PartSpecialExportBus {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/tag_export_bus_base");
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/tag_export_bus_base");
 
     @PartModels
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/export_bus_off"));
+    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_off"));
 
     @PartModels
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/export_bus_on"));
+    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_on"));
 
     @PartModels
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/export_bus_has_channel"));
+    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_has_channel"));
 
     private String oreExpWhite = "";
     private String oreExpBlack = "";
@@ -45,17 +49,35 @@ public class PartTagExportBus extends PartSpecialExportBus {
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra) {
-        super.readFromNBT(extra);
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
         this.oreExpWhite = extra.getString("oreExp");
         this.oreExpBlack = extra.getString("oreExp2");
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra) {
-        super.writeToNBT(extra);
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
         extra.putString("oreExp", this.oreExpWhite);
         extra.putString("oreExp2", this.oreExpBlack);
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        var oreExps = input.get(EAESingletons.TAG_EXPRESS);
+        if (oreExps != null) {
+            this.oreExpWhite = oreExps.left();
+            this.oreExpBlack = oreExps.right();
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
+        super.exportSettings(mode, output);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            output.set(EAESingletons.TAG_EXPRESS, Pair.of(this.oreExpWhite, this.oreExpBlack));
+        }
     }
 
     public String getTagFilter(boolean isWhite) {

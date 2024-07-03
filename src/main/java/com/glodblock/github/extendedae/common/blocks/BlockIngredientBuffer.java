@@ -20,13 +20,11 @@ public class BlockIngredientBuffer extends BlockBaseGui<TileIngredientBuffer> {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public @NotNull VoxelShape getVisualShape(@NotNull BlockState state, @NotNull BlockGetter blockGetter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return Shapes.empty();
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter blockGetter, @NotNull BlockPos pos) {
         return 0.5f;
     }

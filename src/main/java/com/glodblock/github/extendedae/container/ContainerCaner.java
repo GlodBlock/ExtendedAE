@@ -10,15 +10,12 @@ import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class ContainerCaner extends AEBaseMenu implements IActionHolder {
 
@@ -26,7 +23,7 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
             .create(ContainerCaner::new, TileCaner.class)
             .build("caner");
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     @GuiSync(0)
     private CanerMode mode = CanerMode.FILL;
     private final TileCaner host;
@@ -64,7 +61,7 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

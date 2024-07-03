@@ -34,7 +34,6 @@ public class BlockExInscriber extends BlockBaseGui<TileExInscriber> implements S
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return 2;
@@ -59,7 +58,6 @@ public class BlockExInscriber extends BlockBaseGui<TileExInscriber> implements S
                 .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED)
@@ -67,7 +65,6 @@ public class BlockExInscriber extends BlockBaseGui<TileExInscriber> implements S
                 : super.getFluidState(blockState);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if (blockState.getValue(WATERLOGGED)) {

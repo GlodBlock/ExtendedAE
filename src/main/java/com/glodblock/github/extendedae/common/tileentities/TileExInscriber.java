@@ -26,13 +26,15 @@ import appeng.util.SettingsFrom;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import com.glodblock.github.extendedae.api.caps.ICrankPowered;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.InscriberThread;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -59,12 +61,12 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     private int animationIndex = -1;
 
     public TileExInscriber(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExInscriber.class, TileExInscriber::new, EAEItemAndBlock.EX_INSCRIBER), pos, blockState);
+        super(GlodUtil.getTileType(TileExInscriber.class, TileExInscriber::new, EAESingletons.EX_INSCRIBER), pos, blockState);
         this.getMainNode()
                 .setIdlePowerUsage(0)
                 .addService(IGridTickable.class, this);
         this.setInternalMaxPower(1600);
-        this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.EX_INSCRIBER, 4, this::saveChanges);
+        this.upgrades = UpgradeInventories.forMachine(EAESingletons.EX_INSCRIBER, 4, this::saveChanges);
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.INSCRIBER_SEPARATE_SIDES, YesNo.NO);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
@@ -176,18 +178,18 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.upgrades.writeToNBT(data, "upgrades");
-        this.configManager.writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.upgrades.writeToNBT(data, "upgrades", registries);
+        this.configManager.writeToNBT(data, registries);
         data.putInt("stacksize", this.stackSize);
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.upgrades.readFromNBT(data, "upgrades");
-        this.configManager.readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.upgrades.readFromNBT(data, "upgrades", registries);
+        this.configManager.readFromNBT(data, registries);
         this.stackSize = data.contains("stacksize") ? data.getInt("stacksize") : 1;
         for (var t : this.threads) {
             t.init();
@@ -196,18 +198,21 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output, @Nullable Player player) {
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output, @Nullable Player player) {
         super.exportSettings(mode, output, player);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            output.putInt("max_size", this.stackSize);
+            var tag = new CompoundTag();
+            tag.putInt("max_size", this.stackSize);
+            output.set(EAESingletons.EXTRA_SETTING, tag);
         }
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        if (input.contains("max_size", 3)) {
-            this.setInvStackSize(input.getInt("max_size"));
+        var tag = input.get(EAESingletons.EXTRA_SETTING);
+        if (tag != null && tag.contains("max_size")) {
+            this.setInvStackSize(tag.getInt("max_size"));
         }
     }
 
@@ -225,7 +230,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         boolean c = super.readFromStream(data);
         for (var t : this.threads) {
             t.readFromStream(data);
@@ -235,7 +240,7 @@ public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridT
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         for (var t : this.threads) {
             t.writeToStream(data);

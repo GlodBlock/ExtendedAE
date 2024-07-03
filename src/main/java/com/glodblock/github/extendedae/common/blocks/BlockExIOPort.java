@@ -23,7 +23,6 @@ public class BlockExIOPort extends BlockBaseGui<TileExIOPort> {
         this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         final var te = this.getBlockEntity(level, pos);

@@ -1,7 +1,7 @@
 package com.glodblock.github.extendedae.xmod.emi.recipes;
 
 import appeng.core.AppEng;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class EMICircuitCutterRecipe extends BasicEmiRecipe {
 
-    public static final EmiRecipeCategory CATEGORY = new EAERecipeCategory("cutter", EmiStack.of(EAEItemAndBlock.CIRCUIT_CUTTER), Component.translatable("emi.extendedae.category.cutter"));
+    public static final EmiRecipeCategory CATEGORY = new EAERecipeCategory("cutter", EmiStack.of(EAESingletons.CIRCUIT_CUTTER), Component.translatable("emi.extendedae.category.cutter"));
     private final CircuitCutterRecipe recipe;
 
     public EMICircuitCutterRecipe(RecipeHolder<CircuitCutterRecipe> holder) {

@@ -12,7 +12,7 @@ import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTableP
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
 import com.glodblock.github.extendedae.container.pattern.PatternGuiHandler;
 import com.glodblock.github.glodium.network.packet.IMessage;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -33,30 +33,32 @@ public class CPatternKey implements IMessage {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeItem(this.pattern);
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        ItemStack.STREAM_CODEC.encode(buf, this.pattern);
     }
 
     @Override
-    public void fromBytes(FriendlyByteBuf buf) {
-        this.pattern = buf.readItem();
+    public void fromBytes(RegistryFriendlyByteBuf buf) {
+        this.pattern = ItemStack.STREAM_CODEC.decode(buf);
     }
 
     @Override
     public void onMessage(Player player) {
         var details = PatternDetailsHelper.decodePattern(this.pattern, player.level());
-        if (details instanceof AEProcessingPattern) {
-            PatternGuiHandler.open(player, ContainerProcessingPattern.ID, this.pattern);
-        } else if (details instanceof AECraftingPattern) {
-            PatternGuiHandler.open(player, ContainerCraftingPattern.ID, this.pattern);
-        } else if (details instanceof AEStonecuttingPattern) {
-            PatternGuiHandler.open(player, ContainerStonecuttingPattern.ID, this.pattern);
-        } else if (details instanceof AESmithingTablePattern) {
-            PatternGuiHandler.open(player, ContainerSmithingTablePattern.ID, this.pattern);
-        } else {
-            if (nextWarning < System.currentTimeMillis()) {
-                nextWarning = System.currentTimeMillis() + 2000;
-                player.sendSystemMessage(Component.translatable("chat.pattern_view.error", "https://github.com/GlodBlock/ExtendedAE/issues"));
+        switch (details) {
+            case AEProcessingPattern aeProcessingPattern ->
+                    PatternGuiHandler.open(player, ContainerProcessingPattern.ID, this.pattern);
+            case AECraftingPattern aeCraftingPattern ->
+                    PatternGuiHandler.open(player, ContainerCraftingPattern.ID, this.pattern);
+            case AEStonecuttingPattern aeStonecuttingPattern ->
+                    PatternGuiHandler.open(player, ContainerStonecuttingPattern.ID, this.pattern);
+            case AESmithingTablePattern aeSmithingTablePattern ->
+                    PatternGuiHandler.open(player, ContainerSmithingTablePattern.ID, this.pattern);
+            case null, default -> {
+                if (nextWarning < System.currentTimeMillis()) {
+                    nextWarning = System.currentTimeMillis() + 2000;
+                    player.sendSystemMessage(Component.translatable("chat.pattern_view.error", "https://github.com/GlodBlock/ExtendedAE/issues"));
+                }
             }
         }
     }

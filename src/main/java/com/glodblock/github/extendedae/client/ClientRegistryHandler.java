@@ -44,7 +44,7 @@ import com.glodblock.github.extendedae.client.render.tesr.ExDriveTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExInscriberTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExMolecularAssemblerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.IngredientBufferTESR;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
@@ -96,50 +96,47 @@ public class ClientRegistryHandler {
 
     public static final ClientRegistryHandler INSTANCE = new ClientRegistryHandler();
 
-    public void onInit() {
-        if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
-            WTClientLoad.init();
-        }
-    }
-
     @SubscribeEvent
     public void registerGui(RegisterMenuScreensEvent event) {
-        InitScreens.register(ContainerExPatternProvider.TYPE, GuiExPatternProvider::new, "/screens/ex_pattern_provider.json");
-        InitScreens.register(ContainerExInterface.TYPE, GuiExInterface::new, "/screens/ex_interface.json");
-        InitScreens.register(ContainerExIOBus.EXPORT_TYPE, GuiExIOBus::new, "/screens/ex_export_bus.json");
-        InitScreens.register(ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
-        InitScreens.<ContainerExPatternTerminal, GuiExPatternTerminal<ContainerExPatternTerminal>>register(ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
-        InitScreens.register(ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
-        InitScreens.register(ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
-        InitScreens.register(ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
-        InitScreens.register(ContainerPatternModifier.TYPE, GuiPatternModifier::new, "/screens/pattern_modifier.json");
-        InitScreens.register(ContainerExMolecularAssembler.TYPE, GuiExMolecularAssembler::new, "/screens/ex_molecular_assembler.json");
-        InitScreens.register(ContainerExInscriber.TYPE, GuiExInscriber::new, "/screens/ex_inscriber.json");
-        InitScreens.register(ContainerTagStorageBus.TYPE, GuiTagStorageBus::new, "/screens/tag_storage_bus.json");
-        InitScreens.register(ContainerTagExportBus.TYPE, GuiTagExportBus::new, "/screens/tag_export_bus.json");
-        InitScreens.register(ContainerThresholdLevelEmitter.TYPE, GuiThresholdLevelEmitter::new, "/screens/threshold_level_emitter.json");
-        InitScreens.register(ContainerRenamer.TYPE, GuiRenamer::new, "/screens/renamer.json");
-        InitScreens.register(ContainerModStorageBus.TYPE, GuiModStorageBus::new, "/screens/mod_storage_bus.json");
-        InitScreens.register(ContainerModExportBus.TYPE, GuiModExportBus::new, "/screens/mod_export_bus.json");
-        InitScreens.register(ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
-        InitScreens.register(ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
-        InitScreens.register(ContainerPreciseExportBus.TYPE, GuiPreciseExportBus::new, "/screens/precise_export_bus.json");
-        InitScreens.register(ContainerWirelessExPAT.TYPE, GuiWirelessExPAT::new, "/screens/ex_pattern_access_terminal.json");
-        InitScreens.register(ContainerExIOPort.TYPE, GuiExIOPort::new, "/screens/ex_io_port.json");
-        InitScreens.register(ContainerPreciseStorageBus.TYPE, GuiPreciseStorageBus::new, "/screens/precise_storage_bus.json");
-        InitScreens.register(ContainerThresholdExportBus.TYPE, GuiThresholdExportBus::new, "/screens/threshold_export_bus.json");
-        InitScreens.register(ContainerCrystalAssembler.TYPE, GuiCrystalAssembler::new, "/screens/crystal_assembler.json");
-        InitScreens.register(ContainerCircuitCutter.TYPE, GuiCircuitCutter::new, "/screens/circuit_cutter.json");
-        InitScreens.register(ContainerExInterface.TYPE_OVERSIZE, GuiExInterface::new, "/screens/oversize_interface.json");
+        InitScreens.register(event, ContainerExPatternProvider.TYPE, GuiExPatternProvider::new, "/screens/ex_pattern_provider.json");
+        InitScreens.register(event, ContainerExInterface.TYPE, GuiExInterface::new, "/screens/ex_interface.json");
+        InitScreens.register(event, ContainerExIOBus.EXPORT_TYPE, GuiExIOBus::new, "/screens/ex_export_bus.json");
+        InitScreens.register(event, ContainerExIOBus.IMPORT_TYPE, GuiExIOBus::new, "/screens/ex_import_bus.json");
+        InitScreens.<ContainerExPatternTerminal, GuiExPatternTerminal<ContainerExPatternTerminal>>register(event, ContainerExPatternTerminal.TYPE, GuiExPatternTerminal::new, "/screens/ex_pattern_access_terminal.json");
+        InitScreens.register(event, ContainerWirelessConnector.TYPE, GuiWirelessConnector::new, "/screens/wireless_connector.json");
+        InitScreens.register(event, ContainerIngredientBuffer.TYPE, GuiIngredientBuffer::new, "/screens/ingredient_buffer.json");
+        InitScreens.register(event, ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
+        InitScreens.register(event, ContainerPatternModifier.TYPE, GuiPatternModifier::new, "/screens/pattern_modifier.json");
+        InitScreens.register(event, ContainerExMolecularAssembler.TYPE, GuiExMolecularAssembler::new, "/screens/ex_molecular_assembler.json");
+        InitScreens.register(event, ContainerExInscriber.TYPE, GuiExInscriber::new, "/screens/ex_inscriber.json");
+        InitScreens.register(event, ContainerTagStorageBus.TYPE, GuiTagStorageBus::new, "/screens/tag_storage_bus.json");
+        InitScreens.register(event, ContainerTagExportBus.TYPE, GuiTagExportBus::new, "/screens/tag_export_bus.json");
+        InitScreens.register(event, ContainerThresholdLevelEmitter.TYPE, GuiThresholdLevelEmitter::new, "/screens/threshold_level_emitter.json");
+        InitScreens.register(event, ContainerRenamer.TYPE, GuiRenamer::new, "/screens/renamer.json");
+        InitScreens.register(event, ContainerModStorageBus.TYPE, GuiModStorageBus::new, "/screens/mod_storage_bus.json");
+        InitScreens.register(event, ContainerModExportBus.TYPE, GuiModExportBus::new, "/screens/mod_export_bus.json");
+        InitScreens.register(event, ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
+        InitScreens.register(event, ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
+        InitScreens.register(event, ContainerPreciseExportBus.TYPE, GuiPreciseExportBus::new, "/screens/precise_export_bus.json");
+        InitScreens.register(event, ContainerWirelessExPAT.TYPE, GuiWirelessExPAT::new, "/screens/ex_pattern_access_terminal.json");
+        InitScreens.register(event, ContainerExIOPort.TYPE, GuiExIOPort::new, "/screens/ex_io_port.json");
+        InitScreens.register(event, ContainerPreciseStorageBus.TYPE, GuiPreciseStorageBus::new, "/screens/precise_storage_bus.json");
+        InitScreens.register(event, ContainerThresholdExportBus.TYPE, GuiThresholdExportBus::new, "/screens/threshold_export_bus.json");
+        InitScreens.register(event, ContainerCrystalAssembler.TYPE, GuiCrystalAssembler::new, "/screens/crystal_assembler.json");
+        InitScreens.register(event, ContainerCircuitCutter.TYPE, GuiCircuitCutter::new, "/screens/circuit_cutter.json");
+        InitScreens.register(event, ContainerExInterface.TYPE_OVERSIZE, GuiExInterface::new, "/screens/oversize_interface.json");
         event.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
         event.register(ContainerSmithingTablePattern.TYPE, GuiSmithingTablePattern::new);
+        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
+            WTClientLoad.init(event);
+        }
     }
 
     @SubscribeEvent
     public void registerColorHandler(RegisterColorHandlersEvent.Item event) {
-        event.register(new StaticItemColor(AEColor.TRANSPARENT), EAEItemAndBlock.EX_PATTERN_TERMINAL);
+        event.register(new StaticItemColor(AEColor.TRANSPARENT), EAESingletons.EX_PATTERN_TERMINAL);
     }
 
     @SubscribeEvent

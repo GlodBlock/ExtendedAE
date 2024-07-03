@@ -20,6 +20,7 @@ import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
+import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.IConfigInvHost;
@@ -43,10 +44,10 @@ import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -87,8 +88,13 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         this.config = ConfigInventory.configTypes(63)
                 .supportedTypes(StackWorldBehaviors.withPlacementStrategy())
                 .build();
-        this.getConfigManager().registerSetting(Settings.PLACE_BLOCK, YesNo.YES);
-        this.getConfigManager().registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+    }
+
+    @Override
+    protected void registerSettings(IConfigManagerBuilder builder) {
+        super.registerSettings(builder);
+        builder.registerSetting(Settings.PLACE_BLOCK, YesNo.YES);
+        builder.registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
     }
 
     protected final PlacementStrategy getPlacementStrategies() {
@@ -172,17 +178,17 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
         this.priority = data.getInt("priority");
-        this.config.readFromChildTag(data, "config");
+        this.config.readFromChildTag(data, "config", registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
         data.putInt("priority", this.getPriority());
-        this.config.writeToChildTag(data, "config");
+        this.config.writeToChildTag(data, "config", registries);
     }
 
     @Override
@@ -305,7 +311,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     }
 
     @Override
-    public boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+    public boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (!isClientSide()) {
             openConfigMenu(player);
         }

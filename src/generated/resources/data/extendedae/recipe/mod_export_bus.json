@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "ae2:export_bus"
+    },
+    "C": {
+      "item": "ae2:calculation_processor"
+    },
+    "K": {
+      "item": "minecraft:book"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    " C ",
+    "RBR",
+    " K "
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:mod_export_bus"
+  }
+}

@@ -32,20 +32,21 @@ import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.AEItemFilters;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.util.FCUtil;
-import com.glodblock.github.extendedae.util.recipe.ContainerRecipeContext;
-import com.glodblock.github.extendedae.util.recipe.RecipeExecutor;
-import com.glodblock.github.extendedae.util.recipe.RecipeSearchContext;
+import com.glodblock.github.extendedae.util.RecipeExecutor;
+import com.glodblock.github.glodium.recipe.CommonRecipeContext;
+import com.glodblock.github.glodium.recipe.RecipeSearchContext;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -56,7 +57,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IGenericInvHost, IRecipeMachine<Container, CrystalAssemblerRecipe> {
+public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IGenericInvHost, IRecipeMachine<RecipeInput, CrystalAssemblerRecipe> {
 
     public static final int SLOTS = 9;
     public static final int TANK_CAP = 16000;
@@ -71,20 +72,20 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     private final IUpgradeInventory upgrades;
     private final ConfigManager configManager;
     private final GenericStackInv tank = new GenericStackInv(Set.of(AEKeyType.fluids()), this::onChangeTank, GenericStackInv.Mode.STORAGE, 1);
-    private final ContainerRecipeContext<CrystalAssemblerRecipe> ctx = new CrystalRecipeContext(this);
+    private final CommonRecipeContext<CrystalAssemblerRecipe> ctx = new CrystalRecipeContext(this);
     private final RecipeExecutor<CrystalAssemblerRecipe> exec;
     private boolean isWorking = false;
     private int progress = 0;
 
     public TileCrystalAssembler(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCrystalAssembler.class, TileCrystalAssembler::new, EAEItemAndBlock.CRYSTAL_ASSEMBLER), pos, blockState);
+        super(GlodUtil.getTileType(TileCrystalAssembler.class, TileCrystalAssembler::new, EAESingletons.CRYSTAL_ASSEMBLER), pos, blockState);
         this.getMainNode()
                 .setFlags()
                 .setIdlePowerUsage(0)
                 .addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
-        this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.CRYSTAL_ASSEMBLER, 4, this::saveChanges);
+        this.upgrades = UpgradeInventories.forMachine(EAESingletons.CRYSTAL_ASSEMBLER, 4, this::saveChanges);
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
         this.tank.setCapacity(AEKeyType.fluids(), TANK_CAP);
@@ -122,7 +123,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     }
 
     @Override
-    public RecipeSearchContext<Container, CrystalAssemblerRecipe> getContext() {
+    public RecipeSearchContext<RecipeInput, CrystalAssemblerRecipe> getContext() {
         return this.ctx;
     }
 
@@ -155,7 +156,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
         boolean newWork = data.readBoolean();
         if (newWork != this.isWorking) {
@@ -166,7 +167,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         data.writeBoolean(this.isWorking);
     }
@@ -184,11 +185,11 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.tank.writeToChildTag(data, "tank_in");
-        this.upgrades.writeToNBT(data, "upgrades");
-        this.configManager.writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.tank.writeToChildTag(data, "tank_in", registries);
+        this.upgrades.writeToNBT(data, "upgrades", registries);
+        this.configManager.writeToNBT(data, registries);
         this.ctx.save(data);
     }
 
@@ -200,11 +201,11 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.tank.readFromChildTag(data, "tank_in");
-        this.upgrades.readFromNBT(data, "upgrades");
-        this.configManager.readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.tank.readFromChildTag(data, "tank_in", registries);
+        this.upgrades.readFromNBT(data, "upgrades", registries);
+        this.configManager.readFromNBT(data, registries);
         this.ctx.load(data);
     }
 
@@ -280,7 +281,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         return this.tank;
     }
 
-    private static class CrystalRecipeContext extends ContainerRecipeContext<CrystalAssemblerRecipe> {
+    private static class CrystalRecipeContext extends CommonRecipeContext<CrystalAssemblerRecipe> {
 
         private final TileCrystalAssembler host;
 

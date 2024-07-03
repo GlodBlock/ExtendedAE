@@ -7,19 +7,16 @@ import appeng.client.guidebook.PageAnchor;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 public class GuiRenamer extends AEBaseScreen<ContainerRenamer> implements IActionHolder {
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     private final AETextField renameInputs;
 
     public GuiRenamer(ContainerRenamer menu, Inventory playerInventory, Component title, ScreenStyle style) {
@@ -64,7 +61,7 @@ public class GuiRenamer extends AEBaseScreen<ContainerRenamer> implements IActio
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

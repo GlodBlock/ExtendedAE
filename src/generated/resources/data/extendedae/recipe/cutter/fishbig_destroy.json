@@ -1,0 +1,12 @@
+{
+  "type": "extendedae:circuit_cutter",
+  "input": {
+    "ingredient": {
+      "item": "extendedae:fishbig"
+    }
+  },
+  "output": {
+    "count": 8,
+    "id": "minecraft:pufferfish"
+  }
+}

@@ -17,10 +17,10 @@ import java.util.List;
 public class PartExExportBus extends ExportBusPart {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/ex_export_bus_base"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_on"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_off"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_export_bus_base"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_has_channel")
     );
 
     public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));

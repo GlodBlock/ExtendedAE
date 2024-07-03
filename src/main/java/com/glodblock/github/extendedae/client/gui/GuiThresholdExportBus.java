@@ -12,36 +12,34 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.Tooltips;
-import appeng.core.network.NetworkHandler;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.api.ThresholdMode;
 import com.glodblock.github.extendedae.client.button.CycleEPPButton;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdExportBus> implements IActionHolder {
 
     private final SettingToggleButton<RedstoneMode> redstoneMode;
     private final SettingToggleButton<SchedulingMode> schedulingMode;
     private final CycleEPPButton thresholdMode;
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
 
     public GuiThresholdExportBus(ContainerThresholdExportBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -85,9 +83,9 @@ public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdE
                 if (currentStack != null) {
                     var screen = new SetAmount<>(
                             this,
-                            new ItemStack(EAEItemAndBlock.THRESHOLD_EXPORT_BUS),
+                            new ItemStack(EAESingletons.THRESHOLD_EXPORT_BUS),
                             currentStack,
-                            newStack -> NetworkHandler.instance().sendToServer(new InventoryActionPacket(
+                            newStack -> PacketDistributor.sendToServer(new InventoryActionPacket(
                                     InventoryAction.SET_FILTER, slot.index,
                                     GenericStack.wrapInItemStack(newStack))),
                             false);
@@ -132,7 +130,7 @@ public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdE
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

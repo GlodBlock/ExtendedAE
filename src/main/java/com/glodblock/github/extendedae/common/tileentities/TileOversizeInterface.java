@@ -9,7 +9,7 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import appeng.util.ConfigInventory;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class TileOversizeInterface extends TileExInterface {
 
     public TileOversizeInterface(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileOversizeInterface.class, TileOversizeInterface::new, EAEItemAndBlock.OVERSIZE_INTERFACE), pos, blockState);
+        super(GlodUtil.getTileType(TileOversizeInterface.class, TileOversizeInterface::new, EAESingletons.OVERSIZE_INTERFACE), pos, blockState);
         var logic = this.getInterfaceLogic();
         Ae2Reflect.setInterfaceConfig(logic, new OversizeConfigInv(AEKeyTypes.getAll(), null, GenericStackInv.Mode.CONFIG_STACKS, 36, () -> Ae2Reflect.onInterfaceConfigChange(logic), false));
         Ae2Reflect.setInterfaceStorage(logic, new OversizeConfigInv(AEKeyTypes.getAll(), (slot, key) -> Ae2Reflect.isInterfaceSlotAllowed(logic, slot, key), GenericStackInv.Mode.STORAGE, 36, () -> Ae2Reflect.onInterfaceStorageChange(logic), false));
@@ -43,7 +43,7 @@ public class TileOversizeInterface extends TileExInterface {
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAEItemAndBlock.OVERSIZE_INTERFACE);
+        return new ItemStack(EAESingletons.OVERSIZE_INTERFACE);
     }
 
     private static class OversizeConfigInv extends ConfigInventory {

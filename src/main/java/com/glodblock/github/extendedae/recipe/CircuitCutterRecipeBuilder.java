@@ -1,6 +1,6 @@
 package com.glodblock.github.extendedae.recipe;
 
-import com.glodblock.github.extendedae.recipe.util.IngredientStack;
+import com.glodblock.github.glodium.recipe.stack.IngredientStack;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

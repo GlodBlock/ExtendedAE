@@ -1,7 +1,7 @@
 package com.glodblock.github.extendedae.xmod.emi.recipes;
 
 import appeng.core.AppEng;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class EMICrystalAssemblerRecipe extends BasicEmiRecipe {
 
-    public static final EmiRecipeCategory CATEGORY = new EAERecipeCategory("assembler", EmiStack.of(EAEItemAndBlock.CRYSTAL_ASSEMBLER), Component.translatable("emi.extendedae.category.assembler"));
+    public static final EmiRecipeCategory CATEGORY = new EAERecipeCategory("assembler", EmiStack.of(EAESingletons.CRYSTAL_ASSEMBLER), Component.translatable("emi.extendedae.category.assembler"));
     private final CrystalAssemblerRecipe recipe;
 
     public EMICrystalAssemblerRecipe(RecipeHolder<CrystalAssemblerRecipe> holder) {

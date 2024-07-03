@@ -10,7 +10,7 @@ import appeng.menu.locator.MenuHostLocator;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.api.caps.IMEStorageAccess;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,7 @@ public class TileExInterface extends InterfaceBlockEntity implements IPage, IGen
     private int page = 0;
 
     public TileExInterface(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExInterface.class, TileExInterface::new, EAEItemAndBlock.EX_INTERFACE), pos, blockState);
+        super(GlodUtil.getTileType(TileExInterface.class, TileExInterface::new, EAESingletons.EX_INTERFACE), pos, blockState);
     }
 
     public TileExInterface(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -48,7 +48,7 @@ public class TileExInterface extends InterfaceBlockEntity implements IPage, IGen
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAEItemAndBlock.EX_INTERFACE);
+        return new ItemStack(EAESingletons.EX_INTERFACE);
     }
 
     @Override

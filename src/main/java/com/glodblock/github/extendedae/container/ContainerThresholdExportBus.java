@@ -9,16 +9,13 @@ import com.glodblock.github.extendedae.api.ThresholdMode;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdExportBus> implements IActionHolder {
 
@@ -26,7 +23,7 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
             .create(ContainerThresholdExportBus::new, PartThresholdExportBus.class)
             .build("threshold_export_bus");
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     @GuiSync(7)
     private ThresholdMode mode = ThresholdMode.GREATER;
 
@@ -74,7 +71,7 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 

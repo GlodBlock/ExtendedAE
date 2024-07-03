@@ -1,7 +1,6 @@
 package com.glodblock.github.extendedae.recipe;
 
-import com.glodblock.github.extendedae.recipe.util.FluidIngredient;
-import com.glodblock.github.extendedae.recipe.util.IngredientStack;
+import com.glodblock.github.glodium.recipe.stack.IngredientStack;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -11,6 +10,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class CrystalAssemblerRecipeBuilder {
     }
 
     public CrystalAssemblerRecipeBuilder fluid(TagKey<Fluid> tag, int amount) {
-        this.fluid = IngredientStack.of(new FluidIngredient(new FluidIngredient.TagValue(tag)), amount);
+        this.fluid = IngredientStack.of(FluidIngredient.tag(tag), amount);
         return this;
     }
 

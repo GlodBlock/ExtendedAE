@@ -6,17 +6,18 @@ import appeng.client.gui.widgets.ToolboxPanel;
 import appeng.client.gui.widgets.UpgradesPanel;
 import appeng.menu.SlotSemantics;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
-import de.mari_023.ae2wtlib.wut.CycleTerminalButton;
+import de.mari_023.ae2wtlib.terminal.WTMenuHost;
 import de.mari_023.ae2wtlib.wut.IUniversalTerminalCapable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class GuiUWirelessExPAT extends GuiExPatternTerminal<ContainerUWirelessExPAT> implements IUniversalTerminalCapable {
 
     public GuiUWirelessExPAT(ContainerUWirelessExPAT container, Inventory playerInventory, Component title, ScreenStyle style) {
         super(container, playerInventory, title, style);
         if (this.getMenu().isWUT()) {
-            this.addToLeftToolbar(new CycleTerminalButton((btn) -> this.cycleTerminal()));
+            this.addToLeftToolbar(this.cycleTerminalButton());
         }
 
         this.widgets.add("upgrades", new UpgradesPanel(this.getMenu().getSlots(SlotSemantics.UPGRADE), this.getMenu().getHost()));
@@ -27,7 +28,20 @@ public class GuiUWirelessExPAT extends GuiExPatternTerminal<ContainerUWirelessEx
         this.widgets.add("singularityBackground", new BackgroundPanel(style.getImage("singularityBackground")));
     }
 
+    @Override
+    public @NotNull WTMenuHost getHost() {
+        return (WTMenuHost) this.getMenu().getHost();
+    }
+
+    @Override
     public void storeState() {
+        // NO-OP
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int keyPressed) {
+        boolean value = super.keyPressed(keyCode, scanCode, keyPressed);
+        return value || this.checkForTerminalKeys(keyCode, scanCode);
     }
 
 }

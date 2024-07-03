@@ -23,13 +23,12 @@ import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.api.caps.ICrankPowered;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +47,7 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, MAX_THREAD, 1, new ChargerInvFilter(this));
 
     public TileExCharger(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExCharger.class, TileExCharger::new, EAEItemAndBlock.EX_CHARGER), pos, blockState);
+        super(GlodUtil.getTileType(TileExCharger.class, TileExCharger::new, EAESingletons.EX_CHARGER), pos, blockState);
         this.getMainNode()
                 .setFlags()
                 .setIdlePowerUsage(0)
@@ -68,7 +67,7 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
         this.working = data.readBoolean();
         for (int x = 0; x < MAX_THREAD; x ++) {
@@ -83,7 +82,7 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         data.writeBoolean(working);
         for (int x = 0; x < MAX_THREAD; x ++) {
@@ -164,8 +163,8 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
                     this.working = true;
                     if (this.level.getRandom().nextFloat() > 0.8f) {
                         this.extractAEPower(this.getInternalMaxPower(), Actionable.MODULATE, PowerMultiplier.CONFIG);
-                        Item charged = Objects.requireNonNull(ChargerRecipes.findRecipe(level, myItem)).result;
-                        this.inv.setItemDirect(x, new ItemStack(charged));
+                        var charged = Objects.requireNonNull(ChargerRecipes.findRecipe(level, myItem)).result;
+                        this.inv.setItemDirect(x, charged.copy());
                         changed = true;
                     }
                 }

@@ -4,10 +4,11 @@ import appeng.api.stacks.AEKeyType;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.helpers.externalstorage.GenericStackInv;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.xmod.ExternalTypes;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -20,7 +21,7 @@ public class TileIngredientBuffer extends AEBaseBlockEntity implements IGenericI
     private final GenericStackInv buffer;
 
     public TileIngredientBuffer(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileIngredientBuffer.class, TileIngredientBuffer::new, EAEItemAndBlock.INGREDIENT_BUFFER), pos, blockState);
+        super(GlodUtil.getTileType(TileIngredientBuffer.class, TileIngredientBuffer::new, EAESingletons.INGREDIENT_BUFFER), pos, blockState);
         this.buffer = new GenericStackInv(this::setChanged, 36);
         this.buffer.setCapacity(AEKeyType.fluids(), 64000);
         if (ExternalTypes.GAS != null) {
@@ -49,9 +50,9 @@ public class TileIngredientBuffer extends AEBaseBlockEntity implements IGenericI
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.buffer.writeToChildTag(data, "buffer");
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.buffer.writeToChildTag(data, "buffer", registries);
     }
 
     @Override
@@ -61,9 +62,9 @@ public class TileIngredientBuffer extends AEBaseBlockEntity implements IGenericI
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.buffer.readFromChildTag(data, "buffer");
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.buffer.readFromChildTag(data, "buffer", registries);
     }
 
     @Override

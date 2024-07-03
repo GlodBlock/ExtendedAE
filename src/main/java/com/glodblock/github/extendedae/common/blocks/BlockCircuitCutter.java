@@ -37,7 +37,6 @@ public class BlockCircuitCutter extends BlockBaseGui<TileCircuitCutter> {
         return currentState.setValue(WORKING, be.isWorking());
     }
 
-
     @Override
     public void openGui(TileCircuitCutter tile, Player p) {
         MenuOpener.open(ContainerCircuitCutter.TYPE, p, MenuLocators.forBlockEntity(tile));

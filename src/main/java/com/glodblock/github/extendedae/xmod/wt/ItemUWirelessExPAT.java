@@ -10,6 +10,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Supplier;
+
 public class ItemUWirelessExPAT extends ItemWT {
 
     public ItemUWirelessExPAT() {
@@ -21,10 +23,9 @@ public class ItemUWirelessExPAT extends ItemWT {
     }
 
     @Override
-    public @NotNull IConfigManager getConfigManager(@NotNull ItemStack target) {
-        IConfigManager configManager = super.getConfigManager(target);
-        configManager.registerSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS, ShowPatternProviders.VISIBLE);
-        configManager.readFromNBT(target.getOrCreateTag().copy());
-        return configManager;
+    public @NotNull IConfigManager getConfigManager(@NotNull Supplier<ItemStack> target) {
+        return IConfigManager.builder(target)
+                .registerSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS, ShowPatternProviders.VISIBLE)
+                .build();
     }
 }

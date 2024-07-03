@@ -6,10 +6,12 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class SAssemblerAnimation implements IMessage {
@@ -29,20 +31,21 @@ public class SAssemblerAnimation implements IMessage {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeByte(this.rate);
         buf.writeVarLong(this.pos.asLong());
         AEKey.writeKey(buf, this.what);
     }
 
     @Override
-    public void fromBytes(FriendlyByteBuf buf) {
+    public void fromBytes(RegistryFriendlyByteBuf buf) {
         this.rate = buf.readByte();
         this.pos = BlockPos.of(buf.readVarLong());
         this.what = AEKey.readKey(buf);
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         BlockEntity te = player.getCommandSenderWorld().getBlockEntity(this.pos);
         if (te instanceof TileExMolecularAssembler ma) {

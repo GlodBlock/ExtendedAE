@@ -1,0 +1,30 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "ae2:wireless_receiver"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "tag": "c:ingots/iron"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:calculation_processor"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:singularity"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:wireless_tool"
+  }
+}

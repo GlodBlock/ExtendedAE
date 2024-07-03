@@ -36,8 +36,8 @@ public abstract class ContainerPattern extends AbstractContainerMenu {
         super(menuType, id);
         this.stack = stack;
         var item = this.stack.getItem();
-        if (item instanceof EncodedPatternItem<?> pattern) {
-            this.details = PatternDetailsHelper.decodePattern(stack, world, true);
+        if (item instanceof EncodedPatternItem<?>) {
+            this.details = PatternDetailsHelper.decodePattern(stack, world);
             this.analyse();
         } else {
             throw new IllegalArgumentException(String.format("%s isn't an encoded pattern!", item));

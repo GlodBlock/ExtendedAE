@@ -8,10 +8,14 @@ import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -20,16 +24,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class PartTagStorageBus extends PartSpecialStorageBus {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/tag_storage_bus_base");
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/tag_storage_bus_base");
 
     @PartModels
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_off"));
+    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_off"));
 
     @PartModels
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_on"));
+    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_on"));
 
     @PartModels
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
+    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
     private String oreExpWhite = "";
     private String oreExpBlack = "";
@@ -39,15 +43,15 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
         this.oreExpWhite = data.getString("oreExp");
         this.oreExpBlack = data.getString("oreExp2");
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
         data.putString("oreExp", this.oreExpWhite);
         data.putString("oreExp2", this.oreExpBlack);
     }
@@ -89,26 +93,20 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        if (input.contains("ore_dict_exp")) {
-            this.oreExpWhite = input.getString("ore_dict_exp");
-        } else {
-            this.oreExpWhite = "";
-        }
-        if (input.contains("ore_dict_exp_2")) {
-            this.oreExpBlack = input.getString("ore_dict_exp_2");
-        } else {
-            this.oreExpBlack = "";
+        var oreExps = input.get(EAESingletons.TAG_EXPRESS);
+        if (oreExps != null) {
+            this.oreExpWhite = oreExps.left();
+            this.oreExpBlack = oreExps.right();
         }
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            output.putString("ore_dict_exp", this.oreExpWhite);
-            output.putString("ore_dict_exp_2", this.oreExpBlack);
+            output.set(EAESingletons.TAG_EXPRESS, Pair.of(this.oreExpWhite, this.oreExpBlack));
         }
     }
 

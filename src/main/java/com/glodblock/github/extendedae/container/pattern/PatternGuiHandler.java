@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,18 +41,18 @@ public class PatternGuiHandler {
         player.openMenu(menu, buffer -> to(id, pattern, buffer));
     }
 
-    private static AbstractContainerMenu from(int containerId, Inventory inv, FriendlyByteBuf packetBuf) {
+    private static AbstractContainerMenu from(int containerId, Inventory inv, RegistryFriendlyByteBuf packetBuf) {
         var id = packetBuf.readVarInt();
         var world = inv.player.level();
-        var stack = packetBuf.readItem();
+        var stack = ItemStack.STREAM_CODEC.decode(packetBuf);
         var f = factory.get(internal.get(id));
         var t = types.get(internal.get(id));
         return f.create(t, containerId, world, stack);
     }
 
-    private static void to(ResourceLocation id, ItemStack pattern, FriendlyByteBuf packetBuf) {
+    private static void to(ResourceLocation id, ItemStack pattern, RegistryFriendlyByteBuf packetBuf) {
         packetBuf.writeVarInt(internal.inverse().get(id));
-        packetBuf.writeItem(pattern);
+        ItemStack.STREAM_CODEC.encode(packetBuf, pattern);
     }
 
     @SuppressWarnings("unchecked")

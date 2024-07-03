@@ -69,10 +69,10 @@ public abstract class ItemUpgrade extends Item {
                     var side = basePart.getSide();
                     var contents = new CompoundTag();
                     var partItem = this.PART_MAP.get(part.getClass());
-                    part.writeToNBT(contents);
+                    part.writeToNBT(contents, world.registryAccess());
                     var p = cable.replacePart(partItem, side, context.getPlayer(), null);
                     if (p != null) {
-                        p.readFromNBT(contents);
+                        p.readFromNBT(contents, world.registryAccess());
                     }
                 } else {
                     return InteractionResult.PASS;

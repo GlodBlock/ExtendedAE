@@ -2,10 +2,10 @@ package com.glodblock.github.extendedae.datagen;
 
 import com.glodblock.github.extendedae.ExtendedAE;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-@Mod.EventBusSubscriber(modid = ExtendedAE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ExtendedAE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EAEDataGen {
 
     @SubscribeEvent
@@ -13,11 +13,11 @@ public class EAEDataGen {
         var pack = dataEvent.getGenerator().getVanillaPack(true);
         var file = dataEvent.getExistingFileHelper();
         var lookup = dataEvent.getLookupProvider();
-        var blockTagsProvider = pack
-                .addProvider(c -> new EAEBlockTagProvider(c, lookup, file));
-        pack.addProvider(EAERecipeProvider::new);
-        pack.addProvider(EAELootTableProvider::new);
+        var blockTagsProvider = pack.addProvider(c -> new EAEBlockTagProvider(c, lookup, file));
+        pack.addProvider(p -> new EAERecipeProvider(p, lookup));
+        pack.addProvider(p -> new EAELootTableProvider(p, lookup));
         pack.addProvider(c -> new EAEItemTagsProvider(c, lookup, blockTagsProvider.contentsGetter(), file));
+        pack.addProvider(c -> new EAEComponentTagProvider(c, lookup, file));
     }
 
 }

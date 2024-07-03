@@ -22,7 +22,7 @@ public abstract class MixinAbstractContainerScreen extends Screen {
             method = "renderSlotContents",
             at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiGraphics.renderItemDecorations (Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V")
     )
-    private void renderMESizeText(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, int i, int j, String countString, CallbackInfo ci) {
+    private void renderMESizeText(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, String countString, CallbackInfo ci) {
         if (slot instanceof ContainerPattern.DisplayOnlySlot dpSlot && dpSlot.shouldUseMEText()) {
             long size = dpSlot.getActualAmount();
             if (size > 1) {

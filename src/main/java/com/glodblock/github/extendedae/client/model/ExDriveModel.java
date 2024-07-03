@@ -30,10 +30,10 @@ import java.util.function.Function;
 public class ExDriveModel implements IUnbakedGeometry<ExDriveModel> {
 
     private static final ResourceLocation MODEL_BASE = ExtendedAE.id("block/extended_drive/extended_me_drive_base");
-    private static final ResourceLocation MODEL_CELL_EMPTY = new ResourceLocation("ae2:block/drive/drive_cell_empty");
+    private static final ResourceLocation MODEL_CELL_EMPTY = ResourceLocation.parse("ae2:block/drive/drive_cell_empty");
 
     @Override
-    public @NotNull BakedModel bake(@NotNull IGeometryBakingContext context, @NotNull ModelBaker baker, @NotNull Function<Material, TextureAtlasSprite> spriteGetter, @NotNull ModelState modelTransform, @NotNull ItemOverrides overrides, @NotNull ResourceLocation modelLocation) {
+    public @NotNull BakedModel bake(@NotNull IGeometryBakingContext context, @NotNull ModelBaker baker, @NotNull Function<Material, TextureAtlasSprite> spriteGetter, @NotNull ModelState modelTransform, @NotNull ItemOverrides overrides) {
         final Map<Item, BakedModel> cellModels = new IdentityHashMap<>();
 
         for (var entry : StorageCellModels.models().entrySet()) {

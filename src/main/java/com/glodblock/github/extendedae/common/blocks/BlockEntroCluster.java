@@ -45,7 +45,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
     protected final VoxelShape upAabb;
     protected final VoxelShape downAabb;
 
-    @SuppressWarnings("SuspiciousNameCombination")
     public BlockEntroCluster(int tier, int height, int wide) {
         super(defaultProps(MapColor.COLOR_PURPLE, SOUND_MAP[tier])
                 .forceSolidOn()
@@ -62,7 +61,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
         this.westAabb = Block.box((16 - height), wide, wide, 16.0, (16 - wide), (16 - wide));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return switch (state.getValue(FACING)) {
@@ -75,7 +73,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
         };
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.THIS_ENTITY) == null) {
@@ -84,7 +81,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
         return super.getDrops(state, builder);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         Direction direction = state.getValue(FACING);
@@ -92,7 +88,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
         return level.getBlockState(blockPos).isFaceSturdy(level, blockPos, direction);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
@@ -103,6 +98,7 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
                 : super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         var fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -111,7 +107,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
                 .setValue(FACING, context.getClickedFace());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
@@ -123,7 +118,6 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);

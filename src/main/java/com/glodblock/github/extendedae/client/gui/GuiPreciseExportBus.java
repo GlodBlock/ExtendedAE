@@ -13,17 +13,17 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.Tooltips;
-import appeng.core.network.NetworkHandler;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -79,9 +79,9 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
                 if (currentStack != null) {
                     var screen = new SetAmount<>(
                             this,
-                            new ItemStack(EAEItemAndBlock.PRECISE_EXPORT_BUS),
+                            new ItemStack(EAESingletons.PRECISE_EXPORT_BUS),
                             currentStack,
-                            newStack -> NetworkHandler.instance().sendToServer(new InventoryActionPacket(
+                            newStack -> PacketDistributor.sendToServer(new InventoryActionPacket(
                                     InventoryAction.SET_FILTER, slot.index,
                                     GenericStack.wrapInItemStack(newStack))));
                     switchToScreen(screen);

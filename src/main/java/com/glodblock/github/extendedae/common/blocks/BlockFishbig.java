@@ -49,19 +49,16 @@ public class BlockFishbig extends AEBaseBlock {
                 .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean isCollisionShapeFullBlock(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return 2;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return 1.0F;
@@ -72,7 +69,6 @@ public class BlockFishbig extends AEBaseBlock {
         return true;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED)
@@ -80,7 +76,6 @@ public class BlockFishbig extends AEBaseBlock {
                 : super.getFluidState(blockState);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if (blockState.getValue(WATERLOGGED)) {
@@ -94,7 +89,6 @@ public class BlockFishbig extends AEBaseBlock {
         return OrientationStrategies.horizontalFacing();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return Shapes.create(new AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0));

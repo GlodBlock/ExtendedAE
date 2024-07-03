@@ -1,9 +1,10 @@
 package com.glodblock.github.extendedae.recipe;
 
-import com.glodblock.github.extendedae.recipe.util.IngredientStack;
-import com.mojang.serialization.Codec;
+import com.glodblock.github.glodium.recipe.stack.IngredientStack;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
@@ -11,11 +12,18 @@ import org.jetbrains.annotations.NotNull;
 public class CircuitCutterRecipeSerializer implements RecipeSerializer<CircuitCutterRecipe> {
 
     public final static CircuitCutterRecipeSerializer INSTANCE = new CircuitCutterRecipeSerializer();
-    public final static Codec<CircuitCutterRecipe> CODEC = RecordCodecBuilder.create(
+    public final static MapCodec<CircuitCutterRecipe> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder.group(
-                    ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("output").forGetter(ir -> ir.output),
+                    ItemStack.CODEC.fieldOf("output").forGetter(ir -> ir.output),
                     IngredientStack.ITEM_CODEC.fieldOf("input").forGetter(ir -> ir.input)
             ).apply(builder, CircuitCutterRecipe::new)
+    );
+    public final static StreamCodec<RegistryFriendlyByteBuf, CircuitCutterRecipe> STREAM_CODEC = StreamCodec.composite(
+            ItemStack.STREAM_CODEC,
+            r -> r.output,
+            IngredientStack.ITEM_STREAM_CODEC,
+            r -> r.input,
+            CircuitCutterRecipe::new
     );
 
     private CircuitCutterRecipeSerializer() {
@@ -23,19 +31,13 @@ public class CircuitCutterRecipeSerializer implements RecipeSerializer<CircuitCu
     }
 
     @Override
-    public @NotNull Codec<CircuitCutterRecipe> codec() {
+    public @NotNull MapCodec<CircuitCutterRecipe> codec() {
         return CODEC;
     }
 
     @Override
-    public @NotNull CircuitCutterRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
-        return new CircuitCutterRecipe(buffer.readItem(), IngredientStack.ofItem(buffer));
-    }
-
-    @Override
-    public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull CircuitCutterRecipe recipe) {
-        buffer.writeItem(recipe.output);
-        recipe.input.to(buffer);
+    public @NotNull StreamCodec<RegistryFriendlyByteBuf, CircuitCutterRecipe> streamCodec() {
+        return STREAM_CODEC;
     }
 
 }

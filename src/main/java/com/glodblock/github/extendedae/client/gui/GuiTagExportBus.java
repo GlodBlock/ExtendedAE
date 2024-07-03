@@ -11,19 +11,17 @@ import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> implements IActionHolder {
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     private final SettingToggleButton<RedstoneMode> redstoneMode;
     private final AETextField filterInputs;
     private final AETextField filterInputs2;
@@ -49,7 +47,7 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 
