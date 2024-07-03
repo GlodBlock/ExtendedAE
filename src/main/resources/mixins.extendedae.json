@@ -4,6 +4,7 @@
   "package": "com.glodblock.github.extendedae.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinAbstractLevelEmitterPart",
     "MixinPatternAccessTermMenu"
   ],
   "client": [

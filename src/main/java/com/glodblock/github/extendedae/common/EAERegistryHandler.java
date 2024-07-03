@@ -81,6 +81,7 @@ import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeSerializer;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
 import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
 import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -223,7 +224,7 @@ public class EAERegistryHandler extends RegistryHandler {
             WTCommonLoad.init();
         }
         if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
-            //AFCommonLoad.init();
+            AFCommonLoad.init();
         }
     }
 
