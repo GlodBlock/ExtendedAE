@@ -13,6 +13,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
@@ -27,6 +28,7 @@ public abstract class ItemUpgrade extends Item {
         super(properties);
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Nonnull
     @Override
     public InteractionResult useOn(@Nonnull UseOnContext context) {
@@ -37,10 +39,24 @@ public abstract class ItemUpgrade extends Item {
             var ctx = new BlockPlaceContext(context);
             var tClazz = tile.getClass();
             if (this.BLOCK_MAP.containsKey(tClazz)) {
+                var originState = world.getBlockState(pos);
                 var replaceInfo = this.BLOCK_MAP.get(tClazz);
                 var state = replaceInfo.block.getStateForPlacement(ctx);
                 var tileType = GlodUtil.getTileType(replaceInfo.tile);
-                assert state != null;
+                if (state == null) {
+                    return InteractionResult.PASS;
+                }
+                for (var sp : originState.getValues().entrySet()) {
+                    var pt = sp.getKey();
+                    var va = sp.getValue();
+                    try {
+                        if (state.hasProperty(pt)) {
+                            state = state.<Comparable, Comparable>setValue((Property)pt, va);
+                        }
+                    } catch (Exception ignore) {
+                        // NO-OP
+                    }
+                }
                 var te = tileType.create(pos, state);
                 FCUtil.replaceTile(world, pos, tile, te, state);
                 context.getItemInHand().shrink(1);

@@ -1,6 +1,6 @@
 {
 	"parent": "extendedae:block/crystal_assembler_off",
 	"textures": {
-		"1": "extendedae:block/crystal_assembler/on"
+		"state": "extendedae:block/crystal_assembler/on"
 	}
 }

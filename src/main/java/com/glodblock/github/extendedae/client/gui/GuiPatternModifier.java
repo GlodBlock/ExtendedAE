@@ -7,6 +7,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.core.AppEng;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
+import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
@@ -37,27 +38,51 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                 .size(46, 18)
                 .build();
         this.multiBtns.add(
-                Button.builder(Component.literal("x2"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", 2, false)))
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(0), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(0), false)))
                         .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", 2)))
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(0))))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("x10"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", 10, false)))
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(1), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(1), false)))
                         .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", 10)))
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(1))))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("÷2"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", 2, true)))
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(2), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(2), false)))
                         .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", 2)))
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(2))))
                         .build()
         );
         this.multiBtns.add(
-                Button.builder(Component.literal("÷10"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", 10, true)))
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(3), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(3), false)))
                         .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", 10)))
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(3))))
+                        .build()
+        );
+        this.multiBtns.add(
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(0), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(0), true)))
+                        .size(23, 18)
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(0))))
+                        .build()
+        );
+        this.multiBtns.add(
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(1), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(1), true)))
+                        .size(23, 18)
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(1))))
+                        .build()
+        );
+        this.multiBtns.add(
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(2), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(2), true)))
+                        .size(23, 18)
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(2))))
+                        .build()
+        );
+        this.multiBtns.add(
+                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(3), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(3), true)))
+                        .size(23, 18)
+                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(3))))
                         .build()
         );
         this.multiBtns.add(
@@ -66,7 +91,11 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                         .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.clear.desc")))
                         .build()
         );
-        this.imageHeight = 192;
+        this.imageHeight = 210;
+    }
+
+    private Component getDisplayNumber(int number, boolean isMulti) {
+        return isMulti ? Component.literal("x" + number) :  Component.literal("÷" + number);
     }
 
     @Override
@@ -102,15 +131,19 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     public void init() {
         super.init();
-        this.multiBtns.get(0).setPosition(this.leftPos + 7, this.topPos + 19);
-        this.multiBtns.get(1).setPosition(this.leftPos + 37, this.topPos + 19);
-        this.multiBtns.get(2).setPosition(this.leftPos + 67, this.topPos + 19);
-        this.multiBtns.get(3).setPosition(this.leftPos + 97, this.topPos + 19);
-        this.multiBtns.get(4).setPosition(this.leftPos + 130, this.topPos + 19);
+        this.multiBtns.get(0).setPosition(this.leftPos + 7, this.topPos + 16);
+        this.multiBtns.get(1).setPosition(this.leftPos + 37, this.topPos + 16);
+        this.multiBtns.get(2).setPosition(this.leftPos + 67, this.topPos + 16);
+        this.multiBtns.get(3).setPosition(this.leftPos + 97, this.topPos + 16);
+        this.multiBtns.get(4).setPosition(this.leftPos + 7, this.topPos + 36);
+        this.multiBtns.get(5).setPosition(this.leftPos + 37, this.topPos + 36);
+        this.multiBtns.get(6).setPosition(this.leftPos + 67, this.topPos + 36);
+        this.multiBtns.get(7).setPosition(this.leftPos + 97, this.topPos + 36);
+        this.multiBtns.get(8).setPosition(this.leftPos + 130, this.topPos + 25);
         this.multiBtns.forEach(this::addRenderableWidget);
-        this.clone.setPosition(this.leftPos + 79, this.topPos + 35);
+        this.clone.setPosition(this.leftPos + 79, this.topPos + 38);
         this.addRenderableWidget(this.clone);
-        this.replace.setPosition(this.leftPos + 120, this.topPos + 19);
+        this.replace.setPosition(this.leftPos + 120, this.topPos + 24);
         this.addRenderableWidget(this.replace);
     }
 
@@ -137,11 +170,11 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         if (this.menu.page == 0) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 192);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 210);
         } else if (this.menu.page == 1) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 192);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 210);
         } else if (this.menu.page == 2) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 192);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 210);
         }
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
     }
