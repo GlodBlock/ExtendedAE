@@ -42,7 +42,10 @@ public class EnergyCapCache {
         var thisGrid = this.self.get();
         if (gird != null && thisGrid != null) {
             var thatGrid = gird.getGridNode(side.getOpposite());
-            return thatGrid != thisGrid;
+            if (thatGrid == null) {
+                return true;
+            }
+            return thatGrid.getGrid() != thisGrid;
         }
         return true;
     }
