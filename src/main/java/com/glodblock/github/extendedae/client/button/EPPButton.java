@@ -3,7 +3,6 @@ package com.glodblock.github.extendedae.client.button;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
 import appeng.client.gui.widgets.IconButton;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,47 +22,43 @@ public abstract class EPPButton extends IconButton {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partial) {
         if (this.visible) {
+            var item = this.getItemOverlay();
             Blitter blitter = getBlitterIcon();
-            if (!this.active) {
-                blitter.opacity(0.5f);
-            }
 
             if (this.isHalfSize()) {
                 this.width = 8;
                 this.height = 8;
             }
 
-            RenderSystem.disableDepthTest();
-            RenderSystem.enableBlend();
-
-            if (isFocused()) {
-                guiGraphics.fill(getX() - 1, getY() - 1, getX() + width + 1, getY(), 0xFFFFFFFF);
-                guiGraphics.fill(getX() - 1, getY(), getX(), getY() + height, 0xFFFFFFFF);
-                guiGraphics.fill(getX() + width, getY(), getX() + width + 1, getY() + height, 0xFFFFFFFF);
-                guiGraphics.fill(getX() - 1, getY() + height, getX() + width + 1, getY() + height + 1, 0xFFFFFFFF);
-            }
+            var yOffset = isHovered() ? 1 : 0;
 
             if (this.isHalfSize()) {
-                var pose = guiGraphics.pose();
-                pose.pushPose();
-                pose.translate(getX(), getY(), 0.0F);
-                pose.scale(0.5f, 0.5f, 1.f);
-                if (!isDisableBackground()) {
-                    Icon.TOOLBAR_BUTTON_BACKGROUND.getBlitter().dest(0, 0).blit(guiGraphics);
+                if (!this.isDisableBackground()) {
+                    Icon.TOOLBAR_BUTTON_BACKGROUND.getBlitter().dest(getX(), getY()).zOffset(10).blit(guiGraphics);
                 }
-                blitter.dest(0, 0).blit(guiGraphics);
-                pose.popPose();
+                if (item != null) {
+                    guiGraphics.renderItem(new ItemStack(item), getX(), getY(), 0, 20);
+                } else if (blitter != null) {
+                    if (!this.active) {
+                        blitter.opacity(0.5f);
+                    }
+                    blitter.dest(getX(), getY()).zOffset(20).blit(guiGraphics);
+                }
             } else {
-                if (!isDisableBackground()) {
-                    Icon.TOOLBAR_BUTTON_BACKGROUND.getBlitter().dest(getX(), getY()).blit(guiGraphics);
-                }
-                blitter.dest(getX(), getY()).blit(guiGraphics);
-            }
-            RenderSystem.enableDepthTest();
+                if (!this.isDisableBackground()) {
+                    Icon bgIcon = isHovered() ? Icon.TOOLBAR_BUTTON_BACKGROUND_HOVER
+                            : isFocused() ? Icon.TOOLBAR_BUTTON_BACKGROUND_FOCUS : Icon.TOOLBAR_BUTTON_BACKGROUND;
 
-            var item = this.getItemOverlay();
-            if (item != null) {
-                guiGraphics.renderItem(new ItemStack(item), getX(), getY());
+                    bgIcon.getBlitter()
+                            .dest(getX() - 1, getY() + yOffset, 18, 20)
+                            .zOffset(2)
+                            .blit(guiGraphics);
+                }
+                if (item != null) {
+                    guiGraphics.renderItem(new ItemStack(item), getX(), getY() + 1 + yOffset, 0, 3);
+                } else if (blitter != null) {
+                    blitter.dest(getX(), getY() + 1 + yOffset).zOffset(3).blit(guiGraphics);
+                }
             }
         }
     }
