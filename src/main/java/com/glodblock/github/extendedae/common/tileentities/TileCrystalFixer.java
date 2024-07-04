@@ -17,12 +17,13 @@ import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.api.ExtendedAEAPI;
 import com.glodblock.github.extendedae.api.ICrystalFixer;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +40,7 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     private int progress = 0;
 
     public TileCrystalFixer(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCrystalFixer.class, TileCrystalFixer::new, EAEItemAndBlock.CRYSTAL_FIXER), pos, blockState);
+        super(GlodUtil.getTileType(TileCrystalFixer.class, TileCrystalFixer::new, EAESingletons.CRYSTAL_FIXER), pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.inv.setFilter(new Filter());
     }
@@ -128,16 +129,16 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
-        this.inv.setItemDirect(0, data.readItem());
+        this.inv.setItemDirect(0, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         return changed;
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
-        data.writeItem(this.inv.getStackInSlot(0));
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.inv.getStackInSlot(0));
     }
 
     @Override
@@ -151,14 +152,14 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         data.putInt("progress", this.progress);
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         this.progress = data.getInt("progress");
     }
 
@@ -190,12 +191,6 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
     }
 
     private static class Filter implements IAEItemFilter {
-
-        @Override
-        public boolean allowExtract(InternalInventory inv, int slot, int amount) {
-            return true;
-        }
-
         @Override
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
             for (ICrystalFixer fixer : ExtendedAEAPI.INSTANCE.getCrystalFixers()) {

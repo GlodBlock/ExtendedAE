@@ -189,7 +189,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
-        if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
+        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
             WTCommonLoad.container();
         }
     }
@@ -220,65 +220,66 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerStorageHandler();
         this.registerRandomAPI();
         this.initPackageList();
-        if (ExtendedAE.isLoad(ModConstants.AE2WTL)) {
+        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
             WTCommonLoad.init();
         }
-        if (ExtendedAE.isLoad(ModConstants.APPFLUX)) {
+        if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
             AFCommonLoad.init();
         }
     }
 
     private void registerAEUpgrade() {
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE, 1, "gui.extendedae.ex_interface");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE, 1, "gui.extendedae.ex_interface");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_INTERFACE_PART, 1, "gui.extendedae.ex_interface");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_INTERFACE_PART, 1, "gui.extendedae.ex_interface");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.OVERSIZE_INTERFACE, 1, "gui.extendedae.oversize_interface");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.OVERSIZE_INTERFACE, 1, "gui.extendedae.oversize_interface");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.OVERSIZE_INTERFACE_PART, 1, "gui.extendedae.oversize_interface");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.OVERSIZE_INTERFACE_PART, 1, "gui.extendedae.oversize_interface");
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 5, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 4, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 5, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 4, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
-        Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_CONNECTOR, 4);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_ASSEMBLER, 5);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_INSCRIBER, 4);
-        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1);
-        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.TAG_STORAGE_BUS, 1);
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 1);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.TAG_EXPORT_BUS, 4);
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.THRESHOLD_LEVEL_EMITTER, 1);
-        Upgrades.add(AEItems.INVERTER_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1);
-        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.MOD_STORAGE_BUS, 1);
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 1);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.MOD_EXPORT_BUS, 4);
-        Upgrades.add(AEItems.FUZZY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 1);
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.ACTIVE_FORMATION_PLANE, 5);
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 5);
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1);
-        Upgrades.add(AEItems.CRAFTING_CARD, EAEItemAndBlock.PRECISE_EXPORT_BUS, 1);
-        Upgrades.add(AEItems.ENERGY_CARD, EAEItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.EX_IO_PORT, 5);
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.EX_IO_PORT, 1);
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.PRECISE_STORAGE_BUS, 5);
-        Upgrades.add(AEItems.VOID_CARD, EAEItemAndBlock.PRECISE_STORAGE_BUS, 1);
-        Upgrades.add(AEItems.CAPACITY_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 5);
-        Upgrades.add(AEItems.REDSTONE_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 1);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.THRESHOLD_EXPORT_BUS, 4);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.CRYSTAL_ASSEMBLER, 4);
-        Upgrades.add(AEItems.SPEED_CARD, EAEItemAndBlock.CIRCUIT_CUTTER, 4);
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.EX_INTERFACE, 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.EX_INTERFACE, 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.EX_INTERFACE_PART, 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.EX_INTERFACE_PART, 1, "gui.extendedae.ex_interface");
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.OVERSIZE_INTERFACE, 1, "gui.extendedae.oversize_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.OVERSIZE_INTERFACE, 1, "gui.extendedae.oversize_interface");
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.OVERSIZE_INTERFACE_PART, 1, "gui.extendedae.oversize_interface");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.OVERSIZE_INTERFACE_PART, 1, "gui.extendedae.oversize_interface");
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.EX_EXPORT_BUS, 5, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_EXPORT_BUS, 4, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.EX_EXPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.EX_IMPORT_BUS, 5, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_IMPORT_BUS, 4, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
+        Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_CONNECTOR, 4);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_ASSEMBLER, 5);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_INSCRIBER, 4);
+        Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.TAG_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.VOID_CARD, EAESingletons.TAG_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.TAG_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.TAG_EXPORT_BUS, 4);
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.THRESHOLD_LEVEL_EMITTER, 1);
+        Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.MOD_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.VOID_CARD, EAESingletons.MOD_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.MOD_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.MOD_EXPORT_BUS, 4);
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 5);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.PRECISE_EXPORT_BUS, 5);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.PRECISE_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.PRECISE_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_IO_PORT, 5);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.EX_IO_PORT, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.PRECISE_STORAGE_BUS, 5);
+        Upgrades.add(AEItems.VOID_CARD, EAESingletons.PRECISE_STORAGE_BUS, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.THRESHOLD_EXPORT_BUS, 5);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.THRESHOLD_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.THRESHOLD_EXPORT_BUS, 4);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CRYSTAL_ASSEMBLER, 4);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CIRCUIT_CUTTER, 4);
     }
 
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
-        StorageCellModels.registerModel(EAEItemAndBlock.INFINITY_CELL, ExtendedAE.id("block/drive/infinity_cell"));
+        StorageCellModels.registerModel(EAESingletons.INFINITY_WATER_CELL, ExtendedAE.id("block/drive/infinity_water_cell"));
+        StorageCellModels.registerModel(EAESingletons.INFINITY_COBBLESTONE_CELL, ExtendedAE.id("block/drive/infinity_cobblestone_cell"));
     }
 
     private void onRegisterModels() {
@@ -304,22 +305,22 @@ public class EAERegistryHandler extends RegistryHandler {
     }
 
     private void registerRandomAPI() {
-        GridLinkables.register(EAEItemAndBlock.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
-        if (!ExtendedAE.isLoad(ModConstants.AE2WTL)) {
-            HotkeyActions.register(new InventoryHotkeyAction(EAEItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EAEItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+        GridLinkables.register(EAESingletons.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
+        if (!GlodUtil.checkMod(ModConstants.AE2WTL)) {
+            HotkeyActions.register(new InventoryHotkeyAction(EAESingletons.WIRELESS_EX_PAT, (player, i) -> EAESingletons.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
         } else {
-            HotkeyActions.register(new InventoryHotkeyAction(EAEItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EAEItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
+            HotkeyActions.register(new InventoryHotkeyAction(EAESingletons.WIRELESS_EX_PAT, (player, i) -> EAESingletons.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
         }
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
-                .icon(() -> new ItemStack(EAEItemAndBlock.EX_PATTERN_PROVIDER))
+                .icon(() -> new ItemStack(EAESingletons.EX_PATTERN_PROVIDER))
                 .title(Component.translatable("itemGroup.extendedae"))
-                .displayItems((__, o) -> {
+                .displayItems((p, o) -> {
                     for (Pair<String, Item> entry : items) {
                         if (entry.getRight() instanceof AEBaseItem aeItem) {
-                            aeItem.addToMainCreativeTab(o);
+                            aeItem.addToMainCreativeTab(p, o);
                         } else {
                             o.accept(entry.getRight());
                         }

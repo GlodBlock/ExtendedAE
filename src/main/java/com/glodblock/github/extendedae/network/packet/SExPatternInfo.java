@@ -7,11 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +41,7 @@ public class SExPatternInfo implements IMessage {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeVarLong(this.id);
         buf.writeVarLong(this.pos.asLong());
         buf.writeResourceKey(this.dim);
@@ -52,7 +54,7 @@ public class SExPatternInfo implements IMessage {
     }
 
     @Override
-    public void fromBytes(FriendlyByteBuf buf) {
+    public void fromBytes(RegistryFriendlyByteBuf buf) {
         this.id = buf.readVarLong();
         this.pos = BlockPos.of(buf.readVarLong());
         this.dim = buf.readResourceKey(Registries.DIMENSION);
@@ -62,6 +64,7 @@ public class SExPatternInfo implements IMessage {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal<?> gui) {
             gui.postTileInfo(this.id, this.pos, this.dim, this.face);

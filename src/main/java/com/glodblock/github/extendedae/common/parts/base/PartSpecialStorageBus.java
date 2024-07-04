@@ -24,6 +24,7 @@ import appeng.api.storage.IStorageProvider;
 import appeng.api.storage.MEStorage;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
+import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.core.stats.AdvancementTriggers;
@@ -43,6 +44,7 @@ import appeng.parts.automation.UpgradeablePart;
 import appeng.util.Platform;
 import appeng.util.prioritylist.IPartitionList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -78,11 +80,16 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     public PartSpecialStorageBus(IPartItem<?> partItem) {
         super(partItem);
         this.adjacentStorageAccessor = new PartAdjacentApi<>(this, AECapabilities.ME_STORAGE);
-        this.getConfigManager().registerSetting(Settings.ACCESS, AccessRestriction.READ_WRITE);
-        this.getConfigManager().registerSetting(Settings.STORAGE_FILTER, StorageFilter.EXTRACTABLE_ONLY);
-        this.getConfigManager().registerSetting(Settings.FILTER_ON_EXTRACT, YesNo.YES);
         this.source = new MachineSource(this);
         getMainNode().addService(IStorageProvider.class, this).addService(IGridTickable.class, this);
+    }
+
+    @Override
+    protected void registerSettings(IConfigManagerBuilder builder) {
+        super.registerSettings(builder);
+        builder.registerSetting(Settings.ACCESS, AccessRestriction.READ_WRITE);
+        builder.registerSetting(Settings.STORAGE_FILTER, StorageFilter.EXTRACTABLE_ONLY);
+        builder.registerSetting(Settings.FILTER_ON_EXTRACT, YesNo.YES);
     }
 
     @Override
@@ -112,19 +119,19 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
         this.priority = data.getInt("priority");
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
         data.putInt("priority", this.priority);
     }
 
     @Override
-    public final boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+    public final boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (!isClientSide()) {
             openConfigMenu(player);
         }

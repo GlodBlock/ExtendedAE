@@ -7,7 +7,7 @@ import appeng.util.Platform;
 import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 
 import static appeng.block.crafting.PatternProviderBlock.PUSH_DIRECTION;
 
-@SuppressWarnings("deprecation")
 public class BlockExPatternProvider extends BlockBaseGui<TileExPatternProvider> {
 
     public BlockExPatternProvider() {
@@ -44,10 +43,10 @@ public class BlockExPatternProvider extends BlockBaseGui<TileExPatternProvider> 
     }
 
     @Override
-    public InteractionResult check(TileExPatternProvider tile, ItemStack stack, Level world, BlockPos pos, BlockHitResult hit, Player p) {
+    public ItemInteractionResult check(TileExPatternProvider tile, ItemStack stack, Level world, BlockPos pos, BlockHitResult hit, Player p) {
         if (stack != null && InteractionUtil.canWrenchRotate(stack)) {
             this.setSide(world, pos, hit.getDirection());
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return ItemInteractionResult.sidedSuccess(world.isClientSide);
         }
         return null;
     }

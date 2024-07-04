@@ -4,6 +4,7 @@ import appeng.client.gui.widgets.NumberEntryWidget;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.reflect.ReflectKit;
+import com.glodblock.github.glodium.util.GlodUtil;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import net.minecraft.client.gui.components.Button;
@@ -29,7 +30,7 @@ public class Ae2ReflectClient {
                     .forName("appeng.client.guidebook.scene.element.FakeForwardingServerLevel")
                     .getDeclaredConstructor(LevelAccessor.class);
             cFakeForwardingServerLevel.setAccessible(true);
-            if (ExtendedAE.isLoad(ModConstants.EMI)) {
+            if (GlodUtil.checkMod(ModConstants.EMI)) {
                 fEmiInscriberRecipe_CATEGORY = ReflectKit.reflectField(
                         Class.forName("appeng.integration.modules.emi.EmiInscriberRecipe"),
                         "CATEGORY"
@@ -42,7 +43,7 @@ public class Ae2ReflectClient {
                 fEmiInscriberRecipe_CATEGORY = null;
                 fEmiChargerRecipe_CATEGORY = null;
             }
-            if (ExtendedAE.isLoad(ModConstants.REI)) {
+            if (GlodUtil.checkMod(ModConstants.REI)) {
                 fInscriberRecipeCategory_ID = ReflectKit.reflectField(
                         Class.forName("appeng.integration.modules.rei.InscriberRecipeCategory"),
                         "ID"

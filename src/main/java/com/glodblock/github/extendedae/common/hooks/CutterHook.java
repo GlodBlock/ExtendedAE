@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
@@ -28,7 +27,7 @@ public final class CutterHook {
 
     @SubscribeEvent
     public void onPlayerUseBlockEvent(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getUseBlock() == Event.Result.DENY) {
+        if (event.isCanceled()) {
             return;
         }
         var result = onPlayerUseBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());

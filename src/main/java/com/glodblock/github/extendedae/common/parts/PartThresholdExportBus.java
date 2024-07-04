@@ -14,8 +14,11 @@ import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.ThresholdMode;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -29,10 +32,10 @@ import java.util.List;
 public class PartThresholdExportBus extends ExportBusPart {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/threshold_export_bus_base"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_on"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_off"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/threshold_export_bus_base"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_has_channel")
     );
 
     public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
@@ -54,16 +57,16 @@ public class PartThresholdExportBus extends ExportBusPart {
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra) {
-        super.readFromNBT(extra);
-        this.config.readFromChildTag(extra, "config2");
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
+        this.config.readFromChildTag(extra, "config2", registries);
         this.mode = ThresholdMode.values()[extra.getByte("cmod")];
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra) {
-        super.writeToNBT(extra);
-        this.config.writeToChildTag(extra, "config2");
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
+        this.config.writeToChildTag(extra, "config2", registries);
         extra.putByte("cmod", (byte) this.mode.ordinal());
     }
 
@@ -80,15 +83,22 @@ public class PartThresholdExportBus extends ExportBusPart {
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        this.mode = ThresholdMode.values()[input.getByte("cmod")];
+        var tag = input.get(EAESingletons.EXTRA_SETTING);
+        if (tag != null && tag.contains("threshold_mode")) {
+            this.mode = ThresholdMode.values()[tag.getByte("threshold_mode")];
+        }
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
         super.exportSettings(mode, output);
-        output.putByte("cmod", (byte) this.mode.ordinal());
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            var tag = new CompoundTag();
+            tag.putByte("threshold_mode", (byte) this.mode.ordinal());
+            output.set(EAESingletons.EXTRA_SETTING, tag);
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")

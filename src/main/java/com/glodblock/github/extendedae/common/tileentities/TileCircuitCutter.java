@@ -27,20 +27,21 @@ import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.AEItemFilters;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.util.FCUtil;
-import com.glodblock.github.extendedae.util.recipe.ContainerRecipeContext;
-import com.glodblock.github.extendedae.util.recipe.RecipeExecutor;
-import com.glodblock.github.extendedae.util.recipe.RecipeSearchContext;
+import com.glodblock.github.extendedae.util.RecipeExecutor;
+import com.glodblock.github.glodium.recipe.CommonRecipeContext;
+import com.glodblock.github.glodium.recipe.RecipeSearchContext;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +51,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IRecipeMachine<Container, CircuitCutterRecipe> {
+public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IRecipeMachine<RecipeInput, CircuitCutterRecipe> {
 
     public static final int POWER_MAXIMUM_AMOUNT = 8000;
     public static final int MAX_PROGRESS = 200;
@@ -60,7 +61,7 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     private final FilteredInternalInventory outputExposed = new FilteredInternalInventory(output, AEItemFilters.EXTRACT_ONLY);
     private final FilteredInternalInventory inputExposed = new FilteredInternalInventory(input, AEItemFilters.INSERT_ONLY);
     private final CombinedInternalInventory invExposed = new CombinedInternalInventory(inputExposed, outputExposed);
-    private final ContainerRecipeContext<CircuitCutterRecipe> ctx = new CutterRecipeContext(this);
+    private final CommonRecipeContext<CircuitCutterRecipe> ctx = new CutterRecipeContext(this);
     private final RecipeExecutor<CircuitCutterRecipe> exec;
     private final IUpgradeInventory upgrades;
     private final ConfigManager configManager;
@@ -69,14 +70,14 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     private ItemStack renderOutput = ItemStack.EMPTY;
 
     public TileCircuitCutter(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCircuitCutter.class, TileCircuitCutter::new, EAEItemAndBlock.CIRCUIT_CUTTER), pos, blockState);
+        super(GlodUtil.getTileType(TileCircuitCutter.class, TileCircuitCutter::new, EAESingletons.CIRCUIT_CUTTER), pos, blockState);
         this.getMainNode()
                 .setFlags()
                 .setIdlePowerUsage(0)
                 .addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
-        this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.CIRCUIT_CUTTER, 4, this::saveChanges);
+        this.upgrades = UpgradeInventories.forMachine(EAESingletons.CIRCUIT_CUTTER, 4, this::saveChanges);
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
         this.exec = new RecipeExecutor<>(this, r -> r.output, MAX_PROGRESS);
@@ -112,7 +113,7 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     }
 
     @Override
-    public RecipeSearchContext<Container, CircuitCutterRecipe> getContext() {
+    public RecipeSearchContext<RecipeInput, CircuitCutterRecipe> getContext() {
         return this.ctx;
     }
 
@@ -161,23 +162,39 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
-        super.readFromStream(data);
-        this.isWorking = data.readBoolean();
-        this.progress = data.readInt();
-        this.input.setItemDirect(0, data.readItem());
-        this.renderOutput = data.readItem();
-        return true;
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
+        var changed = super.readFromStream(data);
+        boolean newIsWorking = data.readBoolean();
+        if (this.isWorking != newIsWorking) {
+            this.isWorking = newIsWorking;
+            changed = true;
+        }
+        int newProgress = data.readInt();
+        if (this.progress != newProgress) {
+            this.progress = newProgress;
+            changed = true;
+        }
+        var inputStack = ItemStack.OPTIONAL_STREAM_CODEC.decode(data);
+        if (!ItemStack.isSameItem(inputStack, this.input.getStackInSlot(0))) {
+            this.input.setItemDirect(0, inputStack);
+            changed = true;
+        }
+        var outputStack = ItemStack.OPTIONAL_STREAM_CODEC.decode(data);
+        if (!ItemStack.isSameItem(outputStack, this.renderOutput)) {
+            this.renderOutput = outputStack;
+            changed = true;
+        }
+        return changed;
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         data.writeBoolean(this.isWorking);
         data.writeInt(this.progress);
-        data.writeItem(this.input.getStackInSlot(0));
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.input.getStackInSlot(0));
         this.renderOutput = this.ctx.currentRecipe == null ? ItemStack.EMPTY : this.ctx.currentRecipe.value().output;
-        data.writeItem(this.renderOutput);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.renderOutput);
     }
 
     @Override
@@ -189,10 +206,10 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.upgrades.writeToNBT(data, "upgrades");
-        this.configManager.writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.upgrades.writeToNBT(data, "upgrades", registries);
+        this.configManager.writeToNBT(data, registries);
         this.ctx.save(data);
     }
 
@@ -203,10 +220,10 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.upgrades.readFromNBT(data, "upgrades");
-        this.configManager.readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data,registries);
+        this.upgrades.readFromNBT(data, "upgrades", registries);
+        this.configManager.readFromNBT(data, registries);
         this.ctx.load(data);
     }
 
@@ -251,9 +268,7 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
         this.ctx.onInvChange();
     }
 
-
-
-    private static class CutterRecipeContext extends ContainerRecipeContext<CircuitCutterRecipe> {
+    private static class CutterRecipeContext extends CommonRecipeContext<CircuitCutterRecipe> {
 
         private final TileCircuitCutter host;
 

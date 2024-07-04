@@ -3,7 +3,8 @@
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {
-		"base": "extendedae:block/caner/base"
+		"base": "extendedae:block/caner/base",
+		"particle": "extendedae:block/caner/base"
 	},
 	"elements": [
 		{

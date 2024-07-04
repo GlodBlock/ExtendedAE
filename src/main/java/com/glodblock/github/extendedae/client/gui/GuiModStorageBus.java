@@ -17,19 +17,16 @@ import com.glodblock.github.extendedae.container.ContainerModStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.extendedae.util.FCClientUtil;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> implements IActionHolder {
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     private final SettingToggleButton<AccessRestriction> rwMode;
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
@@ -38,7 +35,7 @@ public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> 
     public GuiModStorageBus(ContainerModStorageBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.widgets.addOpenPriorityButton();
-        addToLeftToolbar(new ActionButton(ActionItems.WRENCH, btn -> menu.partition()));
+        addToLeftToolbar(new ActionButton(ActionItems.COG, btn -> menu.partition()));
         this.rwMode = new ServerSettingToggleButton<>(Settings.ACCESS, AccessRestriction.READ_WRITE);
         this.storageFilter = new ServerSettingToggleButton<>(Settings.STORAGE_FILTER, StorageFilter.EXTRACTABLE_ONLY);
         this.filterOnExtract = new ServerSettingToggleButton<>(Settings.FILTER_ON_EXTRACT, YesNo.YES);
@@ -96,7 +93,7 @@ public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> 
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

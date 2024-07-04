@@ -15,12 +15,12 @@ public class EAENetworkHandler extends NetworkHandler {
 
     public EAENetworkHandler() {
         super(ExtendedAE.MODID);
-        registerPacket(ExtendedAE.id("s_ex_pattern_info"), SExPatternInfo::new);
-        registerPacket(ExtendedAE.id("s_assembler_animation"), SAssemblerAnimation::new);
-        registerPacket(ExtendedAE.id("s_generic"), SEAEGenericPacket::new);
-        registerPacket(ExtendedAE.id("c_pattern_key"), CPatternKey::new);
-        registerPacket(ExtendedAE.id("c_update_page"), CUpdatePage::new);
-        registerPacket(ExtendedAE.id("c_generic"), CEAEGenericPacket::new);
+        registerPacket(SExPatternInfo::new);
+        registerPacket(SAssemblerAnimation::new);
+        registerPacket(SEAEGenericPacket::new);
+        registerPacket(CPatternKey::new);
+        registerPacket(CUpdatePage::new);
+        registerPacket(CEAEGenericPacket::new);
     }
 
 }

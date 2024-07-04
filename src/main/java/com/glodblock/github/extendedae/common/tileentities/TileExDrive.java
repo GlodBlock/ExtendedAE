@@ -6,13 +6,13 @@ import appeng.core.AELog;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileExDrive extends DriveBlockEntity {
 
     public TileExDrive(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExDrive.class, TileExDrive::new, EAEItemAndBlock.EX_DRIVE), pos, blockState);
+        super(GlodUtil.getTileType(TileExDrive.class, TileExDrive::new, EAESingletons.EX_DRIVE), pos, blockState);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TileExDrive extends DriveBlockEntity {
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         Ae2Reflect.updateDriveClientSideState(this);
 
         long packedState = 0;
@@ -49,7 +49,7 @@ public class TileExDrive extends DriveBlockEntity {
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = false;
 
         var packedState = data.readLong();
@@ -95,7 +95,7 @@ public class TileExDrive extends DriveBlockEntity {
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAEItemAndBlock.EX_DRIVE);
+        return new ItemStack(EAESingletons.EX_DRIVE);
     }
 
 }

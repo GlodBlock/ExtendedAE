@@ -20,17 +20,15 @@ import appeng.menu.slot.OutputSlot;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> implements IProgressProvider, IPage, IActionHolder {
 
@@ -42,7 +40,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
     private final Slot[] middles = new Slot[4];
     private final Slot[] bottoms = new Slot[4];
     private final Slot[] outputs = new Slot[4];
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     private static final SlotSemantic[] TOP = {
             SlotSemantics.INSCRIBER_PLATE_TOP,
             ExSemantics.EX_1,
@@ -207,7 +205,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

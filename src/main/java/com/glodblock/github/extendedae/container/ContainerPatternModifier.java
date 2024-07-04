@@ -20,19 +20,18 @@ import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.client.gui.widget.SingleFakeSlot;
 import com.glodblock.github.extendedae.common.me.itemhost.HostPatternModifier;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Arrays;
 
 public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActionHolder {
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     public static final MenuType<ContainerPatternModifier> TYPE = MenuTypeBuilder
             .create(ContainerPatternModifier::new, HostPatternModifier.class)
             .build("pattern_modifier");
@@ -95,18 +94,21 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             var stack = slot.getItem();
             if (stack.getItem() instanceof EncodedPatternItem<?>) {
-                var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level(), false);
+                var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
                 if (detail instanceof AEProcessingPattern process) {
-                    var input = process.getSparseInputs();
-                    var output = process.getOutputs();
+                    var input = process.getSparseInputs().toArray(new GenericStack[0]);
+                    var output = process.getOutputs().toArray(new GenericStack[0]);
                     var replaceInput = new GenericStack[input.length];
                     var replaceOutput = new GenericStack[output.length];
                     this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
                     this.replace(output, replaceOutput, AEItemKey.of(replace), AEItemKey.of(with));
-                    var newPattern = PatternDetailsHelper.encodeProcessingPattern(replaceInput, replaceOutput);
+                    var newPattern = PatternDetailsHelper.encodeProcessingPattern(
+                            Arrays.stream(replaceInput).toList(),
+                            Arrays.stream(replaceOutput).toList()
+                    );
                     slot.set(newPattern);
                 } else if (detail instanceof AECraftingPattern craft) {
-                    var input = craft.getSparseInputs();
+                    var input = craft.getSparseInputs().toArray(new GenericStack[0]);
                     var output = craft.getPrimaryOutput();
                     var replaceInput = new GenericStack[input.length];
                     this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
@@ -146,7 +148,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         var target = this.targetSlot.getItem();
         var clone = this.cloneSlot.getItem();
         if (target.getItem() instanceof EncodedPatternItem<?>) {
-            var detail = PatternDetailsHelper.decodePattern(target, this.getPlayer().level(), false);
+            var detail = PatternDetailsHelper.decodePattern(target, this.getPlayer().level());
             if (detail != null) {
                 var newPattern = target.copy();
                 if (clone.isEmpty()) {
@@ -167,16 +169,19 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             var stack = slot.getItem();
             if (stack.getItem() instanceof EncodedPatternItem<?>) {
-                var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level(), false);
+                var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
                 if (detail instanceof AEProcessingPattern process) {
-                    var input = process.getSparseInputs();
-                    var output = process.getOutputs();
+                    var input = process.getSparseInputs().toArray(new GenericStack[0]);
+                    var output = process.getOutputs().toArray(new GenericStack[0]);
                     if (checkModify(input, scale, div) && checkModify(output, scale, div)) {
                         var mulInput = new GenericStack[input.length];
                         var mulOutput = new GenericStack[output.length];
                         modifyStacks(input, mulInput, scale, div);
                         modifyStacks(output, mulOutput, scale, div);
-                        var newPattern = PatternDetailsHelper.encodeProcessingPattern(mulInput, mulOutput);
+                        var newPattern = PatternDetailsHelper.encodeProcessingPattern(
+                                Arrays.stream(mulInput).toList(),
+                                Arrays.stream(mulOutput).toList()
+                        );
                         slot.set(newPattern);
                     }
                 }
@@ -269,7 +274,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

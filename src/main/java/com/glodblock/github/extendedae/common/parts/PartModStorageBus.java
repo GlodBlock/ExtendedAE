@@ -8,9 +8,12 @@ import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.modlist.ModPriorityList;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerModStorageBus;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -19,16 +22,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class PartModStorageBus extends PartSpecialStorageBus {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/mod_storage_bus_base");
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/mod_storage_bus_base");
 
     @PartModels
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_off"));
+    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_off"));
 
     @PartModels
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_on"));
+    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_on"));
 
     @PartModels
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
+    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
     private String modid = "";
 
@@ -37,14 +40,14 @@ public class PartModStorageBus extends PartSpecialStorageBus {
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
         this.modid = data.getString("modid");
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
         data.putString("modid", this.modid);
     }
 
@@ -77,20 +80,19 @@ public class PartModStorageBus extends PartSpecialStorageBus {
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        if (input.contains("mod_name_exp")) {
-            this.modid = input.getString("mod_name_exp");
-        } else {
-            this.modid = "";
+        var id = input.get(EAESingletons.MOD_EXPRESS);
+        if (id != null) {
+            this.modid = id;
         }
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            output.putString("mod_name_exp", this.modid);
+            output.set(EAESingletons.MOD_EXPRESS, this.modid);
         }
     }
 

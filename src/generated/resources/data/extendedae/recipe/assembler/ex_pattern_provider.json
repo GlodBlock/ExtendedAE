@@ -1,0 +1,37 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "tag": "ae2:pattern_provider"
+      }
+    },
+    {
+      "amount": 3,
+      "ingredient": {
+        "item": "ae2:capacity_card"
+      }
+    },
+    {
+      "amount": 3,
+      "ingredient": {
+        "item": "minecraft:crafting_table"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "extendedae:concurrent_processor"
+      }
+    },
+    {
+      "amount": 6,
+      "ingredient": {
+        "tag": "ae2:glass_cable"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:ex_pattern_provider"
+  }
+}

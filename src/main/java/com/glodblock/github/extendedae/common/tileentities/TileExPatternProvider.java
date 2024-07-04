@@ -8,7 +8,7 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileExPatternProvider extends PatternProviderBlockEntity implements IGenericInvHost {
 
     public TileExPatternProvider(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExPatternProvider.class, TileExPatternProvider::new, EAEItemAndBlock.EX_PATTERN_PROVIDER), pos, blockState);
+        super(GlodUtil.getTileType(TileExPatternProvider.class, TileExPatternProvider::new, EAESingletons.EX_PATTERN_PROVIDER), pos, blockState);
     }
 
     @Override
@@ -39,12 +39,12 @@ public class TileExPatternProvider extends PatternProviderBlockEntity implements
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAEItemAndBlock.EX_PATTERN_PROVIDER);
+        return new ItemStack(EAESingletons.EX_PATTERN_PROVIDER);
     }
 
     @Override
     public AEItemKey getTerminalIcon() {
-        return AEItemKey.of(EAEItemAndBlock.EX_PATTERN_PROVIDER);
+        return AEItemKey.of(EAESingletons.EX_PATTERN_PROVIDER);
     }
 
     @Override

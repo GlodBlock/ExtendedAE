@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "ae2:glass_cable"
+    },
+    "K": {
+      "item": "ae2:sky_stone_tank"
+    },
+    "L": {
+      "item": "ae2:logic_processor"
+    },
+    "M": {
+      "item": "extendedae:machine_frame"
+    },
+    "T": {
+      "item": "ae2:crafting_terminal"
+    }
+  },
+  "pattern": [
+    " T ",
+    "LML",
+    "CKC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:crystal_assembler"
+  }
+}

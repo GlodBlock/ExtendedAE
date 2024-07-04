@@ -27,23 +27,24 @@ import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SAssemblerAnimation;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -63,9 +64,9 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
     private AssemblerAnimationStatus animationStatus;
 
     public TileExMolecularAssembler(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExMolecularAssembler.class, TileExMolecularAssembler::new, EAEItemAndBlock.EX_ASSEMBLER), pos, blockState);
+        super(GlodUtil.getTileType(TileExMolecularAssembler.class, TileExMolecularAssembler::new, EAESingletons.EX_ASSEMBLER), pos, blockState);
         this.getMainNode().setIdlePowerUsage(0.0).addService(IGridTickable.class, this);
-        this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.EX_ASSEMBLER, this.getUpgradeSlots(), this::saveChanges);
+        this.upgrades = UpgradeInventories.forMachine(EAESingletons.EX_ASSEMBLER, this.getUpgradeSlots(), this::saveChanges);
         var invs = new ArrayList<InternalInventory>();
         var invs2 = new ArrayList<InternalInventory>();
         for (int x = 0; x < MAX_THREAD; x ++) {
@@ -97,9 +98,9 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
         if (this.hasCustomName()) {
             name = this.getCustomName();
         } else {
-            name = EAEItemAndBlock.EX_ASSEMBLER.asItem().getDescription();
+            name = EAESingletons.EX_ASSEMBLER.asItem().getDescription();
         }
-        var icon = AEItemKey.of(EAEItemAndBlock.EX_ASSEMBLER);
+        var icon = AEItemKey.of(EAESingletons.EX_ASSEMBLER);
 
         List<Component> tooltip;
         var accelerationCards = this.getInstalledUpgrades(AEItems.SPEED_CARD);
@@ -130,7 +131,7 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         final boolean c = super.readFromStream(data);
         final boolean oldPower = this.isPowered;
         this.isPowered = data.readBoolean();
@@ -138,28 +139,28 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         data.writeBoolean(this.isPowered);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         for (int x = 0; x < MAX_THREAD; x ++) {
-            var tag = this.threads[x].writeNBT();
+            var tag = this.threads[x].writeNBT(registries);
             data.put("#ct" + x, tag);
         }
-        this.upgrades.writeToNBT(data, "upgrades");
+        this.upgrades.writeToNBT(data, "upgrades", registries);
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.upgrades.readFromNBT(data, "upgrades");
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.upgrades.readFromNBT(data, "upgrades", registries);
         for (int x = 0; x < MAX_THREAD; x ++) {
             if (data.contains("#ct" + x)) {
-                this.threads[x].readNBT(data.getCompound("#ct" + x));
+                this.threads[x].readNBT(data.getCompound("#ct" + x), registries);
             }
         }
     }
@@ -216,9 +217,8 @@ public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements
             }
         }
         var item = AEItemKey.of(firstJob);
-        if (item != null && this.level != null) {
-            final PacketDistributor.TargetPoint where = new PacketDistributor.TargetPoint(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(), 32, this.level.dimension());
-            EAENetworkHandler.INSTANCE.sendToAllAround(new SAssemblerAnimation(this.worldPosition, (byte) 50, item), where);
+        if (item != null && this.level instanceof ServerLevel) {
+            EAENetworkHandler.INSTANCE.sendToAllAround(new SAssemblerAnimation(this.worldPosition, (byte) 50, item), (ServerLevel) this.level, this.worldPosition, 32, null);
         }
         return rate;
     }

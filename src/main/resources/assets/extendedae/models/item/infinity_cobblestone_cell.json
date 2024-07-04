@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "extendedae:item/infinity_cell_cobble",
+    "layer1": "ae2:item/storage_cell_led"
+  }
+}

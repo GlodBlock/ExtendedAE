@@ -30,10 +30,10 @@ import java.util.Set;
 public class PartOversizeInterface extends PartExInterface {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/oversize_interface"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_on"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_off"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/oversize_interface"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_has_channel")
     );
 
     public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));

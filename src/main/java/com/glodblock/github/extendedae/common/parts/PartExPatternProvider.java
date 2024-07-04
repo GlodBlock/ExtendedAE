@@ -20,13 +20,14 @@ import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -40,10 +41,10 @@ import java.util.List;
 public class PartExPatternProvider extends AEBasePart implements PatternProviderLogicHost {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/ex_pattern_provider_base"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_on"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_off"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_pattern_provider_base"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_has_channel")
     );
 
     public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
@@ -70,15 +71,15 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
-        this.logic.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
+        this.logic.readFromNBT(data, registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
-        this.logic.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
+        this.logic.writeToNBT(data, registries);
     }
 
     @Override
@@ -105,15 +106,15 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
-        super.exportSettings(mode, output);
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder builder) {
+        super.exportSettings(mode, builder);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            this.logic.exportSettings(output);
+            this.logic.exportSettings(builder);
         }
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
         if (mode == SettingsFrom.MEMORY_CARD) {
             this.logic.importSettings(input, player);
@@ -126,7 +127,7 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     }
 
     @Override
-    public boolean onPartActivate(Player p, InteractionHand hand, Vec3 pos) {
+    public boolean onUseWithoutItem(Player p, Vec3 pos) {
         if (!p.getCommandSenderWorld().isClientSide()) {
             this.openMenu(p, MenuLocators.forPart(this));
         }
@@ -187,6 +188,6 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAEItemAndBlock.EX_PATTERN_PROVIDER_PART);
+        return new ItemStack(EAESingletons.EX_PATTERN_PROVIDER_PART);
     }
 }

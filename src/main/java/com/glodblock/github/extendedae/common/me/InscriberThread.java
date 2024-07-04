@@ -18,7 +18,7 @@ import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,22 +83,22 @@ public class InscriberThread {
         return topItemHandler == inv || bottomItemHandler == inv || sideItemHandler == inv;
     }
 
-    public void readFromStream(FriendlyByteBuf data) {
+    public void readFromStream(RegistryFriendlyByteBuf data) {
         var oldSmash = isSmash();
         var newSmash = data.readBoolean();
         if (oldSmash != newSmash && newSmash) {
             setSmash(true);
         }
         for (int i = 0; i < this.inv.size(); i++) {
-            this.inv.setItemDirect(i, data.readItem());
+            this.inv.setItemDirect(i, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         }
         this.cachedTask = null;
     }
 
-    public void writeToStream(FriendlyByteBuf data) {
+    public void writeToStream(RegistryFriendlyByteBuf data) {
         data.writeBoolean(isSmash());
         for (int i = 0; i < this.inv.size(); i++) {
-            data.writeItem(inv.getStackInSlot(i));
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(data, inv.getStackInSlot(i));
         }
     }
 
@@ -120,7 +120,7 @@ public class InscriberThread {
 
     public void onChangeInventory(InternalInventory inv, int slot) {
         if (slot == 0) {
-            boolean sameItemSameTags = ItemStack.isSameItemSameTags(inv.getStackInSlot(0), lastStacks.get(inv));
+            boolean sameItemSameTags = ItemStack.isSameItemSameComponents(inv.getStackInSlot(0), lastStacks.get(inv));
             lastStacks.put(inv, inv.getStackInSlot(0).copy());
             if (sameItemSameTags) {
                 return;

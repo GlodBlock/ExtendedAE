@@ -40,7 +40,6 @@ public class BlockCaner extends BlockBaseGui<TileCaner> implements SimpleWaterlo
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return 2;
@@ -60,7 +59,6 @@ public class BlockCaner extends BlockBaseGui<TileCaner> implements SimpleWaterlo
                 .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED)
@@ -68,7 +66,6 @@ public class BlockCaner extends BlockBaseGui<TileCaner> implements SimpleWaterlo
                 : super.getFluidState(blockState);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if (blockState.getValue(WATERLOGGED)) {
@@ -87,7 +84,6 @@ public class BlockCaner extends BlockBaseGui<TileCaner> implements SimpleWaterlo
         MenuOpener.open(ContainerCaner.TYPE, p, MenuLocators.forBlockEntity(tile));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         var orientation = getOrientation(state);
@@ -116,7 +112,6 @@ public class BlockCaner extends BlockBaseGui<TileCaner> implements SimpleWaterlo
         return Shapes.create(bb.getBoundingBox());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return Shapes.create(new AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0));

@@ -20,7 +20,6 @@ import appeng.client.guidebook.render.SimpleRenderContext;
 import appeng.core.AEConfig;
 import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
-import appeng.core.network.NetworkHandler;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
@@ -45,6 +44,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -129,12 +129,12 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
         @Override
         public int hashCode(ItemStack o) {
-            return o.getItem().hashCode() ^ (o.hasTag() ? o.getTag().hashCode() : 0xFFFFFFFF);
+            return ItemStack.hashItemAndComponents(o);
         }
 
         @Override
         public boolean equals(ItemStack a, ItemStack b) {
-            return a == b || (a != null && b != null && ItemStack.isSameItemSameTags(a, b));
+            return a == b || (a != null && b != null && ItemStack.isSameItemSameComponents(a, b));
         }
     });
     private final Set<PatternContainerRecord> matchedProvider = new HashSet<>();
@@ -330,7 +330,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             if (action != null) {
                 PatternSlot machineSlot = (PatternSlot) slot;
                 final InventoryActionPacket p = new InventoryActionPacket(action, machineSlot.getSlotIndex(), machineSlot.getMachineInv().getServerId());
-                NetworkHandler.instance().sendToServer(p);
+                PacketDistributor.sendToServer(p);
             }
 
             return;
@@ -575,15 +575,13 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
         IPatternDetails result = null;
         if (itemStack.getItem() instanceof EncodedPatternItem<?>) {
-            result = PatternDetailsHelper.decodePattern(itemStack, this.menu.getPlayer().level(), false);
+            result = PatternDetailsHelper.decodePattern(itemStack, this.menu.getPlayer().level());
         }
         if (result == null) {
             return false;
         }
 
-        var list = checkOut ?
-                Arrays.asList(result.getOutputs()) :
-                Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).toList();
+        var list = checkOut ? result.getOutputs() : Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).toList();
         for (var item : list) {
             if (item != null) {
                 var displayName = item.what().getDisplayName().getString().toLowerCase();

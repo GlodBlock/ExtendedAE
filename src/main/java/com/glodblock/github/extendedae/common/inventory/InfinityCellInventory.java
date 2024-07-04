@@ -8,7 +8,7 @@ import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
-import com.glodblock.github.extendedae.common.items.InfinityCell;
+import com.glodblock.github.extendedae.common.items.ItemInfinityCell;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -21,11 +21,11 @@ public class InfinityCellInventory implements StorageCell {
     public static final ICellHandler HANDLER = new Handler();
 
     public InfinityCellInventory(ItemStack stack) {
-        if (!(stack.getItem() instanceof InfinityCell cell)) {
+        if (!(stack.getItem() instanceof ItemInfinityCell)) {
             throw new IllegalArgumentException("Cell isn't an infinity cell!");
         }
         this.stack = stack;
-        this.record = cell.getRecord(stack);
+        this.record = ((ItemInfinityCell) stack.getItem()).getRecord();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public void getAvailableStacks(KeyCounter out) {
-        out.add(this.record, InfinityCell.getAsIntMax(this.record));
+        out.add(this.record, ItemInfinityCell.getAsIntMax(this.record));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class InfinityCellInventory implements StorageCell {
 
         @Override
         public boolean isCell(ItemStack is) {
-            return is != null && is.getItem() instanceof InfinityCell;
+            return is != null && is.getItem() instanceof ItemInfinityCell;
         }
 
         @Override

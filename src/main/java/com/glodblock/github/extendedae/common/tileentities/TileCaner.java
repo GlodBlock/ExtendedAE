@@ -25,15 +25,18 @@ import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.Platform;
+import appeng.util.SettingsFrom;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.api.CanerMode;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -59,7 +62,7 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     private AEKey emptyKey = null;
 
     public TileCaner(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCaner.class, TileCaner::new, EAEItemAndBlock.CANER), pos, blockState);
+        super(GlodUtil.getTileType(TileCaner.class, TileCaner::new, EAESingletons.CANER), pos, blockState);
         // don't let container item go into it
         this.stuff.setCapacity(AEKeyType.items(), 0);
         this.getMainNode()
@@ -97,7 +100,7 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
 
     public boolean isDone() {
         if (!this.target.isEmpty()) {
-            return ItemStack.isSameItemSameTags(this.target, this.container.getStackInSlot(0));
+            return ItemStack.isSameItemSameComponents(this.target, this.container.getStackInSlot(0));
         }
         return false;
     }
@@ -182,25 +185,25 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.stuff.writeToChildTag(data, "stuff");
-        data.put("target", this.target.save(new CompoundTag()));
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.stuff.writeToChildTag(data, "stuff", registries);
+        data.put("target", this.target.saveOptional(registries));
         if (this.ejectSide != null) {
             data.putString("ejectSide", this.ejectSide.name());
         }
         data.putByte("mode", (byte) this.mode.ordinal());
         if (this.emptyKey != null) {
-            data.put("emptyKey", this.emptyKey.toTag());
+            data.put("emptyKey", this.emptyKey.toTag(registries));
         }
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.stuff.readFromChildTag(data, "stuff");
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.stuff.readFromChildTag(data, "stuff", registries);
         if (data.contains("target")) {
-            this.target = ItemStack.of(data.getCompound("target"));
+            this.target = ItemStack.parseOptional(registries, data.getCompound("target"));
         }
         if (data.contains("ejectSide")) {
             this.ejectSide = Direction.valueOf(data.getString("ejectSide"));
@@ -209,7 +212,26 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
             this.mode = CanerMode.values()[data.getByte("mode")];
         }
         if (data.contains("emptyKey")) {
-            this.emptyKey = AEKey.fromTagGeneric(data.getCompound("emptyKey"));
+            this.emptyKey = AEKey.fromTagGeneric(registries, data.getCompound("emptyKey"));
+        }
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        var tag = input.get(EAESingletons.EXTRA_SETTING);
+        if (tag != null && tag.contains("caner_mode")) {
+            this.mode = CanerMode.values()[tag.getByte("caner_mode")];
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output, @Nullable Player player) {
+        super.exportSettings(mode, output, player);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            var tag = new CompoundTag();
+            tag.putByte("caner_mode", (byte) this.mode.ordinal());
+            output.set(EAESingletons.EXTRA_SETTING, tag);
         }
     }
 
@@ -229,16 +251,16 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
-        this.container.setItemDirect(0, data.readItem());
+        this.container.setItemDirect(0, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         return changed;
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
-        data.writeItem(this.container.getStackInSlot(0));
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.container.getStackInSlot(0));
     }
 
     private void fill() {
@@ -328,8 +350,8 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
 
     @Override
     public PatternContainerGroup getCraftingMachineInfo() {
-        Component name = this.hasCustomName() ? this.getCustomName() : EAEItemAndBlock.CANER.asItem().getDescription();
-        return new PatternContainerGroup(AEItemKey.of(EAEItemAndBlock.CANER), name, List.of());
+        Component name = this.hasCustomName() ? this.getCustomName() : EAESingletons.CANER.asItem().getDescription();
+        return new PatternContainerGroup(AEItemKey.of(EAESingletons.CANER), name, List.of());
     }
 
     @Override
@@ -374,14 +396,14 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
                         }
                     }
                 } else if (this.mode == CanerMode.EMPTY) {
-                    if (inputs.length == 1 && patternDetails.getOutputs().length == 2) {
+                    if (inputs.length == 1 && patternDetails.getOutputs().size() == 2) {
                         if (inputs[0].getFirstEntry() != null) {
                             var cnt = inputs[0].getFirstEntry();
-                            var obj = patternDetails.getOutputs()[0];
-                            var rst = patternDetails.getOutputs()[1];
+                            var obj = patternDetails.getOutputs().get(0);
+                            var rst = patternDetails.getOutputs().get(1);
                             if (obj.what() instanceof AEItemKey) {
-                                obj = patternDetails.getOutputs()[1];
-                                rst = patternDetails.getOutputs()[0];
+                                obj = patternDetails.getOutputs().get(1);
+                                rst = patternDetails.getOutputs().get(0);
                             }
                             // sanity check
                             if (!(cnt.getKey() instanceof AEItemKey) || cnt.getLongValue() != 1) {

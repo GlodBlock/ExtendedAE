@@ -8,7 +8,7 @@ import appeng.integration.modules.rei.ChargerDisplay;
 import appeng.items.misc.WrappedGenericStack;
 import com.glodblock.github.extendedae.client.gui.GuiExInscriber;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
 import dev.architectury.event.CompoundEventResult;
@@ -68,8 +68,8 @@ public class REIPlugin implements REIClientPlugin {
         if (CompatLayerHelper.IS_LOADED) {
             return;
         }
-        registry.addWorkstations(ChargerDisplay.ID, EntryStacks.of(EAEItemAndBlock.EX_CHARGER));
-        registry.addWorkstations(Ae2ReflectClient.getInscribeRecipeREI(), EntryStacks.of(EAEItemAndBlock.EX_INSCRIBER));
+        registry.addWorkstations(ChargerDisplay.ID, EntryStacks.of(EAESingletons.EX_CHARGER));
+        registry.addWorkstations(Ae2ReflectClient.getInscribeRecipeREI(), EntryStacks.of(EAESingletons.EX_INSCRIBER));
     }
 
 }

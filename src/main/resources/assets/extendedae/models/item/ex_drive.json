@@ -1,6 +1,3 @@
 {
-  "parent": "extendedae:block/extended_drive/extended_me_drive_base",
-  "textures": {
-    "front": "ae2:block/drive/drive_front_flat"
-  }
+  "parent": "extendedae:block/extended_drive/extended_me_drive_base"
 }

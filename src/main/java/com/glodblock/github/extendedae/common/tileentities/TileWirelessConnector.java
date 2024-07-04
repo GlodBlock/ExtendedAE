@@ -11,13 +11,14 @@ import appeng.api.util.AEColor;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import appeng.core.definitions.AEItems;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.FreqGenerator;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,13 +43,13 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     private AEColor color = AEColor.TRANSPARENT;
 
     public TileWirelessConnector(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EAEItemAndBlock.WIRELESS_CONNECTOR), pos, blockState);
+        super(GlodUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EAESingletons.WIRELESS_CONNECTOR), pos, blockState);
         this.getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
         this.getMainNode().setFlags(GridFlags.DENSE_CAPACITY);
         this.powerUse = 1.0;
         this.getMainNode().setIdlePowerUsage(this.powerUse);
         this.connect = new WirelessConnect(this);
-        this.upgrades = UpgradeInventories.forMachine(EAEItemAndBlock.WIRELESS_CONNECTOR, 4, this::updatePowerUsage);
+        this.upgrades = UpgradeInventories.forMachine(EAESingletons.WIRELESS_CONNECTOR, 4, this::updatePowerUsage);
     }
 
     @Override
@@ -116,10 +117,10 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         this.freq = data.getLong("freq");
-        this.upgrades.readFromNBT(data, "upgrades");
+        this.upgrades.readFromNBT(data, "upgrades", registries);
         if (data.contains("color")) {
             this.color = AEColor.valueOf(data.getString("color"));
         } else {
@@ -130,10 +131,10 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         data.putLong("freq", this.freq);
-        this.upgrades.writeToNBT(data, "upgrades");
+        this.upgrades.writeToNBT(data, "upgrades", registries);
         data.putString("color", this.color.name());
         G.markUsed(this.freq);
     }

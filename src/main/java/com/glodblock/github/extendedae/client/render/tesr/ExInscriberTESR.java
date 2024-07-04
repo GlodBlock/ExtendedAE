@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -37,7 +36,7 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
             {0.1875f, 0.1875f}, {0.1875f, -0.1875f}, {-0.1875f, 0.1875f}, {-0.1875f, -0.1875f}
     };
 
-    private static final Material TEXTURE_INSIDE = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(ExtendedAE.MODID, "block/ex_inscriber_inside"));
+    private static final Material TEXTURE_INSIDE = new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/extended_inscriber/ex_inscriber_inside"));
 
     public ExInscriberTESR(BlockEntityRendererProvider.Context context) {
     }
@@ -198,13 +197,12 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
     }
 
     private static void addVertex(VertexConsumer vb, PoseStack ms, TextureAtlasSprite sprite, float x, float y, float z, double texU, double texV, int overlayUV, int lightmapUV, Direction front) {
-        vb.vertex(ms.last().pose(), x, y, z);
-        vb.color(1.0f, 1.0f, 1.0f, 1.0f);
-        vb.uv(sprite.getU((float) texU), sprite.getV((float) texV));
-        vb.overlayCoords(overlayUV);
-        vb.uv2(lightmapUV);
-        vb.normal(ms.last().normal(), front.getStepX(), front.getStepY(), front.getStepZ());
-        vb.endVertex();
+        vb.addVertex(ms.last().pose(), x, y, z);
+        vb.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        vb.setUv(sprite.getU((float) texU), sprite.getV((float) texV));
+        vb.setOverlay(overlayUV);
+        vb.setLight(lightmapUV);
+        vb.setNormal(ms.last(), front.getStepX(), front.getStepY(), front.getStepZ());
     }
 
     private void renderItem(PoseStack ms, ItemStack stack, int index, float o, MultiBufferSource buffers, int combinedLight, int combinedOverlay, Level level) {

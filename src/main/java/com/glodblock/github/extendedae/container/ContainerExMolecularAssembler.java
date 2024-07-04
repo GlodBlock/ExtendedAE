@@ -15,8 +15,8 @@ import appeng.menu.slot.OutputSlot;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecularAssembler> implements IProgressProvider, IPage, IActionHolder {
 
@@ -34,7 +32,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
             .build("ex_molecular_assembler");
 
     private static final int MAX_CRAFT_PROGRESS = 100;
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     private static final SlotSemantic[] SLOT = new SlotSemantic[] {
             ExSemantics.EX_1,
             ExSemantics.EX_2,
@@ -112,7 +110,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 

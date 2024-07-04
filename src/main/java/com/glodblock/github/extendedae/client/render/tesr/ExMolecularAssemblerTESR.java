@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ExMolecularAssemblerTESR implements BlockEntityRenderer<TileExMolecularAssembler> {
 
-    public static final ResourceLocation LIGHTS_MODEL = AppEng.makeId("block/molecular_assembler_lights");
+    public static final ModelResourceLocation LIGHTS_MODEL = ModelResourceLocation.standalone(AppEng.makeId("block/molecular_assembler_lights"));
 
     private final RandomSource particleRandom = RandomSource.create();
 

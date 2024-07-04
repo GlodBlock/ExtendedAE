@@ -6,8 +6,6 @@ import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,12 +13,12 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FCUtil {
 
     public static void replaceTile(Level world, BlockPos pos, BlockEntity oldTile, BlockEntity newTile, BlockState newBlock) {
-        var contents = oldTile.serializeNBT();
+        var contents = oldTile.saveWithFullMetadata(world.registryAccess());
         world.removeBlockEntity(pos);
         world.removeBlock(pos, false);
         world.setBlock(pos, newBlock, 3);
         world.setBlockEntity(newTile);
-        newTile.deserializeNBT(contents);
+        newTile.loadWithComponents(contents, world.registryAccess());
         if (newTile instanceof AEBaseBlockEntity aeTile) {
             aeTile.markForUpdate();
         } else {
@@ -33,14 +31,6 @@ public class FCUtil {
             return cable.getPart(face);
         }
         return null;
-    }
-
-    public static boolean checkInvalidRL(String rl, Registry<?> registry) {
-        return checkInvalidRL(new ResourceLocation(rl), registry);
-    }
-
-    public static boolean checkInvalidRL(ResourceLocation rl, Registry<?> registry) {
-        return registry.containsKey(rl);
     }
 
     public static boolean ejectInv(Level world, BlockPos pos, InternalInventory inv) {
@@ -70,6 +60,14 @@ public class FCUtil {
             case 3 -> 10;
             case 4 -> 50;
         };
+    }
+
+    public static String[] trimSplit(String str) {
+        var sp = str.split(",");
+        for (int i = 0; i < sp.length; i ++) {
+            sp[i] = sp[i].trim();
+        }
+        return sp;
     }
 
 }

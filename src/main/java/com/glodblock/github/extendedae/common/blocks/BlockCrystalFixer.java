@@ -15,7 +15,6 @@ public class BlockCrystalFixer extends BlockBaseGui<TileCrystalFixer> {
         super(metalProps().noOcclusion());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int getLightBlock(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
         return 2;

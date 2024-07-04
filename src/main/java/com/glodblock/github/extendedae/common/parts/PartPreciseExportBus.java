@@ -19,6 +19,7 @@ import appeng.util.ConfigInventory;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -29,10 +30,10 @@ import java.util.List;
 public class PartPreciseExportBus extends ExportBusPart {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/precise_export_bus_base"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_on"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_off"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/export_bus_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/precise_export_bus_base"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_has_channel")
     );
 
     public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
@@ -45,15 +46,15 @@ public class PartPreciseExportBus extends ExportBusPart {
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra) {
-        super.readFromNBT(extra);
-        this.config.readFromChildTag(extra, "config2");
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
+        this.config.readFromChildTag(extra, "config2", registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra) {
-        super.writeToNBT(extra);
-        this.config.writeToChildTag(extra, "config2");
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
+        this.config.writeToChildTag(extra, "config2", registries);
     }
 
     @Override

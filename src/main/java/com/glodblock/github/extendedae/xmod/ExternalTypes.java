@@ -13,22 +13,22 @@ public class ExternalTypes {
 
     static {
         try {
-            GAS = AEKeyTypes.get(new ResourceLocation("appmek:chemical"));
+            GAS = AEKeyTypes.get(ResourceLocation.parse("appmek:chemical"));
         } catch (Exception e) {
             GAS = null;
         }
         try {
-            MANA = AEKeyTypes.get(new ResourceLocation("appbot:mana"));
+            MANA = AEKeyTypes.get(ResourceLocation.parse("appbot:mana"));
         } catch (Exception e) {
             MANA = null;
         }
         try {
-            FLUX = AEKeyTypes.get(new ResourceLocation("appflux:flux"));
+            FLUX = AEKeyTypes.get(ResourceLocation.parse("appflux:flux"));
         } catch (Exception e) {
             FLUX = null;
         }
         try {
-            SOURCE = AEKeyTypes.get(new ResourceLocation("arseng:source"));
+            SOURCE = AEKeyTypes.get(ResourceLocation.parse("arseng:source"));
         } catch (Exception e) {
             SOURCE = null;
         }

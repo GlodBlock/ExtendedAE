@@ -3,7 +3,7 @@ package com.glodblock.github.extendedae.common.blocks;
 import appeng.block.AEBaseBlock;
 import appeng.core.definitions.AEBlocks;
 import com.glodblock.github.extendedae.api.ISpecialDrop;
-import com.glodblock.github.extendedae.common.EAEItemAndBlock;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +49,7 @@ public class BlockBuddingEntro extends AEBaseBlock implements ISpecialDrop {
         BlockState targetState = level.getBlockState(targetPos);
         Block newCluster;
         if (canClusterGrowAtState(targetState)) {
-            newCluster = EAEItemAndBlock.ENTRO_BUD_SMALL;
+            newCluster = EAESingletons.ENTRO_BUD_SMALL;
         } else {
             newCluster = canClusterGrow(targetState, direction);
         }
@@ -77,16 +77,16 @@ public class BlockBuddingEntro extends AEBaseBlock implements ISpecialDrop {
     @Nullable
     public static Block canClusterGrow(BlockState state, Direction side) {
         var cluster = state.getBlock();
-        if (cluster instanceof BlockEntroCluster && cluster != EAEItemAndBlock.ENTRO_CLUSTER) {
+        if (cluster instanceof BlockEntroCluster && cluster != EAESingletons.ENTRO_CLUSTER) {
             if (state.getValue(AmethystClusterBlock.FACING) == side) {
-                if (cluster == EAEItemAndBlock.ENTRO_BUD_SMALL) {
-                    return EAEItemAndBlock.ENTRO_BUD_MEDIUM;
+                if (cluster == EAESingletons.ENTRO_BUD_SMALL) {
+                    return EAESingletons.ENTRO_BUD_MEDIUM;
                 }
-                if (cluster == EAEItemAndBlock.ENTRO_BUD_MEDIUM) {
-                    return EAEItemAndBlock.ENTRO_BUD_LARGE;
+                if (cluster == EAESingletons.ENTRO_BUD_MEDIUM) {
+                    return EAESingletons.ENTRO_BUD_LARGE;
                 }
-                if (cluster == EAEItemAndBlock.ENTRO_BUD_LARGE) {
-                    return EAEItemAndBlock.ENTRO_CLUSTER;
+                if (cluster == EAESingletons.ENTRO_BUD_LARGE) {
+                    return EAESingletons.ENTRO_CLUSTER;
                 }
             }
         }
@@ -94,14 +94,14 @@ public class BlockBuddingEntro extends AEBaseBlock implements ISpecialDrop {
     }
 
     public Block degradeBudding() {
-        if (this == EAEItemAndBlock.FULLY_ENTROIZED_FLUIX_BUDDING) {
-            return EAEItemAndBlock.MOSTLY_ENTROIZED_FLUIX_BUDDING;
+        if (this == EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING) {
+            return EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING;
         }
-        if (this == EAEItemAndBlock.MOSTLY_ENTROIZED_FLUIX_BUDDING) {
-            return EAEItemAndBlock.HALF_ENTROIZED_FLUIX_BUDDING;
+        if (this == EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING) {
+            return EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING;
         }
-        if (this == EAEItemAndBlock.HALF_ENTROIZED_FLUIX_BUDDING) {
-            return EAEItemAndBlock.HARDLY_ENTROIZED_FLUIX_BUDDING;
+        if (this == EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING) {
+            return EAESingletons.HARDLY_ENTROIZED_FLUIX_BUDDING;
         }
         return AEBlocks.QUARTZ_BLOCK.block();
     }

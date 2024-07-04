@@ -14,9 +14,9 @@ import appeng.parts.reporting.AbstractDisplayPart;
 import appeng.util.ConfigManager;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,8 +26,8 @@ import java.util.List;
 public class PartExPatternAccessTerminal extends AbstractDisplayPart implements IPatternAccessTermMenuHost {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/ex_pattern_access_terminal_off"),
-            new ResourceLocation(ExtendedAE.MODID, "part/ex_pattern_access_terminal_on")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_pattern_access_terminal_off"),
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_pattern_access_terminal_on")
     );
 
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, MODELS.get(0), MODEL_STATUS_OFF);
@@ -42,8 +42,8 @@ public class PartExPatternAccessTerminal extends AbstractDisplayPart implements 
     }
 
     @Override
-    public boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
-        if (!super.onPartActivate(player, hand, pos) && !isClientSide()) {
+    public boolean onUseWithoutItem(Player player, Vec3 pos) {
+        if (!super.onUseWithoutItem(player, pos) && !isClientSide()) {
             MenuOpener.open(ContainerExPatternTerminal.TYPE, player, MenuLocators.forPart(this));
         }
         return true;
@@ -60,15 +60,15 @@ public class PartExPatternAccessTerminal extends AbstractDisplayPart implements 
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        super.writeToNBT(tag);
-        configManager.writeToNBT(tag);
+    public void writeToNBT(CompoundTag tag, HolderLookup.Provider registries) {
+        super.writeToNBT(tag, registries);
+        configManager.writeToNBT(tag, registries);
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        super.readFromNBT(tag);
-        configManager.readFromNBT(tag);
+    public void readFromNBT(CompoundTag tag, HolderLookup.Provider registries) {
+        super.readFromNBT(tag, registries);
+        configManager.readFromNBT(tag, registries);
     }
 
     @Override

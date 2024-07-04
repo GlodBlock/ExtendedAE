@@ -8,8 +8,8 @@ import appeng.parts.AEBasePart;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Nameable;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -26,7 +25,7 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
     public static final MenuType<ContainerRenamer> TYPE = MenuTypeBuilder
             .create(ContainerRenamer::new, Object.class)
             .build("renamer");
-    private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final ActionMap actions = ActionMap.create();
     private final Consumer<String> setter;
     private final Supplier<Component> getter;
     @GuiSync(1)
@@ -84,7 +83,7 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
 
     @NotNull
     @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
+    public ActionMap getActionMap() {
         return this.actions;
     }
 }

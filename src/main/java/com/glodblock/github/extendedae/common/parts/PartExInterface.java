@@ -24,9 +24,9 @@ import appeng.parts.PartModel;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -38,10 +38,10 @@ import java.util.List;
 public class PartExInterface extends AEBasePart implements InterfaceLogicHost, IPage {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/ex_interface"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_on"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_off"),
-            new ResourceLocation(AppEngBase.MOD_ID, "part/interface_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_interface"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_has_channel")
     );
 
     public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
@@ -99,15 +99,15 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
-        this.logic.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
+        this.logic.readFromNBT(data, registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
-        this.logic.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
+        this.logic.writeToNBT(data, registries);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
     }
 
     @Override
-    public boolean onPartActivate(Player p, InteractionHand hand, Vec3 pos) {
+    public boolean onUseWithoutItem(Player p, Vec3 pos) {
         if (!p.getCommandSenderWorld().isClientSide()) {
             openMenu(p, MenuLocators.forPart(this));
         }

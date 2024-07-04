@@ -29,8 +29,8 @@ public class ExPlaneModel implements IUnbakedGeometry<ExPlaneModel> {
     }
 
     @Override
-    public @NotNull BakedModel bake(@NotNull IGeometryBakingContext context, @NotNull ModelBaker baker, @NotNull Function<Material, TextureAtlasSprite> spriteGetter, @NotNull ModelState modelState, @NotNull ItemOverrides overrides, @NotNull ResourceLocation modelLocation) {
-        return Objects.requireNonNull(this.delegate.bake(baker, spriteGetter, modelState, modelLocation));
+    public @NotNull BakedModel bake(@NotNull IGeometryBakingContext context, @NotNull ModelBaker baker, @NotNull Function<Material, TextureAtlasSprite> spriteGetter, @NotNull ModelState modelState, @NotNull ItemOverrides overrides) {
+        return Objects.requireNonNull(this.delegate.bake(baker, spriteGetter, modelState));
     }
 
     public record Loader(ResourceLocation frontTexture) implements IGeometryLoader<ExPlaneModel> {

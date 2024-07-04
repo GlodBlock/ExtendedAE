@@ -3,7 +3,7 @@ package com.glodblock.github.extendedae.network.packet;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.glodium.network.packet.IMessage;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -27,12 +27,12 @@ public class CUpdatePage implements IMessage {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(this.page);
     }
 
     @Override
-    public void fromBytes(FriendlyByteBuf buf) {
+    public void fromBytes(RegistryFriendlyByteBuf buf) {
         this.page = buf.readVarInt();
     }
 

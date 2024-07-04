@@ -55,7 +55,6 @@ public class SetAmount<C extends AEBaseMenu, P extends AEBaseScreen<C>> extends 
         setSlotsHidden(SlotSemantics.TOOLBOX, true);
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private void confirm() {
         this.amount.getLongValue().ifPresent(newAmount -> {
             if (this.checkSize) {

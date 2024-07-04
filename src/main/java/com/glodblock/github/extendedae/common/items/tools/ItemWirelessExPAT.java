@@ -7,7 +7,6 @@ import appeng.core.AEConfig;
 import appeng.helpers.WirelessTerminalMenuHost;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import appeng.menu.locator.ItemMenuHostLocator;
-import appeng.util.ConfigManager;
 import com.glodblock.github.extendedae.common.me.itemhost.HostWirelessExPAT;
 import com.glodblock.github.extendedae.container.ContainerWirelessExPAT;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class ItemWirelessExPAT extends WirelessTerminalItem {
 
     public ItemWirelessExPAT() {
@@ -23,11 +24,10 @@ public class ItemWirelessExPAT extends WirelessTerminalItem {
     }
 
     @Override
-    public IConfigManager getConfigManager(ItemStack target) {
-        var out = new ConfigManager((manager, settingName) -> manager.writeToNBT(target.getOrCreateTag()));
-        out.registerSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS, ShowPatternProviders.VISIBLE);
-        out.readFromNBT(target.getOrCreateTag().copy());
-        return out;
+    public IConfigManager getConfigManager(Supplier<ItemStack> target) {
+        return IConfigManager.builder(target)
+                .registerSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS, ShowPatternProviders.VISIBLE)
+                .build();
     }
 
     @Override

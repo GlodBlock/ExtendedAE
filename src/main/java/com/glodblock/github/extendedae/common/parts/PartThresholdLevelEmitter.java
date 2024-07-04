@@ -12,6 +12,7 @@ import appeng.api.networking.storage.IStorageWatcherNode;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
+import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.helpers.IConfigInvHost;
@@ -23,11 +24,14 @@ import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -38,11 +42,11 @@ import java.util.List;
 public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implements IConfigInvHost {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
-            new ResourceLocation(ExtendedAE.MODID, "part/threshold_level_emitter_base_off"),
-            new ResourceLocation(ExtendedAE.MODID, "part/threshold_level_emitter_base_on"),
-            new ResourceLocation(AppEng.MOD_ID, "part/level_emitter_status_off"),
-            new ResourceLocation(AppEng.MOD_ID, "part/level_emitter_status_on"),
-            new ResourceLocation(AppEng.MOD_ID, "part/level_emitter_status_has_channel")
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/threshold_level_emitter_base_off"),
+            ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/threshold_level_emitter_base_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/level_emitter_status_off"),
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/level_emitter_status_on"),
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/level_emitter_status_has_channel")
     );
 
     public static final PartModel MODEL_OFF_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
@@ -100,8 +104,13 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
             public void onCraftableChange(AEKey what) {
             }
         });
-        getConfigManager().registerSetting(Settings.CRAFT_VIA_REDSTONE, YesNo.NO);
-        getConfigManager().registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+    }
+
+    @Override
+    protected void registerSettings(IConfigManagerBuilder builder) {
+        super.registerSettings(builder);
+        builder.registerSetting(Settings.CRAFT_VIA_REDSTONE, YesNo.NO);
+        builder.registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
     }
 
     @Nullable
@@ -229,7 +238,7 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
     }
 
     @Override
-    public boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+    public boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (!isClientSide()) {
             MenuOpener.open(ContainerThresholdLevelEmitter.TYPE, player, MenuLocators.forPart(this));
         }
@@ -252,19 +261,19 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
         this.upperValue = data.getLong("upperValue");
         this.lowerValue = data.getLong("lowerValue");
-        this.config.readFromChildTag(data, "config");
+        this.config.readFromChildTag(data, "config", registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
         data.putLong("upperValue", this.upperValue);
         data.putLong("lowerValue", this.lowerValue);
-        this.config.writeToChildTag(data, "config");
+        this.config.writeToChildTag(data, "config", registries);
     }
 
     public void setUpperValue(long value) {
@@ -288,18 +297,20 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        this.setUpperValue(input.getLong("upperValue"));
-        this.setLowerValue(input.getLong("lowerValue"));
+        var data = input.get(EAESingletons.THRESHOLD_DATA);
+        if (data != null) {
+            this.setUpperValue(data.left());
+            this.setLowerValue(data.right());
+        }
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            output.putLong("upperValue", this.upperValue);
-            output.putLong("lowerValue", this.lowerValue);
+            output.set(EAESingletons.THRESHOLD_DATA, Pair.of(this.upperValue, this.lowerValue));
         }
     }
 
