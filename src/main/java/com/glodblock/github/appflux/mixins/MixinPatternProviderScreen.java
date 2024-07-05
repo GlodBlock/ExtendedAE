@@ -4,7 +4,6 @@ import appeng.api.upgrades.Upgrades;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.widgets.ToolboxPanel;
 import appeng.client.gui.widgets.UpgradesPanel;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
@@ -30,12 +29,7 @@ public abstract class MixinPatternProviderScreen<C extends PatternProviderMenu> 
             remap = false
     )
     private void initUpgrade(PatternProviderMenu menu, Inventory playerInventory, Component title, ScreenStyle style, CallbackInfo ci) {
-        this.widgets.add("upgrades", new UpgradesPanel(
-                menu.getSlots(SlotSemantics.UPGRADE),
-                this::af_$getCompatibleUpgrades));
-        if (((IUpgradableMenu) menu).getToolbox().isPresent()) {
-            this.widgets.add("toolbox", new ToolboxPanel(style, ((IUpgradableMenu) menu).getToolbox().getName()));
-        }
+        this.widgets.add("upgrades", new UpgradesPanel(menu.getSlots(SlotSemantics.UPGRADE), this::af_$getCompatibleUpgrades));
     }
 
     @Unique
