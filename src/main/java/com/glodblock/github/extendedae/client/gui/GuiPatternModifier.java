@@ -4,6 +4,7 @@ import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
+import appeng.client.gui.widgets.AE2Button;
 import appeng.core.AppEng;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
@@ -37,61 +38,33 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         this.replace = Button.builder(Component.translatable("gui.extendedae.pattern_modifier.replace_button"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace")))
                 .size(46, 18)
                 .build();
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(0), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(0), false)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(0))))
-                        .build()
+        this.multiBtns.add(getButton(0, 23, 18, true));
+        this.multiBtns.add(getButton(1, 23, 18, true));
+        this.multiBtns.add(getButton(2, 23, 18, true));
+        this.multiBtns.add(getButton(3, 23, 18, true));
+        this.multiBtns.add(getButton(0, 23, 18, false));
+        this.multiBtns.add(getButton(1, 23, 18, false));
+        this.multiBtns.add(getButton(2, 23, 18, false));
+        this.multiBtns.add(getButton(3, 23, 18, false));
+        var clearBtn = new AE2Button(
+                0, 0, 36, 18,
+                Component.translatable("gui.extendedae.pattern_modifier.clear"),
+                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clear"))
         );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(1), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(1), false)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(1))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(2), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(2), false)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(2))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(3), true), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(3), false)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(3))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(0), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(0), true)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(0))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(1), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(1), true)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(1))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(2), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(2), true)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(2))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(getDisplayNumber(EAEConfig.getPatternModifierNumber(3), false), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(3), true)))
-                        .size(23, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(3))))
-                        .build()
-        );
-        this.multiBtns.add(
-                Button.builder(Component.translatable("gui.extendedae.pattern_modifier.clear"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clear")))
-                        .size(36, 18)
-                        .tooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.clear.desc")))
-                        .build()
-        );
+        clearBtn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.clear.desc")));
+        this.multiBtns.add(clearBtn);
         this.imageHeight = 210;
+    }
+
+    private Button getButton(int index, int width, int height, boolean isMulti) {
+        var btn = new AE2Button(getDisplayNumber(EAEConfig.getPatternModifierNumber(index), isMulti), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(index), isMulti)));
+        btn.setSize(width, height);
+        if (isMulti) {
+            btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(index))));
+        } else {
+            btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.div.desc", EAEConfig.getPatternModifierNumber(index))));
+        }
+        return btn;
     }
 
     private Component getDisplayNumber(int number, boolean isMulti) {
