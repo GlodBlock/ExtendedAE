@@ -50,6 +50,11 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     }
 
     @Override
+    protected int getUpgradeSlots() {
+        return 5;
+    }
+
+    @Override
     public void onSettingChanged(IConfigManager manager, Setting<?> setting) {
         this.onConfigurationChanged();
         this.getHost().markForSave();

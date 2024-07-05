@@ -17,8 +17,8 @@ public class AFCommonLoad {
             JadeBlacklist.BLACK_LIST.add(o -> o instanceof TileCaner);
             Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.EX_INTERFACE, 1, "gui.extendedae.ex_interface");
             Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.EX_INTERFACE_PART, 1, "gui.extendedae.ex_interface");
-            Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.EX_PATTERN_PROVIDER, 1, "gui.extendedae.ex_pattern_provider");
-            Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.EX_PATTERN_PROVIDER_PART, 1, "gui.extendedae.ex_pattern_provider");
+            Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.EX_PATTERN_PROVIDER, 1, "block.extendedae.ex_pattern_provider");
+            Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.EX_PATTERN_PROVIDER_PART, 1, "block.extendedae.ex_pattern_provider");
             Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.OVERSIZE_INTERFACE, 1, "gui.extendedae.oversize_interface");
             Upgrades.add(AFSingletons.INDUCTION_CARD, EAESingletons.OVERSIZE_INTERFACE_PART, 1, "gui.extendedae.oversize_interface");
         } catch (Throwable ignored) {
