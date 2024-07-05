@@ -38,7 +38,7 @@
 		},
 		{
 			"name": "Back Panel",
-			"from": [1, 1, 7],
+			"from": [1, 1, 16],
 			"to": [15, 15, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 9]},
 			"faces": {
@@ -75,17 +75,17 @@
 		{
 			"name": "Middle Strut",
 			"from": [7, 1, 1],
-			"to": [9, 15, 7],
+			"to": [9, 15, 16],
 			"faces": {
 				"north": {"uv": [7, 1, 9, 15], "texture": "#front"},
-				"east": {"uv": [1, 1, 7, 15], "rotation": 180, "texture": "#inside"},
-				"west": {"uv": [9, 1, 15, 15], "texture": "#inside"}
+				"east": {"uv": [1, 1, 16, 15], "rotation": 180, "texture": "#inside"},
+				"west": {"uv": [16, 15, 1, 1], "texture": "#inside"}
 			}
 		},
 		{
 			"name": "Separator",
 			"from": [1, 3, 3],
-			"to": [15, 4, 7],
+			"to": [15, 4, 16],
 			"faces": {
 				"up": {"uv": [3, 1, 7, 15], "rotation": 90, "texture": "#inside_top"},
 				"down": {"uv": [11, 1, 15, 15], "rotation": 270, "texture": "#inside"}
@@ -134,7 +134,7 @@
 		{
 			"name": "Separator",
 			"from": [1, 6, 3],
-			"to": [15, 7, 7],
+			"to": [15, 7, 16],
 			"faces": {
 				"up": {"uv": [7, 1, 11, 15], "rotation": 90, "texture": "#inside_top"},
 				"down": {"uv": [11, 1, 15, 15], "rotation": 270, "texture": "#inside"}
@@ -143,7 +143,7 @@
 		{
 			"name": "Separator",
 			"from": [1, 9, 3],
-			"to": [15, 10, 7],
+			"to": [15, 10, 16],
 			"faces": {
 				"up": {"uv": [11, 15, 15, 1], "rotation": 90, "texture": "#inside_top"},
 				"down": {"uv": [11, 1, 15, 15], "rotation": 270, "texture": "#inside"}
@@ -152,7 +152,7 @@
 		{
 			"name": "Separator",
 			"from": [1, 12, 3],
-			"to": [15, 13, 7],
+			"to": [15, 13, 16],
 			"faces": {
 				"up": {"uv": [7, 15, 11, 1], "rotation": 90, "texture": "#inside_top"},
 				"down": {"uv": [11, 1, 15, 15], "rotation": 270, "texture": "#inside"}
