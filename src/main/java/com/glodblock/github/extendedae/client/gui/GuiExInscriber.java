@@ -8,6 +8,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ProgressBar;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
+import appeng.client.gui.Icon;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.CycleEPPButton;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
@@ -40,13 +41,13 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         this.autoExportBtn = new ServerSettingToggleButton<>(Settings.AUTO_EXPORT, YesNo.NO);
         this.addToLeftToolbar(autoExportBtn);
 
-        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExInscriber.MAX_THREAD)), EPPIcon.RIGHT);
-        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), EPPIcon.LEFT);
+        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExInscriber.MAX_THREAD)), Icon.ARROW_RIGHT.getBlitter());
+        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), Icon.ARROW_LEFT.getBlitter());
         this.next.setMessage(Component.translatable("gui.extendedae.ex_inscriber.next"));
         this.pre.setMessage(Component.translatable("gui.extendedae.ex_inscriber.pre"));
         CycleEPPButton stackChange = new CycleEPPButton();
         stackChange.addActionPair(EPPIcon.STACK_1, Component.translatable("gui.extendedae.ex_inscriber.unstackable"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("stack", 64)));
-        stackChange.addActionPair(EPPIcon.STACK_64, Component.translatable("gui.extendedae.ex_inscriber.stackable"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("stack", 1)));
+        stackChange.addActionPair(Icon.INSCRIBER_BUFFER_HIGH.getBlitter(), Component.translatable("gui.extendedae.ex_inscriber.stackable"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("stack", 1)));
         stackChange.setState(this.menu.getStackMode());
         addToLeftToolbar(stackChange);
         addToLeftToolbar(this.next);

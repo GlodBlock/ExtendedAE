@@ -6,6 +6,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ProgressBar;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
+import appeng.client.gui.Icon;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
 import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
@@ -25,8 +26,8 @@ public class GuiExMolecularAssembler extends UpgradeableScreen<ContainerExMolecu
         super(menu, playerInventory, title, style);
         this.pb = new ProgressBar(this.menu, style.getImage("progressBar"), ProgressBar.Direction.VERTICAL);
         this.widgets.add("progressBar", this.pb);
-        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExMolecularAssembler.MAX_THREAD)), EPPIcon.RIGHT);
-        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExMolecularAssembler.MAX_THREAD)), EPPIcon.LEFT);
+        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExMolecularAssembler.MAX_THREAD)), Icon.ARROW_RIGHT.getBlitter());
+        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExMolecularAssembler.MAX_THREAD)), Icon.ARROW_LEFT.getBlitter());
         this.next.setMessage(Component.translatable("gui.extendedae.ex_molecular_assembler.next"));
         this.pre.setMessage(Component.translatable("gui.extendedae.ex_molecular_assembler.pre"));
         addToLeftToolbar(this.next);

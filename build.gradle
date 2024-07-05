@@ -94,7 +94,7 @@ repositories {
 
 dependencies {
     implementation "curse.maven:glodium-957920:5491696"
-    implementation "appeng:appliedenergistics2:19.0.7-alpha"
+    implementation "appeng:appliedenergistics2:19.0.8-alpha"
     //compileOnly "curse.maven:curios-309927:5302407"
     compileOnly "curse.maven:applied-flux-965012:5497380"
     compileOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:5466359"

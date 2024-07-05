@@ -48,13 +48,13 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         this.createPlayerInventorySlots(playerInventory);
         var patternInv = host.getInventoryByName("patternInv");
         for (int x = 0; x < patternInv.size(); x ++) {
-            this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.ENCODED_PATTERN, patternInv, x), SlotSemantics.ENCODED_PATTERN);
+            this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.PROVIDER_PATTERN, patternInv, x), SlotSemantics.ENCODED_PATTERN);
         }
         var targetInv = host.getInventoryByName("targetInv");
         var blankPatternInv = host.getInventoryByName("blankPatternInv");
         var clonePatternInv = host.getInventoryByName("clonePatternInv");
         var replaceInv = host.getInventoryByName("replaceInv");
-        this.targetSlot = (AppEngSlot) this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.ENCODED_PATTERN, targetInv, 0), ExSemantics.EX_1);
+        this.targetSlot = (AppEngSlot) this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.PROVIDER_PATTERN, targetInv, 0), ExSemantics.EX_1);
         this.cloneSlot = (AppEngSlot) this.addSlot(new OutputSlot(clonePatternInv, 0, null), ExSemantics.EX_2);
         this.replaceTarget = (AppEngSlot) this.addSlot(new SingleFakeSlot(replaceInv, 0), ExSemantics.EX_4);
         this.replaceWith = (AppEngSlot) this.addSlot(new SingleFakeSlot(replaceInv, 1), ExSemantics.EX_5);

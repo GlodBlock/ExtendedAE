@@ -3,7 +3,7 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/ingredient_buffer.png",
-    "srcRect": [0, 0, 176, 192]
+    "srcRect": [0, 0, 176, 194]
   },
   "slots": {
     "STORAGE": {

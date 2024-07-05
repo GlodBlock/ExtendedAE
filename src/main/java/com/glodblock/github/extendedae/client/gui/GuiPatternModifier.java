@@ -31,23 +31,28 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     public GuiPatternModifier(ContainerPatternModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         ActionEPPButton changeMode = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 3)), Icon.SCHEDULING_DEFAULT.getBlitter());
-        this.clone = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clone")), EPPIcon.RIGHT);
+        this.clone = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clone")), Icon.ARROW_RIGHT.getBlitter());
         changeMode.setMessage(Component.translatable("gui.extendedae.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.extendedae.pattern_modifier.clone.desc"));
         addToLeftToolbar(changeMode);
-        this.replace = Button.builder(Component.translatable("gui.extendedae.pattern_modifier.replace_button"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace")))
-                .size(46, 18)
-                .build();
-        this.multiBtns.add(getButton(0, 23, 18, true));
-        this.multiBtns.add(getButton(1, 23, 18, true));
-        this.multiBtns.add(getButton(2, 23, 18, true));
-        this.multiBtns.add(getButton(3, 23, 18, true));
-        this.multiBtns.add(getButton(0, 23, 18, false));
-        this.multiBtns.add(getButton(1, 23, 18, false));
-        this.multiBtns.add(getButton(2, 23, 18, false));
-        this.multiBtns.add(getButton(3, 23, 18, false));
+//        this.replace = Button.builder(Component.translatable("gui.extendedae.pattern_modifier.replace_button"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace")))
+//                .size(46, 18)
+//                .build();
+        this.replace = new AE2Button(
+                0, 0, 46, 20,
+                Component.translatable("gui.extendedae.pattern_modifier.replace_button"),
+                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace"))
+        );
+        this.multiBtns.add(getButton(0, 23, 20, true));
+        this.multiBtns.add(getButton(1, 23, 20, true));
+        this.multiBtns.add(getButton(2, 23, 20, true));
+        this.multiBtns.add(getButton(3, 23, 20, true));
+        this.multiBtns.add(getButton(0, 23, 20, false));
+        this.multiBtns.add(getButton(1, 23, 20, false));
+        this.multiBtns.add(getButton(2, 23, 20, false));
+        this.multiBtns.add(getButton(3, 23, 20, false));
         var clearBtn = new AE2Button(
-                0, 0, 36, 18,
+                0, 0, 36, 20,
                 Component.translatable("gui.extendedae.pattern_modifier.clear"),
                 b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clear"))
         );
@@ -86,14 +91,14 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                     this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.blank"),
                     52,
-                    57,
+                    62,
                     style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
                     false
             );
             guiGraphics.drawString(
                     this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.target"),
-                    52,
+                    51,
                     25,
                     style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
                     false
@@ -108,15 +113,15 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         this.multiBtns.get(1).setPosition(this.leftPos + 37, this.topPos + 16);
         this.multiBtns.get(2).setPosition(this.leftPos + 67, this.topPos + 16);
         this.multiBtns.get(3).setPosition(this.leftPos + 97, this.topPos + 16);
-        this.multiBtns.get(4).setPosition(this.leftPos + 7, this.topPos + 36);
-        this.multiBtns.get(5).setPosition(this.leftPos + 37, this.topPos + 36);
-        this.multiBtns.get(6).setPosition(this.leftPos + 67, this.topPos + 36);
-        this.multiBtns.get(7).setPosition(this.leftPos + 97, this.topPos + 36);
-        this.multiBtns.get(8).setPosition(this.leftPos + 130, this.topPos + 25);
+        this.multiBtns.get(4).setPosition(this.leftPos + 7, this.topPos + 38);
+        this.multiBtns.get(5).setPosition(this.leftPos + 37, this.topPos + 38);
+        this.multiBtns.get(6).setPosition(this.leftPos + 67, this.topPos + 38);
+        this.multiBtns.get(7).setPosition(this.leftPos + 97, this.topPos + 38);
+        this.multiBtns.get(8).setPosition(this.leftPos + 133, this.topPos + 26);
         this.multiBtns.forEach(this::addRenderableWidget);
-        this.clone.setPosition(this.leftPos + 79, this.topPos + 38);
+        this.clone.setPosition(this.leftPos + 80, this.topPos + 36);
         this.addRenderableWidget(this.clone);
-        this.replace.setPosition(this.leftPos + 120, this.topPos + 24);
+        this.replace.setPosition(this.leftPos + 123, this.topPos + 26);
         this.addRenderableWidget(this.replace);
     }
 
@@ -143,11 +148,11 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         if (this.menu.page == 0) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 210);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 212);
         } else if (this.menu.page == 1) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 210);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 212);
         } else if (this.menu.page == 2) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 210);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 212);
         }
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
     }
@@ -160,5 +165,4 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
             default -> Component.empty();
         };
     }
-
 }

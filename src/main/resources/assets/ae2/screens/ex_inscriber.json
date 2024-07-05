@@ -3,12 +3,12 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/ex_inscriber.png",
-    "srcRect": [0, 0, 176, 187]
+    "srcRect": [0, 0, 176, 189]
   },
   "slots": {
     "INSCRIBER_PLATE_TOP": {
-      "left": 45,
-      "top": 27
+      "left": 39,
+      "top": 34
     },
     "EX_1": {
       "left": 45,
@@ -39,8 +39,8 @@
       "top": 50
     },
     "INSCRIBER_PLATE_BOTTOM": {
-      "left": 45,
-      "top": 73
+      "left": 39,
+      "top": 66
     },
     "EX_4": {
       "left": 45,
@@ -85,7 +85,7 @@
   "images": {
     "progressBar": {
       "texture": "guis/ex_inscriber.png",
-      "srcRect": [135, 188, 6, 18]
+      "srcRect": [176, 0, 6, 18]
     }
   },
   "widgets": {
