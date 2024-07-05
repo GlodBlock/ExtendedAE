@@ -38,7 +38,7 @@
 		},
 		{
 			"name": "Back Panel",
-			"from": [1, 1, 16],
+			"from": [1, 1, 14],
 			"to": [15, 15, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 9]},
 			"faces": {
