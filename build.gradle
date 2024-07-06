@@ -103,10 +103,20 @@ dependencies {
     compileOnly "curse.maven:jade-324717:5444008"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
     // runtime test
-    runtimeOnly "dev.emi:emi-neoforge:1.1.7+1.21"
     runtimeOnly "curse.maven:applied-flux-965012:5497380"
     //runtimeOnly "curse.maven:mega-cells-622112:5310776"
     runtimeOnly "curse.maven:jade-324717:5444008"
+    // setup Xei
+    switch(use_Xei) {
+        case "emi":
+            runtimeOnly "dev.emi:emi-neoforge:1.1.7+1.21"
+            break
+        case "rei":
+            runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
+            runtimeOnly "dev.architectury:architectury-neoforge:13.0.1"
+            runtimeOnly "curse.maven:cloth-config-348521:5424576"
+            break
+    }
 }
 
 tasks.withType(ProcessResources).configureEach {
