@@ -17,7 +17,7 @@ public class EMICrystalAssemblerRecipe extends BasicEmiRecipe {
     private final CrystalAssemblerRecipe recipe;
 
     public EMICrystalAssemblerRecipe(RecipeHolder<CrystalAssemblerRecipe> holder) {
-        super(CATEGORY, holder.id(), 133, 54);
+        super(CATEGORY, holder.id(), 135, 58);
         this.recipe = holder.value();
         for (var in : this.recipe.getInputs()) {
             if (!in.isEmpty()) {
@@ -33,23 +33,23 @@ public class EMICrystalAssemblerRecipe extends BasicEmiRecipe {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         ResourceLocation background = AppEng.makeId("textures/guis/crystal_assembler.png");
-        widgets.addTexture(background, 0, 0, 133, 54, 25, 21);
-        widgets.addAnimatedTexture(background, 127, 18, 6, 18, 179, 39, 2000, false, true, false);
-        int x = 0;
-        int y = 0;
+        widgets.addTexture(background, 0, 0, 135, 58, 23, 19);
+        widgets.addAnimatedTexture(background, 129, 20, 6, 18, 176, 0, 2000, false, true, false);
+        int x = 2;
+        int y = 2;
         for (var in : this.recipe.getInputs()) {
             if (!in.isEmpty()) {
                 widgets.addSlot(EMIStackUtil.of(in), x, y).drawBack(false);
                 x += 18;
                 if (x >= 18 * 3) {
                     y += 18;
-                    x = 0;
+                    x = 2;
                 }
             }
         }
         if (this.recipe.getFluid() != null) {
-            widgets.addSlot(EMIStackUtil.of(this.recipe.getFluid()), 54, 36).drawBack(false);
+            widgets.addSlot(EMIStackUtil.of(this.recipe.getFluid()), 57, 38).drawBack(false);
         }
-        widgets.addSlot(EmiStack.of(recipe.output), 104, 18).drawBack(false);
+        widgets.addSlot(EmiStack.of(recipe.output), 106, 20).drawBack(false);
     }
 }

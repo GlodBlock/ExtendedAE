@@ -17,7 +17,7 @@ public class EMICircuitCutterRecipe extends BasicEmiRecipe {
     private final CircuitCutterRecipe recipe;
 
     public EMICircuitCutterRecipe(RecipeHolder<CircuitCutterRecipe> holder) {
-        super(CATEGORY, holder.id(), 92, 26);
+        super(CATEGORY, holder.id(), 94, 26);
         this.recipe = holder.value();
         this.inputs.add(EMIStackUtil.of(this.recipe.getInput()));
         this.outputs.add(EmiStack.of(this.recipe.output));
@@ -26,10 +26,10 @@ public class EMICircuitCutterRecipe extends BasicEmiRecipe {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         ResourceLocation background = AppEng.makeId("textures/guis/circuit_cutter.png");
-        widgets.addTexture(background, 0, 0, 92, 26, 45, 32);
-        widgets.addAnimatedTexture(background, 86, 4, 6, 18, 178, 36, 2000, false, true, false);
-        widgets.addSlot(EMIStackUtil.of(this.recipe.getInput()), 0, 4);
-        widgets.addSlot(EmiStack.of(recipe.output), 63, 4).drawBack(false);
+        widgets.addTexture(background, 0, 0, 94, 26, 43, 32);
+        widgets.addAnimatedTexture(background, 88, 4, 6, 18, 176, 0, 2000, false, true, false);
+        widgets.addSlot(EMIStackUtil.of(this.recipe.getInput()), 2, 4).drawBack(false);
+        widgets.addSlot(EmiStack.of(recipe.output), 65, 4).drawBack(false);
     }
 
 }
