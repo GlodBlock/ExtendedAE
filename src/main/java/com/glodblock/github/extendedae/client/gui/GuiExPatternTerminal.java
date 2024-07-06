@@ -7,11 +7,14 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.Icon;
 import appeng.client.gui.me.patternaccess.PatternContainerRecord;
 import appeng.client.gui.me.patternaccess.PatternSlot;
+import appeng.client.gui.style.Blitter;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.AETextField;
+import appeng.client.gui.widgets.IconButton;
 import appeng.client.gui.widgets.Scrollbar;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
@@ -23,13 +26,18 @@ import appeng.core.localization.GuiText;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
+import com.glodblock.github.extendedae.api.PatternSearchMode;
+import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
+import com.glodblock.github.extendedae.client.button.HighlightButtonSmall;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
 import com.google.common.collect.HashMultimap;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
@@ -56,6 +64,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -139,8 +148,8 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     });
     private final Set<PatternContainerRecord> matchedProvider = new HashSet<>();
     private final Scrollbar scrollbar;
-    private final AETextField searchOutField;
-    private final AETextField searchInField;
+    private final AETextField searchField;
+    private final SearchButton searchMode;
 
     private int visibleRows = 0;
 
@@ -160,16 +169,32 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
         this.addToLeftToolbar(showPatternProviders);
 
-        this.searchOutField = widgets.addTextField("search_out");
-        this.searchOutField.setResponder(str -> this.refreshList());
-        this.searchOutField.setPlaceholder(GuiText.SearchPlaceholder.text());
-        this.searchOutField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.01")));
+        this.searchField = widgets.addTextField("search");
+        this.searchField.setResponder(str -> this.refreshList());
+        this.searchField.setPlaceholder(GuiText.SearchPlaceholder.text());
+        this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.04")));
 
-        this.searchInField = widgets.addTextField("search_in");
-        this.searchInField.setResponder(str -> this.refreshList());
-        this.searchInField.setPlaceholder(GuiText.SearchPlaceholder.text());
-        this.searchInField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.02")));
+        this.searchMode = new SearchButton(this::changeSearchMode);
+    }
 
+    private void changeSearchMode(Button btn) {
+        SearchButton modeBtn = (SearchButton) btn;
+        modeBtn.nextMode();
+        this.refreshList();
+        switch (modeBtn.mode) {
+            case IN -> {
+                this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.02")));
+            }
+            case OUT -> {
+                this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.01")));
+            }
+            case IN_OUT -> {
+                this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.04")));
+            }
+            default -> {
+                throw new IllegalStateException("Unexpected search mode: " + modeBtn.mode);
+            }
+        }
     }
 
     @Override
@@ -182,8 +207,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.imageHeight = GUI_HEADER_HEIGHT + GUI_FOOTER_HEIGHT + this.visibleRows * ROW_HEIGHT;
 
         super.init();
-        this.setInitialFocus(this.searchOutField);
+        this.setInitialFocus(this.searchField);
         this.highlightBtns.forEach((k, v) -> {v.setVisibility(false); addRenderableWidget(v);});
+        this.searchMode.setPosition(this.leftPos + 73, this.topPos + 17);
+        addRenderableWidget(this.searchMode);
 
         // numLines may have changed, recalculate scroll bar.
         this.resetScrollbar();
@@ -216,7 +243,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                                 col * SLOT_SIZE + GUI_PADDING_X,
                                 (i + 1) * SLOT_SIZE + 13);
                         this.menu.slots.add(slot);
-                        if (!this.searchOutField.getValue().isEmpty() || !this.searchInField.getValue().isEmpty()) {
+                        if (!this.searchField.getValue().isEmpty()) {
                             if (this.matchedStack.contains(slot.getItem())) {
                                 fillRect(guiGraphics, new Rect2i(slot.x, slot.y, 16, 16), 0x8A00FF00);
                             } else if (!this.matchedProvider.contains(container)) {
@@ -292,11 +319,8 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     @Override
     public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.searchOutField.isMouseOver(xCoord, yCoord)) {
-            this.searchOutField.setValue("");
-        }
-        if (btn == 1 && this.searchInField.isMouseOver(xCoord, yCoord)) {
-            this.searchInField.setValue("");
+        if (btn == 1 && this.searchField.isMouseOver(xCoord, yCoord)) {
+            this.searchField.setValue("");
         }
 
         return super.mouseClicked(xCoord, yCoord, btn);
@@ -394,7 +418,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     @Override
     public boolean charTyped(char character, int key) {
-        if (character == ' ' && ((this.searchOutField.getValue().isEmpty() && this.searchOutField.isFocused()) || (this.searchInField.getValue().isEmpty() && this.searchInField.isFocused()))) {
+        if (character == ' ' && (this.searchField.getValue().isEmpty() && this.searchField.isFocused())) {
             return true;
         }
         return super.charTyped(character, key);
@@ -462,11 +486,11 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.matchedStack.clear();
         this.matchedProvider.clear();
 
-        final String outputFilter = this.searchOutField.getValue().toLowerCase();
-        final String inputFilter = this.searchInField.getValue().toLowerCase();
-
-        final Set<Object> cachedSearch = this.getCacheForSearchTerm("out:" + outputFilter + "in:" + inputFilter);
+        final String filter = this.searchField.getValue().toLowerCase();
+        final Set<Object> cachedSearch = this.getCacheForSearchTerm(filter + ":_:" + this.searchMode.mode);
         final boolean rebuild = cachedSearch.isEmpty();
+        boolean searchOutput = this.searchMode.mode.isOut();
+        boolean searchInput = this.searchMode.mode.isIn();
 
         for (PatternContainerRecord entry : this.byId.values()) {
             // ignore inventory if not doing a full rebuild or cache already marks it as miss.
@@ -475,19 +499,19 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
 
             // Shortcut to skip any filter if search term is ""/empty
-            boolean found = outputFilter.isEmpty() && inputFilter.isEmpty();
+            boolean found = filter.isEmpty();
 
             // Search if the current inventory holds a pattern containing the search term.
             if (!found) {
                 boolean midRes;
                 for (ItemStack itemStack : entry.getInventory()) {
-                    if (!outputFilter.isEmpty()) {
-                        midRes = this.itemStackMatchesSearchTerm(itemStack, outputFilter, true);
+                    if (searchOutput) {
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, filter, true);
                     } else {
-                        midRes = true;
+                        midRes = false;
                     }
-                    if (!inputFilter.isEmpty() && midRes) {
-                        midRes = this.itemStackMatchesSearchTerm(itemStack, inputFilter, false);
+                    if (searchInput && !midRes) {
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, filter, false);
                     }
                     if (midRes) {
                         found = true;
@@ -496,10 +520,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
 
             // if found, filter skipped or machine name matching the search term, add it
-            if (found || (entry.getSearchName().contains(outputFilter) && entry.getSearchName().contains(inputFilter))) {
+            if (found || entry.getSearchName().contains(filter)) {
                 this.byGroup.put(entry.getGroup(), entry);
                 cachedSearch.add(entry);
-                if (entry.getSearchName().contains(outputFilter) && entry.getSearchName().contains(inputFilter)) {
+                if (entry.getSearchName().contains(filter)) {
                     this.matchedProvider.add(entry);
                 }
             } else {
@@ -526,7 +550,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                 if (inventory.size() > 0) {
                     var info = this.infoMap.get(container.getServerId());
                     if (info != null) {
-                        var btn = new HighlightButton();
+                        var btn = new HighlightButtonSmall();
                         btn.setMultiplier(this.playerToBlockDis(info.pos()));
                         btn.setTarget(info.pos, info.face, info.playerWorld);
                         btn.setSuccessJob(() -> {
@@ -667,4 +691,73 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> playerWorld) {
 
     }
+
+    public static class SearchButton extends IconButton {
+
+        private PatternSearchMode mode = PatternSearchMode.IN_OUT;
+        private static final int length = PatternSearchMode.values().length;
+
+        public SearchButton(OnPress onPress) {
+            super(onPress);
+            this.width = 12;
+            this.height = 12;
+        }
+
+        @Override
+        protected Icon getIcon() {
+            return null;
+        }
+
+        protected void nextMode() {
+            this.mode = PatternSearchMode.values()[(this.mode.ordinal() + 1) % length];
+        }
+
+        protected Blitter getBlitter() {
+            switch (this.mode) {
+                case IN -> {
+                    return EPPIcon.SEARCH_INPUT;
+                }
+                case OUT -> {
+                    return EPPIcon.SEARCH_OUTPUT;
+                }
+                case IN_OUT -> {
+                    return EPPIcon.SEARCH_IO;
+                }
+                default -> {
+                    throw new IllegalStateException("Unexpected search mode: " + this.mode);
+                }
+            }
+        }
+
+        @Override
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partial) {
+            if (this.visible) {
+                Blitter blitter = this.getBlitter();
+                var yOffset = isHovered() ? 1 : 0;
+                Blitter bgIcon = isHovered() ? EPPIcon.TERMINAL_BUTTON_HOVER
+                        : isFocused() ? EPPIcon.TERMINAL_BUTTON_FOCUS : EPPIcon.TERMINAL_BUTTON;
+                bgIcon.dest(getX(), getY() + yOffset, 12, 12).zOffset(2).blit(guiGraphics);
+                blitter.dest(getX(), getY() + yOffset).zOffset(3).blit(guiGraphics);
+            }
+        }
+
+        @Override
+        public Rect2i getTooltipArea() {
+            return new Rect2i(this.getX(), this.getY(), 12, 12);
+        }
+
+        @Override
+        public List<Component> getTooltipMessage() {
+            var cmp = switch (this.mode) {
+                case IN -> Component.translatable("gui.extendedae.ex_pattern_access_terminal.search_mode.02");
+                case OUT -> Component.translatable("gui.extendedae.ex_pattern_access_terminal.search_mode.01");
+                case IN_OUT -> Component.translatable("gui.extendedae.ex_pattern_access_terminal.search_mode.03");
+            };
+            return List.of(
+                    Component.translatable("gui.extendedae.ex_pattern_access_terminal.search_mode"),
+                    cmp.withStyle(ChatFormatting.GRAY));
+        }
+
+    }
+
 }

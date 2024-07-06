@@ -3,6 +3,7 @@
   "render_type": "cutout",
   "textures": {
     "particle": "extendedae:block/ex_molecular_assembler",
-    "outside": "extendedae:block/ex_molecular_assembler"
+    "outside": "extendedae:block/ex_molecular_assembler",
+    "base": "extendedae:block/ex_molecular_assembler"
   }
 }

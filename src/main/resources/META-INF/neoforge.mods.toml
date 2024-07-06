@@ -8,7 +8,7 @@ license="${mod_license}"
     version="${mod_version}"
     displayName="${mod_name}"
     authors="${mod_authors}"
-    credits="Sea_Kerman for models, gt147532689 for Chinese(simplified) translation, nekitbrush for Russian translation"
+    credits="Sea_Kerman for models, Ridanisaurus for the new textures, gt147532689 for Chinese(simplified) translation, nekitbrush for Russian translation"
     logoFile="logo.png"
     description='''${mod_description}'''
 

@@ -38,13 +38,7 @@
       "left": 175,
       "top": 31
     },
-    "search_out": {
-      "left": 7,
-      "top": 17,
-      "width": 65,
-      "height": 10
-    },
-    "search_in": {
+    "search": {
       "left": 7,
       "top": 17,
       "width": 65,

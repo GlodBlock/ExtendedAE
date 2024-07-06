@@ -12,7 +12,7 @@ public class ActionEPPButton extends EPPButton {
     }
 
     @Override
-    Blitter getBlitterIcon() {
+    protected Blitter getBlitterIcon() {
         return icon;
     }
 

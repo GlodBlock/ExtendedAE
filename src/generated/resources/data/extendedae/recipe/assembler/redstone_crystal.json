@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "appflux"
+    }
+  ],
+  "type": "extendedae:crystal_assembler",
+  "input_fluid": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "minecraft:water"
+    }
+  },
+  "input_items": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "c:storage_blocks/redstone"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "c:gems/fluix"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "c:dusts/glowstone"
+      }
+    }
+  ],
+  "output": {
+    "count": 8,
+    "id": "appflux:redstone_crystal"
+  }
+}
