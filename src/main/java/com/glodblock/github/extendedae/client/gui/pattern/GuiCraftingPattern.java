@@ -15,7 +15,7 @@ public class GuiCraftingPattern extends GuiPattern<ContainerCraftingPattern> {
 
     public GuiCraftingPattern(ContainerCraftingPattern container, Inventory inventory, Component title) {
         super(container, inventory, title);
-        this.imageHeight = 107;
+        this.imageHeight = 109;
     }
 
     @Override
