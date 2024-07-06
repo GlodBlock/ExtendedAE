@@ -14,7 +14,7 @@ public class GuiStonecuttingPattern extends GuiPattern<ContainerStonecuttingPatt
 
     public GuiStonecuttingPattern(ContainerStonecuttingPattern container, Inventory inventory, Component title) {
         super(container, inventory, title);
-        this.imageHeight = 67;
+        this.imageHeight = 69;
     }
 
     @Override

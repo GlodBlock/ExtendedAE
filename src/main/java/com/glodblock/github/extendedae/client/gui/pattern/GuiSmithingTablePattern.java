@@ -14,7 +14,7 @@ public class GuiSmithingTablePattern extends GuiPattern<ContainerSmithingTablePa
 
     public GuiSmithingTablePattern(ContainerSmithingTablePattern container, Inventory inventory, Component title) {
         super(container, inventory, title);
-        this.imageHeight = 64;
+        this.imageHeight = 66;
     }
 
     @Override
