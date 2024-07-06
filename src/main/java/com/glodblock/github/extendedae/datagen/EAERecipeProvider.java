@@ -8,6 +8,8 @@ import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipeBuilder;
 import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
+import com.glodblock.github.appflux.common.AFSingletons;
+import com.glodblock.github.appflux.util.AFTags;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
@@ -635,14 +637,14 @@ public class EAERecipeProvider extends RecipeProvider {
     }
 
     private void appflux(@NotNull RecipeOutput c) {
-        /*// Redstone Crystal
+        // Redstone Crystal
         CrystalAssemblerRecipeBuilder
-                .assemble(AFItemAndBlock.REDSTONE_CRYSTAL, 4)
+                .assemble(AFSingletons.REDSTONE_CRYSTAL, 8)
                 .input(Tags.Items.STORAGE_BLOCKS_REDSTONE, 4)
-                .input(AEBlocks.FLUIX_BLOCK, 4)
-                .input(AFTags.DIAMOND_DUST, 4)
+                .input(ConventionTags.FLUIX_CRYSTAL, 4)
+                .input(ConventionTags.GLOWSTONE, 4)
                 .fluid(Fluids.WATER, 100)
-                .save(c.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/redstone_crystal"));*/
+                .save(c.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/redstone_crystal"));
     }
 
     private void maga(@NotNull RecipeOutput c) {
