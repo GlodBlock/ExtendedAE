@@ -14,17 +14,17 @@
   },
   "slots": {
     "TOOLBOX": {
-      "bottom": 52,
-      "right": -10,
+      "bottom": 60,
+      "right": 1,
       "grid": "BREAK_AFTER_3COLS"
     }
   },
   "widgets": {
     "toolbox": {
-      "right": -2,
-      "bottom": 60,
-      "width": 68,
-      "height": 68
+      "right": 2,
+      "bottom": 66,
+      "width": 59,
+      "height": 66
     }
   }
 }

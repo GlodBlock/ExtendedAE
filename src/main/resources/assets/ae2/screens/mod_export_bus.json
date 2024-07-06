@@ -1,6 +1,6 @@
 {
   "$schema": "schema.json",
-  "includes": ["common/common.json", "common/player_inventory.json"],
+  "includes": ["common/common.json", "common/player_inventory.json", "common/toolbox.json"],
   "background": {
     "texture": "guis/mod_storage_bus.png",
     "srcRect": [0, 0, 176, 144]
@@ -18,17 +18,17 @@
   },
   "slots": {
     "TOOLBOX": {
-      "bottom": 47,
-      "right": -10,
+      "bottom": 60,
+      "right": 1,
       "grid": "BREAK_AFTER_3COLS"
     }
   },
   "widgets": {
     "toolbox": {
-      "right": -2,
-      "bottom": 55,
-      "width": 68,
-      "height": 68
+      "right": 2,
+      "bottom": 66,
+      "width": 59,
+      "height": 66
     },
     "filter_input": {
       "left": 8,

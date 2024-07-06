@@ -220,9 +220,6 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerStorageHandler();
         this.registerRandomAPI();
         this.initPackageList();
-        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-            WTCommonLoad.init();
-        }
         if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
             AFCommonLoad.init();
         }
