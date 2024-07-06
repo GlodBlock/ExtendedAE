@@ -83,12 +83,13 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
         VertexConsumer buffer = buffers.getBuffer(RenderType.solid());
 
         // Bottom of Top Stamp
-        addVertex(buffer, ms, tas, TwoPx, middle + press, TwoPx, 0.125f, 0.875f, combinedOverlay, combinedLight, Direction.DOWN);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, TwoPx, 0.875f, 0.875f, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle + press, TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.DOWN);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, 1.0f - TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
                 Direction.DOWN);
-        addVertex(buffer, ms, tas, TwoPx, middle + press, 1.0f - TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, 1.0f - TwoPx, 0.125f, 0.875f, combinedOverlay, combinedLight,
+                Direction.DOWN);
+        addVertex(buffer, ms, tas, TwoPx, middle + press, 1.0f - TwoPx, 0.875f, 0.875f, combinedOverlay, combinedLight,
                 Direction.DOWN);
 
         // Front of Top Stamp
@@ -113,12 +114,12 @@ public class ExInscriberTESR implements BlockEntityRenderer<TileExInscriber> {
 
         // Top of Bottom Stamp
         middle -= 2.0f * 0.02f;
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, TwoPx, 0.125f, 0.875f, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.UP);
-        addVertex(buffer, ms, tas, TwoPx, middle - press, TwoPx, 0.875f, 0.875f, combinedOverlay, combinedLight, Direction.UP);
-        addVertex(buffer, ms, tas, TwoPx, middle - press, 1.0f - TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle - press, TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight, Direction.UP);
+        addVertex(buffer, ms, tas, TwoPx, middle - press, 1.0f - TwoPx, 0.125f, 0.875f, combinedOverlay, combinedLight,
                 Direction.UP);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, 1.0f - TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, 1.0f - TwoPx, 0.875f, 0.875f, combinedOverlay, combinedLight,
                 Direction.UP);
 
         // Front of Bottom Stamp
