@@ -7,7 +7,6 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.AE2Button;
 import appeng.core.AppEng;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
-import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
@@ -35,9 +34,6 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         changeMode.setMessage(Component.translatable("gui.extendedae.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.extendedae.pattern_modifier.clone.desc"));
         addToLeftToolbar(changeMode);
-//        this.replace = Button.builder(Component.translatable("gui.extendedae.pattern_modifier.replace_button"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace")))
-//                .size(46, 18)
-//                .build();
         this.replace = new AE2Button(
                 0, 0, 46, 20,
                 Component.translatable("gui.extendedae.pattern_modifier.replace_button"),
