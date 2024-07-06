@@ -3,7 +3,7 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/caner.png",
-    "srcRect": [0, 0, 176, 170]
+    "srcRect": [0, 0, 176, 172]
   },
   "slots": {
     "EX_1": {

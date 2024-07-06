@@ -66,15 +66,15 @@ import java.util.WeakHashMap;
 public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends AEBaseScreen<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiExPatternTerminal.class);
 
-    private static final int GUI_WIDTH = 209;
-    private static final int MAGIC_NUMBER = 50;
-    private static final int GUI_TOP_AND_BOTTOM_PADDING = 54;
+    private static final int GUI_WIDTH = 195;
+    private static final int MAGIC_NUMBER = 0; //50
+    private static final int GUI_TOP_AND_BOTTOM_PADDING = 54; //?
 
-    private static final int GUI_PADDING_X = 22;
-    private static final int GUI_PADDING_Y = 6;
+    private static final int GUI_PADDING_X = 8; //22
+    private static final int GUI_PADDING_Y = 6; //??
 
-    private static final int GUI_HEADER_HEIGHT = 51;
-    private static final int GUI_FOOTER_HEIGHT = 97;
+    private static final int GUI_HEADER_HEIGHT = 30; //51
+    private static final int GUI_FOOTER_HEIGHT = 99; //97
     private static final int COLUMNS = 9;
 
     /**
@@ -103,17 +103,17 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     // Background for a text row in the scroll-box.
     // Spans across the whole texture including the right and left borders including the scrollbar.
     // Covers separate textures for the top, middle and bottoms rows for more customization.
-    private static final Rect2i ROW_TEXT_TOP_BBOX = new Rect2i(0, 51, GUI_WIDTH, ROW_HEIGHT);
-    private static final Rect2i ROW_TEXT_MIDDLE_BBOX = new Rect2i(0, 87, GUI_WIDTH, ROW_HEIGHT);
-    private static final Rect2i ROW_TEXT_BOTTOM_BBOX = new Rect2i(0, 123, GUI_WIDTH, ROW_HEIGHT);
+    private static final Rect2i ROW_TEXT_TOP_BBOX = new Rect2i(0, 30, GUI_WIDTH, ROW_HEIGHT); // 51
+    private static final Rect2i ROW_TEXT_MIDDLE_BBOX = new Rect2i(0, 66, GUI_WIDTH, ROW_HEIGHT); // 87
+    private static final Rect2i ROW_TEXT_BOTTOM_BBOX = new Rect2i(0, 102, GUI_WIDTH, ROW_HEIGHT); // 123
     // Background for a inventory row in the scroll-box.
     // Spans across the whole texture including the right and left borders including the scrollbar.
     // Covers separate textures for the top, middle and bottoms rows for more customization.
-    private static final Rect2i ROW_INVENTORY_TOP_BBOX = new Rect2i(0, 69, GUI_WIDTH, ROW_HEIGHT);
-    private static final Rect2i ROW_INVENTORY_MIDDLE_BBOX = new Rect2i(0, 105, GUI_WIDTH, ROW_HEIGHT);
-    private static final Rect2i ROW_INVENTORY_BOTTOM_BBOX = new Rect2i(0, 141, GUI_WIDTH, ROW_HEIGHT);
+    private static final Rect2i ROW_INVENTORY_TOP_BBOX = new Rect2i(0, 48, GUI_WIDTH, ROW_HEIGHT); // 69
+    private static final Rect2i ROW_INVENTORY_MIDDLE_BBOX = new Rect2i(0, 84, GUI_WIDTH, ROW_HEIGHT); // 105
+    private static final Rect2i ROW_INVENTORY_BOTTOM_BBOX = new Rect2i(0, 120, GUI_WIDTH, ROW_HEIGHT); // 141
     // This is the lower part of the UI, anything below the scrollable area (incl. its bottom border)
-    private static final Rect2i FOOTER_BBOX = new Rect2i(0, 159, GUI_WIDTH, GUI_FOOTER_HEIGHT);
+    private static final Rect2i FOOTER_BBOX = new Rect2i(0, 138, GUI_WIDTH, GUI_FOOTER_HEIGHT); // 159
 
     private static final Comparator<PatternContainerGroup> GROUP_COMPARATOR = Comparator.comparing(group -> group.name().getString().toLowerCase(Locale.ROOT));
 
@@ -148,7 +148,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     public GuiExPatternTerminal(T menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.scrollbar = widgets.addScrollBar("scrollbar");
+        this.scrollbar = widgets.addScrollBar("scrollbar", Scrollbar.BIG);
         this.imageWidth = GUI_WIDTH;
 
         TerminalStyle terminalStyle = AEConfig.instance().getTerminalStyle();
@@ -203,7 +203,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                 var row = this.rows.get(scrollLevel + i);
                 if (highlightBtns.containsKey(scrollLevel + i)) {
                     var btn = highlightBtns.get(scrollLevel + i);
-                    btn.setPosition(this.leftPos + GUI_PADDING_X - SLOT_SIZE, this.topPos + (i + 1) * SLOT_SIZE + 34);
+                    btn.setPosition(this.leftPos + GUI_PADDING_X + (SLOT_SIZE * 9) - 1, this.topPos + (i + 1) * SLOT_SIZE + 12);
                     btn.setVisibility(true);
                 }
                 if (row instanceof SlotsRow slotsRow) {
@@ -214,7 +214,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                                 container,
                                 slotsRow.offset + col,
                                 col * SLOT_SIZE + GUI_PADDING_X,
-                                (i + 1) * SLOT_SIZE + 34);
+                                (i + 1) * SLOT_SIZE + 13);
                         this.menu.slots.add(slot);
                         if (!this.searchOutField.getValue().isEmpty() || !this.searchInField.getValue().isEmpty()) {
                             if (this.matchedStack.contains(slot.getItem())) {

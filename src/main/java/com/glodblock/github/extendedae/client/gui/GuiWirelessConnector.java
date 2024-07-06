@@ -33,11 +33,11 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
     @Override
     public void init() {
         super.init();
-        this.statusIcon.setPosition(this.leftPos + 152, this.topPos + PADDING_Y);
+        this.statusIcon.setPosition(this.leftPos + 152, this.topPos + PADDING_Y - 1);
         this.remote.setPosition(this.leftPos + 24, this.topPos + 76);
         this.highlight = new HighlightButton();
         this.highlight.setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.highlight.tooltip")));
-        this.highlight.setPosition(this.leftPos + 152, this.topPos + PADDING_Y + 18);
+        this.highlight.setPosition(this.leftPos + 152, this.topPos + PADDING_Y + 21);
         this.remote.refreshBounds();
         this.addRenderableOnly(this.statusIcon);
         this.addRenderableWidget(this.remote);

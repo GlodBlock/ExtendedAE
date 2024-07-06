@@ -3,7 +3,7 @@
   "includes": ["common/common.json"],
   "background": {
     "texture": "guis/renamer.png",
-    "srcRect": [0, 0, 176, 58]
+    "srcRect": [0, 0, 176, 60]
   },
   "text": {
     "dialog_title": {

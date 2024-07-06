@@ -3,7 +3,7 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/tag_storage_bus.png",
-    "srcRect": [0, 0, 176, 207]
+    "srcRect": [0, 0, 176, 209]
   },
   "text": {
     "dialog_title": {
@@ -74,8 +74,10 @@
       "height": 12
     },
     "openPriority": {
-      "left": 154,
-      "top": 0
+      "left": 152,
+      "top": -5,
+      "width": 20,
+      "height": 20
     }
   }
 }

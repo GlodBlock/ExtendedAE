@@ -3,7 +3,7 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/crystal_assembler.png",
-    "srcRect": [0, 0, 176, 181]
+    "srcRect": [0, 0, 176, 183]
   },
   "slots": {
     "MACHINE_INPUT": {
@@ -12,7 +12,7 @@
       "grid": "BREAK_AFTER_3COLS"
     },
     "STORAGE": {
-      "left": 80,
+      "left": 81,
       "top": 58
     },
     "MACHINE_OUTPUT": {
@@ -34,7 +34,7 @@
   "images": {
     "progressBar": {
       "texture": "guis/crystal_assembler.png",
-      "srcRect": [179, 39, 6, 18]
+      "srcRect": [176, 0, 6, 18]
     }
   },
   "widgets": {

@@ -36,8 +36,8 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
         super(menu, playerInventory, title, style);
 
         this.fuzzyMode = new ServerSettingToggleButton<>(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
-        this.nextPage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), EPPIcon.RIGHT);
-        this.prePage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), EPPIcon.LEFT);
+        this.nextPage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.ARROW_RIGHT.getBlitter());
+        this.prePage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.ARROW_LEFT.getBlitter());
         this.nextPage.setMessage(Component.translatable("gui.extendedae.ex_interface.next"));
         this.prePage.setMessage(Component.translatable("gui.extendedae.ex_interface.pre"));
         addToLeftToolbar(this.fuzzyMode);

@@ -3,7 +3,7 @@
   "includes": ["common/common.json", "common/player_inventory.json"],
   "background": {
     "texture": "guis/circuit_cutter.png",
-    "srcRect": [0, 0, 176, 170]
+    "srcRect": [0, 0, 176, 172]
   },
   "slots": {
     "MACHINE_INPUT": {
@@ -29,7 +29,7 @@
   "images": {
     "progressBar": {
       "texture": "guis/circuit_cutter.png",
-      "srcRect": [178, 36, 6, 18]
+      "srcRect": [176, 0, 6, 18]
     }
   },
   "widgets": {
