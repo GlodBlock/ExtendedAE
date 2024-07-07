@@ -15,8 +15,6 @@ import java.util.Optional;
 
 public interface IFluxCell extends ICellWorkbenchItem, ICapabilityProvider<ItemStack, Void, IEnergyStorage> {
 
-    AEKeyType getKeyType();
-
     EnergyType getEnergyType();
 
     long getBytes(ItemStack cellItem);

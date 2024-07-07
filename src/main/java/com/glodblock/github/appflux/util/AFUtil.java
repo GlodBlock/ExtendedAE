@@ -3,7 +3,7 @@ package com.glodblock.github.appflux.util;
 import appeng.api.parts.IPartHost;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.parts.AEBasePart;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.AFSingletons;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,11 +29,11 @@ public class AFUtil {
 
     public static boolean shouldTryCast(BlockEntity tile, Direction side) {
         if (tile instanceof IUpgradeableObject upgradeable) {
-            return upgradeable.isUpgradedWith(AFItemAndBlock.INDUCTION_CARD);
+            return upgradeable.isUpgradedWith(AFSingletons.INDUCTION_CARD);
         }
         if (tile instanceof IPartHost host) {
             if (host.getPart(side) instanceof IUpgradeableObject upgradeable) {
-                return upgradeable.isUpgradedWith(AFItemAndBlock.INDUCTION_CARD);
+                return upgradeable.isUpgradedWith(AFSingletons.INDUCTION_CARD);
             }
         }
         return true;

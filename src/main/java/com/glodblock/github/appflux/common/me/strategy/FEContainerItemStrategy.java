@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -47,7 +46,7 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
     @Override
     public long extract(ItemContext context, FluxKey what, long amount, Actionable mode) {
         var stack = context.getStack();
-        var copy = ItemHandlerHelper.copyStackWithSize(stack, 1);
+        var copy = stack.copyWithCount(1);
         var handler = AFUtil.findCapability(copy, Capabilities.EnergyStorage.ITEM);
         if (handler == null) {
             return 0;
@@ -63,7 +62,7 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
     @Override
     public long insert(ItemContext context, FluxKey what, long amount, Actionable mode) {
         var stack = context.getStack();
-        var copy = ItemHandlerHelper.copyStackWithSize(stack, 1);
+        var copy = stack.copyWithCount(1);
         var handler = AFUtil.findCapability(copy, Capabilities.EnergyStorage.ITEM);
         if (handler == null) {
             return 0;

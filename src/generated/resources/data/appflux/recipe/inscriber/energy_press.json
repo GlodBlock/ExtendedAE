@@ -1,0 +1,16 @@
+{
+  "type": "ae2:inscriber",
+  "ingredients": {
+    "middle": {
+      "item": "minecraft:iron_block"
+    },
+    "top": {
+      "item": "appflux:energy_processor_press"
+    }
+  },
+  "mode": "inscribe",
+  "result": {
+    "count": 1,
+    "id": "appflux:energy_processor_press"
+  }
+}

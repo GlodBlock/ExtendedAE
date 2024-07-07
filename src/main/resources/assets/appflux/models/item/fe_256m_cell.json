@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "appflux:item/fe_256m_cell",
+    "layer1": "ae2:item/storage_cell_led"
+  }
+}

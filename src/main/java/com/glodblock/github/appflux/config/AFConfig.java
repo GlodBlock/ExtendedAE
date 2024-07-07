@@ -2,24 +2,27 @@ package com.glodblock.github.appflux.config;
 
 import com.glodblock.github.appflux.AppFlux;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-@Mod.EventBusSubscriber(modid = AppFlux.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AppFlux.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class AFConfig {
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     private static final ModConfigSpec.IntValue FLUX_PER_BYTE = BUILDER
-            .comment("FE stored per byte.")
-            .defineInRange("amount", 1024 * 1024 * 4, 1, Integer.MAX_VALUE);
+            .comment("FE can be stored per byte.")
+            .defineInRange("flux_cell.amount", 1024 * 1024, 1, Integer.MAX_VALUE);
     private static final ModConfigSpec.LongValue FLUX_ACCESSOR_IO = BUILDER
             .comment("The I/O limit of Flux Accessor. 0 means no limitation.")
-            .defineInRange("io_limit", 0L, 0L, Integer.MAX_VALUE);
+            .defineInRange("flux_accessor.io_limit", 0L, 0L, Integer.MAX_VALUE);
     private static final ModConfigSpec.BooleanValue NETWORK_CHARGE = BUILDER
             .comment("Allow Flux Accessor to charge ME network with stored FE.")
-            .define("enable", false);
+            .define("flux_accessor.enable", false);
+    private static final ModConfigSpec.BooleanValue ENABLE_IMPORT = BUILDER
+            .comment("Allow ME Import Bus to import energy like items/fluids.")
+            .define("misc.enable", false);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
@@ -35,15 +38,21 @@ public class AFConfig {
         return selfCharge;
     }
 
+    public static boolean allowImport() {
+        return allowImportBus;
+    }
+
     private static int fluxPerByte;
     private static long fluxAccessorIO;
     private static boolean selfCharge;
+    private static boolean allowImportBus;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         fluxPerByte = FLUX_PER_BYTE.get();
         fluxAccessorIO = FLUX_ACCESSOR_IO.get();
         selfCharge = NETWORK_CHARGE.get();
+        allowImportBus = ENABLE_IMPORT.get();
     }
 
 }

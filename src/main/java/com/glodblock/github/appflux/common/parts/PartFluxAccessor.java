@@ -61,14 +61,14 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         return MODEL;
     }
 
-    private IStorageService getStorage() {
+    public IStorageService getStorage() {
         if (this.getGridNode() != null) {
             return this.getGridNode().getGrid().getStorageService();
         }
         return null;
     }
 
-    private IActionSource getSource() {
+    public IActionSource getSource() {
         return IActionSource.ofMachine(this);
     }
 

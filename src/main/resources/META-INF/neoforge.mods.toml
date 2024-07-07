@@ -9,6 +9,7 @@ license="${mod_license}"
     displayName="${mod_name}"
     authors="${mod_authors}"
     logoFile="logo.png"
+    credits="Ridanisaurus for the new textures."
     description='''${mod_description}'''
 
 [[mixins]]
@@ -29,12 +30,18 @@ license="${mod_license}"
 [[dependencies.appflux]]
     modId="ae2"
     type="REQUIRED"
-    versionRange="[17.8.0-beta,)"
+    versionRange="[19.0.7-alpha,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.appflux]]
     modId="glodium"
     type="REQUIRED"
-    versionRange="[1.20-2.2-neoforge,)"
+    versionRange="[1.21-1.1-neoforge,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="mekanism"
+    type="OPTIONAL"
+    versionRange="*"
     ordering="AFTER"
     side="BOTH"

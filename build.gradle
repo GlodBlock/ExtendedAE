@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.80'
+    id 'net.neoforged.moddev' version '0.1.105'
 }
 
 version = mod_version
@@ -17,34 +17,48 @@ base {
     archivesName = mod_name
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
-        modSource project.sourceSets.main
+neoForge {
+    version = project.neoforge_version
+
+    mods {
+        appflux {
+            sourceSet sourceSets.main
+        }
     }
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    runs {
+        client {
+            client()
+        }
+
+        server {
+            server()
+        }
+
+        gametestWorld {
+            client()
+            programArguments.addAll("--username", "AppFluxDev", "--quickPlaySingleplayer", "GametestWorld")
+        }
+
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        gametest {
+            type = "gameTestServer"
+            gameDirectory = project.file("build/gametest")
+        }
+
     }
 
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-    }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 repositories {
     maven {
@@ -71,30 +85,30 @@ repositories {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-    implementation "curse.maven:glodium-957920:5337083"
-    implementation "appeng:appliedenergistics2-neoforge:17.13.0-beta"
-    compileOnly "curse.maven:mekanism-268560:5257006"
-    compileOnly "curse.maven:wireless-chargers-510656:4985608"
-    compileOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
-    compileOnly "curse.maven:jade-324717:5109393"
+    implementation "curse.maven:glodium-957920:5491696"
+    implementation "appeng:appliedenergistics2:19.0.7-alpha"
+    compileOnly "curse.maven:mekanism-268560:5478403"
+    compileOnly "curse.maven:modern-industrialization-405388:5482720"
+    compileOnly "curse.maven:grandpower-980156:5432440"
+    compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
+    compileOnly "curse.maven:jade-324717:5444008"
     // runtime test
-    runtimeOnly "dev.emi:emi-neoforge:1.1.1+1.20.4"
-    runtimeOnly "curse.maven:jade-324717:5109393"
+    runtimeOnly "dev.emi:emi-neoforge:1.1.7+1.21"
+    runtimeOnly "curse.maven:jade-324717:5444008"
 }
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-            neo_version         : neo_version, neo_version_range: neo_version_range,
+            neo_version         : neoforge_version, neo_version_range: neoforge_version_range,
             loader_version_range: loader_version_range,
             mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors         : mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml']) {
-        expand replaceProperties + [project: project]
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
     }
 }
 

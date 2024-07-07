@@ -1,14 +1,18 @@
 package com.glodblock.github.appflux.common.me.key.type;
 
 import com.glodblock.github.appflux.AppFlux;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
-public enum EnergyType {
+public enum EnergyType implements StringRepresentable {
 
     FE("neoforge"), GTEU("gtceu");
 
     private final String mod;
+    public static final Codec<EnergyType> CODEC = StringRepresentable.fromEnum(EnergyType::values);
 
     EnergyType(String mod) {
         this.mod = mod;
@@ -28,6 +32,11 @@ public enum EnergyType {
 
     public ResourceLocation getIcon() {
         return AppFlux.id("energy/" + this.name().toLowerCase());
+    }
+
+    @Override
+    public @NotNull String getSerializedName() {
+        return this.name();
     }
 
 }

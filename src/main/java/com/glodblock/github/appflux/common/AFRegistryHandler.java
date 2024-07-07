@@ -25,6 +25,7 @@ import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
+import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
@@ -33,7 +34,7 @@ import com.glodblock.github.appflux.common.me.strategy.FEExternalStorageStrategy
 import com.glodblock.github.appflux.common.me.strategy.FEStackExportStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEStackImportStrategy;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
-import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
@@ -57,8 +58,8 @@ public class AFRegistryHandler extends RegistryHandler {
     public AFRegistryHandler() {
         super(AppFlux.MODID);
         this.cap(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST, (object, context) -> object);
-        this.cap(TileFluxAccessor.class, Capabilities.EnergyStorage.BLOCK, (te, side) -> te.getEnergyStorage());
         this.cap(IFluxCell.class, Capabilities.EnergyStorage.ITEM, (cell, v) -> ((IFluxCell) cell.getItem()).getCapability(cell, v));
+        CapAdaptor.init(this);
     }
 
     public <T extends AEBaseBlockEntity> void block(String name, AEBaseEntityBlock<T> block, Class<T> clazz, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -83,16 +84,23 @@ public class AFRegistryHandler extends RegistryHandler {
     public void init() {
         StackWorldBehaviors.registerExternalStorageStrategy(FluxKeyType.TYPE, FEExternalStorageStrategy::new);
         StackWorldBehaviors.registerExportStrategy(FluxKeyType.TYPE, FEStackExportStrategy::new);
-        StackWorldBehaviors.registerImportStrategy(FluxKeyType.TYPE, FEStackImportStrategy::new);
+        if (AFConfig.allowImport()) {
+            StackWorldBehaviors.registerImportStrategy(FluxKeyType.TYPE, FEStackImportStrategy::new);
+        }
         ContainerItemStrategy.register(FluxKeyType.TYPE, FluxKey.class, new FEContainerItemStrategy());
         GridServices.register(EnergyDistributeService.class, EnergyDistributeService.class);
         GenericSlotCapacities.register(FluxKeyType.TYPE, 1000000L);
         StorageCells.addCellHandler(FECellHandler.HANDLER);
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_1k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_4k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_16k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_64k, AppFlux.id("block/drive/fe_cell"));
-        StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_256k, AppFlux.id("block/drive/fe_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_1k, AppFlux.id("block/drive/fe_1k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_4k, AppFlux.id("block/drive/fe_4k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_16k, AppFlux.id("block/drive/fe_16k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_64k, AppFlux.id("block/drive/fe_64k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_256k, AppFlux.id("block/drive/fe_256k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_1M, AppFlux.id("block/drive/fe_1m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_4M, AppFlux.id("block/drive/fe_4m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_16M, AppFlux.id("block/drive/fe_16m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_64M, AppFlux.id("block/drive/fe_64m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_CELL_256M, AppFlux.id("block/drive/fe_256m_cell"));
         for (Pair<String, Block> entry : blocks) {
             Block block = BuiltInRegistries.BLOCK.get(AppFlux.id(entry.getKey()));
             if (block instanceof AEBaseEntityBlock<?>) {
@@ -102,15 +110,20 @@ public class AFRegistryHandler extends RegistryHandler {
                 );
             }
         }
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFItemAndBlock.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEBlocks.INTERFACE, 1, GuiText.Interface.getTranslationKey());
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEParts.INTERFACE, 1, GuiText.Interface.getTranslationKey());
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEBlocks.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
-        Upgrades.add(AFItemAndBlock.INDUCTION_CARD, AEParts.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_1M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_4M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256M, 1, GuiText.StorageCells.getTranslationKey());
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.INTERFACE, 1, GuiText.Interface.getTranslationKey());
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.INTERFACE, 1, GuiText.Interface.getTranslationKey());
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
+        Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
     }
 
     @Override
@@ -128,21 +141,17 @@ public class AFRegistryHandler extends RegistryHandler {
 
     @SubscribeEvent
     public void registerPartCap(RegisterPartCapabilitiesEvent event) {
-        event.register(
-                Capabilities.EnergyStorage.BLOCK,
-                (part, direction) -> part.getEnergyStorage(),
-                PartFluxAccessor.class
-        );
+        CapAdaptor.init(event);
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
-                .icon(() -> new ItemStack(AFItemAndBlock.FE_CELL_1k))
+                .icon(() -> new ItemStack(AFSingletons.FE_CELL_1k))
                 .title(Component.translatable("itemGroup.af"))
-                .displayItems((__, o) -> {
+                .displayItems((p, o) -> {
                     for (Pair<String, Item> entry : items) {
                         if (entry.getRight() instanceof AEBaseItem aeItem) {
-                            aeItem.addToMainCreativeTab(o);
+                            aeItem.addToMainCreativeTab(p, o);
                         } else {
                             o.accept(entry.getRight());
                         }

@@ -16,10 +16,6 @@ public class MixinConfig implements IMixinConfigPlugin {
 
     private static final Object2ObjectMap<String, String> MOD_MIXINS = new Object2ObjectOpenHashMap<>();
 
-    static {
-        MOD_MIXINS.put("com.glodblock.github.appflux.mixins.MixinChargerBlockEntity", "wirelesschargers");
-    }
-
     @Override
     public void onLoad(String s) {
 

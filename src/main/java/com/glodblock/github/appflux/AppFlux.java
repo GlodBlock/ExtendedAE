@@ -2,7 +2,7 @@ package com.glodblock.github.appflux;
 
 import appeng.api.AECapabilities;
 import com.glodblock.github.appflux.client.AFClientRegistryHandler;
-import com.glodblock.github.appflux.common.AFItemAndBlock;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
 import com.glodblock.github.appflux.config.AFConfig;
@@ -35,14 +35,14 @@ public class AppFlux {
     public AppFlux(IEventBus bus) {
         assert INSTANCE == null;
         INSTANCE = this;
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AFConfig.SPEC);
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, AFConfig.SPEC);
         bus.addListener((RegisterEvent e) -> {
             if (e.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
                 AFRegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));
                 return;
             }
             if (e.getRegistryKey().equals(Registries.BLOCK)) {
-                AFItemAndBlock.init(AFRegistryHandler.INSTANCE);
+                AFSingletons.init(AFRegistryHandler.INSTANCE);
                 AFRegistryHandler.INSTANCE.runRegister();
             }
         });
@@ -80,7 +80,7 @@ public class AppFlux {
     }
 
     public static ResourceLocation id(String id) {
-        return new ResourceLocation(MODID, id);
+        return ResourceLocation.fromNamespaceAndPath(MODID, id);
     }
 
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "appflux:fe_cell_housing"
+    },
+    {
+      "item": "appflux:core_64k"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "appflux:fe_64k_cell"
+  }
+}
