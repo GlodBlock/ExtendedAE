@@ -4,6 +4,7 @@ import appeng.api.parts.IPartHost;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.parts.AEBasePart;
 import com.glodblock.github.appflux.common.AFSingletons;
+import com.glodblock.github.appflux.util.helpers.Constants;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -41,14 +42,14 @@ public class AFUtil {
 
     public static Set<Direction> getSides(Object host) {
         if (host instanceof BlockEntity) {
-            return EnumSet.allOf(Direction.class);
+            return Constants.ALL_DIRECTIONS;
         } else if (host instanceof AEBasePart part) {
             if (part.getSide() == null) {
-                return EnumSet.noneOf(Direction.class);
+                return Constants.NO_DIRECTIONS;
             }
             return EnumSet.of(part.getSide());
         } else {
-            return EnumSet.noneOf(Direction.class);
+            return Constants.NO_DIRECTIONS;
         }
     }
 
