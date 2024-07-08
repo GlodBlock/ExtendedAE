@@ -2,11 +2,10 @@ package com.glodblock.github.extendedae.util;
 
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodClientUtil;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Set;
 
 public class FCClientUtil {
 
@@ -23,7 +22,7 @@ public class FCClientUtil {
             return "";
         }
         var ids = FCUtil.trimSplit(inputText);
-        var set = Set.of(ids);
+        var set = new ObjectOpenHashSet<>(ids);
         for (String mod : ModConstants.MOD_NAME) {
             if (set.contains(mod)) {
                 continue;

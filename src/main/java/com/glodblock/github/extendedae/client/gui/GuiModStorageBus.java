@@ -23,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> implements IActionHolder {
 
@@ -51,6 +52,18 @@ public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> 
         });
         this.actions.put("init", o -> this.filterInputs.setValue(o.get(0)));
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int keyPressed) {
+        if (keyCode == GLFW.GLFW_KEY_TAB && this.filterInputs.isFocused()) {
+            var suggest = FCClientUtil.getModName(this.filterInputs.getValue());
+            if (!suggest.isEmpty()) {
+                this.filterInputs.setValue(this.filterInputs.getValue() + suggest);
+                return true;
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, keyPressed);
     }
 
     @Override

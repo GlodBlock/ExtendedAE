@@ -37,7 +37,6 @@ public class BlockBuddingEntro extends AEBaseBlock implements ISpecialDrop {
         return PushReaction.DESTROY;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void randomTick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, RandomSource randomSource) {
         if (randomSource.nextInt(GROWTH_CHANCE) != 0) {

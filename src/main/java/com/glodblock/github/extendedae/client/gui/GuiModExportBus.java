@@ -17,6 +17,7 @@ import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 public class GuiModExportBus extends UpgradeableScreen<ContainerModExportBus> implements IActionHolder {
 
@@ -43,6 +44,18 @@ public class GuiModExportBus extends UpgradeableScreen<ContainerModExportBus> im
     @Override
     public ActionMap getActionMap() {
         return this.actions;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int keyPressed) {
+        if (keyCode == GLFW.GLFW_KEY_TAB && this.filterInputs.isFocused()) {
+            var suggest = FCClientUtil.getModName(this.filterInputs.getValue());
+            if (!suggest.isEmpty()) {
+                this.filterInputs.setValue(this.filterInputs.getValue() + suggest);
+                return true;
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, keyPressed);
     }
 
     @Override
