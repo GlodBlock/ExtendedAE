@@ -1,6 +1,6 @@
 {
   "$schema": "schema.json",
-  "includes": ["ex_interface.json", "common/toolbox.json"],
+  "includes": ["ex_interface.json"],
   "text": {
     "dialog_title": {
       "text": {

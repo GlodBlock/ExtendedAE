@@ -1,0 +1,19 @@
+{
+  "$schema": "schema.json",
+  "includes": ["ex_pattern_access_terminal.json", "common/toolbox.json"],
+  "slots": {
+    "TOOLBOX": {
+      "bottom": 84,
+      "right": 20,
+      "grid": "BREAK_AFTER_3COLS"
+    }
+  },
+  "widgets": {
+    "toolbox": {
+      "right": 21,
+      "bottom": 90,
+      "width": 59,
+      "height": 66
+    }
+  }
+}

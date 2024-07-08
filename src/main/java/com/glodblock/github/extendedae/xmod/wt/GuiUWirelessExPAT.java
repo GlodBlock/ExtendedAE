@@ -1,11 +1,10 @@
 package com.glodblock.github.extendedae.xmod.wt;
 
 import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.widgets.BackgroundPanel;
 import appeng.client.gui.widgets.ToolboxPanel;
-import appeng.client.gui.widgets.UpgradesPanel;
-import appeng.menu.SlotSemantics;
+import appeng.menu.AEBaseMenu;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
+import de.mari_023.ae2wtlib.terminal.ScrollingUpgradesPanel;
 import de.mari_023.ae2wtlib.terminal.WTMenuHost;
 import de.mari_023.ae2wtlib.wut.IUniversalTerminalCapable;
 import net.minecraft.network.chat.Component;
@@ -14,18 +13,29 @@ import org.jetbrains.annotations.NotNull;
 
 public class GuiUWirelessExPAT extends GuiExPatternTerminal<ContainerUWirelessExPAT> implements IUniversalTerminalCapable {
 
+    private final ScrollingUpgradesPanel upgradesPanel;
+
     public GuiUWirelessExPAT(ContainerUWirelessExPAT container, Inventory playerInventory, Component title, ScreenStyle style) {
         super(container, playerInventory, title, style);
         if (this.getMenu().isWUT()) {
             this.addToLeftToolbar(this.cycleTerminalButton());
         }
 
-        this.widgets.add("upgrades", new UpgradesPanel(this.getMenu().getSlots(SlotSemantics.UPGRADE), this.getMenu().getHost()));
+        this.upgradesPanel = this.addUpgradePanel(this.widgets, (AEBaseMenu)this.getMenu());
         if (this.getMenu().getToolbox().isPresent()) {
             this.widgets.add("toolbox", new ToolboxPanel(style, this.getMenu().getToolbox().getName()));
         }
+    }
 
-        this.widgets.add("singularityBackground", new BackgroundPanel(style.getImage("singularityBackground")));
+    @Override
+    public void init() {
+        super.init();
+        this.upgradesPanel.setMaxRows(Math.max(2, this.getVisibleRows()));
+    }
+
+    @Override
+    public int getVisibleRows() {
+        return 2;
     }
 
     @Override

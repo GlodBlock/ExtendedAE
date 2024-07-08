@@ -60,6 +60,7 @@
   "item.extendedae.precise_storage_bus": "ME Precise Storage Bus",
   "item.extendedae.threshold_export_bus": "ME Threshold Export Bus",
   "item.extendedae.oversize_interface_part": "ME Oversize Interface",
+  "item.ae2wtlib.wireless_ex_pattern_access_terminal": "Wireless Extended Pattern Access Terminal",
   "infinity.tooltip": "It is an infinity source.",
   "packaged_device.error.tooltip": "Invalid",
   "packaged_device.tooltip": "Device: %s",
