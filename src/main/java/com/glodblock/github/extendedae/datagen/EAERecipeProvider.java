@@ -543,7 +543,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .save(c, ExtendedAE.id("silicon_block"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, AEItems.SILICON, 9)
-                .requires(EAETags.SILICON_BLOCK)
+                .requires(EAESingletons.SILICON_BLOCK)
                 .unlockedBy(C, has(EAETags.SILICON_BLOCK))
                 .save(c, ExtendedAE.id("silicon_decompress"));
 

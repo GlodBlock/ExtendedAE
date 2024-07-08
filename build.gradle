@@ -96,7 +96,6 @@ dependencies {
     implementation "curse.maven:glodium-957920:5491696"
     implementation "appeng:appliedenergistics2:19.0.8-alpha"
     compileOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:5503178"
-    //compileOnly "curse.maven:curios-309927:5302407"
     compileOnly "curse.maven:applied-flux-965012:5504017"
     compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
     //compileOnly "curse.maven:mega-cells-622112:5310776"
