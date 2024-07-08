@@ -17,9 +17,7 @@ import java.util.function.Consumer;
 
 public class SetAmount<C extends AEBaseMenu, P extends AEBaseScreen<C>> extends AESubScreen<C, P> {
     private final NumberEntryWidget amount;
-
     private final GenericStack currentStack;
-
     private final Consumer<GenericStack> setter;
     private final boolean checkSize;
 

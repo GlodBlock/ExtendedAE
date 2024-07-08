@@ -10,6 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.function.Predicate;
+
 public class FCUtil {
 
     public static void replaceTile(Level world, BlockPos pos, BlockEntity oldTile, BlockEntity newTile, BlockState newBlock) {
@@ -33,8 +35,12 @@ public class FCUtil {
         return null;
     }
 
-    public static boolean ejectInv(Level world, BlockPos pos, InternalInventory inv) {
+    public static boolean ejectInv(Level world, BlockPos pos, InternalInventory inv, Predicate<? super BlockEntity> shouldIgnore) {
         for (var dir : Direction.values()) {
+            var te = world.getBlockEntity(pos.relative(dir));
+            if (te == null || shouldIgnore.test(te)) {
+                continue;
+            }
             var target = InternalInventory.wrapExternal(world, pos.relative(dir), dir.getOpposite());
             if (target != null) {
                 int startItems = inv.getStackInSlot(0).getCount();

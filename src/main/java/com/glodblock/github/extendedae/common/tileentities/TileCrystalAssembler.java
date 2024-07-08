@@ -247,7 +247,7 @@ public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements I
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output);
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, te -> te instanceof TileCrystalAssembler);
     }
 
     @Override

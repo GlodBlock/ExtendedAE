@@ -254,7 +254,7 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output);
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, te -> te instanceof TileCircuitCutter);
     }
 
     @Override
