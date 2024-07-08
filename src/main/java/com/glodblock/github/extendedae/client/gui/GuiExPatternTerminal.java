@@ -6,6 +6,7 @@ import appeng.api.config.TerminalStyle;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
+import appeng.api.storage.ILinkStatus;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.Icon;
 import appeng.client.gui.me.patternaccess.PatternContainerRecord;
@@ -18,6 +19,7 @@ import appeng.client.gui.widgets.IconButton;
 import appeng.client.gui.widgets.Scrollbar;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
+import appeng.client.guidebook.color.ConstantColor;
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.render.SimpleRenderContext;
 import appeng.core.AEConfig;
@@ -280,6 +282,28 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                     guiGraphics.drawString(font, text, GUI_PADDING_X + PATTERN_PROVIDER_NAME_MARGIN_X + 10,
                             GUI_PADDING_Y + GUI_HEADER_HEIGHT + i * ROW_HEIGHT, textColor, false);
                 }
+            }
+        }
+        renderLinkStatus(guiGraphics, getMenu().getLinkStatus());
+    }
+
+    private void renderLinkStatus(GuiGraphics guiGraphics, ILinkStatus linkStatus) {
+        // Draw an overlay indicating the grid is disconnected
+        if (!linkStatus.connected()) {
+            var renderContext = new SimpleRenderContext(LytRect.empty(), guiGraphics);
+
+            var rect = new LytRect(
+                    GUI_PADDING_X - 1,
+                    GUI_HEADER_HEIGHT,
+                    COLUMNS * 18,
+                    visibleRows * ROW_HEIGHT);
+
+            renderContext.fillRect(rect, new ConstantColor(0x3f000000));
+
+            // Draw the disconnect status on top of the grid
+            var statusDescription = linkStatus.statusDescription();
+            if (statusDescription != null) {
+                renderContext.renderTextCenteredIn(statusDescription.getString(), ERROR_TEXT_STYLE, rect);
             }
         }
     }
