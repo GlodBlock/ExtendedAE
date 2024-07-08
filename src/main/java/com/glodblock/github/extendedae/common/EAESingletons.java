@@ -99,6 +99,7 @@ public class EAESingletons {
     public static CommonItem CONCURRENT_PROCESSOR;
     public static CommonItem CONCURRENT_PROCESSOR_PRINT;
     public static CommonItem CONCURRENT_PROCESSOR_PRESS;
+    public static CommonItem ENTRO_SHARD;
     public static Block ENTRO_BLOCK;
     public static Block MACHINE_FRAME;
     public static BlockCrystalAssembler CRYSTAL_ASSEMBLER;
@@ -167,6 +168,7 @@ public class EAESingletons {
         ENTRO_SEED = new ItemEntroSeed();
         ENTRO_DUST = new CommonItem();
         ENTRO_INGOT = new CommonItem();
+        ENTRO_SHARD = new CommonItem();
         ENTRO_BUD_SMALL = new BlockEntroCluster(0, 3, 4);
         ENTRO_BUD_MEDIUM = new BlockEntroCluster(1, 4, 3);
         ENTRO_BUD_LARGE = new BlockEntroCluster(2, 5, 3);
@@ -276,6 +278,7 @@ public class EAESingletons {
         regHandler.item("concurrent_processor", CONCURRENT_PROCESSOR);
         regHandler.item("concurrent_processor_press", CONCURRENT_PROCESSOR_PRESS);
         regHandler.item("concurrent_processor_print", CONCURRENT_PROCESSOR_PRINT);
+        regHandler.item("entro_shard", ENTRO_SHARD);
         regHandler.item("ex_pattern_provider_part", EX_PATTERN_PROVIDER_PART);
         regHandler.item("ex_interface_part", EX_INTERFACE_PART);
         regHandler.item("infinity_water_cell", INFINITY_WATER_CELL);

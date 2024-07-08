@@ -46,9 +46,9 @@ public class EAELootTableProvider extends LootTableProvider {
                     add(block, createSingleItemTable(block));
                 }
             }
-            add(EAESingletons.ENTRO_BUD_SMALL, createSingleItemTableWithSilkTouch(EAESingletons.ENTRO_BUD_SMALL, AEItems.FLUIX_DUST));
-            add(EAESingletons.ENTRO_BUD_MEDIUM, createSingleItemTableWithSilkTouch(EAESingletons.ENTRO_BUD_MEDIUM, AEItems.FLUIX_DUST));
-            add(EAESingletons.ENTRO_BUD_LARGE, createSingleItemTableWithSilkTouch(EAESingletons.ENTRO_BUD_LARGE, AEItems.FLUIX_DUST));
+            add(EAESingletons.ENTRO_BUD_SMALL, createSingleItemTableWithSilkTouch(EAESingletons.ENTRO_BUD_SMALL, EAESingletons.ENTRO_SHARD));
+            add(EAESingletons.ENTRO_BUD_MEDIUM, createSingleItemTableWithSilkTouch(EAESingletons.ENTRO_BUD_MEDIUM, EAESingletons.ENTRO_SHARD));
+            add(EAESingletons.ENTRO_BUD_LARGE, createSingleItemTableWithSilkTouch(EAESingletons.ENTRO_BUD_LARGE, EAESingletons.ENTRO_SHARD));
             add(EAESingletons.ENTRO_CLUSTER, createSilkTouchDispatchTable(EAESingletons.ENTRO_CLUSTER,
                     LootItem.lootTableItem(EAESingletons.ENTRO_CRYSTAL)
                             .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))

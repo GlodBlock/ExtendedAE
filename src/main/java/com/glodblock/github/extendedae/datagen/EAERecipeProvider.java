@@ -580,6 +580,16 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.OVERSIZE_INTERFACE_PART))
                 .save(c, ExtendedAE.id("oversize_interface_alt"));
 
+        // Entro Shard
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAESingletons.ENTRO_CRYSTAL)
+                .pattern("SSS")
+                .pattern("S S")
+                .pattern("SSS")
+                .define('S', EAESingletons.ENTRO_SHARD)
+                .unlockedBy(C, has(EAESingletons.ENTRO_SHARD))
+                .save(c, ExtendedAE.id("entro_recycle"));
+
         transformation(c);
         circuit(c);
 
