@@ -178,6 +178,8 @@
   "key.extendedae.category": "Extended AE",
   "emi.extendedae.category.assembler": "Crystal Assembler",
   "emi.extendedae.category.cutter": "Circuit Slicer",
+  "emi.extendedae.category.fixer": "Crystal Fixer",
+  "emi.extendedae.text.success_chance": "Success Chance: %s",
   "emi.extendedae.desc.entro_crystal": "Entro Crystal is grown by Budding Entroized Fluix, like how Certus Quartz works. To get Budding Entroized Fluix, you need to craft Entro Seed and right click Fluix Block with it.",
   "emi.extendedae.desc.entro_seed": "Right click a Fluix Block in world with Entro Seed, and the Fluix Block will be turned into Budding Entroized Fluix."
 }

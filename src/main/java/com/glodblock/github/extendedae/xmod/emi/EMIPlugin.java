@@ -3,9 +3,11 @@ package com.glodblock.github.extendedae.xmod.emi;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
+import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
 import com.glodblock.github.extendedae.xmod.emi.recipes.EMICircuitCutterRecipe;
 import com.glodblock.github.extendedae.xmod.emi.recipes.EMICrystalAssemblerRecipe;
+import com.glodblock.github.extendedae.xmod.emi.recipes.EMICrystalFixerRecipe;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -37,6 +39,9 @@ public class EMIPlugin implements EmiPlugin {
         registry.addCategory(EMICircuitCutterRecipe.CATEGORY);
         registry.addWorkstation(EMICircuitCutterRecipe.CATEGORY, EmiStack.of(EAESingletons.CIRCUIT_CUTTER));
         adaptRecipeType(registry, CircuitCutterRecipe.TYPE, EMICircuitCutterRecipe::new);
+        registry.addCategory(EMICrystalFixerRecipe.CATEGORY);
+        registry.addWorkstation(EMICrystalFixerRecipe.CATEGORY, EmiStack.of(EAESingletons.CRYSTAL_FIXER));
+        adaptRecipeType(registry, CrystalFixerRecipe.TYPE, EMICrystalFixerRecipe::new);
 
         addInfo(registry, EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
         addInfo(registry, EAESingletons.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));

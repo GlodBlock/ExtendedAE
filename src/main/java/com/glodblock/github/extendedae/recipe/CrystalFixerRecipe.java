@@ -65,6 +65,10 @@ public class CrystalFixerRecipe implements Recipe<RecipeInput> {
         return random.nextInt(FULL_CHANCE) < this.chance;
     }
 
+    public double getChance() {
+        return (double) this.chance / FULL_CHANCE;
+    }
+
     public Block getOutput() {
         return this.output;
     }
