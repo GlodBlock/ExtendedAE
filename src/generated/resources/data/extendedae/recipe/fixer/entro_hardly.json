@@ -1,6 +1,6 @@
 {
   "type": "extendedae:crystal_fixer",
-  "chance": 4000,
+  "chance": 2000,
   "fuel": {
     "ingredient": {
       "tag": "c:dusts/ender_pearl"

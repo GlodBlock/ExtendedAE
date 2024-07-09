@@ -719,17 +719,17 @@ public class EAERecipeProvider extends RecipeProvider {
         CrystalFixerRecipeBuilder
                 .fixer(EAESingletons.HARDLY_ENTROIZED_FLUIX_BUDDING, EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING)
                 .fuel(ConventionTags.ENDER_PEARL_DUST)
-                .chance(0.4)
+                .chance(0.2)
                 .save(c, ExtendedAE.id("fixer/entro_hardly"));
         CrystalFixerRecipeBuilder
                 .fixer(EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING, EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING)
                 .fuel(ConventionTags.ENDER_PEARL_DUST)
-                .chance(0.4)
+                .chance(0.2)
                 .save(c, ExtendedAE.id("fixer/entro_half"));
         CrystalFixerRecipeBuilder
                 .fixer(EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING, EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING)
                 .fuel(ConventionTags.ENDER_PEARL_DUST)
-                .chance(0.4)
+                .chance(0.2)
                 .save(c, ExtendedAE.id("fixer/entro_mostly"));
     }
 
