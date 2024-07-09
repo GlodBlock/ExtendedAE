@@ -14,6 +14,7 @@ import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.config.ConfigCondition;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
+import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -593,6 +594,7 @@ public class EAERecipeProvider extends RecipeProvider {
         transformation(c);
         circuit(c);
         assemblerCircuit(c);
+        fixer(c);
 
         if (GlodUtil.checkMod(ModConstants.MEGA)) {
             maga(c);
@@ -701,6 +703,34 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SILICON_PRINT, 4)
                 .input(ConventionTags.REDSTONE, 4)
                 .save(c.withConditions(cond), ExtendedAE.id("assembler/concurrent_processor"));
+    }
+
+    private void fixer(@NotNull RecipeOutput c) {
+        CrystalFixerRecipeBuilder
+                .fixer(AEBlocks.DAMAGED_BUDDING_QUARTZ.block(), AEBlocks.CHIPPED_BUDDING_QUARTZ.block())
+                .fuel(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED)
+                .chance(0.8)
+                .save(c, ExtendedAE.id("fixer/certus_damage"));
+        CrystalFixerRecipeBuilder
+                .fixer(AEBlocks.CHIPPED_BUDDING_QUARTZ.block(), AEBlocks.FLAWED_BUDDING_QUARTZ.block())
+                .fuel(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED)
+                .chance(0.8)
+                .save(c, ExtendedAE.id("fixer/certus_chipped"));
+        CrystalFixerRecipeBuilder
+                .fixer(EAESingletons.HARDLY_ENTROIZED_FLUIX_BUDDING, EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING)
+                .fuel(ConventionTags.ENDER_PEARL_DUST)
+                .chance(0.4)
+                .save(c, ExtendedAE.id("fixer/entro_hardly"));
+        CrystalFixerRecipeBuilder
+                .fixer(EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING, EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING)
+                .fuel(ConventionTags.ENDER_PEARL_DUST)
+                .chance(0.4)
+                .save(c, ExtendedAE.id("fixer/entro_half"));
+        CrystalFixerRecipeBuilder
+                .fixer(EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING, EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING)
+                .fuel(ConventionTags.ENDER_PEARL_DUST)
+                .chance(0.4)
+                .save(c, ExtendedAE.id("fixer/entro_mostly"));
     }
 
     private ICondition mod(String modid) {

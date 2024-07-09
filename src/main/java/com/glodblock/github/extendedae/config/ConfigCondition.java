@@ -42,6 +42,11 @@ public class ConfigCondition implements ICondition {
         return CODEC;
     }
 
+    @Override
+    public String toString() {
+        return "extendedae_config(\"" + this.id + "\")";
+    }
+
     public static class IDs {
 
         public static final String ASSEMBLER_CIRCUIT = "assembler_circuit";

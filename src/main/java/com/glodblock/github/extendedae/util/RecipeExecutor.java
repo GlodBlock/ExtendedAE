@@ -16,11 +16,17 @@ public class RecipeExecutor<T extends Recipe<?>> {
     private final IRecipeMachine<?, T> machine;
     private final int maxTime;
     private final Function<T, ItemStack> outputGetter;
+    private final int energyMultiplier;
 
     public RecipeExecutor(IRecipeMachine<?, T> machine, Function<T, ItemStack> outputGetter, int maxTime) {
+        this(machine, outputGetter, maxTime, 10);
+    }
+
+    public RecipeExecutor(IRecipeMachine<?, T> machine, Function<T, ItemStack> outputGetter, int maxTime, int energyMultiplier) {
         this.machine = machine;
         this.maxTime = maxTime;
         this.outputGetter = outputGetter;
+        this.energyMultiplier = energyMultiplier;
     }
 
     public TickRateModulation execute(int speed, boolean usePower) {
@@ -36,7 +42,7 @@ public class RecipeExecutor<T extends Recipe<?>> {
                     mainNode.ifPresent(grid -> {
                         IEnergyService eg = grid.getEnergyService();
                         IEnergySource src = power;
-                        final int powerConsumption = 10 * speed;
+                        final int powerConsumption = this.energyMultiplier * speed;
                         final double powerThreshold = powerConsumption - 0.01;
                         double powerReq = 0;
                         if (src != null) {

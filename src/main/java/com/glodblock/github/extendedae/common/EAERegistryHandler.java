@@ -81,6 +81,8 @@ import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeSerializer;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
+import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
+import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeSerializer;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
 import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
@@ -158,6 +160,8 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CircuitCutterRecipe.ID, CircuitCutterRecipe.TYPE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CircuitCutterRecipe.ID, CircuitCutterRecipeSerializer.INSTANCE);
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalFixerRecipe.ID, CrystalFixerRecipe.TYPE);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalFixerRecipe.ID, CrystalFixerRecipeSerializer.INSTANCE);
     }
 
     private void onRegisterContainer() {
