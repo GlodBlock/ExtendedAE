@@ -23,23 +23,23 @@ public class EAEConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     private static final ModConfigSpec.IntValue EX_BUS_SPEED = BUILDER
             .comment("ME Extend Import/Export Bus speed multiplier")
-            .defineInRange("exBusMultiplier", 8, 2, 128);
+            .defineInRange("device.extended_io_bus_multiplier", 8, 2, 128);
 
     private static final ModConfigSpec.DoubleValue INFINITY_CELL_ENERGY = BUILDER
             .comment("ME Infinity Cell idle energy cost (unit: AE/t)")
-            .defineInRange("cost", 8.0, 0.1, 64.0);
+            .defineInRange("item.infinity_cell_energy_cost", 8.0, 0.1, 64.0);
 
     private static final ModConfigSpec.DoubleValue WIRELESS_CONNECTOR_RANGE = BUILDER
             .comment("The max range between two wireless connector")
-            .defineInRange("range", 1000.0, 10.0, 10000.0);
+            .defineInRange("device.wireless_connector_max_range", 1000.0, 10.0, 10000.0);
 
     private static final ModConfigSpec.ConfigValue<List<? extends Integer>> PATTERN_MODIFIER_NUMBER = BUILDER
             .comment("Pattern modifier multipliers")
-            .defineList("modifierMultipliers", defaultModifierMultiplier, EAEConfig::checkPositive);
+            .defineList("item.pattern_modifier_multipliers", defaultModifierMultiplier, EAEConfig::checkPositive);
 
     private static final ModConfigSpec.ConfigValue<List<? extends String>> PACKABLE_AE_DEVICE = BUILDER
             .comment("The AE device/part that can be packed by ME Packing Tape")
-            .defineList("whitelist", Lists.newArrayList(
+            .defineList("item.me_packing_tape_whitelist", Lists.newArrayList(
                     "extendedae:ex_interface_part",
                     "extendedae:ex_pattern_provider_part",
                     "extendedae:ex_interface",
@@ -53,18 +53,18 @@ public class EAEConfig {
             ), o -> true);
 
     private static final ModConfigSpec.BooleanValue INSCRIBER_RENDER = BUILDER
-            .comment("Disable Extended Inscriber's item render, it only works in client side.")
-            .define("disableItemRender", false);
+            .comment("Disable Extended Inscriber's item render, it only works in client side")
+            .define("client.disable_inscriber_item_render", false);
 
     private static final ModConfigSpec.IntValue OVERSIZE_MULTIPLIER = BUILDER
             .comment("Size multiplier of oversize interface")
-            .defineInRange("oversizeMultiplier", 16, 2, 4096);
+            .defineInRange("device.oversize_interface_multiplier", 16, 2, 4096);
+
+    private static final ModConfigSpec.BooleanValue CRYSTAL_INSCRIBER = BUILDER
+            .comment("Allow Crystal Assembler to do processor inscriber recipes")
+            .define("device.enable_crystal_assembler_inscribe_processors", true);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
-
-    private static boolean checkRL(Object o) {
-        return o instanceof String s && (GlodUtil.checkInvalidRL(s, BuiltInRegistries.ITEM) || GlodUtil.checkInvalidRL(s, BuiltInRegistries.FLUID));
-    }
 
     private static boolean checkPositive(Object o) {
         return o instanceof Integer && (int) o > 0;
@@ -77,6 +77,7 @@ public class EAEConfig {
     public static boolean disableInscriberRender;
     public static int oversizeMultiplier;
     private static List<? extends Integer> modifierMultiplier;
+    public static boolean allowAssemblerCircuits;
 
     public static int getPatternModifierNumber(int index) {
         if (index >= modifierMultiplier.size()) {
@@ -95,6 +96,7 @@ public class EAEConfig {
         disableInscriberRender = INSCRIBER_RENDER.get();
         oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
         modifierMultiplier = PATTERN_MODIFIER_NUMBER.get();
+        allowAssemblerCircuits = CRYSTAL_INSCRIBER.get();
     }
 
 }

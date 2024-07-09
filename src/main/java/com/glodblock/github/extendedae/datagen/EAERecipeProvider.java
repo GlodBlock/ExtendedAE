@@ -9,9 +9,9 @@ import appeng.recipes.handlers.InscriberRecipeBuilder;
 import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
 import com.glodblock.github.appflux.common.AFSingletons;
-import com.glodblock.github.appflux.util.AFTags;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.config.ConfigCondition;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
@@ -592,6 +592,7 @@ public class EAERecipeProvider extends RecipeProvider {
 
         transformation(c);
         circuit(c);
+        assemblerCircuit(c);
 
         if (GlodUtil.checkMod(ModConstants.MEGA)) {
             maga(c);
@@ -672,6 +673,34 @@ public class EAERecipeProvider extends RecipeProvider {
                 .cut(MEGAItems.ACCUMULATION_PROCESSOR_PRINT, 9)
                 .input(MEGATags.SKY_STEEL_BLOCK_ITEM)
                 .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("cutter/accumulation_processor"));*/
+    }
+
+    private void assemblerCircuit(@NotNull RecipeOutput c) {
+        var cond = new ConfigCondition(ConfigCondition.IDs.ASSEMBLER_CIRCUIT);
+        CrystalAssemblerRecipeBuilder
+                .assemble(AEItems.CALCULATION_PROCESSOR, 4)
+                .input(AEItems.CALCULATION_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.REDSTONE, 4)
+                .save(c.withConditions(cond), ExtendedAE.id("assembler/calculation_processor"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(AEItems.ENGINEERING_PROCESSOR, 4)
+                .input(AEItems.ENGINEERING_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.REDSTONE, 4)
+                .save(c.withConditions(cond), ExtendedAE.id("assembler/engineering_processor"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(AEItems.LOGIC_PROCESSOR, 4)
+                .input(AEItems.LOGIC_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.REDSTONE, 4)
+                .save(c.withConditions(cond), ExtendedAE.id("assembler/logic_processor"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.CONCURRENT_PROCESSOR, 4)
+                .input(EAESingletons.CONCURRENT_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.REDSTONE, 4)
+                .save(c.withConditions(cond), ExtendedAE.id("assembler/concurrent_processor"));
     }
 
     private ICondition mod(String modid) {

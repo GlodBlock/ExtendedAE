@@ -46,6 +46,7 @@ import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
+import com.glodblock.github.extendedae.config.ConfigCondition;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerCaner;
@@ -97,6 +98,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collection;
@@ -151,6 +153,7 @@ public class EAERegistryHandler extends RegistryHandler {
     }
 
     private void onRegisterRecipe() {
+        Registry.register(NeoForgeRegistries.CONDITION_SERIALIZERS, ExtendedAE.id("config"), ConfigCondition.CODEC);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipe.TYPE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CircuitCutterRecipe.ID, CircuitCutterRecipe.TYPE);
