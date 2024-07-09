@@ -411,7 +411,7 @@ public class EAERecipeProvider extends RecipeProvider {
 
         // Entro Seed
         ShapelessRecipeBuilder
-                .shapeless(RecipeCategory.MISC, EAESingletons.ENTRO_SEED)
+                .shapeless(RecipeCategory.MISC, EAESingletons.ENTRO_SEED, 2)
                 .requires(Tags.Items.SANDS)
                 .requires(ConventionTags.ENDER_PEARL_DUST)
                 .requires(ConventionTags.ENDER_PEARL_DUST)
