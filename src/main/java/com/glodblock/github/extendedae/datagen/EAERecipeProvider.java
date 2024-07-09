@@ -614,6 +614,14 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.NETHER_QUARTZ, 4)
                 .fluid(Fluids.WATER, 100)
                 .save(c, ExtendedAE.id("assembler/fluix_transformation"));
+        // Entro Infused Ingot
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.ENTRO_INGOT, 4)
+                .input(EAETags.ENTRO_DUST, 4)
+                .input(ConventionTags.GOLD_INGOT, 4)
+                .input(Items.LAPIS_LAZULI, 4)
+                .fluid(Fluids.WATER, 100)
+                .save(c, ExtendedAE.id("assembler/entro_ingot_transformation"));
     }
 
     private void circuit(@NotNull RecipeOutput c) {
