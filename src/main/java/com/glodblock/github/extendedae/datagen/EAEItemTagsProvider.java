@@ -49,8 +49,6 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
                 .add(EAESingletons.SILICON_BLOCK.asItem());
         tag(EAETags.ENTRO_BLOCK)
                 .add(EAESingletons.ENTRO_BLOCK.asItem());
-        tag(ConventionTags.INSCRIBER_PRESSES)
-                .add(EAESingletons.CONCURRENT_PROCESSOR_PRESS);
         tag(ConventionTags.BUDDING_BLOCKS)
                 .add(EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING.asItem())
                 .add(EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING.asItem())
