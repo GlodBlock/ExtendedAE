@@ -9,6 +9,9 @@ import appeng.api.config.YesNo;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
+import appeng.api.networking.crafting.ICraftingLink;
+import appeng.api.networking.crafting.ICraftingRequester;
+import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.IGridTickable;
@@ -25,7 +28,9 @@ import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.IConfigInvHost;
 import appeng.helpers.IPriorityHost;
+import appeng.helpers.MultiCraftingTracker;
 import appeng.items.parts.PartModels;
+import appeng.me.helpers.MachineSource;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
@@ -38,10 +43,10 @@ import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.automation.UpgradeablePart;
 import appeng.util.ConfigInventory;
 import appeng.util.Platform;
-import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -59,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public class PartActiveFormationPlane extends UpgradeablePart implements IGridTickable, IPriorityHost, IConfigInvHost {
+public class PartActiveFormationPlane extends UpgradeablePart implements IGridTickable, IPriorityHost, IConfigInvHost, ICraftingRequester {
 
     public static final List<ResourceLocation> MODELS = List.of(
             ExtendedAE.id("part/active_formation_plane"),
@@ -81,13 +86,19 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     private final ConfigInventory config;
     @Nullable
     private PlacementStrategy placementStrategies;
+    private final MultiCraftingTracker craftingTracker;
+    protected final IActionSource source;
 
     public PartActiveFormationPlane(IPartItem<?> partItem) {
         super(partItem);
-        this.getMainNode().addService(IGridTickable.class, this);
+        this.getMainNode()
+                .addService(IGridTickable.class, this)
+                .addService(ICraftingRequester.class, this);
         this.config = ConfigInventory.configTypes(63)
                 .supportedTypes(StackWorldBehaviors.withPlacementStrategy())
                 .build();
+        this.source = new MachineSource(this);
+        this.craftingTracker = new MultiCraftingTracker(this, this.config.size());
     }
 
     @Override
@@ -95,6 +106,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         super.registerSettings(builder);
         builder.registerSetting(Settings.PLACE_BLOCK, YesNo.YES);
         builder.registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+        builder.registerSetting(Settings.CRAFT_ONLY, YesNo.NO);
     }
 
     protected final PlacementStrategy getPlacementStrategies() {
@@ -172,6 +184,11 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         return getPlacementStrategies().placeInWorld(what, amount, Actionable.MODULATE, placeBlock != YesNo.YES);
     }
 
+    protected long placeInWorld(AEKey what, long amount, Actionable mode) {
+        var placeBlock = this.getConfigManager().getSetting(Settings.PLACE_BLOCK);
+        return getPlacementStrategies().placeInWorld(what, amount, mode, placeBlock != YesNo.YES);
+    }
+
     @Override
     public float getCableConnectionLength(AECableType cable) {
         return 1;
@@ -182,6 +199,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         super.readFromNBT(data, registries);
         this.priority = data.getInt("priority");
         this.config.readFromChildTag(data, "config", registries);
+        this.craftingTracker.readFromNBT(data);
     }
 
     @Override
@@ -189,6 +207,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         super.writeToNBT(data, registries);
         data.putInt("priority", this.getPriority());
         this.config.writeToChildTag(data, "config", registries);
+        this.craftingTracker.writeToNBT(data);
     }
 
     @Override
@@ -218,18 +237,6 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
 
     protected MenuType<?> getMenuType() {
         return ContainerActiveFormationPlane.TYPE;
-    }
-
-    private IPartitionList createFilter() {
-        var builder = IPartitionList.builder();
-        if (isUpgradedWith(AEItems.FUZZY_CARD)) {
-            builder.fuzzyMode(getConfigManager().getSetting(Settings.FUZZY_MODE));
-        }
-        var slotsToUse = 18 + this.getInstalledUpgrades(AEItems.CAPACITY_CARD) * 9;
-        for (var x = 0; x < this.config.size() && x < slotsToUse; x++) {
-            builder.add(this.config.getKey(x));
-        }
-        return builder.build();
     }
 
     @Override
@@ -275,11 +282,16 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     protected boolean doWork(IGrid grid) {
         var storageService = grid.getStorageService();
         var fzMode = this.getConfigManager().getSetting(Settings.FUZZY_MODE);
+        var cg = grid.getCraftingService();
 
         int x;
         for (x = 0; x < availableSlots(); x ++) {
             var what = getConfig().getKey(x);
             if (what == null) {
+                continue;
+            }
+            if (this.craftOnly()) {
+                attemptCrafting(cg, x, what);
                 continue;
             }
             if (isUpgradedWith(AEItems.FUZZY_CARD)) {
@@ -293,6 +305,11 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
                     return true;
                 }
             }
+
+            if (this.isCraftingEnabled()) {
+                attemptCrafting(cg, x, what);
+            }
+
         }
         return false;
     }
@@ -339,6 +356,44 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         return ModelData.builder()
                 .with(PlaneModelData.CONNECTIONS, getConnections())
                 .build();
+    }
+
+    @Override
+    public ImmutableSet<ICraftingLink> getRequestedJobs() {
+        return this.craftingTracker.getRequestedJobs();
+    }
+
+    @Override
+    public long insertCraftedItems(ICraftingLink link, AEKey what, long amount, Actionable mode) {
+        var grid = getMainNode().getGrid();
+        if (grid != null && getMainNode().isActive()) {
+            return this.placeInWorld(what, amount, mode);
+        }
+        return 0;
+    }
+
+    @Override
+    public void jobStateChange(ICraftingLink link) {
+        this.craftingTracker.jobStateChange(link);
+    }
+
+    private void attemptCrafting(ICraftingService cg, int slotToExport, AEKey what) {
+        var amount = placeInWorld(what, what.getAmountPerUnit(), Actionable.SIMULATE);
+        if (amount > 0) {
+            requestCrafting(cg, slotToExport, what, amount);
+        }
+    }
+
+    protected final void requestCrafting(ICraftingService cg, int configSlot, AEKey what, long amount) {
+        this.craftingTracker.handleCrafting(configSlot, what, amount, this.getBlockEntity().getLevel(), cg, this.source);
+    }
+
+    private boolean craftOnly() {
+        return isCraftingEnabled() && this.getConfigManager().getSetting(Settings.CRAFT_ONLY) == YesNo.YES;
+    }
+
+    private boolean isCraftingEnabled() {
+        return isUpgradedWith(AEItems.CRAFTING_CARD);
     }
 
 }

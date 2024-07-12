@@ -36,6 +36,7 @@ public class ContainerActiveFormationPlane extends UpgradeableMenu<PartActiveFor
             this.setFuzzyMode(cm.getSetting(Settings.FUZZY_MODE));
         }
         this.setPlaceMode(cm.getSetting(Settings.PLACE_BLOCK));
+        this.setCraftingMode(cm.getSetting(Settings.CRAFT_ONLY));
     }
 
     @Override
