@@ -21,6 +21,10 @@ import com.glodblock.github.extendedae.common.blocks.BlockFishbig;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
+import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixCrafter;
+import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixFrame;
+import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixPattern;
+import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixWall;
 import com.glodblock.github.extendedae.common.items.CommonItem;
 import com.glodblock.github.extendedae.common.items.ItemDriveUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemEntroSeed;
@@ -63,6 +67,10 @@ import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileOversizeInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixFrame;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodCodecs;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -153,6 +161,10 @@ public class EAESingletons {
     public static BlockCircuitCutter CIRCUIT_CUTTER;
     public static BlockOversizeInterface OVERSIZE_INTERFACE;
     public static PartItem<PartOversizeInterface> OVERSIZE_INTERFACE_PART;
+    public static BlockAssemblerMatrixFrame ASSEMBLER_MATRIX_FRAME;
+    public static BlockAssemblerMatrixWall ASSEMBLER_MATRIX_WALL;
+    public static BlockAssemblerMatrixPattern ASSEMBLER_MATRIX_PATTERN;
+    public static BlockAssemblerMatrixCrafter ASSEMBLER_MATRIX_CRAFTER;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -224,6 +236,10 @@ public class EAESingletons {
         SILICON_BLOCK = new Block(metalProps().requiresCorrectToolForDrops());
         OVERSIZE_INTERFACE = new BlockOversizeInterface();
         OVERSIZE_INTERFACE_PART = new PartItem<>(new Item.Properties(), PartOversizeInterface.class, PartOversizeInterface::new);
+        ASSEMBLER_MATRIX_FRAME = new BlockAssemblerMatrixFrame();
+        ASSEMBLER_MATRIX_WALL = new BlockAssemblerMatrixWall();
+        ASSEMBLER_MATRIX_PATTERN = new BlockAssemblerMatrixPattern();
+        ASSEMBLER_MATRIX_CRAFTER = new BlockAssemblerMatrixCrafter();
         if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
             try {
                 //To prevent classloader issue
@@ -269,6 +285,10 @@ public class EAESingletons {
         regHandler.block("ex_io_port", EX_IO_PORT, TileExIOPort.class, TileExIOPort::new);
         regHandler.block("circuit_cutter", CIRCUIT_CUTTER, TileCircuitCutter.class, TileCircuitCutter::new);
         regHandler.block("oversize_interface", OVERSIZE_INTERFACE, TileOversizeInterface.class, TileOversizeInterface::new);
+        regHandler.block("assembler_matrix_frame", ASSEMBLER_MATRIX_FRAME, TileAssemblerMatrixFrame.class, TileAssemblerMatrixFrame::new);
+        regHandler.block("assembler_matrix_wall", ASSEMBLER_MATRIX_WALL, TileAssemblerMatrixWall.class, TileAssemblerMatrixWall::new);
+        regHandler.block("assembler_matrix_pattern", ASSEMBLER_MATRIX_PATTERN, TileAssemblerMatrixPattern.class, TileAssemblerMatrixPattern::new);
+        regHandler.block("assembler_matrix_crafter", ASSEMBLER_MATRIX_CRAFTER, TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new);
         regHandler.block("silicon_block", SILICON_BLOCK);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);
