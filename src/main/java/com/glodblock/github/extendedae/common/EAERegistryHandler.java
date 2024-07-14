@@ -18,9 +18,6 @@ import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.powersink.AEBasePoweredBlockEntity;
 import appeng.core.definitions.AEItems;
-import appeng.core.localization.GuiText;
-import appeng.hotkeys.HotkeyActions;
-import appeng.hotkeys.InventoryHotkeyAction;
 import appeng.items.AEBaseItem;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import appeng.items.tools.powered.powersink.PoweredItemCapabilities;
@@ -72,7 +69,6 @@ import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
-import com.glodblock.github.extendedae.container.ContainerWirelessExPAT;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
@@ -85,7 +81,7 @@ import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeSerializer;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
-import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
+import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
@@ -104,8 +100,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collection;
-
-import static appeng.api.features.HotkeyAction.WIRELESS_TERMINAL;
 
 public class EAERegistryHandler extends RegistryHandler {
 
@@ -185,7 +179,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("active_formation_plane"), ContainerActiveFormationPlane.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("caner"), ContainerCaner.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("precise_export_bus"), ContainerPreciseExportBus.TYPE);
-        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("wireless_ex_pat"), ContainerWirelessExPAT.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("u_wireless_ex_pattern_access_terminal"), ContainerWirelessExPAT.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("ex_ioport"), ContainerExIOPort.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("precise_storage_bus"), ContainerPreciseStorageBus.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("threshold_export_bus"), ContainerThresholdExportBus.TYPE);
@@ -197,9 +191,6 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
-        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-            WTCommonLoad.container();
-        }
     }
 
     private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
@@ -270,7 +261,6 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.PRECISE_EXPORT_BUS, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.PRECISE_EXPORT_BUS, 1);
         Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.PRECISE_EXPORT_BUS, 1);
-        Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_IO_PORT, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.EX_IO_PORT, 1);
         Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.PRECISE_STORAGE_BUS, 5);
@@ -280,9 +270,6 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.THRESHOLD_EXPORT_BUS, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CRYSTAL_ASSEMBLER, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CIRCUIT_CUTTER, 4);
-        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-            WTCommonLoad.init();
-        }
     }
 
     private void registerStorageHandler() {
@@ -315,11 +302,6 @@ public class EAERegistryHandler extends RegistryHandler {
 
     private void registerRandomAPI() {
         GridLinkables.register(EAESingletons.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
-        if (!GlodUtil.checkMod(ModConstants.AE2WTL)) {
-            HotkeyActions.register(new InventoryHotkeyAction(EAESingletons.WIRELESS_EX_PAT, (player, i) -> EAESingletons.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
-        } else {
-            HotkeyActions.register(new InventoryHotkeyAction(EAESingletons.WIRELESS_EX_PAT, (player, i) -> EAESingletons.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
-        }
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

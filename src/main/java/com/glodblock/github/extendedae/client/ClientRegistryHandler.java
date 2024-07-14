@@ -30,7 +30,6 @@ import com.glodblock.github.extendedae.client.gui.GuiTagStorageBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdLevelEmitter;
 import com.glodblock.github.extendedae.client.gui.GuiWirelessConnector;
-import com.glodblock.github.extendedae.client.gui.GuiWirelessExPAT;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiCraftingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiProcessingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiSmithingTablePattern;
@@ -80,13 +79,12 @@ import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
-import com.glodblock.github.extendedae.container.ContainerWirelessExPAT;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
-import com.glodblock.github.extendedae.xmod.ModConstants;
-import com.glodblock.github.extendedae.xmod.wt.WTClientLoad;
+import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
+import com.glodblock.github.extendedae.xmod.wt.GuiWirelessExPAT;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -135,9 +133,6 @@ public class ClientRegistryHandler {
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
         event.register(ContainerSmithingTablePattern.TYPE, GuiSmithingTablePattern::new);
-        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-            WTClientLoad.init(event);
-        }
     }
 
     @SubscribeEvent

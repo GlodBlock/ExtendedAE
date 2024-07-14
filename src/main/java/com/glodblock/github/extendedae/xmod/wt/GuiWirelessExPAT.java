@@ -2,26 +2,25 @@ package com.glodblock.github.extendedae.xmod.wt;
 
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ToolboxPanel;
-import appeng.menu.AEBaseMenu;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
-import de.mari_023.ae2wtlib.terminal.ScrollingUpgradesPanel;
-import de.mari_023.ae2wtlib.terminal.WTMenuHost;
-import de.mari_023.ae2wtlib.wut.IUniversalTerminalCapable;
+import de.mari_023.ae2wtlib.api.gui.ScrollingUpgradesPanel;
+import de.mari_023.ae2wtlib.api.terminal.IUniversalTerminalCapable;
+import de.mari_023.ae2wtlib.api.terminal.WTMenuHost;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class GuiUWirelessExPAT extends GuiExPatternTerminal<ContainerUWirelessExPAT> implements IUniversalTerminalCapable {
+public class GuiWirelessExPAT extends GuiExPatternTerminal<ContainerWirelessExPAT> implements IUniversalTerminalCapable {
 
     private final ScrollingUpgradesPanel upgradesPanel;
 
-    public GuiUWirelessExPAT(ContainerUWirelessExPAT container, Inventory playerInventory, Component title, ScreenStyle style) {
+    public GuiWirelessExPAT(ContainerWirelessExPAT container, Inventory playerInventory, Component title, ScreenStyle style) {
         super(container, playerInventory, title, style);
         if (this.getMenu().isWUT()) {
             this.addToLeftToolbar(this.cycleTerminalButton());
         }
 
-        this.upgradesPanel = this.addUpgradePanel(this.widgets, (AEBaseMenu)this.getMenu());
+        this.upgradesPanel = this.addUpgradePanel(this.widgets, this.getMenu());
         if (this.getMenu().getToolbox().isPresent()) {
             this.widgets.add("toolbox", new ToolboxPanel(style, this.getMenu().getToolbox().getName()));
         }

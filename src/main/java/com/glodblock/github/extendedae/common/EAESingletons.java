@@ -3,7 +3,6 @@ package com.glodblock.github.extendedae.common;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.items.parts.PartItem;
-import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.common.blocks.BlockBuddingEntro;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
 import com.glodblock.github.extendedae.common.blocks.BlockCircuitCutter;
@@ -38,7 +37,6 @@ import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpg
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.items.tools.ItemPatternModifier;
-import com.glodblock.github.extendedae.common.items.tools.ItemWirelessExPAT;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
 import com.glodblock.github.extendedae.common.parts.PartExImportBus;
@@ -73,7 +71,7 @@ import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerM
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixSpeed;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
-import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.wt.ItemWirelessExPAT;
 import com.glodblock.github.glodium.util.GlodCodecs;
 import com.glodblock.github.glodium.util.GlodUtil;
 import com.mojang.serialization.Codec;
@@ -157,7 +155,7 @@ public class EAESingletons {
     public static BlockCaner CANER;
     public static BlockExIOPort EX_IO_PORT;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
-    public static WirelessTerminalItem WIRELESS_EX_PAT;
+    public static ItemWirelessExPAT WIRELESS_EX_PAT;
     public static PartItem<PartPreciseStorageBus> PRECISE_STORAGE_BUS;
     public static PartItem<PartThresholdExportBus> THRESHOLD_EXPORT_BUS;
     public static BlockCircuitCutter CIRCUIT_CUTTER;
@@ -244,18 +242,7 @@ public class EAESingletons {
         ASSEMBLER_MATRIX_PATTERN = new BlockAssemblerMatrixPattern();
         ASSEMBLER_MATRIX_CRAFTER = new BlockAssemblerMatrixCrafter();
         ASSEMBLER_MATRIX_SPEED = new BlockAssemblerMatrixSpeed();
-        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-            try {
-                //To prevent classloader issue
-                WIRELESS_EX_PAT = (WirelessTerminalItem) Class.forName("com.glodblock.github.extendedae.xmod.wt.ItemUWirelessExPAT")
-                        .getDeclaredConstructor()
-                        .newInstance();
-            } catch (Exception e) {
-                WIRELESS_EX_PAT = new ItemWirelessExPAT();
-            }
-        } else {
-            WIRELESS_EX_PAT = new ItemWirelessExPAT();
-        }
+        WIRELESS_EX_PAT = new ItemWirelessExPAT();
         regHandler.comp("is_part", IS_PART);
         regHandler.comp("tape_part_data", TAPE_PART_DATA);
         regHandler.comp("tape_tile_data", TAPE_TILE_DATA);

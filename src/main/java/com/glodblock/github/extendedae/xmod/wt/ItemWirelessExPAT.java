@@ -4,7 +4,7 @@ import appeng.api.config.Settings;
 import appeng.api.config.ShowPatternProviders;
 import appeng.api.util.IConfigManager;
 import appeng.menu.locator.ItemMenuHostLocator;
-import de.mari_023.ae2wtlib.terminal.ItemWT;
+import de.mari_023.ae2wtlib.api.terminal.ItemWT;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -12,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public class ItemUWirelessExPAT extends ItemWT {
+public class ItemWirelessExPAT extends ItemWT {
 
-    public ItemUWirelessExPAT() {
+    public ItemWirelessExPAT() {
     }
 
     @Override
     public @NotNull MenuType<?> getMenuType(@NotNull ItemMenuHostLocator itemMenuHostLocator, @NotNull Player player) {
-        return ContainerUWirelessExPAT.TYPE;
+        return ContainerWirelessExPAT.TYPE;
     }
 
     @Override

@@ -10,9 +10,12 @@ import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.darkmode.BlacklistGUI;
-import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
+import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
+import com.glodblock.github.extendedae.xmod.wt.HostWirelessExPAT;
 import com.glodblock.github.glodium.util.GlodUtil;
 import com.mojang.logging.LogUtils;
+import de.mari_023.ae2wtlib.api.gui.Icon;
+import de.mari_023.ae2wtlib.api.registration.AddTerminalEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -50,10 +53,18 @@ public class ExtendedAE {
             }
             if (e.getRegistryKey().equals(Registries.BLOCK)) {
                 EAESingletons.init(EAERegistryHandler.INSTANCE);
-                if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-                    WTCommonLoad.initEvent();
-                }
                 EAERegistryHandler.INSTANCE.runRegister();
+                return;
+            }
+            if (e.getRegistryKey().equals(Registries.ITEM)) {
+                Icon.Texture TX = new Icon.Texture(id("textures/guis/nicons.png"), 64, 64);
+                AddTerminalEvent.register(event -> event.builder(
+                        "ex_pattern_access",
+                        HostWirelessExPAT::new,
+                        ContainerWirelessExPAT.TYPE,
+                        EAESingletons.WIRELESS_EX_PAT,
+                        new Icon(32, 32, 16, 16, TX)
+                ).hotkeyName("wireless_pattern_access_terminal").translationKey("item.extendedae.wireless_ex_pat").addTerminal());
             }
         });
         if (FMLEnvironment.dist.isClient()) {

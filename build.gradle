@@ -80,6 +80,7 @@ repositories {
         url = uri("https://modmaven.dev/")
         content {
             includeGroup("appeng")
+            includeGroup("de.mari_023")
         }
     }
     maven {
@@ -95,7 +96,7 @@ repositories {
 dependencies {
     implementation "curse.maven:glodium-957920:5491696"
     implementation "appeng:appliedenergistics2:19.0.15-alpha"
-    implementation "curse.maven:applied-energistics-2-wireless-terminals-459929:5527543"
+    jarJar(implementation "de.mari_023:ae2wtlib_api:19.1.0-alpha.1")
     compileOnly "curse.maven:applied-flux-965012:5531011"
     compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
     compileOnly "curse.maven:mega-cells-622112:5533085"
@@ -103,7 +104,8 @@ dependencies {
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5531011"
-    runtimeOnly "curse.maven:mega-cells-622112:5533085"
+    runtimeOnly "de.mari_023:ae2wtlib:19.1.0-alpha.1"
+    //runtimeOnly "curse.maven:mega-cells-622112:5533085"
     runtimeOnly "curse.maven:jade-324717:5444008"
     // setup Xei
     switch(use_Xei) {
