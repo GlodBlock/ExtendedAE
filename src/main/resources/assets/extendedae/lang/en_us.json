@@ -163,6 +163,8 @@
   "gui.extendedae.crystal_assembler": "Crystal Assembler",
   "gui.extendedae.crystal_assembler.tank_empty": "Empty",
   "gui.extendedae.crystal_assembler.amount": "%s mb / %s mb",
+  "gui.extendedae.assembler_matrix": "Assembler Matrix",
+  "gui.extendedae.assembler_matrix.tooltip": "Search pattern",
   "chat.ex_pattern_access_terminal.pos": "The pattern provider is now highlighted at: %s, Dim: %s",
   "chat.wireless_connect.out_of_range": "The Wireless Connector is too far",
   "chat.wireless_connect.self_reference": "Can't connect to itself",

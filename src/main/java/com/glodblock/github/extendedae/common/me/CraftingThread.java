@@ -84,6 +84,14 @@ public class CraftingThread {
         return false;
     }
 
+    public void stop() {
+        this.myPlan = null;
+        this.myPattern = ItemStack.EMPTY;
+        this.progress = 0;
+        this.ejectHeldItems();
+        this.updateSleepiness();
+    }
+
     public CompoundTag writeNBT(HolderLookup.Provider register) {
         var data = new CompoundTag();
         if (this.forcePlan) {

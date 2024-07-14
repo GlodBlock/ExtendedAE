@@ -3,8 +3,10 @@ package com.glodblock.github.extendedae.common.me.matrix;
 import appeng.me.cluster.IAEMultiBlock;
 import appeng.me.cluster.MBCalculator;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixFrame;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixFunction;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -46,10 +48,18 @@ public class CalculatorAssemblerMatrix extends MBCalculator<TileAssemblerMatrixB
 
     @Override
     public boolean verifyInternalStructure(ServerLevel level, BlockPos min, BlockPos max) {
+        boolean anyPattern = false;
+        boolean anyCrafter = false;
         for (var pos : BlockPos.betweenClosed(min, max)) {
             var te = (IAEMultiBlock<?>) level.getBlockEntity(pos);
             if (te == null || !te.isValid()) {
                 return false;
+            }
+            if (anyPattern || te instanceof TileAssemblerMatrixPattern) {
+                anyPattern = true;
+            }
+            if (anyCrafter || te instanceof TileAssemblerMatrixCrafter) {
+                anyCrafter = true;
             }
             if (isInternal(pos, min, max)) {
                 if (!(te instanceof TileAssemblerMatrixFunction)) {
@@ -65,7 +75,7 @@ public class CalculatorAssemblerMatrix extends MBCalculator<TileAssemblerMatrixB
                 }
             }
         }
-        return true;
+        return anyCrafter && anyPattern;
     }
 
     @Override

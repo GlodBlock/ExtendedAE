@@ -1,7 +1,10 @@
 package com.glodblock.github.extendedae.common.blocks.matrix;
 
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuLocators;
 import com.glodblock.github.extendedae.common.blocks.BlockBaseGui;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
+import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -66,7 +69,7 @@ public abstract class BlockAssemblerMatrixBase<M extends TileAssemblerMatrixBase
     @Override
     public void openGui(M tile, Player p) {
         if (tile.isActive() && tile.isFormed()) {
-            // To-Do
+            MenuOpener.open(ContainerAssemblerMatrix.TYPE, p, MenuLocators.forBlockEntity(tile));
         }
     }
 

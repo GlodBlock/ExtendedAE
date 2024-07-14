@@ -49,7 +49,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     public int usedThread() {
         int cnt = 0;
         for (var t : this.threads) {
-            if (t.getCurrentPattern() != null) {
+            if (!t.getInternalInventory().isEmpty()) {
                 cnt ++;
             }
         }
@@ -64,6 +64,12 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
             }
         }
         return false;
+    }
+
+    public void stop() {
+        for (var thread : this.threads) {
+            thread.stop();
+        }
     }
 
     @Override

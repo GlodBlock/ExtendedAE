@@ -10,6 +10,7 @@ import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.common.me.FreqGenerator;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -25,12 +26,15 @@ import java.util.function.Supplier;
 
 public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction implements InternalInventoryHost, ICraftingProvider {
 
+    public final static int INV_SIZE = 36;
+    private final static FreqGenerator<Integer> G = FreqGenerator.createInt();
     private final AppEngInternalInventory patternInventory;
     private final List<IPatternDetails> patterns = new ArrayList<>();
+    private int locateID = 0;
 
     public TileAssemblerMatrixPattern(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileAssemblerMatrixPattern.class, TileAssemblerMatrixPattern::new, EAESingletons.ASSEMBLER_MATRIX_PATTERN), pos, blockState);
-        this.patternInventory = new AppEngInternalInventory(this, 18);
+        this.patternInventory = new AppEngInternalInventory(this, INV_SIZE, 1);
         this.patternInventory.setFilter(new Filter(this::getLevel));
         this.getMainNode().addService(ICraftingProvider.class, this);
     }
@@ -39,12 +43,31 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
     public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
         super.saveAdditional(data, registries);
         this.patternInventory.writeToNBT(data, "pattern", registries);
+        data.putInt("locate_id", locateID);
+        G.markUsed(this.locateID);
     }
 
     @Override
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
         this.patternInventory.readFromNBT(data, "pattern", registries);
+        if (data.contains("locate_id")) {
+            this.locateID = data.getInt("locate_id");
+            if (this.locateID == 0) {
+                this.locateID = G.genFreq();
+            }
+            G.markUsed(this.locateID);
+        } else {
+            this.locateID = G.genFreq();
+        }
+    }
+
+    public AppEngInternalInventory getPatternInventory() {
+        return this.patternInventory;
+    }
+
+    public int getLocateID() {
+        return this.locateID;
     }
 
     public void updatePatterns() {
@@ -107,7 +130,7 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
         return this.cluster == null || this.cluster.isBusy();
     }
 
-    private record Filter(Supplier<Level> world) implements IAEItemFilter {
+    public record Filter(Supplier<Level> world) implements IAEItemFilter {
 
         @Override
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {

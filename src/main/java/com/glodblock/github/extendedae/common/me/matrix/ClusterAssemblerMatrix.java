@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -82,6 +83,10 @@ public class ClusterAssemblerMatrix implements IAECluster {
         for (var r : this.tiles) {
             r.updateSubType(true);
         }
+    }
+
+    public List<TileAssemblerMatrixPattern> getPatterns() {
+        return Collections.unmodifiableList(this.patterns);
     }
 
     public void done() {
