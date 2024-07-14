@@ -11,6 +11,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
 import com.google.common.collect.Iterators;
 import net.minecraft.network.chat.Component;
@@ -29,7 +30,7 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
 
     public static final MenuType<ContainerPreciseStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerPreciseStorageBus::new, PartPreciseStorageBus.class)
-            .build("precise_storage_bus");
+            .build(ExtendedAE.id("precise_storage_bus"));
 
     @GuiSync(3)
     public AccessRestriction rwMode = AccessRestriction.READ_WRITE;

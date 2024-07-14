@@ -8,6 +8,7 @@ import appeng.core.definitions.AEItems;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -16,7 +17,7 @@ public class ContainerActiveFormationPlane extends UpgradeableMenu<PartActiveFor
 
     public static final MenuType<ContainerActiveFormationPlane> TYPE = MenuTypeBuilder
             .create(ContainerActiveFormationPlane::new, PartActiveFormationPlane.class)
-            .build("active_formation_plane");
+            .build(ExtendedAE.id("active_formation_plane"));
 
     @GuiSync(7)
     public YesNo placeMode;

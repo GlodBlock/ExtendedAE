@@ -21,7 +21,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.externalstorage.GenericStackInv;
@@ -57,7 +57,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileCrystalAssembler extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IGenericInvHost, IRecipeMachine<RecipeInput, CrystalAssemblerRecipe> {
+public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IGenericInvHost, IRecipeMachine<RecipeInput, CrystalAssemblerRecipe> {
 
     public static final int SLOTS = 9;
     public static final int TANK_CAP = 16000;

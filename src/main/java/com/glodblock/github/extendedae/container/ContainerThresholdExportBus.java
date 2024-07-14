@@ -5,6 +5,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.ThresholdMode;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
@@ -21,7 +22,7 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
 
     public static final MenuType<ContainerThresholdExportBus> TYPE = MenuTypeBuilder
             .create(ContainerThresholdExportBus::new, PartThresholdExportBus.class)
-            .build("threshold_export_bus");
+            .build(ExtendedAE.id("threshold_export_bus"));
 
     private final ActionMap actions = ActionMap.create();
     @GuiSync(7)

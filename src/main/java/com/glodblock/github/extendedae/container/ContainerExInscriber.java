@@ -17,6 +17,7 @@ import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.OutputSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
@@ -34,7 +35,7 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
 
     public static final MenuType<ContainerExInscriber> TYPE = MenuTypeBuilder
             .create(ContainerExInscriber::new, TileExInscriber.class)
-            .build("ex_inscriber");
+            .build(ExtendedAE.id("ex_inscriber"));
 
     private final Slot[] tops = new Slot[4];
     private final Slot[] middles = new Slot[4];
@@ -149,8 +150,8 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
 
         if (s == this.middles[this.page]) {
             ItemDefinition<?> press = AEItems.NAME_PRESS;
-            if (press.isSameAs(top) || press.isSameAs(bot)) {
-                return !press.isSameAs(is);
+            if (press.is(top) || press.is(bot)) {
+                return !press.is(is);
             }
 
             return InscriberRecipes.findRecipe(getHost().getLevel(), is, top, bot, false) != null;
@@ -164,8 +165,8 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
 
             // name presses
             ItemDefinition<?> namePress = AEItems.NAME_PRESS;
-            if (namePress.isSameAs(otherSlot)) {
-                return namePress.isSameAs(is);
+            if (namePress.is(otherSlot)) {
+                return namePress.is(is);
             }
 
             // everything else

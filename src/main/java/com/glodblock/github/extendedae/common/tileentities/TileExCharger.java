@@ -2,7 +2,7 @@ package com.glodblock.github.extendedae.common.tileentities;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
+import appeng.api.config.PowerUnit;
 import appeng.api.implementations.blockentities.ICrankable;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.inventories.InternalInventory;
@@ -15,7 +15,7 @@ import appeng.api.orientation.RelativeSide;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalBlockPos;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.blockentity.misc.ChargerRecipes;
 import appeng.core.AEConfig;
 import appeng.core.settings.TickRates;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTickable, ICrankPowered {
+public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGridTickable, ICrankPowered {
 
     public static final int POWER_MAXIMUM_AMOUNT = 3200;
     public static final int MAX_THREAD = 4;
@@ -176,7 +176,7 @@ public class TileExCharger extends AENetworkPowerBlockEntity implements IGridTic
                     final double extracted = grid.getEnergyService().extractAEPower(toExtract, Actionable.MODULATE,
                             PowerMultiplier.ONE);
 
-                    this.injectExternalPower(PowerUnits.AE, extracted, Actionable.MODULATE);
+                    this.injectExternalPower(PowerUnit.AE, extracted, Actionable.MODULATE);
                 });
                 changed = true;
             }

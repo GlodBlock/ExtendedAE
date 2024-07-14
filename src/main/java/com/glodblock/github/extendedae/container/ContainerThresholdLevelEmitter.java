@@ -10,6 +10,7 @@ import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.slot.FakeSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -30,7 +31,7 @@ public class ContainerThresholdLevelEmitter extends UpgradeableMenu<PartThreshol
                 menu.upperValue = buffer.readVarLong();
                 menu.lowerValue = buffer.readVarLong();
             })
-            .build("threshold_level_emitter");
+            .build(ExtendedAE.id("threshold_level_emitter"));
 
     @GuiSync(7)
     public long upperValue;

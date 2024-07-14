@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.container;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartModExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
@@ -18,7 +19,7 @@ public class ContainerModExportBus extends UpgradeableMenu<PartModExportBus> imp
 
     public static final MenuType<ContainerModExportBus> TYPE = MenuTypeBuilder
             .create(ContainerModExportBus::new, PartModExportBus.class)
-            .build("mod_export_bus");
+            .build(ExtendedAE.id("mod_export_bus"));
 
     @GuiSync(9)
     public String exp = "";

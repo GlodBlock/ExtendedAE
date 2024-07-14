@@ -12,6 +12,7 @@ import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.OutputSlot;
 import appeng.util.ConfigMenuInventory;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,7 +32,7 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
 
     public static final MenuType<ContainerCrystalAssembler> TYPE = MenuTypeBuilder
             .create(ContainerCrystalAssembler::new, TileCrystalAssembler.class)
-            .build("crystal_assembler");
+            .build(ExtendedAE.id("crystal_assembler"));
 
     public ContainerCrystalAssembler(int id, Inventory ip, TileCrystalAssembler host) {
         super(TYPE, id, ip, host);

@@ -12,6 +12,7 @@ import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.IOptionalSlot;
 import appeng.menu.slot.OutputSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
@@ -29,7 +30,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
 
     public static final MenuType<ContainerExMolecularAssembler> TYPE = MenuTypeBuilder
             .create(ContainerExMolecularAssembler::new, TileExMolecularAssembler.class)
-            .build("ex_molecular_assembler");
+            .build(ExtendedAE.id("ex_molecular_assembler"));
 
     private static final int MAX_CRAFT_PROGRESS = 100;
     private final ActionMap actions = ActionMap.create();

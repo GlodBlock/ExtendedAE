@@ -8,6 +8,7 @@ import appeng.api.util.IConfigManager;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
@@ -27,7 +28,7 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
 
     public static final MenuType<ContainerModStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerModStorageBus::new, PartModStorageBus.class)
-            .build("mod_storage_bus");
+            .build(ExtendedAE.id("mod_storage_bus"));
 
     @GuiSync(3)
     public AccessRestriction rwMode = AccessRestriction.READ_WRITE;

@@ -153,7 +153,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     private final AETextField searchField;
     private final SearchButton searchMode;
 
-    private int visibleRows = 0;
+    protected int visibleRows = 0;
 
     private final ServerSettingToggleButton<ShowPatternProviders> showPatternProviders;
 

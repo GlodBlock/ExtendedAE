@@ -6,6 +6,7 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.FilteredInternalInventory;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
@@ -31,7 +32,7 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
 
     public static final MenuType<ContainerAssemblerMatrix> TYPE = MenuTypeBuilder
             .create(ContainerAssemblerMatrix::new, TileAssemblerMatrixBase.class)
-            .build("assembler_matrix");
+            .build(ExtendedAE.id("assembler_matrix"));
 
     private final ActionMap actions = ActionMap.create();
     private final List<PatternSlotTracker> trackers = new ArrayList<>();

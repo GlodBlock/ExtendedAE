@@ -10,6 +10,7 @@ import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.OutputSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -24,7 +25,7 @@ public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> i
 
     public static final MenuType<ContainerCircuitCutter> TYPE = MenuTypeBuilder
             .create(ContainerCircuitCutter::new, TileCircuitCutter.class)
-            .build("circuit_cutter");
+            .build(ExtendedAE.id("circuit_cutter"));
 
     public ContainerCircuitCutter(int id, Inventory ip, TileCircuitCutter host) {
         super(TYPE, id, ip, host);

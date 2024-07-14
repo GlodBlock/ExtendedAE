@@ -30,12 +30,7 @@ public class GuiUWirelessExPAT extends GuiExPatternTerminal<ContainerUWirelessEx
     @Override
     public void init() {
         super.init();
-        this.upgradesPanel.setMaxRows(Math.max(2, this.getVisibleRows()));
-    }
-
-    @Override
-    public int getVisibleRows() {
-        return 2;
+        this.upgradesPanel.setMaxRows(Math.max(2, this.visibleRows));
     }
 
     @Override

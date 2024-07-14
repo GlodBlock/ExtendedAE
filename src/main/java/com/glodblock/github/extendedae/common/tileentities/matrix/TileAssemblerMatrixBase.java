@@ -6,7 +6,7 @@ import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.grid.AENetworkBlockEntity;
+import appeng.blockentity.grid.AENetworkedBlockEntity;
 import appeng.me.cluster.IAEMultiBlock;
 import appeng.util.iterators.ChainedIterator;
 import com.glodblock.github.extendedae.common.EAESingletons;
@@ -30,7 +30,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public abstract class TileAssemblerMatrixBase extends AENetworkBlockEntity implements IAEMultiBlock<ClusterAssemblerMatrix>, IPowerChannelState {
+public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity implements IAEMultiBlock<ClusterAssemblerMatrix>, IPowerChannelState {
 
     protected final CalculatorAssemblerMatrix calc = new CalculatorAssemblerMatrix(this);
     protected boolean isCore = false;

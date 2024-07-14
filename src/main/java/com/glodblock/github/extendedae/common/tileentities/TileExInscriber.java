@@ -18,7 +18,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.core.settings.TickRates;
 import appeng.recipes.handlers.InscriberRecipe;
 import appeng.util.ConfigManager;
@@ -46,7 +46,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileExInscriber extends AENetworkPowerBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, ICrankPowered {
+public class TileExInscriber extends AENetworkedPoweredBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, ICrankPowered {
 
     public static final int MAX_THREAD = 4;
     private final InscriberThread[] threads = new InscriberThread[MAX_THREAD];

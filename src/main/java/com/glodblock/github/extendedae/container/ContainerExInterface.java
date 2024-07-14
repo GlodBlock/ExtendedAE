@@ -10,6 +10,7 @@ import appeng.menu.implementations.SetStockAmountMenu;
 import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,10 +27,10 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
 
     public static final MenuType<ContainerExInterface> TYPE = MenuTypeBuilder
             .create(ContainerExInterface::new, InterfaceLogicHost.class)
-            .build("ex_interface");
+            .build(ExtendedAE.id("ex_interface"));
     public static final MenuType<ContainerExInterface> TYPE_OVERSIZE = MenuTypeBuilder
             .create(ContainerExInterface::new, InterfaceLogicHost.class)
-            .build("oversize_interface");
+            .build(ExtendedAE.id("oversize_interface"));
 
     private static final int PAGE = 18;
     private static final int LINE = 9;

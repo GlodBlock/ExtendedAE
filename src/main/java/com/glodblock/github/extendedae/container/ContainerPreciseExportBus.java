@@ -4,6 +4,7 @@ import appeng.core.definitions.AEItems;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -13,7 +14,7 @@ public class ContainerPreciseExportBus extends UpgradeableMenu<PartPreciseExport
 
     public static final MenuType<ContainerPreciseExportBus> TYPE = MenuTypeBuilder
             .create(ContainerPreciseExportBus::new, PartPreciseExportBus.class)
-            .build("precise_export_bus");
+            .build(ExtendedAE.id("precise_export_bus"));
 
     public ContainerPreciseExportBus(int id, Inventory ip, PartPreciseExportBus host) {
         super(TYPE, id, ip, host);

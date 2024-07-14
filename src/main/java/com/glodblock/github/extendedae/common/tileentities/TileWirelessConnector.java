@@ -9,7 +9,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.blockentity.ServerTickingBlockEntity;
-import appeng.blockentity.grid.AENetworkBlockEntity;
+import appeng.blockentity.grid.AENetworkedBlockEntity;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.FreqGenerator;
@@ -30,7 +30,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 // Adapt from Quantum Bridge code
-public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity {
+public class TileWirelessConnector extends AENetworkedBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity {
 
     private boolean updateStatus = true;
     private long freq = 0;

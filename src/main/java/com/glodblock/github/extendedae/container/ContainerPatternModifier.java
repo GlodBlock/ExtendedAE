@@ -15,6 +15,7 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.OutputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.client.gui.widget.SingleFakeSlot;
@@ -34,7 +35,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
     private final ActionMap actions = ActionMap.create();
     public static final MenuType<ContainerPatternModifier> TYPE = MenuTypeBuilder
             .create(ContainerPatternModifier::new, HostPatternModifier.class)
-            .build("pattern_modifier");
+            .build(ExtendedAE.id("pattern_modifier"));
 
     public final AppEngSlot targetSlot;
     public final AppEngSlot cloneSlot;
@@ -251,7 +252,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
     private boolean consumeBlankPattern() {
         for (var slot : this.getSlots(ExSemantics.EX_3)) {
             var stack = slot.getItem();
-            if (!stack.isEmpty() && AEItems.BLANK_PATTERN.isSameAs(stack)) {
+            if (!stack.isEmpty() && AEItems.BLANK_PATTERN.is(stack)) {
                 stack.shrink(1);
                 if (stack.getCount() <= 0) {
                     slot.set(ItemStack.EMPTY);

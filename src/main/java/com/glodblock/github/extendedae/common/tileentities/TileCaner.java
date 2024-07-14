@@ -4,7 +4,7 @@ import appeng.api.behaviors.ContainerItemContext;
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
+import appeng.api.config.PowerUnit;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
@@ -20,7 +20,7 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.parts.automation.StackWorldBehaviors;
@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
-public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickable, ICraftingMachine, IGenericInvHost {
+public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTickable, ICraftingMachine, IGenericInvHost {
 
     public static final int POWER_MAXIMUM_AMOUNT = 3200;
     public static final int POWER_USAGE = 80;
@@ -154,7 +154,7 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
             getMainNode().ifPresent(grid -> {
                 double toExtract = Math.min(POWER_USAGE, this.getInternalMaxPower() - this.getInternalCurrentPower());
                 final double extracted = grid.getEnergyService().extractAEPower(toExtract, Actionable.MODULATE, PowerMultiplier.ONE);
-                this.injectExternalPower(PowerUnits.AE, extracted, Actionable.MODULATE);
+                this.injectExternalPower(PowerUnit.AE, extracted, Actionable.MODULATE);
             });
         }
         if (this.mode == CanerMode.FILL) {

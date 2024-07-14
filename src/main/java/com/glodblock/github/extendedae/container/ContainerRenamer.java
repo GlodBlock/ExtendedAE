@@ -5,6 +5,7 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.parts.AEBasePart;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
@@ -24,7 +25,7 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
 
     public static final MenuType<ContainerRenamer> TYPE = MenuTypeBuilder
             .create(ContainerRenamer::new, Object.class)
-            .build("renamer");
+            .build(ExtendedAE.id("renamer"));
     private final ActionMap actions = ActionMap.create();
     private final Consumer<String> setter;
     private final Supplier<Component> getter;

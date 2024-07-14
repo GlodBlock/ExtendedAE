@@ -5,6 +5,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.AppEngSlot;
 import appeng.util.ConfigMenuInventory;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -13,7 +14,7 @@ public class ContainerIngredientBuffer extends AEBaseMenu {
 
     public static final MenuType<ContainerIngredientBuffer> TYPE = MenuTypeBuilder
             .create(ContainerIngredientBuffer::new, TileIngredientBuffer.class)
-            .build("ingredient_buffer");
+            .build(ExtendedAE.id("ingredient_buffer"));
 
     public ContainerIngredientBuffer(int id, Inventory playerInventory, TileIngredientBuffer host) {
         super(TYPE, id, playerInventory, host);

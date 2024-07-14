@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.container;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessStatus;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,7 +13,7 @@ public class ContainerWirelessConnector extends UpgradeableMenu<TileWirelessConn
 
     public static final MenuType<ContainerWirelessConnector> TYPE = MenuTypeBuilder
             .create(ContainerWirelessConnector::new, TileWirelessConnector.class)
-            .build("wireless_connector");
+            .build(ExtendedAE.id("wireless_connector"));
 
     private final TileWirelessConnector connector;
     @GuiSync(7)

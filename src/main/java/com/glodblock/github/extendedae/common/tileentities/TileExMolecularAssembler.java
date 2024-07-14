@@ -20,7 +20,7 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
-import appeng.blockentity.grid.AENetworkInvBlockEntity;
+import appeng.blockentity.grid.AENetworkedInvBlockEntity;
 import appeng.client.render.crafting.AssemblerAnimationStatus;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
@@ -52,7 +52,7 @@ import java.util.List;
 
 import static appeng.blockentity.crafting.MolecularAssemblerBlockEntity.INV_MAIN;
 
-public class TileExMolecularAssembler extends AENetworkInvBlockEntity implements IUpgradeableObject, IGridTickable, ICraftingMachine, IPowerChannelState {
+public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implements IUpgradeableObject, IGridTickable, ICraftingMachine, IPowerChannelState {
 
     public static final int MAX_THREAD = 8;
     private final IUpgradeInventory upgrades;

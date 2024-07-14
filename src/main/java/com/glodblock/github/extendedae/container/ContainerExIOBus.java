@@ -4,6 +4,7 @@ import appeng.core.definitions.AEItems;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import appeng.parts.automation.IOBusPart;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
 import com.glodblock.github.extendedae.common.parts.PartExImportBus;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,11 +14,11 @@ public class ContainerExIOBus extends UpgradeableMenu<IOBusPart> {
 
     public static final MenuType<ContainerExIOBus> EXPORT_TYPE = MenuTypeBuilder
             .create(ContainerExIOBus::new, PartExExportBus.class)
-            .build("ex_export_bus");
+            .build(ExtendedAE.id("ex_export_bus"));
 
     public static final MenuType<ContainerExIOBus> IMPORT_TYPE = MenuTypeBuilder
             .create(ContainerExIOBus::new, PartExImportBus.class)
-            .build("ex_import_bus");
+            .build(ExtendedAE.id("ex_import_bus"));
 
     public ContainerExIOBus(MenuType<?> menuType, int id, Inventory ip, IOBusPart host) {
         super(menuType, id, ip, host);

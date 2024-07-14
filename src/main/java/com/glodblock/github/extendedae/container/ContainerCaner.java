@@ -5,6 +5,7 @@ import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.AppEngSlot;
 import appeng.util.ConfigMenuInventory;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.CanerMode;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
@@ -21,7 +22,7 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
 
     public static final MenuType<ContainerCaner> TYPE = MenuTypeBuilder
             .create(ContainerCaner::new, TileCaner.class)
-            .build("caner");
+            .build(ExtendedAE.id("caner"));
 
     private final ActionMap actions = ActionMap.create();
     @GuiSync(0)

@@ -6,6 +6,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.ToolboxMenu;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.RestrictedInputSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
 import de.mari_023.ae2wtlib.AE2wtlibSlotSemantics;
 import de.mari_023.ae2wtlib.wct.WCTMenuHost;
@@ -17,7 +18,7 @@ public class ContainerUWirelessExPAT extends ContainerExPatternTerminal {
 
     public static final MenuType<ContainerUWirelessExPAT> TYPE = MenuTypeBuilder
             .create(ContainerUWirelessExPAT::new, HostUWirelessExPAT.class)
-            .build("u_wireless_ex_pattern_access_terminal");
+            .build(ExtendedAE.id("u_wireless_ex_pattern_access_terminal"));
     private final HostUWirelessExPAT host;
     private final ToolboxMenu toolboxMenu;
 

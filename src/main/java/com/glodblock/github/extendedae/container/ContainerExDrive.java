@@ -5,6 +5,7 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.RestrictedInputSlot;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,7 +15,7 @@ public class ContainerExDrive extends AEBaseMenu {
 
     public static final MenuType<ContainerExDrive> TYPE = MenuTypeBuilder
             .create(ContainerExDrive::new, TileExDrive.class)
-            .build("ex_drive");
+            .build(ExtendedAE.id("ex_drive"));
 
     public ContainerExDrive(int id, Inventory ip, DriveBlockEntity drive) {
         super(TYPE, id, ip, drive);
