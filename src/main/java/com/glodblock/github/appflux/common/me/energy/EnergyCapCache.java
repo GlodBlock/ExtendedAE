@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 public class EnergyCapCache {
 
     private final Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>[]> cache = new IdentityHashMap<>();
-    private final Map<Direction, BlockCapabilityCache<IInWorldGridNodeHost, Direction>> girdCache = new IdentityHashMap<>();
+    private final Map<Direction, BlockCapabilityCache<IInWorldGridNodeHost, Void>> girdCache = new IdentityHashMap<>();
 
     private final ServerLevel world;
     private final BlockPos pos;
@@ -50,8 +50,8 @@ public class EnergyCapCache {
         return true;
     }
 
-    private BlockCapabilityCache<IInWorldGridNodeHost, Direction> getGridCache(Direction side) {
-        return this.girdCache.computeIfAbsent(side, face -> BlockCapabilityCache.create(AECapabilities.IN_WORLD_GRID_NODE_HOST, this.world, this.pos.relative(face), face.getOpposite()));
+    private BlockCapabilityCache<IInWorldGridNodeHost, Void> getGridCache(Direction side) {
+        return this.girdCache.computeIfAbsent(side, face -> BlockCapabilityCache.create(AECapabilities.IN_WORLD_GRID_NODE_HOST, this.world, this.pos.relative(face), null));
     }
 
     @SuppressWarnings("unchecked")
