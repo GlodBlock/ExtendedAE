@@ -280,6 +280,9 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.THRESHOLD_EXPORT_BUS, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CRYSTAL_ASSEMBLER, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CIRCUIT_CUTTER, 4);
+        if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
+            WTCommonLoad.init();
+        }
     }
 
     private void registerStorageHandler() {

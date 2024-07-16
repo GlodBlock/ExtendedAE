@@ -17,10 +17,9 @@ public class WTCommonLoad {
 
     public static void container() {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("u_wireless_ex_pattern_access_terminal"), ContainerUWirelessExPAT.TYPE);
-        Upgrades.add(AE2wtlibItems.QUANTUM_BRIDGE_CARD, EAESingletons.WIRELESS_EX_PAT, 1, GuiText.WirelessTerminals.getTranslationKey());
     }
 
-    public static void init() {
+    public static void initEvent() {
         AddTerminalEvent.register(event -> event.builder(
                 "ex_pattern_access",
                 HostUWirelessExPAT::new,
@@ -28,6 +27,10 @@ public class WTCommonLoad {
                 (ItemWT) EAESingletons.WIRELESS_EX_PAT,
                 new Icon(32, 32, 16, 16, TX)
         ).addTerminal());
+    }
+
+    public static void init() {
+        Upgrades.add(AE2wtlibItems.QUANTUM_BRIDGE_CARD, EAESingletons.WIRELESS_EX_PAT, 1, GuiText.WirelessTerminals.getTranslationKey());
     }
 
 }

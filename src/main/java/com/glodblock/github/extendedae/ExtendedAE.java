@@ -46,7 +46,7 @@ public class ExtendedAE {
             if (e.getRegistryKey().equals(Registries.BLOCK)) {
                 EAESingletons.init(EAERegistryHandler.INSTANCE);
                 if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
-                    WTCommonLoad.init();
+                    WTCommonLoad.initEvent();
                 }
                 EAERegistryHandler.INSTANCE.runRegister();
             }
