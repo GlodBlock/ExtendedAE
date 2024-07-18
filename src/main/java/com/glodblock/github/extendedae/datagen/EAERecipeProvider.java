@@ -18,6 +18,9 @@ import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodUtil;
+import gripe._90.megacells.definition.MEGABlocks;
+import gripe._90.megacells.definition.MEGAItems;
+import gripe._90.megacells.definition.MEGATags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -669,20 +672,20 @@ public class EAERecipeProvider extends RecipeProvider {
     }
 
     private void maga(@NotNull RecipeOutput c) {
-        /*// Sky steel
+        // Sky steel
         CrystalAssemblerRecipeBuilder
                 .assemble(MEGAItems.SKY_STEEL_INGOT, 8)
                 .input(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED, 4)
                 .input(ConventionTags.IRON_INGOT, 4)
-                .input(AEItems.SKY_DUST, 4)
+                .input(AEBlocks.SKY_STONE_BLOCK, 4)
                 .fluid(Fluids.LAVA, 100)
                 .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("assembler/sky_steel"));
 
         // Accumulation Processor
         CircuitCutterRecipeBuilder
                 .cut(MEGAItems.ACCUMULATION_PROCESSOR_PRINT, 9)
-                .input(MEGATags.SKY_STEEL_BLOCK_ITEM)
-                .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("cutter/accumulation_processor"));*/
+                .input(MEGABlocks.SKY_STEEL_BLOCK)
+                .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("cutter/accumulation_processor"));
     }
 
     private void assemblerCircuit(@NotNull RecipeOutput c) {
@@ -711,6 +714,20 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SILICON_PRINT, 4)
                 .input(ConventionTags.REDSTONE, 4)
                 .save(c.withConditions(cond), ExtendedAE.id("assembler/concurrent_processor"));
+        // AppFlux
+        CrystalAssemblerRecipeBuilder
+                .assemble(AFSingletons.ENERGY_PROCESSOR, 4)
+                .input(AFSingletons.ENERGY_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.REDSTONE, 4)
+                .save(c.withConditions(cond, mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/energy_processor"));
+        // MEGA
+        CrystalAssemblerRecipeBuilder
+                .assemble(MEGAItems.ACCUMULATION_PROCESSOR, 4)
+                .input(MEGAItems.ACCUMULATION_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.FLUIX_DUST, 4)
+                .save(c.withConditions(cond, mod(ModConstants.MEGA)), ExtendedAE.id("assembler/accumulation_processor"));
     }
 
     private void fixer(@NotNull RecipeOutput c) {
