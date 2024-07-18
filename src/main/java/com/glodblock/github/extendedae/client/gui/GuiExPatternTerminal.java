@@ -326,7 +326,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     private int getHoveredLineIndex(int x, int y) {
         x = x - leftPos - GUI_PADDING_X;
-        y = y - topPos - SLOT_SIZE; // Header is exactly one slot in size
+        y = y - topPos - GUI_HEADER_HEIGHT;
         if (x < 0 || y < 0) {
             return -1;
         }
