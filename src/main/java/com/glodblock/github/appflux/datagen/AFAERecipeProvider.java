@@ -113,6 +113,19 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .unlockedBy(C, has(AFSingletons.INSULATING_RESIN))
                 .save(consumer,  AppFlux.id("blasting/harden_resin"));
         ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, AFSingletons.CHARGED_REDSTONE_BLOCK)
+                .pattern("XXX")
+                .pattern("XXX")
+                .pattern("XXX")
+                .define('X', AFSingletons.CHARGED_REDSTONE)
+                .unlockedBy(C, has(AFSingletons.CHARGED_REDSTONE))
+                .save(consumer, AppFlux.id("charged_redstone_block"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, AFSingletons.CHARGED_REDSTONE, 9)
+                .requires(AFSingletons.CHARGED_REDSTONE_BLOCK)
+                .unlockedBy(C, has(AFSingletons.CHARGED_REDSTONE_BLOCK))
+                .save(consumer, AppFlux.id("charged_redstone_block_decompress"));
+        ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFSingletons.CORE_1k)
                 .pattern("DCD")
                 .pattern("CPC")

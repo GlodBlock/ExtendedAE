@@ -1,6 +1,7 @@
 package com.glodblock.github.appflux.common;
 
 import appeng.items.parts.PartItem;
+import com.glodblock.github.appflux.common.blocks.BlockChargedRedstoneBlock;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
 import com.glodblock.github.appflux.common.items.ItemInductionCard;
@@ -58,6 +59,7 @@ public class AFSingletons {
     public static BlockFluxAccessor FLUX_ACCESSOR;
     public static PartItem<PartFluxAccessor> PART_FLUX_ACCESSOR;
     public static ItemInductionCard INDUCTION_CARD;
+    public static BlockChargedRedstoneBlock CHARGED_REDSTONE_BLOCK;
 
     public static void init(AFRegistryHandler regHandler) {
         FE_ENERGY = GlodUtil.getComponentType(Codec.LONG, ByteBufCodecs.VAR_LONG);
@@ -100,6 +102,7 @@ public class AFSingletons {
             }
         };
         INDUCTION_CARD = new ItemInductionCard();
+        CHARGED_REDSTONE_BLOCK = new BlockChargedRedstoneBlock();
         regHandler.comp("fe_energy", FE_ENERGY);
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
@@ -134,6 +137,7 @@ public class AFSingletons {
         regHandler.item("emerald_dust", EMERALD_DUST);
         regHandler.item("induction_card", INDUCTION_CARD);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);
+        regHandler.block("charged_redstone_block", CHARGED_REDSTONE_BLOCK);
     }
 
 }

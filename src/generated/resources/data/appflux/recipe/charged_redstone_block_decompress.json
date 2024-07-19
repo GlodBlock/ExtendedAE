@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "appflux:charged_redstone_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "appflux:charged_redstone"
+  }
+}

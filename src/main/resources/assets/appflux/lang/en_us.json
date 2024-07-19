@@ -34,6 +34,7 @@
   "item.appflux.induction_card.tooltip": "Allow AE devices to accept or send energy",
   "item.appflux.part_flux_accessor": "Flux Accessor",
   "block.appflux.flux_accessor": "Flux Accessor",
+  "block.appflux.charged_redstone_block": "Charged Redstone Crystal Block",
   "block.appflux.flux_accessor.tooltip.1": "Pull energy from network.",
   "block.appflux.flux_accessor.tooltip.2": "Need external cable to push energy",
   "appflux.key.flux": "Energy",

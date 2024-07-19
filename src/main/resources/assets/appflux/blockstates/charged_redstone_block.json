@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "appflux:block/charged_redstone_block"
+    }
+  }
+}

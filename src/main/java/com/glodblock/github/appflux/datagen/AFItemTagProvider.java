@@ -30,5 +30,6 @@ public class AFItemTagProvider extends ItemTagsProvider {
         tag(Tags.Items.DUSTS).add(AFSingletons.DIAMOND_DUST);
         tag(AFTags.EMERALD_DUST).add(AFSingletons.EMERALD_DUST);
         tag(Tags.Items.DUSTS).add(AFSingletons.EMERALD_DUST);
+        tag(Tags.Items.STORAGE_BLOCKS).add(AFSingletons.CHARGED_REDSTONE_BLOCK.asItem());
     }
 }

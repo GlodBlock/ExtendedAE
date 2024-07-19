@@ -30,6 +30,7 @@ public class AFLootTableProvider extends LootTableProvider {
         @Override
         protected void generate() {
             add(AFSingletons.FLUX_ACCESSOR, createSingleItemTable(AFSingletons.FLUX_ACCESSOR));
+            add(AFSingletons.CHARGED_REDSTONE_BLOCK, createSingleItemTable(AFSingletons.CHARGED_REDSTONE_BLOCK));
         }
 
         public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> bi) {
