@@ -3,16 +3,19 @@ package com.glodblock.github.appflux.common.me.service;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridService;
 import appeng.api.networking.IGridServiceProvider;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class EnergyDistributeService implements IGridService, IGridServiceProvider {
 
     private final Map<IGridNode, IEnergyDistributor> distributors = new IdentityHashMap<>();
+    private final Set<IEnergyDistributor> activeNodes = new ReferenceOpenHashSet<>();
 
     public EnergyDistributeService() {
         // NO-OP
@@ -20,14 +23,19 @@ public class EnergyDistributeService implements IGridService, IGridServiceProvid
 
     @Override
     public void onLevelEndTick(Level level) {
-        for (var dis : this.distributors.values()) {
+        for (var dis : this.activeNodes) {
             dis.distribute();
         }
     }
 
     @Override
     public void removeNode(IGridNode gridNode) {
-        this.distributors.remove(gridNode);
+        var node = this.distributors.get(gridNode);
+        if (node != null) {
+            node.setServiceHost(null);
+            this.activeNodes.remove(node);
+            this.distributors.remove(gridNode);
+        }
     }
 
     @Override
@@ -35,7 +43,16 @@ public class EnergyDistributeService implements IGridService, IGridServiceProvid
         var distributor = gridNode.getService(IEnergyDistributor.class);
         if (distributor != null) {
             this.distributors.put(gridNode, distributor);
+            distributor.setServiceHost(this);
         }
+    }
+
+    public void wake(IEnergyDistributor node) {
+        this.activeNodes.add(node);
+    }
+
+    public void sleep(IEnergyDistributor node) {
+        this.activeNodes.remove(node);
     }
 
 }

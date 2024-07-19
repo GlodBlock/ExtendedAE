@@ -11,10 +11,12 @@ import appeng.helpers.InterfaceLogicHost;
 import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -50,6 +52,9 @@ public abstract class MixinInterfaceLogic implements IEnergyDistributor {
     @Unique
     private EnergyCapCache af_cacheApi;
 
+    @Unique
+    private EnergyDistributeService af_service;
+
     @Inject(
             method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/InterfaceLogicHost;Lnet/minecraft/world/item/Item;I)V",
             at = @At("TAIL"),
@@ -67,6 +72,13 @@ public abstract class MixinInterfaceLogic implements IEnergyDistributor {
     )
     private void notifyUpgrade(CallbackInfo ci) {
         this.host.getBlockEntity().invalidateCapabilities();
+        if (this.af_service != null) {
+            if (this.upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
+                this.af_service.wake(this);
+            } else {
+                this.af_service.sleep(this);
+            }
+        }
     }
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
@@ -85,6 +97,19 @@ public abstract class MixinInterfaceLogic implements IEnergyDistributor {
                 for (var d : AFUtil.getSides(this.host)) {
                     EnergyHandler.send(this.af_cacheApi, d, storage, this.actionSource);
                 }
+            }
+        }
+    }
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        this.af_service = service;
+        if (this.af_service != null) {
+            if (this.upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
+                this.af_service.wake(this);
+            } else {
+                this.af_service.sleep(this);
             }
         }
     }

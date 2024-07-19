@@ -10,6 +10,7 @@ import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyDistributor {
 
@@ -77,6 +79,13 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
             if (AFConfig.selfCharge() && gird != null) {
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
+        }
+    }
+
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        if (service != null) {
+            service.wake(this);
         }
     }
 

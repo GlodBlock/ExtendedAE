@@ -12,12 +12,14 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,8 +33,6 @@ import java.util.List;
 @Mixin(value = PatternProviderLogic.class, remap = false)
 public abstract class MixinPatternProviderLogic implements IUpgradeableObject, IEnergyDistributor {
 
-    @Unique
-    private IUpgradeInventory af_$upgrades = UpgradeInventories.empty();
     @Final
     @Shadow
     private PatternProviderLogicHost host;
@@ -46,17 +46,30 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
     private IActionSource actionSource;
 
     @Unique
+    private IUpgradeInventory af_upgrades = UpgradeInventories.empty();
+
+    @Unique
     private EnergyCapCache af_cacheApi;
 
     @Unique
-    private void af_$onUpgradesChanged() {
+    private EnergyDistributeService af_service;
+
+    @Unique
+    private void af_onUpgradesChanged() {
         this.host.saveChanges();
         this.host.getBlockEntity().invalidateCapabilities();
+        if (this.af_service != null) {
+            if (this.af_upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
+                this.af_service.wake(this);
+            } else {
+                this.af_service.sleep(this);
+            }
+        }
     }
 
     @Override
     public IUpgradeInventory getUpgrades() {
-        return this.af_$upgrades;
+        return this.af_upgrades;
     }
 
     @Inject(
@@ -64,7 +77,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
             at = @At("TAIL")
     )
     private void initUpgrade(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
-        af_$upgrades = UpgradeInventories.forMachine(host.getTerminalIcon().getItem(), 1, this::af_$onUpgradesChanged);
+        af_upgrades = UpgradeInventories.forMachine(host.getTerminalIcon().getItem(), 1, this::af_onUpgradesChanged);
         this.mainNode.addService(IEnergyDistributor.class, this);
     }
 
@@ -73,7 +86,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
             at = @At("TAIL")
     )
     private void saveUpgrade(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
-        this.af_$upgrades.writeToNBT(tag, "upgrades", registries);
+        this.af_upgrades.writeToNBT(tag, "upgrades", registries);
     }
 
     @Inject(
@@ -81,7 +94,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
             at = @At("TAIL")
     )
     private void loadUpgrade(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
-        this.af_$upgrades.readFromNBT(tag, "upgrades", registries);
+        this.af_upgrades.readFromNBT(tag, "upgrades", registries);
     }
 
     @Inject(
@@ -89,7 +102,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
             at = @At("TAIL")
     )
     private void dropUpgrade(List<ItemStack> drops, CallbackInfo ci) {
-        for (var is : this.af_$upgrades) {
+        for (var is : this.af_upgrades) {
             if (!is.isEmpty()) {
                 drops.add(is);
             }
@@ -101,7 +114,7 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
             at = @At("TAIL")
     )
     private void clearUpgrade(CallbackInfo ci) {
-        this.af_$upgrades.clear();
+        this.af_upgrades.clear();
     }
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
@@ -114,12 +127,25 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
         if (this.af_cacheApi == null) {
             this.af_initCache();
         }
-        if (this.af_$upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
+        if (this.af_upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
             var storage = this.af_getStorage();
             if (storage != null) {
                 for (var d : AFUtil.getSides(this.host)) {
                     EnergyHandler.send(this.af_cacheApi, d, storage, this.actionSource);
                 }
+            }
+        }
+    }
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        this.af_service = service;
+        if (this.af_service != null) {
+            if (this.af_upgrades.isInstalled(AFSingletons.INDUCTION_CARD)) {
+                this.af_service.wake(this);
+            } else {
+                this.af_service.sleep(this);
             }
         }
     }

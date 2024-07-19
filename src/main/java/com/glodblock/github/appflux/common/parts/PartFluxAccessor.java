@@ -15,12 +15,14 @@ import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
@@ -96,6 +98,13 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
             if (AFConfig.selfCharge() && gird != null) {
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
+        }
+    }
+
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        if (service != null) {
+            service.wake(this);
         }
     }
 
