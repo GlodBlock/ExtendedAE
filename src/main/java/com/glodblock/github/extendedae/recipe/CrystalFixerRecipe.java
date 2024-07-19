@@ -1,7 +1,6 @@
 package com.glodblock.github.extendedae.recipe;
 
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.glodium.Glodium;
 import com.glodblock.github.glodium.recipe.stack.IngredientStack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
@@ -37,13 +36,14 @@ public class CrystalFixerRecipe implements Recipe<RecipeInput> {
     }
 
     public CrystalFixerRecipe(Block input, Block output, IngredientStack.Item fuel, int chance) {
-        if (FAST_LOOKUP.containsKey(input)) {
-            throw new IllegalArgumentException(input + " has been used in other crystal fixer recipe");
-        }
         this.input = input;
         this.output = output;
         this.fuel = fuel;
         this.chance = chance;
+    }
+
+    public static void clearLookup() {
+        FAST_LOOKUP.clear();
     }
 
     private static Block asBlock(ItemStack stack) {
