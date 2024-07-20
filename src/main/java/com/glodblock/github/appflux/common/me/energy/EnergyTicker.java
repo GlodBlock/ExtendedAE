@@ -8,6 +8,8 @@ import appeng.parts.PartAdjacentApi;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,6 +35,7 @@ public class EnergyTicker implements IEnergyDistributor {
     private Set<Direction> validSides;
     // mutable
     private final Set<Direction> blocked = EnumSet.noneOf(Direction.class);
+    private final Reference2ReferenceMap<Direction, EnergyTickRecord> lastTick = new Reference2ReferenceOpenHashMap<>();
     private final ICapabilityInvalidationListener[] listeners = new ICapabilityInvalidationListener[6];
 
     public EnergyTicker(Supplier<BlockEntity> tileGetter, Object host, BooleanSupplier controller, IManagedGridNode node, IActionSource source) {
@@ -66,7 +69,7 @@ public class EnergyTicker implements IEnergyDistributor {
     }
 
     @Override
-    public void distribute() {
+    public void distribute(long ticks) {
         if (this.service == null) {
             return;
         }
@@ -83,8 +86,14 @@ public class EnergyTicker implements IEnergyDistributor {
                 if (this.blocked.contains(d)) {
                     continue;
                 }
-                if (EnergyHandler.failSend(this.cache, d, storage, this.source)) {
-                    this.blocked.add(d);
+                var tickRate = this.lastTick.get(d);
+                if (tickRate.needTick(ticks)) {
+                    long sent = EnergyHandler.send(this.cache, d, storage, this.source);
+                    if (sent == -1) {
+                        this.blocked.add(d);
+                    } else {
+                        tickRate.sent(sent);
+                    }
                 }
             }
         }
@@ -102,6 +111,7 @@ public class EnergyTicker implements IEnergyDistributor {
                 for (var d : this.validSides) {
                     var pos = this.tile.getBlockPos().relative(d);
                     world.registerCapabilityListener(pos, this.listeners[d.get3DDataValue()]);
+                    this.lastTick.put(d, new EnergyTickRecord());
                 }
             }
         }

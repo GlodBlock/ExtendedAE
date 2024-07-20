@@ -32,7 +32,7 @@ public class MIEnergyCap implements MIEnergyStorage {
         }
     }
 
-    public static void send(MIEnergyStorage accepter, IStorageService storage, IActionSource source) {
+    public static long send(MIEnergyStorage accepter, IStorageService storage, IActionSource source) {
         var toAdd = accepter.receive(AFConfig.getFluxAccessorIO(), true);
         if (toAdd > 0) {
             var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
@@ -42,8 +42,10 @@ public class MIEnergyCap implements MIEnergyStorage {
                 if (differ > 0) {
                     storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, source);
                 }
+                return actuallyDrained;
             }
         }
+        return 0;
     }
 
     @Override

@@ -17,17 +17,22 @@ public class EnergyDistributeService implements IGridService, IGridServiceProvid
     private final Map<IGridNode, IEnergyDistributor> distributors = new IdentityHashMap<>();
     // IdentityHashMap is faster
     private final Set<IEnergyDistributor> activeNodes = Collections.newSetFromMap(new IdentityHashMap<>());
-
+    private long tickCounter = 0;
 
     public EnergyDistributeService() {
         // NO-OP
     }
 
     @Override
+    public void onServerStartTick() {
+        this.tickCounter++;
+    }
+
+    @Override
     public void onLevelEndTick(Level level) {
         for (var dis : this.activeNodes) {
             if (dis.isActive()) {
-                dis.distribute();
+                dis.distribute(this.tickCounter);
             }
         }
     }

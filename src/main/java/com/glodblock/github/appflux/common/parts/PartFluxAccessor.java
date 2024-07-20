@@ -17,6 +17,7 @@ import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.energy.EnergyTickRecord;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
@@ -33,6 +34,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     public static final IPartModel MODEL = new PartModel(RL);
     private EnergyCapCache cacheApi;
     private boolean blocked = false;
+    private final EnergyTickRecord lastTick = new EnergyTickRecord();
     private final ICapabilityInvalidationListener listener;
     private final IActionSource source = IActionSource.ofMachine(this);
 
@@ -109,7 +111,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     }
 
     @Override
-    public void distribute() {
+    public void distribute(long ticks) {
         if (this.getLevel() == null) {
             return;
         }
@@ -121,8 +123,13 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         var gird = this.getGrid();
         if (storage != null && d != null) {
             if (!this.blocked) {
-                if (EnergyHandler.failSend(this.cacheApi, d, storage, this.source)) {
-                    this.blocked = true;
+                if (this.lastTick.needTick(ticks)) {
+                    long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
+                    if (sent == -1) {
+                        this.blocked = true;
+                    } else {
+                        this.lastTick.sent(sent);
+                    }
                 }
             }
             if (AFConfig.selfCharge() && gird != null) {

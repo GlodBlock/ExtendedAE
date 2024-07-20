@@ -34,7 +34,7 @@ public class MekEnergyCap implements IStrictEnergyHandler {
         }
     }
 
-    public static void send(IStrictEnergyHandler handler, IStorageService storage, IActionSource source) {
+    public static long send(IStrictEnergyHandler handler, IStorageService storage, IActionSource source) {
         var ioJ = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(AFConfig.getFluxAccessorIO());
         var notAddedJ = handler.insertEnergy(ioJ, Action.SIMULATE);
         var toAddJ = ioJ.subtract(notAddedJ);
@@ -47,9 +47,12 @@ public class MekEnergyCap implements IStrictEnergyHandler {
                 var leftFE = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(leftJ).longValue();
                 if (leftFE > 0) {
                     storage.getInventory().insert(FluxKey.of(EnergyType.FE), leftFE, Actionable.MODULATE, source);
+                    return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(drainedJ.minusEqual(leftJ)).longValue();
                 }
+                return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(drainedJ).longValue();
             }
         }
+        return 0;
     }
 
     private MekEnergyCap(IStorageService storage, IActionSource source) {

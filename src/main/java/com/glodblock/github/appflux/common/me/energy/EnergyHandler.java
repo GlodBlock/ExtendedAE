@@ -35,8 +35,10 @@ public class EnergyHandler {
                 if (differ > 0) {
                     storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, source);
                 }
+                return actuallyDrained;
             }
         }
+        return 0;
     };
 
     static {
@@ -52,21 +54,20 @@ public class EnergyHandler {
         HANDLERS.add(Pair.of(cap, handler));
     }
 
+    // -1 means this side has no valid energy accepter
     @SuppressWarnings("unchecked")
-    public static <T> boolean failSend(@NotNull EnergyCapCache cache, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
+    public static <T> long send(@NotNull EnergyCapCache cache, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
         for (var entry : HANDLERS) {
             T cap = cache.getEnergyCap((BlockCapability<T, Direction>) entry.left(), side);
             if (cap != null) {
-                ((Handler<T>) entry.right()).send(cap, storage, source);
-                return false;
+                return ((Handler<T>) entry.right()).send(cap, storage, source);
             }
         }
         var cap = cache.getEnergyCap(Capabilities.EnergyStorage.BLOCK, side);
         if (cap != null) {
-            DEFAULT.send(cap, storage, source);
-            return false;
+            return DEFAULT.send(cap, storage, source);
         }
-        return true;
+        return -1;
     }
 
     public static void chargeNetwork(@NotNull IEnergyService energy, @NotNull IStorageService storage, @NotNull IActionSource source) {
@@ -77,7 +78,7 @@ public class EnergyHandler {
 
     public interface Handler<T> {
 
-        void send(@NotNull T cap, @NotNull IStorageService storage, @NotNull IActionSource source);
+        long send(@NotNull T cap, @NotNull IStorageService storage, @NotNull IActionSource source);
 
     }
 

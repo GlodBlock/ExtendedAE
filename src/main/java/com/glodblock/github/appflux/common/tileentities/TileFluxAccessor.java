@@ -11,11 +11,14 @@ import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.energy.EnergyTickRecord;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.helpers.Constants;
 import com.glodblock.github.glodium.util.GlodUtil;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -33,6 +36,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
     private EnergyCapCache cacheApi;
     // mutable
     private final Set<Direction> blocked = EnumSet.noneOf(Direction.class);
+    private final Reference2ReferenceMap<Direction, EnergyTickRecord> lastTick = new Reference2ReferenceOpenHashMap<>();
     private final ICapabilityInvalidationListener[] listeners = new ICapabilityInvalidationListener[6];
     private final IActionSource source = IActionSource.ofMachine(this);
 
@@ -40,7 +44,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
         super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFSingletons.FLUX_ACCESSOR), pos, blockState);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
-        for (var d : Constants.ALL_DIRECTIONS) {
+        for (var d : Constants.ALL_DIRECTIONS_LIST) {
             this.listeners[d.get3DDataValue()] = () -> {
                 if (this.isRemoved()) {
                     return false;
@@ -87,7 +91,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
     }
 
     @Override
-    public void distribute() {
+    public void distribute(long ticks) {
         if (this.level == null) {
             return;
         }
@@ -97,12 +101,18 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
         var storage = this.getStorage();
         var gird = this.getGrid();
         if (storage != null) {
-            for (var d : Constants.ALL_DIRECTIONS) {
+            for (var d : Constants.ALL_DIRECTIONS_LIST) {
                 if (this.blocked.contains(d)) {
                     continue;
                 }
-                if (EnergyHandler.failSend(this.cacheApi, d, storage, this.source)) {
-                    this.blocked.add(d);
+                var tickRate = this.lastTick.get(d);
+                if (tickRate.needTick(ticks)) {
+                    long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
+                    if (sent == -1) {
+                        this.blocked.add(d);
+                    } else {
+                        tickRate.sent(sent);
+                    }
                 }
             }
             if (AFConfig.selfCharge() && gird != null) {
@@ -117,9 +127,10 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
             service.wake(this);
             this.blocked.clear();
             if (this.getLevel() instanceof ServerLevel world) {
-                for (var d : Constants.ALL_DIRECTIONS) {
+                for (var d : Constants.ALL_DIRECTIONS_LIST) {
                     var pos = this.getBlockPos().relative(d);
                     world.registerCapabilityListener(pos, this.listeners[d.get3DDataValue()]);
+                    this.lastTick.put(d, new EnergyTickRecord());
                 }
             }
         }

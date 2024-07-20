@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IEnergyDistributor extends IGridNodeService {
 
-    default void distribute() {
+    default void distribute(long ticks) {
 
     }
 
