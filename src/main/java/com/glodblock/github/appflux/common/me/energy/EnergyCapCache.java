@@ -39,8 +39,11 @@ public class EnergyCapCache {
 
     private boolean checkGrid(Direction side) {
         var gird = this.getGridCache(side).getCapability();
+        if (gird == null) {
+            return true;
+        }
         var thisGrid = this.self.get();
-        if (gird != null && thisGrid != null) {
+        if (thisGrid != null) {
             var thatGrid = gird.getGridNode(side.getOpposite());
             if (thatGrid == null) {
                 return true;

@@ -13,4 +13,8 @@ public interface IEnergyDistributor extends IGridNodeService {
 
     }
 
+    default boolean isActive() {
+        return true;
+    }
+
 }

@@ -53,18 +53,20 @@ public class EnergyHandler {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> void send(@NotNull EnergyCapCache cache, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
+    public static <T> boolean failSend(@NotNull EnergyCapCache cache, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
         for (var entry : HANDLERS) {
             T cap = cache.getEnergyCap((BlockCapability<T, Direction>) entry.left(), side);
             if (cap != null) {
                 ((Handler<T>) entry.right()).send(cap, storage, source);
-                return;
+                return false;
             }
         }
         var cap = cache.getEnergyCap(Capabilities.EnergyStorage.BLOCK, side);
         if (cap != null) {
             DEFAULT.send(cap, storage, source);
+            return false;
         }
+        return true;
     }
 
     public static void chargeNetwork(@NotNull IEnergyService energy, @NotNull IStorageService storage, @NotNull IActionSource source) {

@@ -3,11 +3,11 @@ package com.glodblock.github.appflux.common.me.service;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridService;
 import appeng.api.networking.IGridServiceProvider;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +15,9 @@ import java.util.Set;
 public class EnergyDistributeService implements IGridService, IGridServiceProvider {
 
     private final Map<IGridNode, IEnergyDistributor> distributors = new IdentityHashMap<>();
-    private final Set<IEnergyDistributor> activeNodes = new ReferenceOpenHashSet<>();
+    // IdentityHashMap is faster
+    private final Set<IEnergyDistributor> activeNodes = Collections.newSetFromMap(new IdentityHashMap<>());
+
 
     public EnergyDistributeService() {
         // NO-OP
@@ -24,7 +26,9 @@ public class EnergyDistributeService implements IGridService, IGridServiceProvid
     @Override
     public void onLevelEndTick(Level level) {
         for (var dis : this.activeNodes) {
-            dis.distribute();
+            if (dis.isActive()) {
+                dis.distribute();
+            }
         }
     }
 

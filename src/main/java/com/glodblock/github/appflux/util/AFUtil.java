@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 public class AFUtil {
@@ -47,7 +46,7 @@ public class AFUtil {
             if (part.getSide() == null) {
                 return Constants.NO_DIRECTIONS;
             }
-            return EnumSet.of(part.getSide());
+            return Set.of(part.getSide());
         } else {
             return Constants.NO_DIRECTIONS;
         }

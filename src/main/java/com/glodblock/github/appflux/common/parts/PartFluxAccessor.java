@@ -2,6 +2,7 @@ package com.glodblock.github.appflux.common.parts;
 
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
@@ -10,6 +11,7 @@ import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
 import appeng.parts.AEBasePart;
+import appeng.parts.PartAdjacentApi;
 import appeng.parts.PartModel;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
@@ -20,6 +22,7 @@ import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
@@ -29,11 +32,38 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     public static final ResourceLocation RL = AppFlux.id("part/flux_accessor");
     public static final IPartModel MODEL = new PartModel(RL);
     private EnergyCapCache cacheApi;
+    private boolean blocked = false;
+    private final ICapabilityInvalidationListener listener;
+    private final IActionSource source = IActionSource.ofMachine(this);
 
     public PartFluxAccessor(IPartItem<?> partItem) {
         super(partItem);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
+        this.listener = () -> {
+            if (!PartAdjacentApi.isPartValid(this)) {
+                return false;
+            }
+            this.blocked = false;
+            return true;
+        };
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.getMainNode().isActive();
+    }
+
+    public IActionSource getSource() {
+        return this.source;
+    }
+
+    @Override
+    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
+        super.onMainNodeStateChanged(reason);
+        if (this.getMainNode().hasGridBooted()) {
+            this.getBlockEntity().invalidateCapabilities();
+        }
     }
 
     private void initCache() {
@@ -70,13 +100,9 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         return null;
     }
 
-    public IActionSource getSource() {
-        return IActionSource.ofMachine(this);
-    }
-
     public IEnergyStorage getEnergyStorage() {
         if (this.getStorage() != null) {
-            return new NetworkFEPower(this.getStorage(), this.getSource());
+            return new NetworkFEPower(this.getStorage(), this.source);
         } else {
             return new EnergyStorage(0);
         }
@@ -94,9 +120,13 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         var d = this.getSide();
         var gird = this.getGrid();
         if (storage != null && d != null) {
-            EnergyHandler.send(this.cacheApi, d, storage, this.getSource());
+            if (!this.blocked) {
+                if (EnergyHandler.failSend(this.cacheApi, d, storage, this.source)) {
+                    this.blocked = true;
+                }
+            }
             if (AFConfig.selfCharge() && gird != null) {
-                EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
+                EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.source);
             }
         }
     }
@@ -105,6 +135,11 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     public void setServiceHost(@Nullable EnergyDistributeService service) {
         if (service != null) {
             service.wake(this);
+            this.blocked = false;
+            if (this.getLevel() instanceof ServerLevel world) {
+                var pos = this.getBlockEntity().getBlockPos().relative(this.getSide());
+                world.registerCapabilityListener(pos, this.listener);
+            }
         }
     }
 
