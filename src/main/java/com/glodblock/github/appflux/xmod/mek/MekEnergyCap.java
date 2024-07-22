@@ -9,7 +9,6 @@ import com.glodblock.github.appflux.config.AFConfig;
 import mekanism.api.Action;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.energy.IStrictEnergyHandler;
-import mekanism.api.math.FloatingLong;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.integration.energy.forgeenergy.ForgeStrictEnergyHandler;
 import mekanism.common.util.UnitDisplayUtils;
@@ -37,19 +36,19 @@ public class MekEnergyCap implements IStrictEnergyHandler {
     public static long send(IStrictEnergyHandler handler, IStorageService storage, IActionSource source) {
         var ioJ = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(AFConfig.getFluxAccessorIO());
         var notAddedJ = handler.insertEnergy(ioJ, Action.SIMULATE);
-        var toAddJ = ioJ.subtract(notAddedJ);
-        var toAddFE = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(toAddJ).longValue();
+        var toAddJ = ioJ - notAddedJ;
+        var toAddFE = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(toAddJ);
         if (toAddFE > 0) {
             var drainedFE = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAddFE, Actionable.MODULATE, source);
             if (drainedFE > 0) {
                 var drainedJ = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(drainedFE);
                 var leftJ = handler.insertEnergy(drainedJ, Action.EXECUTE);
-                var leftFE = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(leftJ).longValue();
+                var leftFE = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(leftJ);
                 if (leftFE > 0) {
                     storage.getInventory().insert(FluxKey.of(EnergyType.FE), leftFE, Actionable.MODULATE, source);
-                    return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(drainedJ.minusEqual(leftJ)).longValue();
+                    return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(drainedJ - leftJ);
                 }
-                return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(drainedJ).longValue();
+                return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(drainedJ);
             }
         }
         return 0;
@@ -66,37 +65,37 @@ public class MekEnergyCap implements IStrictEnergyHandler {
     }
 
     @Override
-    public FloatingLong getEnergy(int container) {
+    public long getEnergy(int container) {
         if (container == 0) {
             return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(this.storage.getCachedInventory().get(FluxKey.of(EnergyType.FE)));
         }
-        return FloatingLong.ZERO;
+        return 0;
     }
 
     @Override
-    public void setEnergy(int container, FloatingLong energy) {
+    public void setEnergy(int container, long energy) {
         // NO-OP
     }
 
     @Override
-    public FloatingLong getMaxEnergy(int container) {
+    public long getMaxEnergy(int container) {
         if (container == 0) {
             var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
             return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(space + this.storage.getCachedInventory().get(FluxKey.of(EnergyType.FE)));
         }
-        return FloatingLong.ZERO;
+        return 0;
     }
 
     @Override
-    public FloatingLong getNeededEnergy(int container) {
+    public long getNeededEnergy(int container) {
         if (container == 0) {
             return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source));
         }
-        return FloatingLong.ZERO;
+        return 0;
     }
 
     @Override
-    public FloatingLong insertEnergy(int container, FloatingLong amount, @NotNull Action action) {
+    public long insertEnergy(int container, long amount, @NotNull Action action) {
         if (container == 0) {
             return this.insertEnergy(amount, action);
         }
@@ -104,33 +103,33 @@ public class MekEnergyCap implements IStrictEnergyHandler {
     }
 
     @Override
-    public FloatingLong insertEnergy(FloatingLong amount, Action action) {
-        long toInsert = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertToAsLong(amount);
+    public long insertEnergy(long amount, Action action) {
+        long toInsert = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(amount);
         if (toInsert > 0L) {
             long inserted = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), toInsert, Actionable.ofSimulate(action.simulate()), this.source);
             if (inserted > 0L) {
-                return amount.subtract(UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(inserted));
+                return amount - UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(inserted);
             }
         }
         return amount;
     }
 
     @Override
-    public FloatingLong extractEnergy(int container, FloatingLong amount, @NotNull Action action) {
+    public long extractEnergy(int container, long amount, @NotNull Action action) {
         if (container == 0) {
             return this.extractEnergy(amount, action);
         }
-        return FloatingLong.ZERO;
+        return 0;
     }
 
     @Override
-    public FloatingLong extractEnergy(FloatingLong amount, Action action) {
-        long toExtract = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertToAsLong(amount);
+    public long extractEnergy(long amount, Action action) {
+        long toExtract = UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertTo(amount);
         if (toExtract > 0L) {
             long extracted = this.storage.getInventory().extract(FluxKey.of(EnergyType.FE), toExtract, Actionable.ofSimulate(action.simulate()), this.source);
             return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(extracted);
         }
-        return FloatingLong.ZERO;
+        return 0;
     }
 
 }

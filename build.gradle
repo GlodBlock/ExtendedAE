@@ -87,7 +87,7 @@ repositories {
 dependencies {
     implementation "curse.maven:glodium-957920:5491696"
     implementation "appeng:appliedenergistics2:19.0.12-alpha"
-    compileOnly "curse.maven:mekanism-268560:5523554"
+    compileOnly "curse.maven:mekanism-268560:5552293"
     compileOnly "curse.maven:modern-industrialization-405388:5529060"
     compileOnly "curse.maven:grandpower-980156:5432440"
     compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
