@@ -55,13 +55,13 @@ public class ExtendedAE {
         });
         if (FMLEnvironment.dist.isClient()) {
             bus.register(ClientRegistryHandler.INSTANCE);
+            NeoForge.EVENT_BUS.addListener(this::onRecipeUpdate);
         }
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);
         bus.addListener(this::sendIMC);
         bus.addListener(EAENetworkHandler.INSTANCE::onRegister);
         bus.register(EAERegistryHandler.INSTANCE);
-        NeoForge.EVENT_BUS.addListener(this::onRecipeUpdate);
         NeoForge.EVENT_BUS.register(CutterHook.INSTANCE);
     }
 

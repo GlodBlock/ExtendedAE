@@ -43,6 +43,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -246,8 +247,15 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         if (this.pushOutResult()) {
             return TickRateModulation.URGENT;
         }
-        this.markForUpdate();
-        return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)), true);
+        this.fastUpdate();
+        return this.exec.execute(FCUtil.speedCardMap(this.upgrades.getInstalledUpgrades(AEItems.SPEED_CARD)), true);
+    }
+
+    private void fastUpdate() {
+        if (this.level != null && !this.isRemoved() && !notLoaded()) {
+            BlockState currentState = getBlockState();
+            this.level.sendBlockUpdated(this.worldPosition, currentState, currentState, Block.UPDATE_NEIGHBORS);
+        }
     }
 
     private boolean pushOutResult() {
@@ -266,6 +274,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         this.saveChanges();
         this.ctx.onInvChange();
+        this.markForUpdate();
     }
 
     private static class CutterRecipeContext extends CommonRecipeContext<CircuitCutterRecipe> {
