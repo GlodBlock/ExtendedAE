@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.datagen;
 
+import appeng.api.util.AEColor;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
@@ -20,7 +21,6 @@ import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodUtil;
 import gripe._90.megacells.definition.MEGABlocks;
 import gripe._90.megacells.definition.MEGAItems;
-import gripe._90.megacells.definition.MEGATags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -51,6 +51,7 @@ public class EAERecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull RecipeOutput c) {
+        var quartzBlock = Ingredient.of(Blocks.CHISELED_QUARTZ_BLOCK, Blocks.QUARTZ_BLOCK, Blocks.QUARTZ_PILLAR);
         // Extended Pattern Provider
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.EX_PATTERN_PROVIDER)
@@ -593,6 +594,50 @@ public class EAERecipeProvider extends RecipeProvider {
                 .define('S', EAESingletons.ENTRO_SHARD)
                 .unlockedBy(C, has(EAESingletons.ENTRO_SHARD))
                 .save(c, ExtendedAE.id("entro_recycle"));
+
+        // Assembler Matrix
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAESingletons.ASSEMBLER_MATRIX_FRAME)
+                .pattern("QLQ")
+                .pattern("LML")
+                .pattern("QLQ")
+                .define('Q', ConventionTags.NETHER_QUARTZ)
+                .define('L', Items.LAPIS_LAZULI)
+                .define('M', EAESingletons.MACHINE_FRAME)
+                .unlockedBy(C, has(EAESingletons.MACHINE_FRAME))
+                .save(c, ExtendedAE.id("assembler_matrix_frame"));
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAESingletons.ASSEMBLER_MATRIX_WALL, 2)
+                .pattern("BFB")
+                .pattern("IQI")
+                .pattern("BFB")
+                .define('B', Items.IRON_BARS)
+                .define('F', ConventionTags.FLUIX_CRYSTAL)
+                .define('I', EAETags.ENTRO_INGOT)
+                .define('Q', quartzBlock)
+                .unlockedBy(C, has(EAESingletons.ENTRO_INGOT))
+                .save(c, ExtendedAE.id("assembler_matrix_wall"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.ASSEMBLER_MATRIX_CRAFTER)
+                .input(EAESingletons.ASSEMBLER_MATRIX_WALL)
+                .input(EAESingletons.EX_ASSEMBLER)
+                .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.PURPLE), 6)
+                .input(AEItems.LOGIC_PROCESSOR)
+                .save(c, ExtendedAE.id("assembler/assembler_matrix_crafter"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.ASSEMBLER_MATRIX_PATTERN)
+                .input(EAESingletons.ASSEMBLER_MATRIX_WALL)
+                .input(EAETags.EX_PATTERN_PROVIDER)
+                .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.BLUE), 6)
+                .input(AEItems.ENGINEERING_PROCESSOR)
+                .save(c, ExtendedAE.id("assembler/assembler_matrix_pattern"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.ASSEMBLER_MATRIX_SPEED)
+                .input(EAESingletons.ASSEMBLER_MATRIX_WALL)
+                .input(AEItems.SPEED_CARD, 8)
+                .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.RED), 6)
+                .input(EAESingletons.CONCURRENT_PROCESSOR)
+                .save(c, ExtendedAE.id("assembler/assembler_matrix_speed"));
 
         transformation(c);
         circuit(c);

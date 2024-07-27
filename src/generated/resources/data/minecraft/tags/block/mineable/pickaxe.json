@@ -28,6 +28,7 @@
     "extendedae:assembler_matrix_wall",
     "extendedae:assembler_matrix_pattern",
     "extendedae:assembler_matrix_crafter",
+    "extendedae:assembler_matrix_speed",
     "extendedae:silicon_block",
     "extendedae:fishbig"
   ]

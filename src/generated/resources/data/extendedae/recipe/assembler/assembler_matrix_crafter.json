@@ -1,0 +1,30 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "extendedae:assembler_matrix_wall"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "extendedae:ex_molecular_assembler"
+      }
+    },
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "ae2:purple_lumen_paint_ball"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:logic_processor"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:assembler_matrix_crafter"
+  }
+}
