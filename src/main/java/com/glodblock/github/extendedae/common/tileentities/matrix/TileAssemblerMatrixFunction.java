@@ -9,6 +9,7 @@ public abstract class TileAssemblerMatrixFunction extends TileAssemblerMatrixBas
 
     public TileAssemblerMatrixFunction(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+        this.getMainNode().setIdlePowerUsage(1);
     }
 
     public abstract void add(ClusterAssemblerMatrix c);

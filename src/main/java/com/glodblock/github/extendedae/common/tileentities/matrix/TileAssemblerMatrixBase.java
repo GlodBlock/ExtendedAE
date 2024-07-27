@@ -40,6 +40,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     public TileAssemblerMatrixBase(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.getMainNode().setFlags(GridFlags.MULTIBLOCK, GridFlags.REQUIRE_CHANNEL).addService(IGridMultiblock.class, this::getMultiblockNodes);
+        this.getMainNode().setIdlePowerUsage(0);
     }
 
     public CompoundTag getPreviousState() {
