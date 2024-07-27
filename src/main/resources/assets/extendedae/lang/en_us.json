@@ -166,6 +166,7 @@
   "gui.extendedae.crystal_assembler.amount": "%s mb / %s mb",
   "gui.extendedae.assembler_matrix": "Assembler Matrix",
   "gui.extendedae.assembler_matrix.tooltip": "Search pattern",
+  "gui.extendedae.assembler_matrix.pattern": "Only accepts crafting pattern",
   "gui.extendedae.assembler_matrix.threads": "Running Jobs: %s",
   "gui.extendedae.assembler_matrix.cancel": "Stop all crafting jobs and return ingredients",
   "chat.ex_pattern_access_terminal.pos": "The pattern provider is now highlighted at: %s, Dim: %s",

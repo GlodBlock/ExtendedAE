@@ -2,10 +2,14 @@ package com.glodblock.github.extendedae.common.tileentities.matrix;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
+import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingProvider;
+import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
+import appeng.helpers.patternprovider.PatternContainer;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
@@ -16,15 +20,17 @@ import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction implements InternalInventoryHost, ICraftingProvider {
+public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction implements InternalInventoryHost, ICraftingProvider, PatternContainer {
 
     public final static int INV_SIZE = 36;
     private final static FreqGenerator<Integer> G = FreqGenerator.createInt();
@@ -128,6 +134,22 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
     @Override
     public boolean isBusy() {
         return this.cluster == null || this.cluster.isBusy();
+    }
+
+    @Override
+    public @Nullable IGrid getGrid() {
+        return this.getMainNode().getGrid();
+    }
+
+    @Override
+    public InternalInventory getTerminalPatternInventory() {
+        return this.patternInventory;
+    }
+
+    @Override
+    public PatternContainerGroup getTerminalGroup() {
+        var icon = AEItemKey.of(EAESingletons.ASSEMBLER_MATRIX_PATTERN);
+        return new PatternContainerGroup(icon, icon.getDisplayName(), List.of(Component.translatable("gui.extendedae.assembler_matrix.pattern")));
     }
 
     public record Filter(Supplier<Level> world) implements IAEItemFilter {
