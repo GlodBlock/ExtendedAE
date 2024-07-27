@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.client.gui;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.Icon;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.AETextField;
@@ -13,9 +14,14 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
 import appeng.util.inv.AppEngInternalInventory;
+import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.widget.AssemblerMatrixSlot;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
+import com.glodblock.github.extendedae.network.EAENetworkHandler;
+import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
@@ -30,13 +36,14 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> {
+public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> implements IActionHolder {
 
     private static final int ROW_HEIGHT = 18;
     private static final int GUI_PADDING_X = 8;
@@ -44,6 +51,7 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> {
     private static final ResourceLocation BG = AppEng.makeId("textures/guis/assembler_matrix.png");
     private static final Rect2i EMPTY_ROW1 = new Rect2i(0, 203, 160, 16);
     private static final Rect2i EMPTY_ROW2 = new Rect2i(0, 219, 160, 18);
+    private final ActionMap actions = ActionMap.create();
     private final Scrollbar scrollbar;
     private final Int2ReferenceMap<PatternInfo> infos = new Int2ReferenceOpenHashMap<>();
     private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
@@ -59,6 +67,7 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> {
     });
     private final ArrayList<PatternRow> rows = new ArrayList<>();
     private final AETextField searchField;
+    private int runningThreads = 0;
 
     public GuiAssemblerMatrix(ContainerAssemblerMatrix menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -67,6 +76,10 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> {
         this.searchField.setResponder(str -> this.refreshList());
         this.searchField.setPlaceholder(GuiText.SearchPlaceholder.text());
         this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.assembler_matrix.tooltip")));
+        this.actions.put("running_update", o -> this.runningThreads = o.get(0));
+        var cancel = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("cancel")), Icon.CLEAR.getBlitter());
+        cancel.setMessage(Component.translatable("gui.extendedae.assembler_matrix.cancel"));
+        addToLeftToolbar(cancel);
     }
 
     @Override
@@ -105,6 +118,12 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> {
                 }
             }
         }
+        guiGraphics.drawString(
+                this.font,
+                Component.translatable("gui.extendedae.assembler_matrix.threads", this.runningThreads),
+                80, 19,
+                textColor, false
+        );
     }
 
     @Override
@@ -226,6 +245,12 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> {
             }
         }
         return false;
+    }
+
+    @NotNull
+    @Override
+    public ActionMap getActionMap() {
+        return this.actions;
     }
 
     private static class PatternInfo {

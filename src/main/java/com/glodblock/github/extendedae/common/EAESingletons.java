@@ -24,6 +24,7 @@ import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixCrafter;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixFrame;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixPattern;
+import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixSpeed;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixWall;
 import com.glodblock.github.extendedae.common.items.CommonItem;
 import com.glodblock.github.extendedae.common.items.ItemDriveUpgrade;
@@ -70,6 +71,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixFrame;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixSpeed;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodCodecs;
@@ -165,6 +167,7 @@ public class EAESingletons {
     public static BlockAssemblerMatrixWall ASSEMBLER_MATRIX_WALL;
     public static BlockAssemblerMatrixPattern ASSEMBLER_MATRIX_PATTERN;
     public static BlockAssemblerMatrixCrafter ASSEMBLER_MATRIX_CRAFTER;
+    public static BlockAssemblerMatrixSpeed ASSEMBLER_MATRIX_SPEED;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -240,6 +243,7 @@ public class EAESingletons {
         ASSEMBLER_MATRIX_WALL = new BlockAssemblerMatrixWall();
         ASSEMBLER_MATRIX_PATTERN = new BlockAssemblerMatrixPattern();
         ASSEMBLER_MATRIX_CRAFTER = new BlockAssemblerMatrixCrafter();
+        ASSEMBLER_MATRIX_SPEED = new BlockAssemblerMatrixSpeed();
         if (GlodUtil.checkMod(ModConstants.AE2WTL)) {
             try {
                 //To prevent classloader issue
@@ -289,6 +293,7 @@ public class EAESingletons {
         regHandler.block("assembler_matrix_wall", ASSEMBLER_MATRIX_WALL, TileAssemblerMatrixWall.class, TileAssemblerMatrixWall::new);
         regHandler.block("assembler_matrix_pattern", ASSEMBLER_MATRIX_PATTERN, TileAssemblerMatrixPattern.class, TileAssemblerMatrixPattern::new);
         regHandler.block("assembler_matrix_crafter", ASSEMBLER_MATRIX_CRAFTER, TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new);
+        regHandler.block("assembler_matrix_speed", ASSEMBLER_MATRIX_SPEED, TileAssemblerMatrixSpeed.class, TileAssemblerMatrixSpeed::new);
         regHandler.block("silicon_block", SILICON_BLOCK);
         regHandler.block("fishbig", FISHBIG);
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);

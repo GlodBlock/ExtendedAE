@@ -12,6 +12,7 @@ import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerM
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SAssemblerMatrixUpdate;
+import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -38,6 +39,7 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
     private final List<PatternSlotTracker> trackers = new ArrayList<>();
     private final Int2ReferenceMap<PatternSlotTracker> trackerMap = new Int2ReferenceOpenHashMap<>();
     private final TileAssemblerMatrixBase host;
+    private int runningThreads = 0;
 
     public ContainerAssemblerMatrix(int id, Inventory playerInventory, TileAssemblerMatrixBase host) {
         super(TYPE, id, playerInventory, host);
@@ -56,6 +58,14 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
                 }
             });
         }
+    }
+
+    private int runningThreads() {
+        var c = this.host.getCluster();
+        if (c == null) {
+            return 0;
+        }
+        return c.getBusyCrafterAmount();
     }
 
     @Override
@@ -156,6 +166,11 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
                     tracker.init = true;
                     EAENetworkHandler.INSTANCE.sendTo(tracker.fullPacket(), player);
                 }
+            }
+            int newRunningThreads = this.runningThreads();
+            if (this.runningThreads != newRunningThreads) {
+                this.runningThreads = newRunningThreads;
+                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("running_update", newRunningThreads), player);
             }
         }
     }

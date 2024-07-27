@@ -30,7 +30,7 @@ import java.util.List;
 
 public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction implements InternalInventoryHost, IGridTickable {
 
-    public static final int MAX_THREAD = 4;
+    public static final int MAX_THREAD = 8;
     private final CraftingThread[] threads = new CraftingThread[MAX_THREAD];
     private final InternalInventory internalInv;
 
@@ -149,7 +149,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         var rate = TickRateModulation.SLEEP;
         for (var t : this.threads) {
             if (t.isAwake()) {
-                var tr = t.tick(0, ticksSinceLastCall);
+                var tr = t.tick(this.cluster.getSpeedCore(), ticksSinceLastCall);
                 if (tr.ordinal() > rate.ordinal()) {
                     rate = tr;
                 }

@@ -37,6 +37,7 @@ public class ClusterAssemblerMatrix implements IAECluster {
     private final ReferenceSet<TileAssemblerMatrixCrafter> availableCrafters = new ReferenceOpenHashSet<>();
     private final ReferenceSet<TileAssemblerMatrixCrafter> busyCrafters = new ReferenceOpenHashSet<>();
     private final Reference2IntMap<TileAssemblerMatrixCrafter> crafterStatusCache = new Reference2IntOpenHashMap<>();
+    private int speedCore = 0;
 
     public ClusterAssemblerMatrix(BlockPos boundsMin, BlockPos boundsMax) {
         this.boundsMin = boundsMin.immutable();
@@ -49,6 +50,24 @@ public class ClusterAssemblerMatrix implements IAECluster {
         } else {
             this.busyCrafters.add(crafter);
         }
+    }
+
+    public void addSpeedCore() {
+        if (this.speedCore < 5) {
+            this.speedCore++;
+        }
+    }
+
+    public int getSpeedCore() {
+        return this.speedCore;
+    }
+
+    public int getBusyCrafterAmount() {
+        int cnt = this.busyCrafters.size() * TileAssemblerMatrixCrafter.MAX_THREAD;
+        for (var crafter : this.availableCrafters) {
+            cnt += crafter.usedThread();
+        }
+        return cnt;
     }
 
     public void updateCrafter(TileAssemblerMatrixCrafter crafter) {
