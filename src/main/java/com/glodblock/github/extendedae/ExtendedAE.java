@@ -17,7 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.InterModComms;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -36,10 +36,13 @@ public class ExtendedAE {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ExtendedAE INSTANCE;
 
-    public ExtendedAE(IEventBus bus) {
+    public ExtendedAE(IEventBus bus, ModContainer container) {
         assert INSTANCE == null;
         INSTANCE = this;
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, EAEConfig.SPEC);
+        if (!container.getModId().equals(MODID)) {
+            throw new IllegalArgumentException("Invalid ID: " + MODID);
+        }
+        container.registerConfig(ModConfig.Type.COMMON, EAEConfig.SPEC);
         bus.addListener((RegisterEvent e) -> {
             if (e.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
                 EAERegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));

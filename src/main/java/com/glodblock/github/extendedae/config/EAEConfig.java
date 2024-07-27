@@ -1,11 +1,9 @@
 package com.glodblock.github.extendedae.config;
 
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.glodium.util.GlodUtil;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -89,14 +87,16 @@ public class EAEConfig {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
-        busSpeed = EX_BUS_SPEED.get();
-        infCellCost = INFINITY_CELL_ENERGY.get();
-        wirelessMaxRange = WIRELESS_CONNECTOR_RANGE.get();
-        tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::parse).collect(Collectors.toList());
-        disableInscriberRender = INSCRIBER_RENDER.get();
-        oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
-        modifierMultiplier = PATTERN_MODIFIER_NUMBER.get();
-        allowAssemblerCircuits = CRYSTAL_INSCRIBER.get();
+        if (event.getConfig().getSpec() == SPEC) {
+            busSpeed = EX_BUS_SPEED.get();
+            infCellCost = INFINITY_CELL_ENERGY.get();
+            wirelessMaxRange = WIRELESS_CONNECTOR_RANGE.get();
+            tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::parse).collect(Collectors.toList());
+            disableInscriberRender = INSCRIBER_RENDER.get();
+            oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
+            modifierMultiplier = PATTERN_MODIFIER_NUMBER.get();
+            allowAssemblerCircuits = CRYSTAL_INSCRIBER.get();
+        }
     }
 
 }

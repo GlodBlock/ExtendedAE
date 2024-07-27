@@ -24,7 +24,8 @@ public class SAssemblerMatrixUpdate implements IMessage {
 
     public SAssemblerMatrixUpdate(int id, Int2ObjectMap<ItemStack> updateMap) {
         this.patternID = id;
-        this.updateMap = updateMap;
+        // deep clone to prevent CME
+        this.updateMap = new Int2ObjectOpenHashMap<>(updateMap);
     }
 
     @Override
