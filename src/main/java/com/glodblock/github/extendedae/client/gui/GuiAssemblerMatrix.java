@@ -255,18 +255,16 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
 
     private static class PatternInfo {
 
-        private final int id;
         private final List<PatternRow> internalRows = new ArrayList<>();
 
         PatternInfo(int id) {
-            this.id = id;
             int left = TileAssemblerMatrixPattern.INV_SIZE;
             int offset = 0;
             do {
                 this.internalRows.add(new PatternRow(id, offset, Math.min(left, 9)));
                 left -= 9;
                 offset += 9;
-            } while (left >= 0);
+            } while (left > 0);
         }
 
         PatternRow getRowBySlot(int slot) {
