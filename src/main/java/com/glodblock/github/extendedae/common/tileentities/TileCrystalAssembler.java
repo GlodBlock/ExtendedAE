@@ -129,7 +129,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
 
     @Override
     public void setWorking(boolean work) {
+        boolean oldVal = this.isWorking;
         this.isWorking = work;
+        if (oldVal != work) {
+            this.markForUpdate();
+        }
     }
 
     public AppEngInternalInventory getInput() {
@@ -239,7 +243,6 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         if (this.pushOutResult()) {
             return TickRateModulation.URGENT;
         }
-        this.markForUpdate();
         return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)), true);
     }
 

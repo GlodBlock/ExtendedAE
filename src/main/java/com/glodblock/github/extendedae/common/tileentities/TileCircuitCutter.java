@@ -120,7 +120,11 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
 
     @Override
     public void setWorking(boolean work) {
+        boolean oldVal = this.isWorking;
         this.isWorking = work;
+        if (oldVal != work) {
+            this.markForUpdate();
+        }
     }
 
     public AppEngInternalInventory getInput() {
@@ -274,7 +278,6 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         this.saveChanges();
         this.ctx.onInvChange();
-        this.markForUpdate();
     }
 
     private static class CutterRecipeContext extends CommonRecipeContext<CircuitCutterRecipe> {
