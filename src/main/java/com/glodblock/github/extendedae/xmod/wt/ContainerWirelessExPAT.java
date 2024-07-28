@@ -8,21 +8,21 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.RestrictedInputSlot;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
-import de.mari_023.ae2wtlib.AE2wtlibSlotSemantics;
-import de.mari_023.ae2wtlib.wct.WCTMenuHost;
-import de.mari_023.ae2wtlib.wut.ItemWUT;
+import de.mari_023.ae2wtlib.api.gui.AE2wtlibSlotSemantics;
+import de.mari_023.ae2wtlib.api.terminal.ItemWUT;
+import de.mari_023.ae2wtlib.api.terminal.WTMenuHost;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
-public class ContainerUWirelessExPAT extends ContainerExPatternTerminal {
+public class ContainerWirelessExPAT extends ContainerExPatternTerminal {
 
-    public static final MenuType<ContainerUWirelessExPAT> TYPE = MenuTypeBuilder
-            .create(ContainerUWirelessExPAT::new, HostUWirelessExPAT.class)
+    public static final MenuType<ContainerWirelessExPAT> TYPE = MenuTypeBuilder
+            .create(ContainerWirelessExPAT::new, HostWirelessExPAT.class)
             .build(ExtendedAE.id("u_wireless_ex_pattern_access_terminal"));
-    private final HostUWirelessExPAT host;
+    private final HostWirelessExPAT host;
     private final ToolboxMenu toolboxMenu;
 
-    public ContainerUWirelessExPAT(int id, Inventory ip, HostUWirelessExPAT host) {
+    public ContainerWirelessExPAT(int id, Inventory ip, HostWirelessExPAT host) {
         super(TYPE, id, ip, host, true);
         this.host = host;
         this.toolboxMenu = new ToolboxMenu(this);
@@ -34,7 +34,7 @@ public class ContainerUWirelessExPAT extends ContainerExPatternTerminal {
             this.addSlot(slot, SlotSemantics.UPGRADE);
         }
 
-        this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.QE_SINGULARITY, this.host.getSubInventory(WCTMenuHost.INV_SINGULARITY), 0), AE2wtlibSlotSemantics.SINGULARITY);
+        this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.QE_SINGULARITY, this.host.getSubInventory(WTMenuHost.INV_SINGULARITY), 0), AE2wtlibSlotSemantics.SINGULARITY);
     }
 
     @Override

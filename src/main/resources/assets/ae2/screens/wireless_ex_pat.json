@@ -1,6 +1,10 @@
 {
   "$schema": "schema.json",
-  "includes": ["ex_pattern_access_terminal.json", "common/toolbox.json"],
+  "includes": [
+    "ex_pattern_access_terminal.json",
+    "wtlib/universal_terminal.json",
+    "common/toolbox.json"
+  ],
   "slots": {
     "TOOLBOX": {
       "bottom": 84,
