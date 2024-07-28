@@ -49,23 +49,12 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
     public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
         super.saveAdditional(data, registries);
         this.patternInventory.writeToNBT(data, "pattern", registries);
-        data.putInt("locate_id", locateID);
-        G.markUsed(this.locateID);
     }
 
     @Override
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
         this.patternInventory.readFromNBT(data, "pattern", registries);
-        if (data.contains("locate_id")) {
-            this.locateID = data.getInt("locate_id");
-            if (this.locateID == 0) {
-                this.locateID = G.genFreq();
-            }
-            G.markUsed(this.locateID);
-        } else {
-            this.locateID = G.genFreq();
-        }
     }
 
     public AppEngInternalInventory getPatternInventory() {
@@ -73,6 +62,9 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
     }
 
     public int getLocateID() {
+        if (this.locateID == 0) {
+            this.locateID = G.genFreq();
+        }
         return this.locateID;
     }
 
