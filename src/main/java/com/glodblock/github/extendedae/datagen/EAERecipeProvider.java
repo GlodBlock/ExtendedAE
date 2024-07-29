@@ -714,6 +714,11 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.GLOWSTONE, 4)
                 .fluid(Fluids.WATER, 100)
                 .save(c.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/redstone_crystal"));
+        // Energy Processor
+        CircuitCutterRecipeBuilder
+                .cut(AFSingletons.ENERGY_PROCESSOR_PRINT, 9)
+                .input(AFSingletons.CHARGED_REDSTONE_BLOCK)
+                .save(c.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("cutter/energy_processor"));
     }
 
     private void maga(@NotNull RecipeOutput c) {
