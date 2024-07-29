@@ -5,7 +5,10 @@ import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,6 +28,11 @@ public class FCUtil {
         } else {
             newTile.setChanged();
         }
+    }
+
+    public static Component getItemDisplayName(ItemLike item) {
+        var itemStack = new ItemStack(item);
+        return itemStack.getHoverName();
     }
 
     public static IPart getPart(BlockEntity te, Direction face) {

@@ -6,6 +6,7 @@ import appeng.items.AEBaseItem;
 import appeng.parts.PartPlacement;
 import appeng.util.Platform;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import com.glodblock.github.extendedae.util.FCUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -42,14 +43,14 @@ public class ItemPackedDevice extends AEBaseItem {
                 if (tag.getBoolean("part")) {
                     var item = ForgeRegistries.ITEMS.getHolder(new ResourceLocation(tag.getString("id")));
                     if (item.isPresent()) {
-                        var name = Platform.getItemDisplayName(item.get().get(), new CompoundTag());
+                        var name = FCUtil.getItemDisplayName(item.get().get());
                         lines.add(Component.translatable("packaged_device.tooltip", name).withStyle(ChatFormatting.GRAY));
                         return;
                     }
                 } else {
                     var item = ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(tag.getString("block_id")));
                     if (item.isPresent()) {
-                        var name = Platform.getItemDisplayName(item.get().get().asItem(), new CompoundTag());
+                        var name = FCUtil.getItemDisplayName(item.get().get());
                         lines.add(Component.translatable("packaged_device.tooltip", name).withStyle(ChatFormatting.GRAY));
                         return;
                     }
