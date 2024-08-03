@@ -47,7 +47,7 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         this.pre.setMessage(Component.translatable("gui.extendedae.ex_inscriber.pre"));
         CycleEPPButton stackChange = new CycleEPPButton();
         stackChange.addActionPair(EPPIcon.STACK_1, Component.translatable("gui.extendedae.ex_inscriber.unstackable"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("stack", 64)));
-        stackChange.addActionPair(Icon.INSCRIBER_BUFFER_HIGH.getBlitter(), Component.translatable("gui.extendedae.ex_inscriber.stackable"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("stack", 1)));
+        stackChange.addActionPair(Icon.INSCRIBER_BUFFER_64.getBlitter(), Component.translatable("gui.extendedae.ex_inscriber.stackable"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("stack", 1)));
         stackChange.setState(this.menu.getStackMode());
         addToLeftToolbar(stackChange);
         addToLeftToolbar(this.next);

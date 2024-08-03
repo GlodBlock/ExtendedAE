@@ -30,7 +30,7 @@ license="${mod_license}"
 [[dependencies.extendedae]]
     modId="ae2"
     type="REQUIRED"
-    versionRange="[19.0.12-alpha,)"
+    versionRange="[19.0.18-beta,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.extendedae]]

@@ -95,7 +95,7 @@ repositories {
 
 dependencies {
     implementation "curse.maven:glodium-957920:5491696"
-    implementation "appeng:appliedenergistics2:19.0.15-alpha"
+    implementation "appeng:appliedenergistics2:19.0.18-beta"
     jarJar(implementation "de.mari_023:ae2wtlib_api:19.1.0-alpha.1")
     compileOnly "curse.maven:applied-flux-965012:5545246"
     compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
