@@ -38,6 +38,7 @@ It is a rectangular prism, with edge lengths between 3 and 7.
 - Interior composed of Assembler Matrix Pattern/Craft/Speed Core.
 
 A valid Assembler Matrix must contain at least one pattern core and craft core. 
+It must be completely filled and can't be hollow.
 When Assembler Matrix is correctly formed and powered, the lines on Assembler Matrix Frame will turn blue.
 
 ## Assembler Matrix Core
