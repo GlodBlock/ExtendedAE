@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CalculatorAssemblerMatrix extends MBCalculator<TileAssemblerMatrixBase, ClusterAssemblerMatrix> {
 
-    private static final int MAX_SIZE = 7;
-    private static final int MIN_SIZE = 3;
+    private static final int MAX_SIZE = 6;
+    private static final int MIN_SIZE = 2;
 
     public CalculatorAssemblerMatrix(TileAssemblerMatrixBase t) {
         super(t);
