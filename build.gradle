@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '0.1.105'
+    id 'net.neoforged.moddev' version '1.0.13'
 }
 
 version = mod_version
@@ -85,13 +85,13 @@ repositories {
 }
 
 dependencies {
-    implementation "curse.maven:glodium-957920:5491696"
-    implementation "appeng:appliedenergistics2:19.0.7-alpha"
-    compileOnly "dev.emi:emi-neoforge:1.1.7+1.21"
-    compileOnly "curse.maven:jade-324717:5444008"
+    implementation "curse.maven:glodium-957920:5614731"
+    implementation "appeng:appliedenergistics2:19.0.20-beta"
+    compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
+    compileOnly "curse.maven:jade-324717:5427817"
     // runtime test
-    runtimeOnly "dev.emi:emi-neoforge:1.1.7+1.21"
-    runtimeOnly "curse.maven:jade-324717:5444008"
+    runtimeOnly "dev.emi:emi-neoforge:1.1.10+1.21"
+    runtimeOnly "curse.maven:jade-324717:5427817"
 }
 
 tasks.withType(ProcessResources).configureEach {
