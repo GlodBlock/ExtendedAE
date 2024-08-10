@@ -30,13 +30,13 @@ license="${mod_license}"
 [[dependencies.appflux]]
     modId="ae2"
     type="REQUIRED"
-    versionRange="[19.0.12-alpha,)"
+    versionRange="[19.0.20-beta,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.appflux]]
     modId="glodium"
     type="REQUIRED"
-    versionRange="[1.21-1.1-neoforge,)"
+    versionRange="[1.21-2.0-neoforge,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.appflux]]
