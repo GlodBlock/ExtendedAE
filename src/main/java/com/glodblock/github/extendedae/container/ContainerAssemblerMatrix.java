@@ -69,6 +69,27 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
     }
 
     @Override
+    protected ItemStack transferStackToMenu(ItemStack input) {
+        var slot = this.getAvailableSlot();
+        if (slot != null) {
+            return slot.addItems(input);
+        }
+        return input;
+    }
+
+    @Nullable
+    private InternalInventory getAvailableSlot() {
+        for (var tr : this.trackerMap.values()) {
+            for (int x = 0; x < tr.server.size(); x ++) {
+                if (tr.server.getStackInSlot(x).isEmpty()) {
+                    return new FilteredInternalInventory(tr.server.getSlotInv(x), new TileAssemblerMatrixPattern.Filter(() -> this.getHost().getLevel()));
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void doAction(ServerPlayer player, InventoryAction action, int slot, long id) {
         var inv = this.trackerMap.get((int) id);
         if (inv == null) {
