@@ -1,7 +1,7 @@
 ---
 navigation:
     parent: epp_intro/epp_intro-index.md
-    title: ME Caner
+    title: ME Canner
     icon: extendedae:caner
 categories:
 - extended devices
@@ -9,11 +9,11 @@ item_ids:
 - extendedae:caner
 ---
 
-# ME Caner
+# ME Canner
 
 <BlockImage id="extendedae:caner" scale="8"></BlockImage>
 
-ME Caner is a machine that "canning" stuffs, including fluids, Mekanism gas, Botania mana and even Energy!
+ME Canner is a machine that "canning" stuffs, including fluids, Mekanism gas, Botania mana and even Energy!
 
 The first slot is for what to fill, and the second slot is for what to be filled.
 
@@ -36,7 +36,7 @@ Only the top and bottom side can accept energy and connect to network.
   <ImportStructure src="../structure/caner_example.snbt"></ImportStructure>
 </GameScene>
 
-A simple setup for ME Caner. ME Caner will auto eject the filled item when it accepts the ingredients from <ItemLink id="ae2:pattern_provider" />.
+A simple setup for ME Canner. ME Canner will auto eject the filled item when it accepts the ingredients from <ItemLink id="ae2:pattern_provider" />.
 
 <GameScene zoom="6" background="transparent">
   <ImportStructure src="../structure/caner_auto.snbt"></ImportStructure>
@@ -53,6 +53,6 @@ Empower Energy Tablet (Need Applied Flux installed):
 ![P1](../pic/fill_energy.png)
 
 
-## Uncaning
+## Uncanning
 
-ME Caner also can drain stuffs from container in Empty mode. You need to switch the inputs and outputs in pattern.
+ME Canner also can drain stuffs from container in Empty mode. You need to switch the inputs and outputs in pattern.
