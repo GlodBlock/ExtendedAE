@@ -29,7 +29,7 @@ public class EMICircuitCutterRecipe extends BasicEmiRecipe {
         widgets.addTexture(background, 0, 0, 94, 26, 43, 32);
         widgets.addAnimatedTexture(background, 88, 4, 6, 18, 176, 0, 2000, false, true, false);
         widgets.addSlot(EMIStackUtil.of(this.recipe.getInput()), 2, 4).drawBack(false);
-        widgets.addSlot(EmiStack.of(recipe.output), 65, 4).drawBack(false);
+        widgets.addSlot(EmiStack.of(recipe.output), 65, 4).recipeContext(this).drawBack(false);
     }
 
 }

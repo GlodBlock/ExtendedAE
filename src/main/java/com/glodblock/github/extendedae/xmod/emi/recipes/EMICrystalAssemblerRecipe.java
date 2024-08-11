@@ -50,6 +50,6 @@ public class EMICrystalAssemblerRecipe extends BasicEmiRecipe {
         if (this.recipe.getFluid() != null) {
             widgets.addSlot(EMIStackUtil.of(this.recipe.getFluid()), 57, 38).drawBack(false);
         }
-        widgets.addSlot(EmiStack.of(recipe.output), 106, 20).drawBack(false);
+        widgets.addSlot(EmiStack.of(recipe.output), 106, 20).recipeContext(this).drawBack(false);
     }
 }
