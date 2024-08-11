@@ -146,6 +146,9 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
 
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
+        if (this.cluster == null) {
+            return TickRateModulation.SLEEP;
+        }
         var rate = TickRateModulation.SLEEP;
         for (var t : this.threads) {
             if (t.isAwake()) {
