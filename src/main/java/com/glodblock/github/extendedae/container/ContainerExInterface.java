@@ -89,8 +89,7 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
         } else {
             var stack = getHost().getConfig().getStack(configSlot);
             if (stack != null) {
-                SetStockAmountMenu.open((ServerPlayer) getPlayer(), getLocator(), configSlot,
-                        stack.what(), (int) stack.amount());
+                SetStockAmountMenu.open((ServerPlayer) getPlayer(), getLocator(), configSlot, stack.what(), (int) stack.amount());
             }
         }
     }

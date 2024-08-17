@@ -29,6 +29,8 @@ public class TileOversizeInterface extends TileExInterface {
         var logic = this.getInterfaceLogic();
         Ae2Reflect.setInterfaceConfig(logic, new OversizeConfigInv(AEKeyTypes.getAll(), null, GenericStackInv.Mode.CONFIG_STACKS, 36, () -> Ae2Reflect.onInterfaceConfigChange(logic), false));
         Ae2Reflect.setInterfaceStorage(logic, new OversizeConfigInv(AEKeyTypes.getAll(), (slot, key) -> Ae2Reflect.isInterfaceSlotAllowed(logic, slot, key), GenericStackInv.Mode.STORAGE, 36, () -> Ae2Reflect.onInterfaceStorageChange(logic), false));
+        this.getConfig().useRegisteredCapacities();
+        this.getStorage().useRegisteredCapacities();
     }
 
     @Override
