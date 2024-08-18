@@ -4,6 +4,7 @@ import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.xmod.ModConstants;
 import com.glodblock.github.appflux.xmod.mek.MekEnergyCap;
 import com.glodblock.github.appflux.xmod.mi.MIEnergyCap;
@@ -17,7 +18,7 @@ public class CapAdaptor {
         if (GlodUtil.checkMod(ModConstants.MEK)) {
             event.cap(TileFluxAccessor.class, MekEnergyCap.CAP, (te, side) -> MekEnergyCap.of(te.getStorage(), te.getSource()));
         }
-        if (GlodUtil.checkMod(ModConstants.MI)) {
+        if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
             event.cap(TileFluxAccessor.class, MIEnergyCap.CAP, (te, side) -> MIEnergyCap.of(te.getStorage(), te.getSource()));
         }
     }
@@ -35,7 +36,7 @@ public class CapAdaptor {
                     PartFluxAccessor.class
             );
         }
-        if (GlodUtil.checkMod(ModConstants.MI)) {
+        if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
             event.register(
                     MIEnergyCap.CAP,
                     (part, direction) -> MIEnergyCap.of(part.getStorage(), part.getSource()),

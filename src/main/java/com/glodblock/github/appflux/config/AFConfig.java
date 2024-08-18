@@ -24,6 +24,10 @@ public class AFConfig {
             .comment("Allow ME Import Bus to import energy like items/fluids.")
             .define("misc.enable", false);
 
+    private static final ModConfigSpec.BooleanValue MI_EU = BUILDER
+            .comment("Enable MI-EU support.")
+            .define("third_party_support.enable_mi", true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static int getFluxPerByte() {
@@ -42,10 +46,15 @@ public class AFConfig {
         return allowImportBus;
     }
 
+    public static boolean miSupport() {
+        return mi;
+    }
+
     private static int fluxPerByte;
     private static long fluxAccessorIO;
     private static boolean selfCharge;
     private static boolean allowImportBus;
+    private static boolean mi;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -53,6 +62,7 @@ public class AFConfig {
         fluxAccessorIO = FLUX_ACCESSOR_IO.get();
         selfCharge = NETWORK_CHARGE.get();
         allowImportBus = ENABLE_IMPORT.get();
+        mi = MI_EU.get();
     }
 
 }

@@ -45,7 +45,7 @@ public class EnergyHandler {
         if (GlodUtil.checkMod(ModConstants.MEK)) {
             addHandler(MekEnergyCap.CAP, MekEnergyCap::send);
         }
-        if (GlodUtil.checkMod(ModConstants.MI)) {
+        if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
             addHandler(MIEnergyCap.CAP, MIEnergyCap::send);
         }
     }
