@@ -63,6 +63,7 @@ public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTic
 
     public TileCaner(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCaner.class, TileCaner::new, EAESingletons.CANER), pos, blockState);
+        this.stuff.useRegisteredCapacities();
         // don't let container item go into it
         this.stuff.setCapacity(AEKeyType.items(), 0);
         this.getMainNode()
@@ -280,9 +281,10 @@ public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTic
             return;
         }
         if (this.getInternalCurrentPower() >= POWER_USAGE) {
-            long added = handler.insert(obj.what(), obj.amount(), Actionable.MODULATE);
+            long added = handler.insert(obj.what(), obj.amount(), Actionable.SIMULATE);
             if (added > 0) {
                 this.stuff.extract(0, obj.what(), added, Actionable.MODULATE);
+                handler.insert(obj.what(), added, Actionable.MODULATE);
                 if (!player.getInventory().getItem(0).isEmpty()) {
                     this.container.setItemDirect(0, player.getInventory().getItem(0).copy());
                 } else {
