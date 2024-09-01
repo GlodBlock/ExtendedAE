@@ -96,6 +96,7 @@
   "gui.extendedae.ex_inscriber.pre": "Предыдущая страница",
   "gui.extendedae.ex_inscriber.number": "Страница %s",
   "gui.extendedae.ex_inscriber.unstackable": "Размер стека - 1",
+  "gui.extendedae.ex_inscriber.fourstackable": "Размер стека - 4",
   "gui.extendedae.ex_inscriber.stackable": "Размер стека - 64",
   "gui.extendedae.ex_io_port": "МЭ Расширенный порт ввода/вывода",
   "gui.extendedae.wireless_connect": "МЭ Беспроводной соединитель",

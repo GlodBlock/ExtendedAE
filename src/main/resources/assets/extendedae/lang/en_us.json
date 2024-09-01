@@ -101,6 +101,7 @@
   "gui.extendedae.ex_inscriber.pre": "Previous Inscription Job",
   "gui.extendedae.ex_inscriber.number": "Inscription Job %s",
   "gui.extendedae.ex_inscriber.unstackable": "Stack to 1",
+  "gui.extendedae.ex_inscriber.fourstackable": "Stack to 4",
   "gui.extendedae.ex_inscriber.stackable": "Stack to 64",
   "gui.extendedae.pattern_modifier": "Pattern Modifier (%s)",
   "gui.extendedae.pattern_modifier.multiply": "Multiply Mode",

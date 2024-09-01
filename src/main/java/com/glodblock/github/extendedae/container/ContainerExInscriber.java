@@ -125,7 +125,12 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
     }
 
     public int getStackMode() {
-        return this.getHost().getInvStackSize() == 1 ? 0 : 1;
+        return switch (this.getHost().getInvStackSize()) {
+            case 64 -> 0;
+            case 1 -> 1;
+            case 4 -> 2;
+            default -> throw new IllegalStateException("Unexpected stack size: " + this.getHost().getInvStackSize());
+        };
     }
 
     @Override

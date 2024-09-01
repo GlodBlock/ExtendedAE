@@ -57,7 +57,8 @@ public class TileExInscriber extends AENetworkedPoweredBlockEntity implements IG
     private final InternalInventory sideItemHandlerAll;
     private final InternalInventory combinedItemHandlerExternAll;
     private final InternalInventory invAll;
-    private int stackSize = 1;
+    public static final int DEFAULT_STACK_SIZE = 64; //Available value: 1,4,64
+    private int stackSize = DEFAULT_STACK_SIZE;
     private int animationIndex = -1;
 
     public TileExInscriber(BlockPos pos, BlockState blockState) {
@@ -190,7 +191,7 @@ public class TileExInscriber extends AENetworkedPoweredBlockEntity implements IG
         super.loadTag(data, registries);
         this.upgrades.readFromNBT(data, "upgrades", registries);
         this.configManager.readFromNBT(data, registries);
-        this.stackSize = data.contains("stacksize") ? data.getInt("stacksize") : 1;
+        this.stackSize = data.contains("stacksize") ? data.getInt("stacksize") : DEFAULT_STACK_SIZE;
         for (var t : this.threads) {
             t.init();
             t.setStackSize(this.stackSize);
