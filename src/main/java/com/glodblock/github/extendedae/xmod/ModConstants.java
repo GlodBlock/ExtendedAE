@@ -15,5 +15,6 @@ public final class ModConstants {
     public static final String APPFLUX = "appflux";
     public static final String MEGA = "megacells";
     public static final String DARK_MODE = "darkmodeeverywhere";
+    public static final String APPMEK = "appmek";
 
 }
