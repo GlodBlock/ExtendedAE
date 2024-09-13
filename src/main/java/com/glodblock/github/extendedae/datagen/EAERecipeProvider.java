@@ -752,7 +752,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(osmium, 4)
                 .input(AEBlocks.SKY_STONE_BLOCK, 4)
                 .fluid(Fluids.LAVA, 100)
-                .save(c.withConditions(mod(ModConstants.MEGA)).withConditions(mod(ModConstants.APPMEK)), ExtendedAE.id("assembler/sky_osmium"));
+                .save(c.withConditions(mod(ModConstants.MEGA), mod(ModConstants.APPMEK)), ExtendedAE.id("assembler/sky_osmium"));
 
         // Accumulation Processor
         CircuitCutterRecipeBuilder
