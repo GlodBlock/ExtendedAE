@@ -22,14 +22,18 @@ import com.glodblock.github.glodium.util.GlodUtil;
 import gripe._90.megacells.definition.MEGABlocks;
 import gripe._90.megacells.definition.MEGAItems;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
@@ -730,6 +734,25 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEBlocks.SKY_STONE_BLOCK, 4)
                 .fluid(Fluids.LAVA, 100)
                 .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("assembler/sky_steel"));
+
+        // Sky bronze
+        CrystalAssemblerRecipeBuilder
+                .assemble(MEGAItems.SKY_BRONZE_INGOT, 8)
+                .input(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED, 4)
+                .input(ConventionTags.COPPER_INGOT, 4)
+                .input(AEBlocks.SKY_STONE_BLOCK, 4)
+                .fluid(Fluids.LAVA, 100)
+                .save(c.withConditions(mod(ModConstants.MEGA)), ExtendedAE.id("assembler/sky_bronze"));
+
+        // Sky osmium
+        TagKey<Item> osmium = TagKey.create(Registries.ITEM,(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium")));
+        CrystalAssemblerRecipeBuilder
+                .assemble(MEGAItems.SKY_OSMIUM_INGOT, 8)
+                .input(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED, 4)
+                .input(osmium, 4)
+                .input(AEBlocks.SKY_STONE_BLOCK, 4)
+                .fluid(Fluids.LAVA, 100)
+                .save(c.withConditions(mod(ModConstants.MEGA)).withConditions(mod(ModConstants.APPMEK)), ExtendedAE.id("assembler/sky_osmium"));
 
         // Accumulation Processor
         CircuitCutterRecipeBuilder
