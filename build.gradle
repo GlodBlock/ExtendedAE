@@ -102,7 +102,6 @@ dependencies {
     compileOnly "curse.maven:mega-cells-622112:5662141"
     compileOnly "curse.maven:jade-324717:5427817"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
-    compileOnly "curse.maven:crafting-tweaks-233071:5644056"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5614830"
     runtimeOnly "de.mari_023:ae2wtlib:19.1.0-alpha.1"
