@@ -6,7 +6,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FCClientUtil {
 
@@ -18,14 +20,14 @@ public class FCClientUtil {
     }
 
     public static String getModName(String inputText) {
-        var trimInput = inputText.trim();
+        String trimInput = inputText.trim();
         if (trimInput.isEmpty() || trimInput.endsWith(",")) {
             return "";
         }
-        var ids = FCUtil.trimSplit(inputText);
-        var set = Set.of(ids);
+        String[] ids = FCUtil.trimSplit(inputText);
+        Set<String> uniqueInputs = Arrays.stream(ids).collect(Collectors.toSet());
         for (String mod : LoadList.MOD_NAME) {
-            if (set.contains(mod)) {
+            if (uniqueInputs.contains(mod)) {
                 continue;
             }
             String modid = ids[ids.length - 1];
