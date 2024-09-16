@@ -6,6 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class FCClientUtil {
@@ -23,7 +25,8 @@ public class FCClientUtil {
             return "";
         }
         var ids = FCUtil.trimSplit(inputText);
-        var set = Set.of(ids);
+        var set = new HashSet<>();
+        Collections.addAll(set, ids);
         for (String mod : LoadList.MOD_NAME) {
             if (set.contains(mod)) {
                 continue;
