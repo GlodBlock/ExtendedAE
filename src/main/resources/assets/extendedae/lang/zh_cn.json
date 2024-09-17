@@ -90,7 +90,6 @@
   "gui.extendedae.ex_inscriber.pre": "上一个压印工作",
   "gui.extendedae.ex_inscriber.number": "压印工作 %s",
   "gui.extendedae.ex_inscriber.unstackable": "数量限制 1",
-  "gui.extendedae.ex_inscriber.fourstackable": "数量限制 4",
   "gui.extendedae.ex_inscriber.stackable": "数量限制 64",
   "gui.extendedae.pattern_modifier": "样板修改器（%s）",
   "gui.extendedae.pattern_modifier.multiply": "乘数模式",
