@@ -26,11 +26,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class BlockFishbig extends AEBaseBlock {
+public class BlockMascot extends AEBaseBlock {
 
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public BlockFishbig() {
+    public BlockMascot() {
         super(defaultProps(MapColor.NONE, SoundType.WOOL).noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }

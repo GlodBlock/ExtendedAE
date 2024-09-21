@@ -16,7 +16,7 @@ import com.glodblock.github.extendedae.common.blocks.BlockExInscriber;
 import com.glodblock.github.extendedae.common.blocks.BlockExInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockExMolecularAssembler;
 import com.glodblock.github.extendedae.common.blocks.BlockExPatternProvider;
-import com.glodblock.github.extendedae.common.blocks.BlockFishbig;
+import com.glodblock.github.extendedae.common.blocks.BlockMascot;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
@@ -151,7 +151,8 @@ public class EAESingletons {
     public static PartItem<PartModStorageBus> MOD_STORAGE_BUS;
     public static PartItem<PartModExportBus> MOD_EXPORT_BUS;
     public static PartItem<PartActiveFormationPlane> ACTIVE_FORMATION_PLANE;
-    public static BlockFishbig FISHBIG;
+    public static BlockMascot FISHBIG;
+    public static BlockMascot MDDYUE;
     public static BlockCaner CANER;
     public static BlockExIOPort EX_IO_PORT;
     public static PartItem<PartPreciseExportBus> PRECISE_EXPORT_BUS;
@@ -223,7 +224,8 @@ public class EAESingletons {
         ACTIVE_FORMATION_PLANE = new PartItem<>(new Item.Properties(), PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         CANER = new BlockCaner();
         EX_IO_PORT = new BlockExIOPort();
-        FISHBIG = new BlockFishbig();
+        FISHBIG = new BlockMascot();
+        MDDYUE = new BlockMascot();
         PRECISE_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartPreciseExportBus.class, PartPreciseExportBus::new);
         PRECISE_STORAGE_BUS = new PartItem<>(new Item.Properties(), PartPreciseStorageBus.class, PartPreciseStorageBus::new);
         THRESHOLD_EXPORT_BUS = new PartItem<>(new Item.Properties(), PartThresholdExportBus.class, PartThresholdExportBus::new);
@@ -283,6 +285,7 @@ public class EAESingletons {
         regHandler.block("assembler_matrix_speed", ASSEMBLER_MATRIX_SPEED, TileAssemblerMatrixSpeed.class, TileAssemblerMatrixSpeed::new);
         regHandler.block("silicon_block", SILICON_BLOCK);
         regHandler.block("fishbig", FISHBIG);
+        regHandler.block("mddyue", MDDYUE);
         regHandler.item("entro_crystal", ENTRO_CRYSTAL);
         regHandler.item("entro_seed", ENTRO_SEED);
         regHandler.item("entro_dust", ENTRO_DUST);

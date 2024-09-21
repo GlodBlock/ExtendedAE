@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "extendedae:block/mddyue",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extendedae:block/mddyue"
+    },
+    "facing=south": {
+      "model": "extendedae:block/mddyue",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "extendedae:block/mddyue",
+      "y": 270
+    }
+  }
+}
