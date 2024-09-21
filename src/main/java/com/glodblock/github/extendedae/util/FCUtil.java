@@ -1,9 +1,7 @@
 package com.glodblock.github.extendedae.util;
 
 import appeng.api.inventories.InternalInventory;
-import appeng.api.parts.IPart;
 import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.networking.CableBusBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -26,13 +24,6 @@ public class FCUtil {
         } else {
             newTile.setChanged();
         }
-    }
-
-    public static IPart getPart(BlockEntity te, Direction face) {
-        if (te instanceof CableBusBlockEntity cable) {
-            return cable.getPart(face);
-        }
-        return null;
     }
 
     public static boolean ejectInv(Level world, BlockPos pos, InternalInventory inv, Predicate<? super BlockEntity> shouldIgnore) {

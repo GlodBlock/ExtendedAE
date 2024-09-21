@@ -72,7 +72,9 @@ public abstract class ItemUpgrade extends Item {
                     part.writeToNBT(contents, world.registryAccess());
                     var p = cable.replacePart(partItem, side, context.getPlayer(), null);
                     if (p != null) {
+                        contents.put("BYPASS_EXTENDEDAE", new CompoundTag());
                         p.readFromNBT(contents, world.registryAccess());
+                        p.addToWorld();
                     }
                 } else {
                     return InteractionResult.PASS;
