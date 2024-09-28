@@ -29,6 +29,7 @@ import com.glodblock.github.extendedae.client.gui.GuiTagExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiTagStorageBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdLevelEmitter;
+import com.glodblock.github.extendedae.client.gui.GuiVoidCell;
 import com.glodblock.github.extendedae.client.gui.GuiWirelessConnector;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiCraftingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiProcessingPattern;
@@ -78,6 +79,7 @@ import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
+import com.glodblock.github.extendedae.container.ContainerVoidCell;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
@@ -129,6 +131,7 @@ public class ClientRegistryHandler {
         InitScreens.register(event, ContainerCircuitCutter.TYPE, GuiCircuitCutter::new, "/screens/circuit_cutter.json");
         InitScreens.register(event, ContainerExInterface.TYPE_OVERSIZE, GuiExInterface::new, "/screens/oversize_interface.json");
         InitScreens.register(event, ContainerAssemblerMatrix.TYPE, GuiAssemblerMatrix::new, "/screens/assembler_matrix.json");
+        InitScreens.register(event, ContainerVoidCell.TYPE, GuiVoidCell::new, "/screens/void_cell.json");
         event.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -140,6 +143,7 @@ public class ClientRegistryHandler {
         event.register(makeOpaque(new StaticItemColor(AEColor.TRANSPARENT)), EAESingletons.EX_PATTERN_TERMINAL);
         event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.INFINITY_WATER_CELL);
         event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.INFINITY_COBBLESTONE_CELL);
+        event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.VOID_CELL);
     }
 
     @SubscribeEvent

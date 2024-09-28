@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.common;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.items.parts.PartItem;
+import com.glodblock.github.extendedae.api.VoidMode;
 import com.glodblock.github.extendedae.common.blocks.BlockBuddingEntro;
 import com.glodblock.github.extendedae.common.blocks.BlockCaner;
 import com.glodblock.github.extendedae.common.blocks.BlockCircuitCutter;
@@ -16,8 +17,8 @@ import com.glodblock.github.extendedae.common.blocks.BlockExInscriber;
 import com.glodblock.github.extendedae.common.blocks.BlockExInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockExMolecularAssembler;
 import com.glodblock.github.extendedae.common.blocks.BlockExPatternProvider;
-import com.glodblock.github.extendedae.common.blocks.BlockMascot;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
+import com.glodblock.github.extendedae.common.blocks.BlockMascot;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixCrafter;
@@ -35,6 +36,7 @@ import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
 import com.glodblock.github.extendedae.common.items.ItemPackedDevice;
 import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
+import com.glodblock.github.extendedae.common.items.ItemVoidCell;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.items.tools.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
@@ -99,6 +101,8 @@ public class EAESingletons {
     public static DataComponentType<CompoundTag> EXTRA_SETTING;
     public static DataComponentType<Pair<Long, Long>> THRESHOLD_DATA;
     public static DataComponentType<Pair<Long, GlobalPos>> WIRELESS_LOCATOR;
+    public static DataComponentType<VoidMode> VOID_MODE;
+    public static DataComponentType<Double> VOID_ENERGY;
 
     public static CommonItem ENTRO_CRYSTAL;
     public static ItemEntroSeed ENTRO_SEED;
@@ -167,6 +171,7 @@ public class EAESingletons {
     public static BlockAssemblerMatrixPattern ASSEMBLER_MATRIX_PATTERN;
     public static BlockAssemblerMatrixCrafter ASSEMBLER_MATRIX_CRAFTER;
     public static BlockAssemblerMatrixSpeed ASSEMBLER_MATRIX_SPEED;
+    public static ItemVoidCell VOID_CELL;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -178,6 +183,8 @@ public class EAESingletons {
         EXTRA_SETTING = GlodUtil.getComponentType(CompoundTag.CODEC, GlodCodecs.NBT_STREAM_CODEC);
         THRESHOLD_DATA = GlodUtil.getComponentType(GlodCodecs.pair(Codec.LONG, Codec.LONG), GlodCodecs.pair(ByteBufCodecs.VAR_LONG, ByteBufCodecs.VAR_LONG));
         WIRELESS_LOCATOR = GlodUtil.getComponentType(GlodCodecs.pair(Codec.LONG, GlobalPos.CODEC), GlodCodecs.pair(ByteBufCodecs.VAR_LONG, GlobalPos.STREAM_CODEC));
+        VOID_MODE = GlodUtil.getComponentType(VoidMode.CODEC, VoidMode.STREAM_CODEC);
+        VOID_ENERGY = GlodUtil.getComponentType(Codec.DOUBLE, ByteBufCodecs.DOUBLE);
         ENTRO_CRYSTAL = new CommonItem();
         ENTRO_SEED = new ItemEntroSeed();
         ENTRO_DUST = new CommonItem();
@@ -245,6 +252,7 @@ public class EAESingletons {
         ASSEMBLER_MATRIX_CRAFTER = new BlockAssemblerMatrixCrafter();
         ASSEMBLER_MATRIX_SPEED = new BlockAssemblerMatrixSpeed();
         WIRELESS_EX_PAT = new ItemWirelessExPAT();
+        VOID_CELL = new ItemVoidCell();
         regHandler.comp("is_part", IS_PART);
         regHandler.comp("tape_part_data", TAPE_PART_DATA);
         regHandler.comp("tape_tile_data", TAPE_TILE_DATA);
@@ -254,6 +262,8 @@ public class EAESingletons {
         regHandler.comp("extra_setting", EXTRA_SETTING);
         regHandler.comp("threshold_data", THRESHOLD_DATA);
         regHandler.comp("wireless_locator", WIRELESS_LOCATOR);
+        regHandler.comp("void_mode", VOID_MODE);
+        regHandler.comp("void_energy", VOID_ENERGY);
         regHandler.block("entro_cluster_small", ENTRO_BUD_SMALL);
         regHandler.block("entro_cluster_medium", ENTRO_BUD_MEDIUM);
         regHandler.block("entro_cluster_large", ENTRO_BUD_LARGE);
@@ -321,6 +331,7 @@ public class EAESingletons {
         regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
         regHandler.item("threshold_export_bus", THRESHOLD_EXPORT_BUS);
         regHandler.item("oversize_interface_part", OVERSIZE_INTERFACE_PART);
+        regHandler.item("void_cell", VOID_CELL);
     }
 
 }

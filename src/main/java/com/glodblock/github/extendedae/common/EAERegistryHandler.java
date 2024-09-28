@@ -26,6 +26,7 @@ import com.glodblock.github.extendedae.api.caps.ICrankPowered;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.api.caps.IMEStorageAccess;
 import com.glodblock.github.extendedae.common.inventory.InfinityCellInventory;
+import com.glodblock.github.extendedae.common.inventory.VoidCellInventory;
 import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
@@ -68,6 +69,7 @@ import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
+import com.glodblock.github.extendedae.container.ContainerVoidCell;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
@@ -187,6 +189,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("circuit_cutter"), ContainerCircuitCutter.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("oversize_interface"), ContainerExInterface.TYPE_OVERSIZE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("assembler_matrix"), ContainerAssemblerMatrix.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("void_cell"), ContainerVoidCell.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -270,12 +273,16 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.THRESHOLD_EXPORT_BUS, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CRYSTAL_ASSEMBLER, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CIRCUIT_CUTTER, 4);
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.VOID_CELL, 1);
+        Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.VOID_CELL, 1);
     }
 
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
+        StorageCells.addCellHandler(VoidCellInventory.HANDLER);
         StorageCellModels.registerModel(EAESingletons.INFINITY_WATER_CELL, ExtendedAE.id("block/drive/infinity_water_cell"));
         StorageCellModels.registerModel(EAESingletons.INFINITY_COBBLESTONE_CELL, ExtendedAE.id("block/drive/infinity_cobblestone_cell"));
+        StorageCellModels.registerModel(EAESingletons.VOID_CELL, ExtendedAE.id("block/drive/void_cell"));
     }
 
     private void onRegisterModels() {

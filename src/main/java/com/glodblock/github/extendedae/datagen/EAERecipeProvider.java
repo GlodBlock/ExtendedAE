@@ -643,6 +643,20 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.CONCURRENT_PROCESSOR)
                 .save(c, ExtendedAE.id("assembler/assembler_matrix_speed"));
 
+        // Void Cell
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAESingletons.VOID_CELL)
+                .pattern("CEC")
+                .pattern("KXK")
+                .pattern("III")
+                .define('C', AEBlocks.QUARTZ_GLASS)
+                .define('E', AEBlocks.CONDENSER)
+                .define('K', AEItems.VOID_CARD)
+                .define('X', AEItems.CELL_COMPONENT_16K)
+                .define('I', Items.AMETHYST_SHARD)
+                .unlockedBy(C, has(AEItems.VOID_CARD))
+                .save(c, ExtendedAE.id("void_cell"));
+
         transformation(c);
         circuit(c);
         assemblerCircuit(c);

@@ -77,7 +77,7 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
         this.searchField.setPlaceholder(GuiText.SearchPlaceholder.text());
         this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.assembler_matrix.tooltip")));
         this.actions.put("running_update", o -> this.runningThreads = o.get(0));
-        var cancel = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("cancel")), Icon.CLEAR.getBlitter());
+        var cancel = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("cancel")), Icon.CLEAR);
         cancel.setMessage(Component.translatable("gui.extendedae.assembler_matrix.cancel"));
         addToLeftToolbar(cancel);
     }

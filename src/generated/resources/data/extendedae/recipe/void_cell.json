@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ae2:quartz_glass"
+    },
+    "E": {
+      "item": "ae2:condenser"
+    },
+    "I": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "K": {
+      "item": "ae2:void_card"
+    },
+    "X": {
+      "item": "ae2:cell_component_16k"
+    }
+  },
+  "pattern": [
+    "CEC",
+    "KXK",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:void_cell"
+  }
+}

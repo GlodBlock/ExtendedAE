@@ -2,16 +2,15 @@ package com.glodblock.github.extendedae.client.gui;
 
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
+import appeng.client.gui.Icon;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ProgressBar;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
-import appeng.client.gui.Icon;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.CycleEPPButton;
-import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
 import com.glodblock.github.extendedae.container.ContainerExInscriber;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
@@ -41,8 +40,8 @@ public class GuiExInscriber extends UpgradeableScreen<ContainerExInscriber> {
         this.autoExportBtn = new ServerSettingToggleButton<>(Settings.AUTO_EXPORT, YesNo.NO);
         this.addToLeftToolbar(autoExportBtn);
 
-        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExInscriber.MAX_THREAD)), Icon.ARROW_RIGHT.getBlitter());
-        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), Icon.ARROW_LEFT.getBlitter());
+        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExInscriber.MAX_THREAD)), Icon.ARROW_RIGHT);
+        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExInscriber.MAX_THREAD)), Icon.ARROW_LEFT);
         this.next.setMessage(Component.translatable("gui.extendedae.ex_inscriber.next"));
         this.pre.setMessage(Component.translatable("gui.extendedae.ex_inscriber.pre"));
         CycleEPPButton stackChange = new CycleEPPButton();

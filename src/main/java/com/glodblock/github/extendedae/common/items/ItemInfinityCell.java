@@ -1,9 +1,7 @@
 package com.glodblock.github.extendedae.common.items;
 
-import appeng.api.config.FuzzyMode;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
-import appeng.api.storage.cells.ICellWorkbenchItem;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
 import net.minecraft.ChatFormatting;
@@ -18,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemInfinityCell extends AEBaseItem implements ICellWorkbenchItem {
+public class ItemInfinityCell extends AEBaseItem {
 
     private final AEKey record;
 
@@ -46,16 +44,6 @@ public class ItemInfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     public Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
         var content = Collections.singletonList(new GenericStack(this.record, getAsIntMax(this.record)));
         return Optional.of(new StorageCellTooltipComponent(List.of(), content, false, true));
-    }
-
-    @Override
-    public FuzzyMode getFuzzyMode(ItemStack itemStack) {
-        return FuzzyMode.IGNORE_ALL;
-    }
-
-    @Override
-    public void setFuzzyMode(ItemStack itemStack, FuzzyMode fuzzyMode) {
-        // NO-OP
     }
 
     public static long getAsIntMax(AEKey key) {

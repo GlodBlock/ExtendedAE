@@ -13,7 +13,6 @@ import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
-import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CUpdatePage;
@@ -36,8 +35,8 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
         super(menu, playerInventory, title, style);
 
         this.fuzzyMode = new ServerSettingToggleButton<>(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
-        this.nextPage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.ARROW_RIGHT.getBlitter());
-        this.prePage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.ARROW_LEFT.getBlitter());
+        this.nextPage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.ARROW_RIGHT);
+        this.prePage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.ARROW_LEFT);
         this.nextPage.setMessage(Component.translatable("gui.extendedae.ex_interface.next"));
         this.prePage.setMessage(Component.translatable("gui.extendedae.ex_interface.pre"));
         addToLeftToolbar(this.fuzzyMode);
