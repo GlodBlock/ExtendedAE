@@ -70,7 +70,7 @@ repositories {
     }
     maven {
         name 'cursemaven'
-        url "https://www.cursemaven.com"
+        url = "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
@@ -84,11 +84,18 @@ repositories {
         }
     }
     maven {
-        url "https://maven.shedaniel.me/"
+        url = "https://maven.shedaniel.me/"
         content {
             includeGroup "me.shedaniel"
             includeGroup "me.shedaniel.cloth"
             includeGroup "dev.architectury"
+        }
+    }
+
+    maven {
+        url = "https://maven.saps.dev/minecraft"
+        content {
+            includeGroup "dev.latvian.mods"
         }
     }
 }
@@ -102,6 +109,7 @@ dependencies {
     compileOnly "curse.maven:mega-cells-622112:5662141"
     compileOnly "curse.maven:jade-324717:5427817"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
+    compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.0-build.171"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5614830"
     runtimeOnly "de.mari_023:ae2wtlib:19.1.0-alpha.1"
