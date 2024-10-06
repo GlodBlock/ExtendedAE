@@ -211,6 +211,7 @@ public class VoidCellInventory implements StorageCell {
     }
 
     public void fillOutput() {
+        this.getCellItems();
         if (this.voidMode == VoidMode.TRASH || this.voidMode.getPower() == 0) {
             this.voidEnergy = 0;
             return;
