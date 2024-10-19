@@ -8,6 +8,7 @@ import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
+import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.me.modlist.ModPriorityList;
@@ -16,8 +17,10 @@ import com.glodblock.github.extendedae.common.parts.base.PartSpecialExportBus;
 import com.glodblock.github.extendedae.container.ContainerModExportBus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PartModExportBus extends PartSpecialExportBus {
@@ -52,6 +55,24 @@ public class PartModExportBus extends PartSpecialExportBus {
     public void writeToNBT(CompoundTag extra) {
         super.writeToNBT(extra);
         extra.putString("modid", this.modid);
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        if (input.contains("mod_name_exp")) {
+            this.modid = input.getString("mod_name_exp");
+        } else {
+            this.modid = "";
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, CompoundTag output) {
+        super.exportSettings(mode, output);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            output.putString("mod_name_exp", this.modid);
+        }
     }
 
     public String getModNameFilter() {
