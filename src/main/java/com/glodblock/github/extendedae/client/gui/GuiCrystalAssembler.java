@@ -9,12 +9,19 @@ import appeng.client.gui.widgets.ProgressBar;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.localization.Tooltips;
+import com.glodblock.github.extendedae.client.button.ActionEPPButton;
+import com.glodblock.github.extendedae.client.button.EPPIcon;
+import com.glodblock.github.extendedae.client.gui.subgui.OutputSideConfig;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
+import com.glodblock.github.extendedae.network.EAENetworkHandler;
+import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,6 +30,7 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
 
     private final ProgressBar pb;
     private final SettingToggleButton<YesNo> autoExportBtn;
+    private final ActionEPPButton outputSideBtn;
 
     public GuiCrystalAssembler(ContainerCrystalAssembler menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -30,6 +38,21 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
         widgets.add("progressBar", this.pb);
         this.autoExportBtn = new ServerSettingToggleButton<>(Settings.AUTO_EXPORT, YesNo.NO);
         this.addToLeftToolbar(autoExportBtn);
+        this.outputSideBtn = new ActionEPPButton(b -> this.openOutputConfig(), EPPIcon.OUTPUT_SIDES);
+        this.outputSideBtn.setMessage(Component.translatable("gui.extendedae.set_output_sides.open"));
+        this.addToLeftToolbar(this.outputSideBtn);
+    }
+
+    private void openOutputConfig() {
+        if (this.getMenu().getHost() != null) {
+            switchToScreen(new OutputSideConfig<>(
+                    this,
+                    new ItemStack(EAESingletons.CIRCUIT_CUTTER),
+                    this.getMenu().getHost(),
+                    this.getMenu().getOutputSides(),
+                    (side, value) -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_side", side.getName(), value)))
+            );
+        }
     }
 
     @Override
@@ -38,6 +61,7 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
         int progress = this.menu.getCurrentProgress() * 100 / this.menu.getMaxProgress();
         this.pb.setFullMsg(Component.literal(progress + "%"));
         this.autoExportBtn.set(getMenu().getAutoExport());
+        this.outputSideBtn.setVisibility(this.autoExportBtn.getCurrentValue() == YesNo.YES);
     }
 
     @Override

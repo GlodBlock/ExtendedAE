@@ -112,6 +112,11 @@ public class TileCrystalFixer extends AENetworkedInvBlockEntity implements IGrid
     }
 
     @Override
+    public Set<Direction> getOutputSides() {
+        return Set.of();
+    }
+
+    @Override
     public @Nullable IManagedGridNode getNode() {
         return this.getMainNode();
     }

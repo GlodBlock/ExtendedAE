@@ -14,20 +14,32 @@ import appeng.menu.slot.OutputSlot;
 import appeng.util.ConfigMenuInventory;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
+import com.glodblock.github.extendedae.container.helper.DirectionSet;
+import com.glodblock.github.glodium.network.packet.sync.ActionMap;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssembler> implements IProgressProvider {
+public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssembler> implements IProgressProvider, IActionHolder {
 
     @GuiSync(3)
     public int processingTime = -1;
 
     @GuiSync(8)
     public YesNo autoExport = YesNo.NO;
+
+    @GuiSync(9)
+    public DirectionSet outputSides = new DirectionSet(new ArrayList<>());
+
+    private final ActionMap actions = ActionMap.create();
+
     private final AppEngSlot tank;
 
     public static final MenuType<ContainerCrystalAssembler> TYPE = MenuTypeBuilder
@@ -45,6 +57,16 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
                 Component.translatable("gui.extendedae.crystal_assembler.tank_empty"),
                 Component.translatable("gui.extendedae.crystal_assembler.amount", 0, TileCrystalAssembler.TANK_CAP).withStyle(Tooltips.NORMAL_TOOLTIP_TEXT)
         ));
+        this.actions.put("set_side", o -> this.setOutputSide(o.get(0), o.get(1)));
+    }
+
+    private void setOutputSide(String name, boolean value) {
+        var side = Direction.byName(name);
+        if (value) {
+            this.getHost().getOutputSides().add(side);
+        } else {
+            this.getHost().getOutputSides().remove(side);
+        }
     }
 
     public boolean isTank(Slot slot) {
@@ -53,7 +75,9 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
 
     @Override
     protected void loadSettingsFromHost(IConfigManager cm) {
-        this.autoExport = getHost().getConfigManager().getSetting(Settings.AUTO_EXPORT);
+        this.autoExport = cm.getSetting(Settings.AUTO_EXPORT);
+        this.outputSides.clear();
+        this.outputSides.addAll(this.getHost().getOutputSides());
     }
 
     @Override
@@ -76,6 +100,16 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
 
     public YesNo getAutoExport() {
         return autoExport;
+    }
+
+    public List<Direction> getOutputSides() {
+        return outputSides.sides();
+    }
+
+    @NotNull
+    @Override
+    public ActionMap getActionMap() {
+        return this.actions;
     }
 
 }

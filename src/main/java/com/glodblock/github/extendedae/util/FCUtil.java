@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class FCUtil {
@@ -26,8 +27,8 @@ public class FCUtil {
         }
     }
 
-    public static boolean ejectInv(Level world, BlockPos pos, InternalInventory inv, Predicate<? super BlockEntity> shouldIgnore) {
-        for (var dir : Direction.values()) {
+    public static boolean ejectInv(Level world, BlockPos pos, InternalInventory inv, Set<Direction> outputSides, Predicate<? super BlockEntity> shouldIgnore) {
+        for (var dir : outputSides) {
             var te = world.getBlockEntity(pos.relative(dir));
             if (te == null || shouldIgnore.test(te)) {
                 continue;

@@ -38,6 +38,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -69,6 +71,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     private boolean isWorking = false;
     private int progress = 0;
     private ItemStack renderOutput = ItemStack.EMPTY;
+    private final Set<Direction> outputSides = EnumSet.noneOf(Direction.class);
 
     public TileCircuitCutter(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCircuitCutter.class, TileCircuitCutter::new, EAESingletons.CIRCUIT_CUTTER), pos, blockState);
@@ -134,6 +137,11 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     @Override
     public AppEngInternalInventory getOutput() {
         return this.output;
+    }
+
+    @Override
+    public Set<Direction> getOutputSides() {
+        return this.outputSides;
     }
 
     public ItemStack getRenderOutput() {
@@ -216,6 +224,11 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         this.upgrades.writeToNBT(data, "upgrades", registries);
         this.configManager.writeToNBT(data, registries);
         this.ctx.save(data);
+        var sides = new ListTag();
+        for (var side : this.getOutputSides()) {
+            sides.add(StringTag.valueOf(side.getName()));
+        }
+        data.put("output_side", sides);
     }
 
     @Override
@@ -230,6 +243,15 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         this.upgrades.readFromNBT(data, "upgrades", registries);
         this.configManager.readFromNBT(data, registries);
         this.ctx.load(data);
+        this.outputSides.clear();
+        if (data.contains("output_side")) {
+            var list = data.getList("output_side", CompoundTag.TAG_STRING);
+            for (var name : list) {
+                this.outputSides.add(Direction.byName(name.getAsString()));
+            }
+        } else {
+            this.outputSides.addAll(List.of(Direction.values()));
+        }
     }
 
     @Override
@@ -266,7 +288,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, te -> te instanceof TileCircuitCutter);
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides, te -> te instanceof TileCircuitCutter);
     }
 
     @Override

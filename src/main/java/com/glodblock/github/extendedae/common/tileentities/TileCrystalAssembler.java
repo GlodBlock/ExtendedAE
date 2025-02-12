@@ -43,6 +43,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -76,6 +78,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     private final RecipeExecutor<CrystalAssemblerRecipe> exec;
     private boolean isWorking = false;
     private int progress = 0;
+    private final Set<Direction> outputSides = EnumSet.noneOf(Direction.class);
 
     public TileCrystalAssembler(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCrystalAssembler.class, TileCrystalAssembler::new, EAESingletons.CRYSTAL_ASSEMBLER), pos, blockState);
@@ -150,6 +153,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     }
 
     @Override
+    public Set<Direction> getOutputSides() {
+        return this.outputSides;
+    }
+
+    @Override
     public AECableType getCableConnectionType(Direction dir) {
         return AECableType.COVERED;
     }
@@ -195,6 +203,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.upgrades.writeToNBT(data, "upgrades", registries);
         this.configManager.writeToNBT(data, registries);
         this.ctx.save(data);
+        var sides = new ListTag();
+        for (var side : this.getOutputSides()) {
+            sides.add(StringTag.valueOf(side.getName()));
+        }
+        data.put("output_side", sides);
     }
 
     @Override
@@ -211,6 +224,15 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.upgrades.readFromNBT(data, "upgrades", registries);
         this.configManager.readFromNBT(data, registries);
         this.ctx.load(data);
+        this.outputSides.clear();
+        if (data.contains("output_side")) {
+            var list = data.getList("output_side", CompoundTag.TAG_STRING);
+            for (var name : list) {
+                this.outputSides.add(Direction.byName(name.getAsString()));
+            }
+        } else {
+            this.outputSides.addAll(List.of(Direction.values()));
+        }
     }
 
     @Override
@@ -250,7 +272,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, te -> te instanceof TileCrystalAssembler);
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides, te -> te instanceof TileCrystalAssembler);
     }
 
     @Override

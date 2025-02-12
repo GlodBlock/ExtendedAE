@@ -1,0 +1,55 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json"],
+  "background": {
+    "texture": "guis/set_output_sides.png",
+    "srcRect": [0, 0, 93, 92]
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.extendedae.set_output_sides"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    }
+  },
+  "widgets": {
+    "return": {
+      "left": 69,
+      "top": -5
+    },
+    "clear": {
+      "left": 74,
+      "top": 72,
+      "width": 8,
+      "height": 8
+    },
+    "front": {
+      "left": 34,
+      "top": 38
+    },
+    "back": {
+      "left": 54,
+      "top": 60
+    },
+    "top": {
+      "left": 34,
+      "top": 16
+    },
+    "right": {
+      "left": 14,
+      "top": 38
+    },
+    "bottom": {
+      "left": 34,
+      "top": 60
+    },
+    "left": {
+      "left": 54,
+      "top": 38
+    }
+  }
+}
