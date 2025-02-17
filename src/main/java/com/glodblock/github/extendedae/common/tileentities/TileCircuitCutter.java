@@ -22,6 +22,7 @@ import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.util.ConfigManager;
+import appeng.util.SettingsFrom;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.FilteredInternalInventory;
@@ -37,10 +38,12 @@ import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -235,6 +238,32 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     public void clearContent() {
         super.clearContent();
         this.upgrades.clear();
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        var nbt = input.get(EAESingletons.EXTRA_SETTING);
+        if (nbt != null) {
+            this.outputSides.clear();
+            for (var side : nbt.getList("output_side", CompoundTag.TAG_STRING)) {
+                this.outputSides.add(Direction.byName(side.getAsString()));
+            }
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output, @Nullable Player player) {
+        super.exportSettings(mode, output, player);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            var nbt = new CompoundTag();
+            var sides = new ListTag();
+            for (var side : this.getOutputSides()) {
+                sides.add(StringTag.valueOf(side.getName()));
+            }
+            nbt.put("output_side", sides);
+            output.set(EAESingletons.EXTRA_SETTING, nbt);
+        }
     }
 
     @Override

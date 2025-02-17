@@ -16,7 +16,7 @@ public class BlockAssemblerMatrixGlass extends BlockAssemblerMatrixBase<TileAsse
 
     @Override
     public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter blockGetter, @NotNull BlockPos pos) {
-        return 0.5f;
+        return 1f;
     }
 
     public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter blockGetter, @NotNull BlockPos p4) {
