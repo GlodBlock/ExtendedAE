@@ -207,7 +207,6 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
         if (this.cluster != null && this.cluster != c) {
             this.cluster.breakCluster();
         }
-
         this.cluster = c;
         this.updateSubType(true);
     }

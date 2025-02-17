@@ -13,9 +13,7 @@ import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.util.inv.AppEngInternalInventory;
-import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
-import appeng.util.inv.filter.AEItemFilters;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
@@ -37,14 +35,12 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
 
     public final static int INV_SIZE = 36;
     private final AppEngInternalInventory patternInventory;
-    private final FilteredInternalInventory exposedInventory;
     private final List<IPatternDetails> patterns = new ArrayList<>();
 
     public TileAssemblerMatrixPattern(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileAssemblerMatrixPattern.class, TileAssemblerMatrixPattern::new, EAESingletons.ASSEMBLER_MATRIX_PATTERN), pos, blockState);
         this.patternInventory = new AppEngInternalInventory(this, INV_SIZE, 1);
         this.patternInventory.setFilter(new Filter(this::getLevel));
-        this.exposedInventory = new FilteredInternalInventory(this.patternInventory, AEItemFilters.INSERT_ONLY);
         this.getMainNode().addService(ICraftingProvider.class, this);
     }
 
@@ -69,8 +65,8 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
         return this.patternInventory;
     }
 
-    public FilteredInternalInventory getExposedInventory() {
-        return this.exposedInventory;
+    public AppEngInternalInventory getExposedInventory() {
+        return this.patternInventory;
     }
 
     public long getLocateID() {
