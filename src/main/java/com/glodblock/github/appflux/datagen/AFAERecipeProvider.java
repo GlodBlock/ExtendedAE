@@ -115,9 +115,10 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, AFSingletons.CHARGED_REDSTONE_BLOCK)
                 .pattern("XXX")
+                .pattern("XxX")
                 .pattern("XXX")
-                .pattern("XXX")
-                .define('X', AFSingletons.CHARGED_REDSTONE)
+                .define('x', AFSingletons.CHARGED_REDSTONE)
+                .define('X', AFTags.CHARGED_REDSTONE_GEM)
                 .unlockedBy(C, has(AFSingletons.CHARGED_REDSTONE))
                 .save(consumer, AppFlux.id("charged_redstone_block"));
         ShapelessRecipeBuilder

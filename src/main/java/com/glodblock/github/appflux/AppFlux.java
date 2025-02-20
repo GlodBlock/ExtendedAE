@@ -6,6 +6,7 @@ import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.AFRegistryHandler;
 import com.glodblock.github.appflux.common.me.inventory.FEGenericStackInvStorage;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.network.AFNetworkHandler;
 import com.glodblock.github.appflux.util.AFUtil;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -48,6 +49,7 @@ public class AppFlux {
         });
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);
+        bus.addListener(AFNetworkHandler.INSTANCE::onRegister);
         bus.register(AFRegistryHandler.INSTANCE);
         if (FMLEnvironment.dist.isClient()) {
             bus.register(AFClientRegistryHandler.INSTANCE);

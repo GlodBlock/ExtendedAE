@@ -40,5 +40,9 @@
   "appflux.key.flux": "Energy",
   "appflux.type.fe.name": "FE",
   "appflux.cell.storage": "Contains: %s %s",
+  "gui.appflux.flux_accessor": "Flux Accessor",
+  "gui.appflux.flux_accessor.fast_on": "Fast Mode: On",
+  "gui.appflux.flux_accessor.fast_off": "Fast Mode: Off",
+  "gui.appflux.flux_accessor.warn": "May cause lag in Fast Mode.",
   "group.pattern_provider.name": "ME Pattern Provider"
 }

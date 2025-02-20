@@ -1,0 +1,19 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json"],
+  "background": {
+    "texture": "guis/flux_accessor.png",
+    "srcRect": [0, 0, 121, 60]
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.appflux.flux_accessor"
+      },
+      "position": {
+        "left": 5,
+        "top": 6
+      }
+    }
+  }
+}

@@ -25,6 +25,7 @@ import java.util.List;
 public class AFSingletons {
 
     public static DataComponentType<Long> FE_ENERGY;
+    public static DataComponentType<Boolean> FAST_MODE;
 
     public static NormalItem CORE_1k;
     public static NormalItem CORE_4k;
@@ -63,6 +64,7 @@ public class AFSingletons {
 
     public static void init(AFRegistryHandler regHandler) {
         FE_ENERGY = GlodUtil.getComponentType(Codec.LONG, ByteBufCodecs.VAR_LONG);
+        FAST_MODE = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
         CORE_1k = new NormalItem();
         CORE_4k = new NormalItem();
         CORE_16k = new NormalItem();
@@ -104,6 +106,7 @@ public class AFSingletons {
         INDUCTION_CARD = new ItemInductionCard();
         CHARGED_REDSTONE_BLOCK = new BlockChargedRedstoneBlock();
         regHandler.comp("fe_energy", FE_ENERGY);
+        regHandler.comp("fast_mode", FAST_MODE);
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
         regHandler.item("core_16k", CORE_16k);

@@ -82,11 +82,13 @@ repositories {
             includeGroup("appeng")
         }
     }
+    mavenCentral()
 }
 
 dependencies {
     implementation "curse.maven:glodium-957920:5614731"
-    implementation "appeng:appliedenergistics2:19.0.20-beta"
+    implementation "org.appliedenergistics:appliedenergistics2:19.2.1-beta"
+    implementation "org.appliedenergistics:guideme:2.5.1"
     compileOnly "curse.maven:mekanism-268560:5574951"
     compileOnly "curse.maven:modern-industrialization-405388:5585300"
     compileOnly "curse.maven:grandpower-980156:5432440"

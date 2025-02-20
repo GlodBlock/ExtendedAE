@@ -17,4 +17,12 @@ public interface IEnergyDistributor extends IGridNodeService {
         return true;
     }
 
+    default boolean isFastMode() {
+        return false;
+    }
+
+    default void setFastMode(boolean mode) {
+
+    }
+
 }

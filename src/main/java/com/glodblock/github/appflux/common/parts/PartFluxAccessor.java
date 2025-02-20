@@ -10,10 +10,14 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartAdjacentApi;
 import appeng.parts.PartModel;
+import appeng.util.SettingsFrom;
 import com.glodblock.github.appflux.AppFlux;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
@@ -21,8 +25,14 @@ import com.glodblock.github.appflux.common.me.energy.EnergyTickRecord;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.container.ContainerFluxAccessor;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -34,6 +44,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     public static final IPartModel MODEL = new PartModel(RL);
     private EnergyCapCache cacheApi;
     private boolean blocked = false;
+    private boolean fast = false;
     private EnergyTickRecord lastTick = new EnergyTickRecord();
     private final ICapabilityInvalidationListener listener;
     private final IActionSource source = IActionSource.ofMachine(this);
@@ -111,6 +122,42 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     }
 
     @Override
+    public boolean onUseWithoutItem(Player player, Vec3 pos) {
+        if (!isClientSide()) {
+            MenuOpener.open(ContainerFluxAccessor.TYPE, player, MenuLocators.forPart(this));
+        }
+        return true;
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        if (input.has(AFSingletons.FAST_MODE)) {
+            this.fast = input.getOrDefault(AFSingletons.FAST_MODE, false);
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output) {
+        super.exportSettings(mode, output);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            output.set(AFSingletons.FAST_MODE, this.fast);
+        }
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
+        this.fast = extra.getBoolean("fast");
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
+        extra.putBoolean("fast", this.fast);
+    }
+
+    @Override
     public void distribute(long ticks) {
         if (this.getLevel() == null) {
             return;
@@ -123,7 +170,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         var gird = this.getGrid();
         if (storage != null && d != null) {
             if (!this.blocked) {
-                if (this.lastTick.needTick(ticks)) {
+                if (this.isFastMode() || this.lastTick.needTick(ticks)) {
                     long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
                     if (sent == -1) {
                         this.blocked = true;
@@ -149,6 +196,16 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
                 this.lastTick = new EnergyTickRecord();
             }
         }
+    }
+
+    @Override
+    public boolean isFastMode() {
+        return this.fast;
+    }
+
+    @Override
+    public void setFastMode(boolean mode) {
+        this.fast = mode;
     }
 
 }

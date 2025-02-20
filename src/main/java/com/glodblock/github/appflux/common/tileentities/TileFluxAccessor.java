@@ -7,6 +7,7 @@ import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
+import appeng.util.SettingsFrom;
 import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
@@ -21,7 +22,11 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener;
 import net.neoforged.neoforge.energy.EnergyStorage;
@@ -34,6 +39,7 @@ import java.util.Set;
 public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyDistributor {
 
     private EnergyCapCache cacheApi;
+    private boolean fast = false;
     // mutable
     private final Set<Direction> blocked = EnumSet.noneOf(Direction.class);
     private final Reference2ReferenceMap<Direction, EnergyTickRecord> lastTick = new Reference2ReferenceOpenHashMap<>();
@@ -86,6 +92,34 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
     }
 
     @Override
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        if (input.has(AFSingletons.FAST_MODE)) {
+            this.fast = input.getOrDefault(AFSingletons.FAST_MODE, false);
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output, @Nullable Player player) {
+        super.exportSettings(mode, output, player);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            output.set(AFSingletons.FAST_MODE, this.fast);
+        }
+    }
+
+    @Override
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.fast = data.getBoolean("fast");
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag extra, HolderLookup.Provider registries) {
+        super.saveAdditional(extra, registries);
+        extra.putBoolean("fast", this.fast);
+    }
+
+    @Override
     public boolean isActive() {
         return this.getMainNode().isActive();
     }
@@ -106,7 +140,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
                     continue;
                 }
                 var tickRate = this.lastTick.get(d);
-                if (tickRate.needTick(ticks)) {
+                if (this.isFastMode() || tickRate.needTick(ticks)) {
                     long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
                     if (sent == -1) {
                         this.blocked.add(d);
@@ -134,6 +168,16 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isFastMode() {
+        return this.fast;
+    }
+
+    @Override
+    public void setFastMode(boolean mode) {
+        this.fast = mode;
     }
 
     @Override

@@ -3,12 +3,15 @@
   "category": "misc",
   "key": {
     "X": {
+      "tag": "c:gems/charged_redstone"
+    },
+    "x": {
       "item": "appflux:charged_redstone"
     }
   },
   "pattern": [
     "XXX",
-    "XXX",
+    "XxX",
     "XXX"
   ],
   "result": {

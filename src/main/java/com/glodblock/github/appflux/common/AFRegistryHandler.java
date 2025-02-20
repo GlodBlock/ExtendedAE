@@ -35,6 +35,7 @@ import com.glodblock.github.appflux.common.me.strategy.FEStackExportStrategy;
 import com.glodblock.github.appflux.common.me.strategy.FEStackImportStrategy;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.container.ContainerFluxAccessor;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
@@ -131,6 +132,7 @@ public class AFRegistryHandler extends RegistryHandler {
         super.runRegister();
         AEKeyTypes.register(FluxKeyType.TYPE);
         PartModels.registerModels(PartFluxAccessor.RL);
+        Registry.register(BuiltInRegistries.MENU, AppFlux.id("flux_accessor"), ContainerFluxAccessor.TYPE);
     }
 
     @SubscribeEvent
