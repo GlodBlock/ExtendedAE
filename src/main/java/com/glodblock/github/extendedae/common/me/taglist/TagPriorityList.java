@@ -52,10 +52,12 @@ public class TagPriorityList implements IPartitionList {
             refer = fluid.builtInRegistryHolder();
         }
         if (refer != null) {
-            if (whiteSet.isEmpty()) {
-                return false;
+            boolean pass = true;
+
+            if (!whiteSet.isEmpty()) {
+                pass = refer.tags().anyMatch(whiteSet::contains);
             }
-            boolean pass = refer.tags().anyMatch(whiteSet::contains);
+
             if (pass) {
                 if (!blackSet.isEmpty()) {
                     return refer.tags().noneMatch(blackSet::contains);
