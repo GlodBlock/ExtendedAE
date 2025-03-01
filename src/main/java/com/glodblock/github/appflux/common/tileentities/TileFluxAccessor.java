@@ -14,6 +14,7 @@ import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -22,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDistributor {
 
+    private CompoundTag extraData = new CompoundTag();
+
     public TileFluxAccessor(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFItemAndBlock.FLUX_ACCESSOR), pos, blockState);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
@@ -29,10 +32,22 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
     }
 
     @Override
+    public void loadTag(CompoundTag data) {
+        super.loadTag(data);
+        this.extraData = data.getCompound("ex_dt");
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag data) {
+        super.saveAdditional(data);
+        data.put("ex_dt", this.extraData);
+    }
+
+    @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         CapAdaptor.Factory<T> handler = CapAdaptor.find(cap);
         if (handler != null) {
-            return LazyOptional.of(() -> handler.create(this.getStorage(), this.getSource()));
+            return LazyOptional.of(() -> handler.create(this.getStorage(), this.getSource(), () -> this.extraData));
         }
         return super.getCapability(cap, side);
     }

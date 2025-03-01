@@ -16,6 +16,7 @@ import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,6 +25,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
     public static final ResourceLocation RL = AppFlux.id("part/flux_accessor");
     public static final IPartModel MODEL = new PartModel(RL);
+    private CompoundTag extraData = new CompoundTag();
 
     public PartFluxAccessor(IPartItem<?> partItem) {
         super(partItem);
@@ -59,10 +61,22 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     }
 
     @Override
+    public void readFromNBT(CompoundTag data) {
+        super.readFromNBT(data);
+        this.extraData = data.getCompound("ex_dt");
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag data) {
+        super.writeToNBT(data);
+        data.put("ex_dt", this.extraData);
+    }
+
+    @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap) {
         CapAdaptor.Factory<T> handler = CapAdaptor.find(cap);
         if (handler != null) {
-            return LazyOptional.of(() -> handler.create(this.getStorage(), this.getSource()));
+            return LazyOptional.of(() -> handler.create(this.getStorage(), this.getSource(), () -> this.extraData));
         }
         return super.getCapability(cap);
     }

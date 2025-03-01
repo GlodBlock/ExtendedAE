@@ -9,6 +9,8 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
+import com.gregtechceu.gtceu.api.capability.compat.FeCompat;
+import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 public final class EnergyHandler {
 
     private static final ArrayList<Pair<Capability<?>, Handler<?>>> HANDLERS = new ArrayList<>();
-    private static final Handler<IEnergyStorage> DEFAULT = (accepter, storage, source) -> {
+    private static final Handler<IEnergyStorage> DEFAULT = (accepter, side, storage, source) -> {
         var toAdd = accepter.receiveEnergy(AFUtil.clampLong(AFConfig.getFluxAccessorIO()), true);
         if (toAdd > 0) {
             var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
@@ -41,12 +43,41 @@ public final class EnergyHandler {
 
     static {
         if (ModList.get().isLoaded("fluxnetworks")) {
-            addHandler(FluxCapabilities.FN_ENERGY_STORAGE, (accepter, storage, source) -> {
+            addHandler(FluxCapabilities.FN_ENERGY_STORAGE, (accepter, side, storage, source) -> {
                 var toAdd = accepter.receiveEnergyL(AFConfig.getFluxAccessorIO(), true);
                 if (toAdd > 0) {
                     var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
                     if (drained > 0) {
                         var actuallyDrained = accepter.receiveEnergyL(drained, false);
+                        var differ = drained - actuallyDrained;
+                        if (differ > 0) {
+                            storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, source);
+                        }
+                    }
+                }
+            });
+        }
+        if (ModList.get().isLoaded("gtceu")) {
+            addHandler(GTCapability.CAPABILITY_ENERGY_CONTAINER, (accepter, side, storage, source) -> {
+                var toAddEU = Math.min(
+                        accepter.getEnergyCanBeInserted(),
+                        accepter.getInputVoltage() * accepter.getInputAmperage()
+                );
+                var toAdd = Math.min(FeCompat.toFeLong(toAddEU, FeCompat.ratio(false)), AFConfig.getFluxAccessorIO());
+                if (toAdd > 0) {
+                    var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
+                    if (drained > 0) {
+                        var drainedEU = FeCompat.toEu(drained, FeCompat.ratio(true));
+                        var voltage = accepter.getInputVoltage();
+                        var amp = accepter.getInputAmperage();
+                        if (drainedEU <= voltage) {
+                            voltage = drainedEU;
+                            amp = 1;
+                        } else {
+                            amp = drainedEU / voltage;
+                        }
+                        var actuallyDrainedEU = voltage * accepter.acceptEnergyFromNetwork(side, voltage, amp);
+                        var actuallyDrained = FeCompat.toFeLong(actuallyDrainedEU, FeCompat.ratio(false));
                         var differ = drained - actuallyDrained;
                         if (differ > 0) {
                             storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, source);
@@ -66,13 +97,13 @@ public final class EnergyHandler {
         for (var entry : HANDLERS) {
             T cap = AFUtil.findCapability(te, side, (Capability<T>) entry.getLeft());
             if (cap != null) {
-                ((Handler<T>) entry.getRight()).send(cap, storage, source);
+                ((Handler<T>) entry.getRight()).send(cap, side, storage, source);
                 return;
             }
         }
         var cap = AFUtil.findCapability(te, side, ForgeCapabilities.ENERGY);
         if (cap != null) {
-            DEFAULT.send(cap, storage, source);
+            DEFAULT.send(cap, side, storage, source);
         }
     }
 
@@ -84,7 +115,7 @@ public final class EnergyHandler {
 
     public interface Handler<T> {
 
-        void send(@NotNull T cap, @NotNull IStorageService storage, @NotNull IActionSource source);
+        void send(@NotNull T cap, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source);
 
     }
 
