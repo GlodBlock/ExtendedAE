@@ -118,7 +118,7 @@ public class PartThresholdExportBus extends ExportBusPart {
             }
             var what = stack.what();
             var transferFactor = what.getAmountPerOperation();
-            long amount = (long) context.getOperationsRemaining() * transferFactor;
+            long amount = Math.min((long) context.getOperationsRemaining() * transferFactor, this.getMaxOutput(stack, storageService));
             amount = getExportStrategy().transfer(context, what, amount);
             if (amount > 0) {
                 context.reduceOperationsRemaining(Math.max(1, amount / transferFactor));
@@ -137,11 +137,20 @@ public class PartThresholdExportBus extends ExportBusPart {
         long thr = stack.amount();
         long stored = service.getCachedInventory().get(stack.what());
         if (this.mode == ThresholdMode.GREATER) {
-            return stored >= thr;
+            return stored > thr;
         } else if (this.mode == ThresholdMode.LOWER) {
             return stored <= thr;
         } else {
             return false;
+        }
+    }
+
+    // Don't output too much
+    private long getMaxOutput(@NotNull GenericStack stack, @NotNull IStorageService service) {
+        if (this.mode == ThresholdMode.GREATER) {
+            return service.getCachedInventory().get(stack.what()) - stack.amount();
+        } else {
+            return Long.MAX_VALUE;
         }
     }
 
