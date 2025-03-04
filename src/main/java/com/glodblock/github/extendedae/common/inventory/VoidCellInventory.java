@@ -229,6 +229,7 @@ public class VoidCellInventory implements StorageCell {
         if (output != null && amt > 0) {
             var cur = this.getCellItems().getLong(output);
             this.getCellItems().put(output, cur + amt);
+            this.voidEnergy -= amt * this.voidMode.getPower();
         }
     }
 
