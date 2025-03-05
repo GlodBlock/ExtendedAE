@@ -116,7 +116,7 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
                     for (var upgrade : this.getUpgrades(stack)) {
                         playerInventory.placeItemBackInInventory(upgrade);
                     }
-                    playerInventory.placeItemBackInInventory(new ItemStack(AFItemAndBlock.FE_HOUSING));
+                    playerInventory.placeItemBackInInventory(this.getHousing());
                     return true;
                 } else {
                     player.displayClientMessage(PlayerMessages.OnlyEmptyCellsCanBeDisassembled.text(), true);
@@ -124,6 +124,10 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
             }
         }
         return false;
+    }
+
+    public ItemStack getHousing() {
+        return new ItemStack(AFItemAndBlock.FE_HOUSING);
     }
 
     @Override

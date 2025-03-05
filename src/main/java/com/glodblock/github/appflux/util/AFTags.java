@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 public class AFTags {
 
     public static final TagKey<Item> RESIN_INGOT = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "ingots/insulating_resin"));
+    public static final TagKey<Item> SKY_RESIN_INGOT = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "ingots/sky_insulating_resin"));
     public static final TagKey<Item> REDSTONE_GEM = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "gems/redstone"));
 
 }

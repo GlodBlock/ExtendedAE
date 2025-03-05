@@ -23,7 +23,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -197,6 +201,115 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.FE_CELL_64k, "64k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.FE_CELL_256k, "256k");
+        if (ModList.get().isLoaded("megacells")) {
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            c -> TransformRecipeBuilder.transform(c,
+                                    AppFlux.id("mega/sky_resin"),
+                                    AFItemAndBlock.SKY_HARDEN_INSULATING_RESIN, 2,
+                                    TransformCircumstance.fluid(FluidTags.LAVA),
+                                    Ingredient.of(AFTags.REDSTONE_GEM),
+                                    Ingredient.of(AFTags.RESIN_INGOT),
+                                    Ingredient.of(AEBlocks.SKY_STONE_BLOCK)
+                            )
+                    )
+                    .build(consumer, AppFlux.id("mega/sky_resin"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_1M)
+                                    .pattern("DPD")
+                                    .pattern("LGL")
+                                    .pattern("DLD")
+                                    .define('D', ConventionTags.ENDER_PEARL_DUST)
+                                    .define('L', AFItemAndBlock.CORE_256k)
+                                    .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                                    .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
+                                    .unlockedBy(C, has(AFItemAndBlock.ENERGY_PROCESSOR))::save
+                    )
+                    .build(consumer, AppFlux.id("mega/1m_core"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_4M)
+                                    .pattern("DPD")
+                                    .pattern("LGL")
+                                    .pattern("DLD")
+                                    .define('D', AEItems.SKY_DUST)
+                                    .define('L', AFItemAndBlock.CORE_1M)
+                                    .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                                    .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
+                                    .unlockedBy(C, has(AFItemAndBlock.ENERGY_PROCESSOR))::save
+                    )
+                    .build(consumer, AppFlux.id("mega/4m_core"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_16M)
+                                    .pattern("DPD")
+                                    .pattern("LGL")
+                                    .pattern("DLD")
+                                    .define('D', AEItems.SKY_DUST)
+                                    .define('L', AFItemAndBlock.CORE_4M)
+                                    .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                                    .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
+                                    .unlockedBy(C, has(AFItemAndBlock.ENERGY_PROCESSOR))::save
+                    )
+                    .build(consumer, AppFlux.id("mega/16m_core"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_64M)
+                                    .pattern("DPD")
+                                    .pattern("LGL")
+                                    .pattern("DLD")
+                                    .define('D', ConventionTags.GLOWSTONE)
+                                    .define('L', AFItemAndBlock.CORE_16M)
+                                    .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                                    .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
+                                    .unlockedBy(C, has(AFItemAndBlock.ENERGY_PROCESSOR))::save
+                    )
+                    .build(consumer, AppFlux.id("mega/64m_core"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, AFItemAndBlock.CORE_256M)
+                                    .pattern("DPD")
+                                    .pattern("LGL")
+                                    .pattern("DLD")
+                                    .define('D', ConventionTags.GLOWSTONE)
+                                    .define('L', AFItemAndBlock.CORE_64M)
+                                    .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                                    .define('P', AFItemAndBlock.ENERGY_PROCESSOR)
+                                    .unlockedBy(C, has(AFItemAndBlock.ENERGY_PROCESSOR))::save
+                    )
+                    .build(consumer, AppFlux.id("mega/256m_core"));
+            ConditionalRecipe.builder()
+                    .addCondition(new ModLoadedCondition("megacells"))
+                    .addRecipe(
+                            ShapedRecipeBuilder
+                                    .shaped(RecipeCategory.MISC, AFItemAndBlock.MEGA_FE_HOUSING)
+                                    .pattern("GDG")
+                                    .pattern("D D")
+                                    .pattern("III")
+                                    .define('D', AFTags.REDSTONE_GEM)
+                                    .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                                    .define('I', AFTags.SKY_RESIN_INGOT)
+                                    .unlockedBy(C, has(AFItemAndBlock.SKY_HARDEN_INSULATING_RESIN))::save
+                    )
+                    .build(consumer, AppFlux.id("mega/fe_housing"));
+            addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_1M, AFItemAndBlock.FE_CELL_1M, "1m");
+            addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_4M, AFItemAndBlock.FE_CELL_4M, "4m");
+            addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_16M, AFItemAndBlock.FE_CELL_16M, "16m");
+            addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_64M, AFItemAndBlock.FE_CELL_64M, "64m");
+            addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_256M, AFItemAndBlock.FE_CELL_256M, "256m");
+        }
     }
 
     private void addFECellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
@@ -217,6 +330,34 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(core)
                 .unlockedBy(C, has(AFItemAndBlock.FE_HOUSING))
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
+    }
+
+    private void addMEGAFECellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
+        ConditionalRecipe.builder()
+                .addCondition(new ModLoadedCondition("megacells"))
+                .addRecipe(
+                        ShapedRecipeBuilder
+                                .shaped(RecipeCategory.MISC, result)
+                                .pattern("GDG")
+                                .pattern("DXD")
+                                .pattern("III")
+                                .define('D', ConventionTags.REDSTONE)
+                                .define('G', AEBlocks.QUARTZ_GLASS)
+                                .define('I', AFTags.SKY_RESIN_INGOT)
+                                .define('X', core)
+                                .unlockedBy(C, has(AFTags.SKY_RESIN_INGOT))::save
+                )
+                .build(consumer, AppFlux.id("mega/" + id + "_fe_cell"));
+        ConditionalRecipe.builder()
+                .addCondition(new ModLoadedCondition("megacells"))
+                .addRecipe(
+                        ShapelessRecipeBuilder
+                                .shapeless(RecipeCategory.MISC, result)
+                                .requires(AFItemAndBlock.MEGA_FE_HOUSING)
+                                .requires(core)
+                                .unlockedBy(C, has(AFItemAndBlock.MEGA_FE_HOUSING))::save
+                )
+                .build(consumer, AppFlux.id("mega/" + id + "_fe_cell_assemble"));
     }
 
 }

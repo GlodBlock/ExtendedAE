@@ -22,9 +22,17 @@ public class AFItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        tag(AFTags.RESIN_INGOT).add(AFItemAndBlock.HARDEN_INSULATING_RESIN);
-        tag(Tags.Items.INGOTS).add(AFItemAndBlock.HARDEN_INSULATING_RESIN);
-        tag(AFTags.REDSTONE_GEM).add(AFItemAndBlock.REDSTONE_CRYSTAL);
-        tag(Tags.Items.GEMS).add(AFItemAndBlock.REDSTONE_CRYSTAL);
+        tag(AFTags.RESIN_INGOT)
+                .add(AFItemAndBlock.HARDEN_INSULATING_RESIN);
+        tag(AFTags.SKY_RESIN_INGOT)
+                .add(AFItemAndBlock.SKY_HARDEN_INSULATING_RESIN);
+        tag(Tags.Items.INGOTS)
+                .add(AFItemAndBlock.HARDEN_INSULATING_RESIN)
+                .add(AFItemAndBlock.SKY_HARDEN_INSULATING_RESIN);
+        tag(AFTags.REDSTONE_GEM)
+                .add(AFItemAndBlock.REDSTONE_CRYSTAL);
+        tag(Tags.Items.GEMS)
+                .add(AFItemAndBlock.REDSTONE_CRYSTAL)
+                .add(AFItemAndBlock.CHARGED_REDSTONE);
     }
 }

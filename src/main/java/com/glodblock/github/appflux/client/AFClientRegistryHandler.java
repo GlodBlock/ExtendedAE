@@ -20,6 +20,11 @@ public class AFClientRegistryHandler {
         event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_16k);
         event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_64k);
         event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_256k);
+        event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_1M);
+        event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_4M);
+        event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_16M);
+        event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_64M);
+        event.register(BasicStorageCell::getColor, AFItemAndBlock.FE_CELL_256M);
     }
 
     public void init() {
