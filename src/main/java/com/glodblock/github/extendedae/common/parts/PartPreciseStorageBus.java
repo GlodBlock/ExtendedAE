@@ -143,6 +143,9 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
             if (filter instanceof PreciseFilter p) {
                 toAdd = p.getAmount(what);
             }
+            if (filter.isEmpty()) {
+                toAdd = 1;
+            }
             if (toAdd <= 0) {
                 return 0;
             }
