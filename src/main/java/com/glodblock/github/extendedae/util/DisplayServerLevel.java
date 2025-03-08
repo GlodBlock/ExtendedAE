@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.util;
 
-import blusunrize.immersiveengineering.common.util.fakeworld.EmptyLevelEntityGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
