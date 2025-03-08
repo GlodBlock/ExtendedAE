@@ -1,7 +1,7 @@
 package com.glodblock.github.extendedae.client.gui.widget;
 
 import appeng.client.gui.AEBaseScreen;
-import com.glodblock.github.extendedae.util.Ae2ReflectClient;
+import com.glodblock.github.extendedae.util.DisplayServerLevel;
 import com.glodblock.github.glodium.util.GlodUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import guideme.color.LightDarkMode;
@@ -56,10 +56,6 @@ public class WorldDisplay extends AbstractWidget {
         this.ready = false;
     }
 
-    public void setHideNeighbor(boolean val) {
-        this.hideNeighbor = val;
-    }
-
     public void locate(BlockPos blockPos) {
         // holy crap what shit i just made
         // TODO: 2023/8/25 optimize it later 
@@ -71,9 +67,7 @@ public class WorldDisplay extends AbstractWidget {
             return;
         }
         this.scene = new GuidebookScene(new GuidebookLevel(), new CameraSettings());
-        var wrap = Ae2ReflectClient.getFakeServerWorld(this.scene.getLevel());
-        assert wrap != null;
-
+        var wrap = DisplayServerLevel.create(this.scene.getLevel());
         var sizeX = new Vec3i(3, 1, 1);
         var sizeY = new Vec3i(1, 3, 1);
         var sizeZ = new Vec3i(1, 1, 3);
