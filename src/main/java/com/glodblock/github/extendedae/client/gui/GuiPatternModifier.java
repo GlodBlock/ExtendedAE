@@ -25,11 +25,12 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
 
     private final ActionEPPButton clone;
     private final Button replace;
+    private final List<Button> propertyBtns = new ArrayList<>();
     private final List<Button> multiBtns = new ArrayList<>();
 
     public GuiPatternModifier(ContainerPatternModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        ActionEPPButton changeMode = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 3)), Icon.SCHEDULING_DEFAULT);
+        ActionEPPButton changeMode = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 4)), Icon.SCHEDULING_DEFAULT);
         this.clone = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clone")), Icon.ARROW_RIGHT);
         changeMode.setMessage(Component.translatable("gui.extendedae.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.extendedae.pattern_modifier.clone.desc"));
@@ -39,14 +40,18 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                 Component.translatable("gui.extendedae.pattern_modifier.replace_button"),
                 b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace"))
         );
-        this.multiBtns.add(getButton(0, 23, 20, false));
-        this.multiBtns.add(getButton(1, 23, 20, false));
-        this.multiBtns.add(getButton(2, 23, 20, false));
-        this.multiBtns.add(getButton(3, 23, 20, false));
-        this.multiBtns.add(getButton(0, 23, 20, true));
-        this.multiBtns.add(getButton(1, 23, 20, true));
-        this.multiBtns.add(getButton(2, 23, 20, true));
-        this.multiBtns.add(getButton(3, 23, 20, true));
+        this.propertyBtns.add(getPropertyButton(0, true));
+        this.propertyBtns.add(getPropertyButton(0, false));
+        this.propertyBtns.add(getPropertyButton(1, true));
+        this.propertyBtns.add(getPropertyButton(1, false));
+        this.multiBtns.add(getMultiplyButton(0, false));
+        this.multiBtns.add(getMultiplyButton(1, false));
+        this.multiBtns.add(getMultiplyButton(2, false));
+        this.multiBtns.add(getMultiplyButton(3, false));
+        this.multiBtns.add(getMultiplyButton(0, true));
+        this.multiBtns.add(getMultiplyButton(1, true));
+        this.multiBtns.add(getMultiplyButton(2, true));
+        this.multiBtns.add(getMultiplyButton(3, true));
         var clearBtn = new AE2Button(
                 0, 0, 36, 20,
                 Component.translatable("gui.extendedae.pattern_modifier.clear"),
@@ -57,9 +62,16 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         this.imageHeight = 210;
     }
 
-    private Button getButton(int index, int width, int height, boolean isDiv) {
+    private Button getPropertyButton(int mode, boolean value) {
+        var display = value ? Component.translatable("gui.extendedae.pattern_modifier.enable") : Component.translatable("gui.extendedae.pattern_modifier.disable");
+        var btn = new AE2Button(display, b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", mode, value)));
+        btn.setSize(23, 20);
+        return btn;
+    }
+
+    private Button getMultiplyButton(int index, boolean isDiv) {
         var btn = new AE2Button(getDisplayNumber(EAEConfig.getPatternModifierNumber(index), isDiv), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(index), isDiv)));
-        btn.setSize(width, height);
+        btn.setSize(23, 20);
         if (!isDiv) {
             btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(index))));
         } else {
@@ -85,6 +97,23 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         if (this.menu.page == 2) {
             guiGraphics.drawString(
                     this.font,
+                    Component.translatable("gui.extendedae.pattern_modifier.pattern_mode.substitute"),
+                    8,
+                    22,
+                    style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
+                    false
+            );
+            guiGraphics.drawString(
+                    this.font,
+                    Component.translatable("gui.extendedae.pattern_modifier.pattern_mode.fluid_substitute"),
+                    8,
+                    44,
+                    style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
+                    false
+            );
+        } else if (this.menu.page == 3) {
+            guiGraphics.drawString(
+                    this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.blank"),
                     52,
                     62,
@@ -105,6 +134,11 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     public void init() {
         super.init();
+        this.propertyBtns.get(0).setPosition(this.leftPos + 116, this.topPos + 16);
+        this.propertyBtns.get(1).setPosition(this.leftPos + 146, this.topPos + 16);
+        this.propertyBtns.get(2).setPosition(this.leftPos + 116, this.topPos + 38);
+        this.propertyBtns.get(3).setPosition(this.leftPos + 146, this.topPos + 38);
+        this.propertyBtns.forEach(this::addRenderableWidget);
         this.multiBtns.get(0).setPosition(this.leftPos + 7, this.topPos + 16);
         this.multiBtns.get(1).setPosition(this.leftPos + 37, this.topPos + 16);
         this.multiBtns.get(2).setPosition(this.leftPos + 67, this.topPos + 16);
@@ -128,14 +162,22 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         this.menu.showPage();
         if (this.menu.page == 0) {
             this.clone.setVisibility(false);
+            this.propertyBtns.forEach(b -> b.visible = false);
             this.multiBtns.forEach(b -> b.visible = true);
             this.replace.visible = false;
         } else if (this.menu.page == 1) {
             this.clone.setVisibility(false);
+            this.propertyBtns.forEach(b -> b.visible = false);
             this.multiBtns.forEach(b -> b.visible = false);
             this.replace.visible = true;
         } else if (this.menu.page == 2) {
+            this.clone.setVisibility(false);
+            this.propertyBtns.forEach(b -> b.visible = true);
+            this.multiBtns.forEach(b -> b.visible = false);
+            this.replace.visible = false;
+        } else if (this.menu.page == 3) {
             this.clone.setVisibility(true);
+            this.propertyBtns.forEach(b -> b.visible = false);
             this.multiBtns.forEach(b -> b.visible = false);
             this.replace.visible = false;
         }
@@ -143,11 +185,11 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
 
     @Override
     public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
-        if (this.menu.page == 0) {
+        if (this.menu.page == 0 || this.menu.page == 2) {
             guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 212);
         } else if (this.menu.page == 1) {
             guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 212);
-        } else if (this.menu.page == 2) {
+        } else if (this.menu.page == 3) {
             guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 212);
         }
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
@@ -157,7 +199,8 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         return switch (this.menu.page) {
             case 0 -> Component.translatable("gui.extendedae.pattern_modifier.multiply");
             case 1 -> Component.translatable("gui.extendedae.pattern_modifier.replace");
-            case 2 -> Component.translatable("gui.extendedae.pattern_modifier.clone");
+            case 2 -> Component.translatable("gui.extendedae.pattern_modifier.pattern_mode");
+            case 3 -> Component.translatable("gui.extendedae.pattern_modifier.clone");
             default -> Component.empty();
         };
     }

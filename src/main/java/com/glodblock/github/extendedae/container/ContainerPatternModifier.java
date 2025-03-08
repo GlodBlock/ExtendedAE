@@ -41,6 +41,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
     public final AppEngSlot cloneSlot;
     public final AppEngSlot replaceTarget;
     public final AppEngSlot replaceWith;
+    // 0 - multiply 1 - replace 2 - pattern_mode 3 - clone
     @GuiSync(1)
     public int page;
 
@@ -66,22 +67,23 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         this.actions.put("clone", o -> clonePattern());
         this.actions.put("modify", o -> modify(o.get(0), o.get(1)));
         this.actions.put("replace", o -> replace());
+        this.actions.put("pattern_mode", o -> changePatternMode(o.get(0), o.get(1)));
         this.actions.put("show", o -> showPage());
     }
 
     public void showPage() {
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             if (slot instanceof AppEngSlot as) {
-                as.setSlotEnabled(this.page == 0 || this.page == 1);
+                as.setSlotEnabled(this.page == 0 || this.page == 1 || this.page == 2);
             }
         }
         this.replaceTarget.setSlotEnabled(this.page == 1);
         this.replaceWith.setSlotEnabled(this.page == 1);
-        this.targetSlot.setSlotEnabled(this.page == 2);
-        this.cloneSlot.setSlotEnabled(this.page == 2);
+        this.targetSlot.setSlotEnabled(this.page == 3);
+        this.cloneSlot.setSlotEnabled(this.page == 3);
         for (var slot : this.getSlots(ExSemantics.EX_3)) {
             if (slot instanceof AppEngSlot as) {
-                as.setSlotEnabled(this.page == 2);
+                as.setSlotEnabled(this.page == 3);
             }
         }
     }
@@ -94,43 +96,41 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             var stack = slot.getItem();
-            if (stack.getItem() instanceof EncodedPatternItem<?>) {
-                var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
-                if (detail instanceof AEProcessingPattern process) {
-                    var input = process.getSparseInputs().toArray(new GenericStack[0]);
-                    var output = process.getOutputs().toArray(new GenericStack[0]);
-                    var replaceInput = new GenericStack[input.length];
-                    var replaceOutput = new GenericStack[output.length];
-                    this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
-                    this.replace(output, replaceOutput, AEItemKey.of(replace), AEItemKey.of(with));
-                    var newPattern = PatternDetailsHelper.encodeProcessingPattern(
-                            Arrays.stream(replaceInput).toList(),
-                            Arrays.stream(replaceOutput).toList()
+            var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
+            if (detail instanceof AEProcessingPattern process) {
+                var input = process.getSparseInputs().toArray(new GenericStack[0]);
+                var output = process.getOutputs().toArray(new GenericStack[0]);
+                var replaceInput = new GenericStack[input.length];
+                var replaceOutput = new GenericStack[output.length];
+                this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
+                this.replace(output, replaceOutput, AEItemKey.of(replace), AEItemKey.of(with));
+                var newPattern = PatternDetailsHelper.encodeProcessingPattern(
+                        Arrays.stream(replaceInput).toList(),
+                        Arrays.stream(replaceOutput).toList()
+                );
+                slot.set(newPattern);
+            } else if (detail instanceof AECraftingPattern craft) {
+                var input = craft.getSparseInputs().toArray(new GenericStack[0]);
+                var output = craft.getPrimaryOutput();
+                var replaceInput = new GenericStack[input.length];
+                this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
+                try {
+                    var newPattern = PatternDetailsHelper.encodeCraftingPattern(
+                            Ae2Reflect.getCraftRecipe(craft),
+                            itemize(replaceInput),
+                            itemize(output),
+                            craft.canSubstitute,
+                            craft.canSubstituteFluids
                     );
-                    slot.set(newPattern);
-                } else if (detail instanceof AECraftingPattern craft) {
-                    var input = craft.getSparseInputs().toArray(new GenericStack[0]);
-                    var output = craft.getPrimaryOutput();
-                    var replaceInput = new GenericStack[input.length];
-                    this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
-                    try {
-                        var newPattern = PatternDetailsHelper.encodeCraftingPattern(
-                                Ae2Reflect.getCraftRecipe(craft),
-                                itemize(replaceInput),
-                                itemize(output),
-                                craft.canSubstitute,
-                                craft.canSubstituteFluids
-                        );
-                        //noinspection DataFlowIssue
-                        var check = new AECraftingPattern(AEItemKey.of(newPattern), this.getPlayer().level());
-                        //noinspection ConstantValue
-                        if (check != null) {
-                            slot.set(newPattern);
-                        }
-                    } catch (Exception e) {
-                        // It is an invalid change
-                        return;
+                    //noinspection DataFlowIssue
+                    var check = new AECraftingPattern(AEItemKey.of(newPattern), this.getPlayer().level());
+                    //noinspection ConstantValue
+                    if (check != null) {
+                        slot.set(newPattern);
                     }
+                } catch (Exception e) {
+                    // It is an invalid change
+                    return;
                 }
             }
         }
@@ -169,22 +169,20 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             var stack = slot.getItem();
-            if (stack.getItem() instanceof EncodedPatternItem<?>) {
-                var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
-                if (detail instanceof AEProcessingPattern process) {
-                    var input = process.getSparseInputs().toArray(new GenericStack[0]);
-                    var output = process.getOutputs().toArray(new GenericStack[0]);
-                    if (checkModify(input, scale, div) && checkModify(output, scale, div)) {
-                        var mulInput = new GenericStack[input.length];
-                        var mulOutput = new GenericStack[output.length];
-                        modifyStacks(input, mulInput, scale, div);
-                        modifyStacks(output, mulOutput, scale, div);
-                        var newPattern = PatternDetailsHelper.encodeProcessingPattern(
-                                Arrays.stream(mulInput).toList(),
-                                Arrays.stream(mulOutput).toList()
-                        );
-                        slot.set(newPattern);
-                    }
+            var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
+            if (detail instanceof AEProcessingPattern process) {
+                var input = process.getSparseInputs().toArray(new GenericStack[0]);
+                var output = process.getOutputs().toArray(new GenericStack[0]);
+                if (checkModify(input, scale, div) && checkModify(output, scale, div)) {
+                    var mulInput = new GenericStack[input.length];
+                    var mulOutput = new GenericStack[output.length];
+                    modifyStacks(input, mulInput, scale, div);
+                    modifyStacks(output, mulOutput, scale, div);
+                    var newPattern = PatternDetailsHelper.encodeProcessingPattern(
+                            Arrays.stream(mulInput).toList(),
+                            Arrays.stream(mulOutput).toList()
+                    );
+                    slot.set(newPattern);
                 }
             }
         }
@@ -261,6 +259,25 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
             }
         }
         return false;
+    }
+
+    private void changePatternMode(int mode, boolean value) {
+        for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
+            var stack = slot.getItem();
+            var detail = PatternDetailsHelper.decodePattern(stack, this.getPlayer().level());
+            if (detail instanceof AECraftingPattern craft) {
+                var input = craft.getSparseInputs().toArray(new GenericStack[0]);
+                var output = craft.getPrimaryOutput();
+                var newPattern = PatternDetailsHelper.encodeCraftingPattern(
+                        Ae2Reflect.getCraftRecipe(craft),
+                        itemize(input),
+                        itemize(output),
+                        mode == 0 ? value : craft.canSubstitute,
+                        mode == 1 ? value : craft.canSubstituteFluids
+                );
+                slot.set(newPattern);
+            }
+        }
     }
 
     @Override
