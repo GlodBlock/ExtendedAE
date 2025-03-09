@@ -50,6 +50,8 @@ public class EAEConfig {
                     "extendedae:ex_interface",
                     "extendedae:ex_pattern_provider",
                     "extendedae:ex_drive",
+                    "extendedae:oversize_interface",
+                    "extendedae:oversize_interface_part",
                     "ae2:cable_interface",
                     "ae2:cable_pattern_provider",
                     "ae2:interface",
