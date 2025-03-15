@@ -201,6 +201,11 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_CELL_16k, "16k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.FE_CELL_64k, "64k");
         addFECellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.FE_CELL_256k, "256k");
+        addFEPortableCellRecipe(consumer, AFItemAndBlock.CORE_1k, AFItemAndBlock.FE_PORTABLE_CELL_1k, "1k");
+        addFEPortableCellRecipe(consumer, AFItemAndBlock.CORE_4k, AFItemAndBlock.FE_PORTABLE_CELL_4k, "4k");
+        addFEPortableCellRecipe(consumer, AFItemAndBlock.CORE_16k, AFItemAndBlock.FE_PORTABLE_CELL_16k, "16k");
+        addFEPortableCellRecipe(consumer, AFItemAndBlock.CORE_64k, AFItemAndBlock.FE_PORTABLE_CELL_64k, "64k");
+        addFEPortableCellRecipe(consumer, AFItemAndBlock.CORE_256k, AFItemAndBlock.FE_PORTABLE_CELL_256k, "256k");
         if (ModList.get().isLoaded("megacells")) {
             ConditionalRecipe.builder()
                     .addCondition(new ModLoadedCondition("megacells"))
@@ -309,6 +314,11 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
             addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_16M, AFItemAndBlock.FE_CELL_16M, "16m");
             addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_64M, AFItemAndBlock.FE_CELL_64M, "64m");
             addMEGAFECellRecipe(consumer, AFItemAndBlock.CORE_256M, AFItemAndBlock.FE_CELL_256M, "256m");
+            addFEPortableMEGACellRecipe(consumer, AFItemAndBlock.CORE_1M, AFItemAndBlock.FE_PORTABLE_CELL_1M, "1m");
+            addFEPortableMEGACellRecipe(consumer, AFItemAndBlock.CORE_4M, AFItemAndBlock.FE_PORTABLE_CELL_4M, "4m");
+            addFEPortableMEGACellRecipe(consumer, AFItemAndBlock.CORE_16M, AFItemAndBlock.FE_PORTABLE_CELL_16M, "16m");
+            addFEPortableMEGACellRecipe(consumer, AFItemAndBlock.CORE_64M, AFItemAndBlock.FE_PORTABLE_CELL_64M, "64m");
+            addFEPortableMEGACellRecipe(consumer, AFItemAndBlock.CORE_256M, AFItemAndBlock.FE_PORTABLE_CELL_256M, "256m");
         }
     }
 
@@ -322,7 +332,7 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .define('G', AEBlocks.QUARTZ_GLASS)
                 .define('I', AFTags.RESIN_INGOT)
                 .define('X', core)
-                .unlockedBy(C, has(AFItemAndBlock.HARDEN_INSULATING_RESIN))
+                .unlockedBy(C, has(AFTags.RESIN_INGOT))
                 .save(consumer, AppFlux.id(id + "_fe_cell"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, result)
@@ -330,6 +340,32 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(core)
                 .unlockedBy(C, has(AFItemAndBlock.FE_HOUSING))
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
+    }
+
+    private void addFEPortableCellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, result)
+                .requires(AEBlocks.CHEST)
+                .requires(core)
+                .requires(AEBlocks.ENERGY_CELL)
+                .requires(AFItemAndBlock.FE_HOUSING)
+                .unlockedBy(C, has(AFItemAndBlock.FE_HOUSING))
+                .save(consumer, AppFlux.id("tools/" + "fe_" + id + "_portable_cell"));
+    }
+
+    private void addFEPortableMEGACellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {
+        ConditionalRecipe.builder()
+                .addCondition(new ModLoadedCondition("megacells"))
+                .addRecipe(
+                        ShapelessRecipeBuilder
+                                .shapeless(RecipeCategory.MISC, result)
+                                .requires(AEBlocks.CHEST)
+                                .requires(core)
+                                .requires(AEBlocks.DENSE_ENERGY_CELL)
+                                .requires(AFItemAndBlock.MEGA_FE_HOUSING)
+                                .unlockedBy(C, has(AFItemAndBlock.MEGA_FE_HOUSING))::save
+                )
+                .build(consumer, AppFlux.id("tools/" + "fe_" + id + "_portable_cell"));
     }
 
     private void addMEGAFECellRecipe(Consumer<FinishedRecipe> consumer, Item core, Item result, String id) {

@@ -19,6 +19,7 @@ public class ItemInductionCard extends UpgradeCardItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag advancedTooltips) {
         tooltip.add(Component.translatable("item.appflux.induction_card.tooltip").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("item.appflux.induction_card.tooltip.02").withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, level, tooltip, advancedTooltips);
     }
 
