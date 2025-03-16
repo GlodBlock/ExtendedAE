@@ -95,6 +95,7 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     compileOnly "curse.maven:jade-324717:5427817"
     compileOnly "curse.maven:wireless-chargers-510656:5551798"
+    compileOnly "curse.maven:flux-networks-248020:6089446"
     // runtime test
     runtimeOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     runtimeOnly "curse.maven:jade-324717:5427817"

@@ -10,6 +10,7 @@ import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.appflux.xmod.ModConstants;
+import com.glodblock.github.appflux.xmod.fluxnetwork.FluxNetworkCap;
 import com.glodblock.github.appflux.xmod.mek.MekEnergyCap;
 import com.glodblock.github.appflux.xmod.mi.LongEnergyCap;
 import com.glodblock.github.appflux.xmod.mi.MIEnergyCap;
@@ -52,6 +53,9 @@ public class EnergyHandler {
         }
         if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
             addHandler(MIEnergyCap.CAP, MIEnergyCap::send);
+        }
+        if (GlodUtil.checkMod(ModConstants.FN)) {
+            addHandler(FluxNetworkCap.CAP, FluxNetworkCap::send);
         }
     }
 
