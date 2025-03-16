@@ -7,6 +7,7 @@ import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.xmod.ModConstants;
 import com.glodblock.github.appflux.xmod.mek.MekEnergyCap;
+import com.glodblock.github.appflux.xmod.mi.LongEnergyCap;
 import com.glodblock.github.appflux.xmod.mi.MIEnergyCap;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -17,6 +18,9 @@ public class CapAdaptor {
         event.cap(TileFluxAccessor.class, Capabilities.EnergyStorage.BLOCK, (te, side) -> te.getEnergyStorage());
         if (GlodUtil.checkMod(ModConstants.MEK)) {
             event.cap(TileFluxAccessor.class, MekEnergyCap.CAP, (te, side) -> MekEnergyCap.of(te.getStorage(), te.getSource()));
+        }
+        if (GlodUtil.checkMod(ModConstants.GP)) {
+            event.cap(TileFluxAccessor.class, LongEnergyCap.CAP, (te, side) -> LongEnergyCap.of(te.getStorage(), te.getSource()));
         }
         if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
             event.cap(TileFluxAccessor.class, MIEnergyCap.CAP, (te, side) -> MIEnergyCap.of(te.getStorage(), te.getSource()));
@@ -33,6 +37,13 @@ public class CapAdaptor {
             event.register(
                     MekEnergyCap.CAP,
                     (part, direction) -> MekEnergyCap.of(part.getStorage(), part.getSource()),
+                    PartFluxAccessor.class
+            );
+        }
+        if (GlodUtil.checkMod(ModConstants.GP)) {
+            event.register(
+                    LongEnergyCap.CAP,
+                    (part, direction) -> LongEnergyCap.of(part.getStorage(), part.getSource()),
                     PartFluxAccessor.class
             );
         }
