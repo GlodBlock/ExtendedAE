@@ -24,6 +24,7 @@ import appeng.items.AEBaseItem;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.api.IFluxCell;
+import com.glodblock.github.appflux.common.items.ItemPortableFECell;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
 import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
@@ -44,6 +45,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -102,6 +104,16 @@ public class AFRegistryHandler extends RegistryHandler {
         StorageCellModels.registerModel(AFSingletons.FE_CELL_16M, AppFlux.id("block/drive/fe_16m_cell"));
         StorageCellModels.registerModel(AFSingletons.FE_CELL_64M, AppFlux.id("block/drive/fe_64m_cell"));
         StorageCellModels.registerModel(AFSingletons.FE_CELL_256M, AppFlux.id("block/drive/fe_256m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_1k, AppFlux.id("block/drive/fe_1k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_4k, AppFlux.id("block/drive/fe_4k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_16k, AppFlux.id("block/drive/fe_16k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_64k, AppFlux.id("block/drive/fe_64k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_256k, AppFlux.id("block/drive/fe_256k_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_1M, AppFlux.id("block/drive/fe_1m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_4M, AppFlux.id("block/drive/fe_4m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_16M, AppFlux.id("block/drive/fe_16m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_64M, AppFlux.id("block/drive/fe_64m_cell"));
+        StorageCellModels.registerModel(AFSingletons.FE_PORTABLE_CELL_256M, AppFlux.id("block/drive/fe_256m_cell"));
         for (Pair<String, Block> entry : blocks) {
             Block block = BuiltInRegistries.BLOCK.get(AppFlux.id(entry.getKey()));
             if (block instanceof AEBaseEntityBlock<?>) {
@@ -111,20 +123,32 @@ public class AFRegistryHandler extends RegistryHandler {
                 );
             }
         }
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_1k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_4k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256k, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_1M, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_4M, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_16M, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_64M, 1, GuiText.StorageCells.getTranslationKey());
-        Upgrades.add(AEItems.VOID_CARD, AFSingletons.FE_CELL_256M, 1, GuiText.StorageCells.getTranslationKey());
+        registerCellUpgrades(
+                AFSingletons.FE_CELL_1k, AFSingletons.FE_CELL_4k, AFSingletons.FE_CELL_16k, AFSingletons.FE_CELL_64k, AFSingletons.FE_CELL_256k,
+                AFSingletons.FE_CELL_1M, AFSingletons.FE_CELL_4M, AFSingletons.FE_CELL_16M, AFSingletons.FE_CELL_64M, AFSingletons.FE_CELL_256M
+        );
+        registerPortableCellUpgrades(
+                AFSingletons.FE_PORTABLE_CELL_1k, AFSingletons.FE_PORTABLE_CELL_4k, AFSingletons.FE_PORTABLE_CELL_16k, AFSingletons.FE_PORTABLE_CELL_64k, AFSingletons.FE_PORTABLE_CELL_256k,
+                AFSingletons.FE_PORTABLE_CELL_1M, AFSingletons.FE_PORTABLE_CELL_4M, AFSingletons.FE_PORTABLE_CELL_16M, AFSingletons.FE_PORTABLE_CELL_64M, AFSingletons.FE_PORTABLE_CELL_256M
+        );
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.INTERFACE, 1, GuiText.Interface.getTranslationKey());
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.INTERFACE, 1, GuiText.Interface.getTranslationKey());
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEBlocks.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
         Upgrades.add(AFSingletons.INDUCTION_CARD, AEParts.PATTERN_PROVIDER, 1, "group.pattern_provider.name");
+    }
+
+    private static void registerCellUpgrades(ItemLike... cells) {
+        for (var cell : cells) {
+            Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.StorageCells.getTranslationKey());
+        }
+    }
+
+    private static void registerPortableCellUpgrades(ItemLike... cells) {
+        for (var cell : cells) {
+            Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.PortableCells.getTranslationKey());
+            Upgrades.add(AEItems.ENERGY_CARD, cell, 2, GuiText.PortableCells.getTranslationKey());
+            Upgrades.add(AFSingletons.INDUCTION_CARD, cell, 1, "group.fe_portable_cells.name");
+        }
     }
 
     @Override
@@ -133,6 +157,7 @@ public class AFRegistryHandler extends RegistryHandler {
         AEKeyTypes.register(FluxKeyType.TYPE);
         PartModels.registerModels(PartFluxAccessor.RL);
         Registry.register(BuiltInRegistries.MENU, AppFlux.id("flux_accessor"), ContainerFluxAccessor.TYPE);
+        Registry.register(BuiltInRegistries.MENU, AppFlux.id("portable_fe_cell"), ItemPortableFECell.FE_CELL_TYPE);
     }
 
     @SubscribeEvent

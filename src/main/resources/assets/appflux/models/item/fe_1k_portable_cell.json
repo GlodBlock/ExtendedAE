@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer2": "ae2:item/portable_cell_screen",
+    "layer1": "ae2:item/portable_cell_led",
+    "layer0": "appflux:item/portable_cell_fe_housing",
+    "layer3": "ae2:item/portable_cell_side_1k"
+  }
+}

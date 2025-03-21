@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class FluxCellInventory implements StorageCell {
 
-    protected static final String DATA = "power";
     protected final IFluxCell cellType;
     protected final ItemStack stack;
     @Nullable

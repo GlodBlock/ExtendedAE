@@ -28,6 +28,7 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class AFAERecipeProvider extends AE2RecipeProvider {
 
@@ -282,6 +283,16 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFECellRecipe(consumer, AFSingletons.CORE_16M, AFSingletons.FE_CELL_16M, "16m");
         addFECellRecipe(consumer, AFSingletons.CORE_64M, AFSingletons.FE_CELL_64M, "64m");
         addFECellRecipe(consumer, AFSingletons.CORE_256M, AFSingletons.FE_CELL_256M, "256m");
+        addFEPortableCellRecipe(consumer, AFSingletons.CORE_1k, AFSingletons.FE_PORTABLE_CELL_1k, "1k");
+        addFEPortableCellRecipe(consumer, AFSingletons.CORE_4k, AFSingletons.FE_PORTABLE_CELL_4k, "4k");
+        addFEPortableCellRecipe(consumer, AFSingletons.CORE_16k, AFSingletons.FE_PORTABLE_CELL_16k, "16k");
+        addFEPortableCellRecipe(consumer, AFSingletons.CORE_64k, AFSingletons.FE_PORTABLE_CELL_64k, "64k");
+        addFEPortableCellRecipe(consumer, AFSingletons.CORE_256k, AFSingletons.FE_PORTABLE_CELL_256k, "256k");
+        addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_1M, AFSingletons.FE_PORTABLE_CELL_1M, "1m");
+        addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_4M, AFSingletons.FE_PORTABLE_CELL_4M, "4m");
+        addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_16M, AFSingletons.FE_PORTABLE_CELL_16M, "16m");
+        addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_64M, AFSingletons.FE_PORTABLE_CELL_64M, "64m");
+        addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_256M, AFSingletons.FE_PORTABLE_CELL_256M, "256m");
     }
 
     private void addFECellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
@@ -302,6 +313,28 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(core)
                 .unlockedBy(C, has(AFSingletons.FE_HOUSING))
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
+    }
+
+    private void addFEPortableCellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, result)
+                .requires(AEBlocks.ME_CHEST)
+                .requires(core)
+                .requires(AEBlocks.ENERGY_CELL)
+                .requires(AFSingletons.FE_HOUSING)
+                .unlockedBy(C, has(AFSingletons.FE_HOUSING))
+                .save(consumer, AppFlux.id("tools/" + "fe_" + id + "_portable_cell"));
+    }
+
+    private void addFEMEGAPortableCellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, result)
+                .requires(AEBlocks.ME_CHEST)
+                .requires(core)
+                .requires(AEBlocks.DENSE_ENERGY_CELL)
+                .requires(AFSingletons.FE_HOUSING)
+                .unlockedBy(C, has(AFSingletons.FE_HOUSING))
+                .save(consumer, AppFlux.id("tools/" + "fe_" + id + "_portable_cell"));
     }
 
 }

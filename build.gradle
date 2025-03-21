@@ -78,9 +78,6 @@ repositories {
     maven {
         name = "Modmaven"
         url = uri("https://modmaven.dev/")
-        content {
-            includeGroup("appeng")
-        }
     }
     mavenCentral()
 }
@@ -89,7 +86,7 @@ dependencies {
     implementation "curse.maven:glodium-957920:5614731"
     implementation "org.appliedenergistics:appliedenergistics2:19.2.2-beta"
     implementation "org.appliedenergistics:guideme:2.5.1"
-    compileOnly "curse.maven:mekanism-268560:5574951"
+    compileOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
     compileOnly "curse.maven:modern-industrialization-405388:5585300"
     compileOnly "curse.maven:grandpower-980156:5432440"
     compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
@@ -99,6 +96,7 @@ dependencies {
     // runtime test
     runtimeOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     runtimeOnly "curse.maven:jade-324717:5427817"
+    runtimeOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
 }
 
 tasks.withType(ProcessResources).configureEach {

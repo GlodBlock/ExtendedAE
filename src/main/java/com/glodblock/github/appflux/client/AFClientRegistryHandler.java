@@ -1,11 +1,14 @@
 package com.glodblock.github.appflux.client;
 
 import appeng.api.client.AEKeyRendering;
+import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.init.client.InitScreens;
 import appeng.items.storage.BasicStorageCell;
+import appeng.menu.me.common.MEStorageMenu;
 import com.glodblock.github.appflux.client.gui.GuiFluxAccessor;
 import com.glodblock.github.appflux.client.render.FluxKeyRenderHandler;
 import com.glodblock.github.appflux.common.AFSingletons;
+import com.glodblock.github.appflux.common.items.ItemPortableFECell;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.container.ContainerFluxAccessor;
@@ -31,11 +34,22 @@ public class AFClientRegistryHandler {
         event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_16M);
         event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_64M);
         event.register(makeOpaque(BasicStorageCell::getColor), AFSingletons.FE_CELL_256M);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_1k);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_4k);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_16k);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_64k);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_256k);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_1M);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_4M);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_16M);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_64M);
+        event.register(makeOpaque(ItemPortableFECell::getColor), AFSingletons.FE_PORTABLE_CELL_256M);
     }
 
     @SubscribeEvent
     public void registerGui(RegisterMenuScreensEvent event) {
         InitScreens.register(event, ContainerFluxAccessor.TYPE, GuiFluxAccessor::new, "/screens/flux_accessor.json");
+        InitScreens.<MEStorageMenu, MEStorageScreen<MEStorageMenu>>register(event, ItemPortableFECell.FE_CELL_TYPE, MEStorageScreen::new, "/screens/terminals/portable_fe_cell.json");
     }
 
     public void init() {
