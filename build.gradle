@@ -90,7 +90,7 @@ dependencies {
     implementation fg.deobf("appeng:appliedenergistics2-forge:15.2.16")
     compileOnly fg.deobf("curse.maven:wireless-chargers-510656:4591907")
     compileOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.0.14:all")
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.2.0.20")
     compileOnly fg.deobf("curse.maven:flux-networks-248020:5234697")
     compileOnly fg.deobf("com.gregtechceu.gtceu:gtceu-1.20.1:1.5.1") {transitive = false}
     compileOnly fg.deobf("curse.maven:mega-cells-622112:5320730")
@@ -98,8 +98,9 @@ dependencies {
     compileOnly fg.deobf("curse.maven:jade-324717:4768593")
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     // runtime test
-    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.2.0.20")
     runtimeOnly fg.deobf("curse.maven:jade-324717:4768593")
+    runtimeOnly fg.deobf("mekanism:Mekanism:1.20.1-10.4.0.14:all")
     runtimeOnly fg.deobf("curse.maven:mega-cells-622112:5320730")
     runtimeOnly fg.deobf("curse.maven:cloth-config-348521:5729105")
 }

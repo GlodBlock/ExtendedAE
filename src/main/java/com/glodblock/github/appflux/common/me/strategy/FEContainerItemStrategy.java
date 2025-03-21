@@ -46,6 +46,7 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public long extract(ItemContext context, FluxKey what, long amount, Actionable mode) {
+        System.out.println("amount: " + amount);
         var stack = context.getStack();
         var copy = ItemHandlerHelper.copyStackWithSize(stack, 1);
         var handler = AFUtil.findCapability(copy, ForgeCapabilities.ENERGY);
@@ -53,6 +54,9 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
             return 0;
         }
         int extracted = handler.extractEnergy(AFUtil.clampLong(amount), mode.isSimulate());
+        System.out.println("stack: " + stack);
+        System.out.println("handler: " + handler);
+        System.out.println("extracted: " + extracted);
         if (mode == Actionable.MODULATE) {
             stack.shrink(1);
             context.addOverflow(copy);
@@ -89,7 +93,11 @@ public class FEContainerItemStrategy implements ContainerItemStrategy<FluxKey, I
 
     @Override
     public @Nullable GenericStack getExtractableContent(ItemContext context) {
-        return this.getContainedStack(context.getStack());
+        long canExt = this.extract(context, FluxKey.of(EnergyType.FE), Integer.MAX_VALUE, Actionable.SIMULATE);
+        if (canExt <= 0) {
+            return null;
+        }
+        return new GenericStack(FluxKey.of(EnergyType.FE), canExt);
     }
 
 }

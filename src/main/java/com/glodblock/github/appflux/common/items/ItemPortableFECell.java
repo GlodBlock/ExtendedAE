@@ -6,12 +6,15 @@ import appeng.api.stacks.AEKeyType;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.upgrades.Upgrades;
+import appeng.items.contents.PortableCellMenuHost;
 import appeng.items.tools.powered.AbstractPortableCell;
+import appeng.menu.me.common.MEStorageMenu;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.AFContainers;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
+import com.glodblock.github.appflux.common.me.cell.FluxCellInventory;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
@@ -52,9 +55,9 @@ public class ItemPortableFECell extends AbstractPortableCell implements IFluxCel
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
-        if (entity instanceof Player player) {
+        if (!level.isClientSide() && entity instanceof Player player) {
             var induct = this.getUpgrades(stack).isInstalled(AFItemAndBlock.INDUCTION_CARD);
-            var storedInv = FECellHandler.HANDLER.getCellInventory(stack, null);
+            var storedInv = this.getUsingStorage(player, stack);
             if (induct && storedInv != null) {
                 var inv = player.getInventory();
                 for (int slot = 0; slot < inv.getContainerSize(); slot ++) {
@@ -70,6 +73,17 @@ public class ItemPortableFECell extends AbstractPortableCell implements IFluxCel
                 }
             }
         }
+    }
+
+    private FluxCellInventory getUsingStorage(Player player, ItemStack stack) {
+        if (player.containerMenu instanceof MEStorageMenu container) {
+            if (container.getHost() instanceof PortableCellMenuHost cell) {
+                if (cell.getItemStack() == stack) {
+                    return (FluxCellInventory) cell.getInventory();
+                }
+            }
+        }
+        return FECellHandler.HANDLER.getCellInventory(stack, null);
     }
 
     @Override
