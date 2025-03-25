@@ -89,6 +89,7 @@ public class ExtendedAE {
 
     public void clientSetup(FMLClientSetupEvent event) {
         PatternHotKey.onInit();
+        CutterHook.addTooltip();
     }
 
     public void sendIMC(InterModEnqueueEvent event) {

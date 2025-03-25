@@ -8,14 +8,21 @@ import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
 import appeng.util.InteractionUtil;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+
+import java.util.List;
 
 public final class CutterHook {
 
@@ -23,6 +30,16 @@ public final class CutterHook {
 
     private CutterHook() {
         // NO-OP
+    }
+
+    public static void addTooltip() {
+        NeoForge.EVENT_BUS.addListener((ItemTooltipEvent evt) -> hookTooltip(evt.getItemStack(), evt.getToolTip()));
+    }
+
+    private static void hookTooltip(ItemStack stack, List<Component> tooltip) {
+        if (stack.getItem() instanceof QuartzCuttingKnifeItem) {
+            tooltip.add(Component.translatable("cutter.tooltip").withStyle(ChatFormatting.DARK_GRAY));
+        }
     }
 
     @SubscribeEvent
