@@ -424,6 +424,16 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.FISHBIG))
                 .save(c, ExtendedAE.id("fishbig"));
 
+        // MDDyue
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAESingletons.MDDYUE)
+                .pattern("MMM")
+                .pattern("M M")
+                .pattern("MMM")
+                .define('M', Items.EGG)
+                .unlockedBy(C, has(EAESingletons.MDDYUE))
+                .save(c, ExtendedAE.id("mddyue"));
+
         // Entro Seed
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, EAESingletons.ENTRO_SEED, 2)
@@ -779,6 +789,10 @@ public class EAERecipeProvider extends RecipeProvider {
                 .cut(Items.PUFFERFISH, 8)
                 .input(EAESingletons.FISHBIG)
                 .save(c, ExtendedAE.id("cutter/fishbig_destroy"));
+        CircuitCutterRecipeBuilder
+                .cut(Items.EGG, 8)
+                .input(EAESingletons.MDDYUE)
+                .save(c, ExtendedAE.id("cutter/mddyue_destroy"));
 
     }
 
