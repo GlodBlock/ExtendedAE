@@ -18,7 +18,7 @@ public class ContainerWirelessExPAT extends ContainerExPatternTerminal {
 
     public static final MenuType<ContainerWirelessExPAT> TYPE = MenuTypeBuilder
             .create(ContainerWirelessExPAT::new, HostWirelessExPAT.class)
-            .build(ExtendedAE.id("u_wireless_ex_pattern_access_terminal"));
+            .buildUnregistered(ExtendedAE.id("u_wireless_ex_pattern_access_terminal"));
     private final HostWirelessExPAT host;
     private final ToolboxMenu toolboxMenu;
 

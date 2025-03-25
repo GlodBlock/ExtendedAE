@@ -112,7 +112,7 @@ dependencies {
     compileOnly "curse.maven:jade-324717:5427817"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
     compileOnly "mekanism:Mekanism:1.21.1-10.7.0.55"
-    compileOnly "curse.maven:applied-mekanistics-574300:5664061"
+    compileOnly "curse.maven:applied-mekanistics-574300:5978711"
     compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.0-build.171"
     compileOnly "curse.maven:framedblocks-441647:6127891"
     // runtime test
