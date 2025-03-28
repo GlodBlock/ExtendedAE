@@ -15,7 +15,7 @@ public class ContainerStonecuttingPattern extends ContainerPattern {
     public static final MenuType<ContainerStonecuttingPattern> TYPE = PatternGuiHandler.register(ID, ContainerStonecuttingPattern::new);
 
     public ContainerStonecuttingPattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
-        super(TYPE, world, id, stack);
+        super(menuType, world, id, stack);
         this.addSlot(new DisplayOnlySlot(this, this.inputs, 0, 51, 25));
         this.addSlot(new DisplayOnlySlot(this, this.outputs, 0, 106, 25));
     }

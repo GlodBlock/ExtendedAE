@@ -115,9 +115,10 @@ dependencies {
     compileOnly "curse.maven:applied-mekanistics-574300:5978711"
     compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.0-build.171"
     compileOnly "curse.maven:framedblocks-441647:6127891"
+    compileOnly "curse.maven:advancedae-1084104:6225993"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5614830"
-    runtimeOnly "de.mari_023:ae2wtlib:19.2.0"
+    runtimeOnly "de.mari_023:ae2wtlib:19.2.1"
     runtimeOnly "curse.maven:jade-324717:5427817"
     runtimeOnly "curse.maven:mega-cells-622112:6005043"
     runtimeOnly "mekanism:Mekanism:1.21.1-10.7.0.55"

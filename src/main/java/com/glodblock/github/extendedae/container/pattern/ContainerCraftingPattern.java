@@ -18,7 +18,7 @@ public class ContainerCraftingPattern extends ContainerPattern {
     public static final MenuType<ContainerCraftingPattern> TYPE = PatternGuiHandler.register(ID, ContainerCraftingPattern::new);
 
     public ContainerCraftingPattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
-        super(TYPE, world, id, stack);
+        super(menuType, world, id, stack);
         for (int row = 0; row < 3; row ++) {
             for (int col = 0; col < 3; col ++) {
                 this.addSlot(new DisplayOnlySlot(this, this.inputs, row * 3 + col, 29 + col * 18, 35 + row * 18));

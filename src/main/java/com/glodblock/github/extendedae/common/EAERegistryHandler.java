@@ -88,6 +88,8 @@ import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeSerializer;
 import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.aae.AAECommonLoad;
+import com.glodblock.github.extendedae.xmod.aae.AAERegister;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBCommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBRegister;
@@ -206,6 +208,9 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
         if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
             FBRegister.register();
+        }
+        if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
+            AAERegister.register();
         }
     }
 
@@ -331,6 +336,9 @@ public class EAERegistryHandler extends RegistryHandler {
         PatternGuiHandler.addPatternHandler(AESmithingTablePattern.class, ContainerSmithingTablePattern.ID);
         if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
             FBCommonLoad.init();
+        }
+        if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
+            AAECommonLoad.init();
         }
     }
 

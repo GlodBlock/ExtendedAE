@@ -15,7 +15,7 @@ public class ContainerSmithingTablePattern extends ContainerPattern {
     public static final MenuType<ContainerSmithingTablePattern> TYPE = PatternGuiHandler.register(ID, ContainerSmithingTablePattern::new);
 
     public ContainerSmithingTablePattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
-        super(TYPE, world, id, stack);
+        super(menuType, world, id, stack);
         for (int i = 0; i < 3; i ++) {
             this.addSlot(new DisplayOnlySlot(this, this.inputs, i, 34 + i * 18, 25));
         }

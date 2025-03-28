@@ -14,7 +14,7 @@ public class ContainerFramingSawPattern extends ContainerPattern {
     public static final MenuType<ContainerFramingSawPattern> TYPE = PatternGuiHandler.register(ID, ContainerFramingSawPattern::new);
 
     public ContainerFramingSawPattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
-        super(TYPE, world, id, stack);
+        super(menuType, world, id, stack);
         this.addSlot(new DisplayOnlySlot(this, this.inputs, 0, 52, 15));
         for (int index = 0; index < 3; index ++) {
             this.addSlot(new DisplayOnlySlot(this, this.inputs, index + 1, 34 + index * 18, 34));
