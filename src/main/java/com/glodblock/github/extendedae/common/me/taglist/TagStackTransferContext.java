@@ -9,10 +9,15 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // clueless
 @SuppressWarnings({"UnstableApiUsage", "NonExtendableApiUsage"})
 public class TagStackTransferContext implements StackTransferContext {
+    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
+    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
+
     private final IStorageService internalStorage;
     private final IEnergySource energySource;
     private final IActionSource actionSource;
@@ -28,6 +33,11 @@ public class TagStackTransferContext implements StackTransferContext {
         this.filter = filter;
         this.initialOperations = operationsRemaining;
         this.operationsRemaining = operationsRemaining;
+        
+        if (DEBUG_ENABLED) {
+            LOGGER.info("Created TagStackTransferContext with filter: {}", filter.getClass().getSimpleName());
+            LOGGER.info("Filter isEmpty: {}", filter.isEmpty());
+        }
     }
 
     @Override
@@ -72,7 +82,15 @@ public class TagStackTransferContext implements StackTransferContext {
 
     @Override
     public boolean isInFilter(AEKey key) {
-        return filter.isEmpty() || filter.isListed(key);
+        boolean isEmpty = filter.isEmpty();
+        boolean isListed = isEmpty || filter.isListed(key);
+        
+        if (DEBUG_ENABLED) {
+            LOGGER.info("isInFilter check for item {}: isEmpty={}, isListed={}, final result={}", 
+                key, isEmpty, isListed, isListed);
+        }
+        
+        return isListed;
     }
 
     @Override
@@ -82,25 +100,43 @@ public class TagStackTransferContext implements StackTransferContext {
 
     @Override
     public void setInverted(boolean inverted) {
-        isInverted = inverted;
+        if (DEBUG_ENABLED && this.isInverted != inverted) {
+            LOGGER.info("Filter inversion changed to: {}", inverted);
+        }
+        this.isInverted = inverted;
     }
 
     @Override
     public boolean isInverted() {
-        return !filter.isEmpty() && isInverted;
+        boolean result = !filter.isEmpty() && isInverted;
+        if (DEBUG_ENABLED) {
+            LOGGER.info("isInverted check: !filter.isEmpty()={}, isInverted={}, result={}", 
+                !filter.isEmpty(), isInverted, result);
+        }
+        return result;
     }
 
     @Override
     public boolean canInsert(AEItemKey what, long amount) {
-        return internalStorage.getInventory().insert(
+        boolean canInsert = internalStorage.getInventory().insert(
                 what,
                 amount,
                 Actionable.SIMULATE,
                 actionSource) > 0;
+                
+        if (DEBUG_ENABLED) {
+            LOGGER.info("canInsert check for item {}: {}", what, canInsert);
+        }
+        
+        return canInsert;
     }
 
     @Override
     public void reduceOperationsRemaining(long inserted) {
+        if (DEBUG_ENABLED) {
+            LOGGER.info("Reducing operations remaining by {}: {} -> {}", 
+                inserted, operationsRemaining, operationsRemaining - inserted);
+        }
         operationsRemaining -= inserted;
     }
 }

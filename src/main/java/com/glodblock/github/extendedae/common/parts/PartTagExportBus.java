@@ -26,9 +26,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PartTagExportBus extends PartSpecialExportBus {
+    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
+    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
     public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/tag_export_bus_base");
 
@@ -53,6 +59,11 @@ public class PartTagExportBus extends PartSpecialExportBus {
         super.readFromNBT(extra, registries);
         this.oreExpWhite = extra.getString("oreExp");
         this.oreExpBlack = extra.getString("oreExp2");
+        
+        if (DEBUG_ENABLED) {
+            LOGGER.info("TagExportBus loaded from NBT with whitelist: '{}', blacklist: '{}'", 
+                this.oreExpWhite, this.oreExpBlack);
+        }
     }
 
     @Override
@@ -69,6 +80,11 @@ public class PartTagExportBus extends PartSpecialExportBus {
         if (oreExps != null) {
             this.oreExpWhite = oreExps.left();
             this.oreExpBlack = oreExps.right();
+            
+            if (DEBUG_ENABLED) {
+                LOGGER.info("TagExportBus imported settings with whitelist: '{}', blacklist: '{}'", 
+                    this.oreExpWhite, this.oreExpBlack);
+            }
         }
     }
 
@@ -87,11 +103,17 @@ public class PartTagExportBus extends PartSpecialExportBus {
     public void setTagFilter(String exp, boolean isWhite) {
         if (isWhite) {
             if (!exp.equals(this.oreExpWhite)) {
+                if (DEBUG_ENABLED) {
+                    LOGGER.info("TagExportBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
+                }
                 this.oreExpWhite = exp;
                 this.filter = null;
             }
         } else {
             if (!exp.equals(this.oreExpBlack)) {
+                if (DEBUG_ENABLED) {
+                    LOGGER.info("TagExportBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
+                }
                 this.oreExpBlack = exp;
                 this.filter = null;
             }
@@ -105,6 +127,9 @@ public class PartTagExportBus extends PartSpecialExportBus {
 
     @NotNull
     protected StackTransferContext createTransferContext(IStorageService storageService, IEnergyService energyService) {
+        if (DEBUG_ENABLED) {
+            LOGGER.info("Creating TagStackTransferContext for TagExportBus");
+        }
         return new TagStackTransferContext(
                 storageService,
                 energyService,
@@ -116,8 +141,69 @@ public class PartTagExportBus extends PartSpecialExportBus {
 
     @Override
     protected IPartitionList createFilter() {
+        if (DEBUG_ENABLED) {
+            LOGGER.info("Creating filter for TagExportBus");
+        }
+        
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExpWhite), TagExpParser.getMatchingOre(this.oreExpBlack), this.oreExpWhite + this.oreExpBlack);
+            // Handle special cases or empty filter expressions
+            String whitelist = this.oreExpWhite.trim();
+            String blacklist = this.oreExpBlack.trim();
+            
+            if (DEBUG_ENABLED) {
+                LOGGER.info("Creating new filter with whitelist: '{}', blacklist: '{}'", whitelist, blacklist);
+            }
+            
+            // Handle specific cases where we know the filter should match nothing
+            boolean emptyFilter = whitelist.isEmpty() && blacklist.isEmpty();
+            boolean operatorOnly = !whitelist.isEmpty() && 
+                                   (whitelist.equals("&") || whitelist.equals("|") || whitelist.equals("^") ||
+                                    whitelist.matches("^\\s*[&|^].*") || whitelist.matches(".*[&|^]\\s*$"));
+            
+            if (DEBUG_ENABLED) {
+                LOGGER.info("Filter analysis: emptyFilter={}, operatorOnly={}", emptyFilter, operatorOnly);
+                
+                if (whitelist.contains("&")) {
+                    LOGGER.info("Expression contains '&', parsed as: {}", 
+                        TagExpParser.parseExpression(whitelist).getClass().getSimpleName());
+                }
+            }
+                                    
+            if (operatorOnly) {
+                // Create a filter that matches nothing
+                if (DEBUG_ENABLED) {
+                    LOGGER.info("Creating empty filter that matches nothing");
+                }
+                return new TagPriorityList(Set.of(), Set.of(), whitelist);
+            } else {
+                // For AND expressions, we need to create a specialized filter
+                if (whitelist.contains("&") && 
+                    TagExpParser.parseExpression(whitelist) instanceof TagExpParser.AndExpression) {
+                    if (DEBUG_ENABLED) {
+                        LOGGER.info("Creating AND filter with expression: {}", whitelist);
+                    }
+                    // For AND expressions, whitelist will be empty but we pass the expression for evaluation
+                    this.filter = new TagPriorityList(
+                        Set.of(), // Empty whitelist for AND expressions
+                        TagExpParser.getMatchingOre(blacklist),
+                        whitelist + (blacklist.isEmpty() ? "" : ";" + blacklist)
+                    );
+                } else {
+                    // Standard filter creation
+                    if (DEBUG_ENABLED) {
+                        LOGGER.info("Creating standard filter");
+                    }
+                    this.filter = new TagPriorityList(
+                        TagExpParser.getMatchingOre(whitelist),
+                        TagExpParser.getMatchingOre(blacklist),
+                        whitelist + (blacklist.isEmpty() ? "" : ";" + blacklist)
+                    );
+                }
+            }
+        } else {
+            if (DEBUG_ENABLED) {
+                LOGGER.info("Using existing filter");
+            }
         }
         return this.filter;
     }
