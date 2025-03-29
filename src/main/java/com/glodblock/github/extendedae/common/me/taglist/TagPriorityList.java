@@ -17,14 +17,16 @@ public class TagPriorityList implements IPartitionList {
 
     private final Set<TagKey<?>> whiteSet;
     private final Set<TagKey<?>> blackSet;
-    private final String tagExp;
+    private final boolean emptyWhiteExp;
+    private final boolean emptyBlackExp;
     // Cache isn't fast enough here, so I have to use map here.
     private final Reference2BooleanMap<Object> memory = new Reference2BooleanOpenHashMap<>();
 
-    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, String tagExp) {
+    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, boolean emptyWhiteExp, boolean emptyBlackExp) {
         this.whiteSet = whiteKeys;
         this.blackSet = blackKeys;
-        this.tagExp = tagExp;
+        this.emptyWhiteExp = emptyWhiteExp;
+        this.emptyBlackExp = emptyBlackExp;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class TagPriorityList implements IPartitionList {
 
     @Override
     public boolean isEmpty() {
-        return this.tagExp.isEmpty();
+        return this.emptyWhiteExp && this.emptyBlackExp;
     }
 
     @Override
@@ -54,13 +56,13 @@ public class TagPriorityList implements IPartitionList {
         if (refer != null) {
             boolean pass = true;
 
-            if (!whiteSet.isEmpty()) {
-                pass = refer.tags().anyMatch(whiteSet::contains);
+            if (!this.emptyWhiteExp) {
+                pass = refer.tags().anyMatch(this.whiteSet::contains);
             }
 
             if (pass) {
-                if (!blackSet.isEmpty()) {
-                    return refer.tags().noneMatch(blackSet::contains);
+                if (!this.blackSet.isEmpty()) {
+                    return refer.tags().noneMatch(this.blackSet::contains);
                 }
                 return true;
             }
