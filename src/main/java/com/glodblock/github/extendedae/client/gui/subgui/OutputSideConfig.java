@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.client.gui.subgui;
 import appeng.api.config.ActionItems;
 import appeng.api.orientation.RelativeSide;
 import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.AESubScreen;
 import appeng.client.gui.Icon;
@@ -14,6 +15,8 @@ import com.glodblock.github.extendedae.client.button.OutputButton;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -46,7 +49,7 @@ public class OutputSideConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> e
                 setter.accept(side, ((OutputButton) b).isOn());
             });
             if (host.getLevel() != null) {
-                btn.setDisplay(host.getLevel().getBlockState(host.getBlockPos().relative(side)).getBlock());
+                btn.setDisplay(this.getDisplayIcon(host, host.getLevel(), side));
             }
             this.btns.put(side, btn);
         }
@@ -57,6 +60,18 @@ public class OutputSideConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> e
             var side = host.getOrientation().getSide(relative);
             this.widgets.add(relative.name().toLowerCase(Locale.ROOT), this.btns.get(side));
         }
+    }
+
+    private ItemLike getDisplayIcon(AEBaseBlockEntity host, Level world, Direction side) {
+        var pos = host.getBlockPos().relative(side);
+        var tile = world.getBlockEntity(pos);
+        if (tile instanceof CableBusBlockEntity cable) {
+            var part = cable.getPart(side.getOpposite());
+            if (part != null) {
+                return part.getPartItem();
+            }
+        }
+        return world.getBlockState(pos).getBlock();
     }
 
     @Override
