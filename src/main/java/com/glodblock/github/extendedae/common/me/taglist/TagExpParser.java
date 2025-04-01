@@ -3,579 +3,406 @@ package com.glodblock.github.extendedae.common.me.taglist;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ReferenceSet;
+
+import appeng.api.stacks.AEKey;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
- * @author brachy84
+ * Parses and evaluates tag query expressions with support for logical operators
+ * (&, |, !, ^), parentheses, and wildcards (*).
+ * <p>
+ * The parser uses the Shunting-Yard algorithm to convert infix expressions
+ * to Reverse Polish Notation (RPN), allowing for correct operator precedence
+ * and associativity. The RPN expression is then evaluated against a set of tags.
+ * <p>
+ * Example: "(minecraft:logs & !minecraft:planks) | forge:ores/*"
  */
 public final class TagExpParser {
     private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
     private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
-    private final static ReferenceSet<TagKey<?>> TAGS = new ReferenceOpenHashSet<>();
-    private static boolean isInit = false;
-    private final static LoadingCache<String, Set<TagKey<?>>> CACHE = CacheBuilder.newBuilder().build(
-            new CacheLoader<>() {
+    // Cache compiled predicates for efficiency.
+    private final static LoadingCache<String, Predicate<Set<String>>> COMPILED_EXPRESSION_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(512) // Sensible cache size limit
+            .build(new CacheLoader<>() {
                 @Override
-                public @NotNull Set<TagKey<?>> load(@NotNull String key) {
-                    return getMatchingOreInternal(key);
+                public @NotNull Predicate<Set<String>> load(@NotNull String key) {
+                    return compileInternal(key);
                 }
-            }
-    );
+            });
 
-    private static void init() {
-        TAGS.addAll(BuiltInRegistries.ITEM.getTagNames().toList());
-        TAGS.addAll(BuiltInRegistries.FLUID.getTagNames().toList());
-        
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Initialized TagExpParser with {} available tags", TAGS.size());
-        }
-    }
+    // --- Public API ---
 
-    public static Set<TagKey<?>> getMatchingOre(String oreExp) {
-        oreExp = validateExp(oreExp);
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Getting matching tags for expression: '{}'", oreExp);
-        }
-        Set<TagKey<?>> result = CACHE.getUnchecked(oreExp);
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Found {} matching tags for '{}': {}", 
-                result.size(), 
-                oreExp, 
-                result.stream().map(tag -> tag.location().toString()).limit(20).toList());
-            if (result.size() > 20) {
-                LOGGER.info("... and {} more tags", result.size() - 20);
-            }
-        }
-        return result;
-    }
-
-    private static Set<TagKey<?>> getMatchingOreInternal(String oreExp) {
-        if (oreExp == null || oreExp.trim().isEmpty()) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Empty expression, returning empty tag set");
-            }
-            return Set.of();
-        }
-        if (!isInit) {
-            init();
-            isInit = true;
-        }
-        
-        // Handle special cases that should match nothing
-        if (oreExp.trim().equals("&") || oreExp.trim().equals("|") || oreExp.trim().equals("^") || 
-            oreExp.trim().matches("^\\s*[&|^].*") || oreExp.trim().matches(".*[&|^]\\s*$")) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Expression '{}' only contains operators or has invalid format, returning empty tag set", oreExp);
-            }
-            return Set.of(); // Expression with only operators or invalid operators should match nothing
-        }
-        
-        Set<TagKey<?>> matchingIds = new HashSet<>();
-        Expression expression = parseExpression(oreExp);
-        
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Parsing '{}' resulted in a {} expression", oreExp, expression.getClass().getSimpleName());
-        }
-        
-        // Special handling for AND expressions
-        if (expression instanceof AndExpression) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Expression is an AND - returning an empty set as we'll check tags at item evaluation time");
-            }
-            // For AND expressions, we don't pre-populate the whitelist
-            // Instead, we'll check each item against the required tags at evaluation time
-            return Set.of();
-        }
-        
-        // For other expressions, use the standard matching logic
-        for (var tag : TAGS) {
-            String tagStr = tag.location().toString();
-            boolean matches = expression.matches(tagStr);
-            if (matches) {
-                matchingIds.add(tag);
-                if (DEBUG_ENABLED && matchingIds.size() <= 10) {
-                    LOGGER.debug("Tag '{}' matched expression '{}'", tagStr, oreExp);
-                }
-            }
-        }
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Expression '{}' matched {} tags", oreExp, matchingIds.size());
-        }
-        return matchingIds;
-    }
-
-    // Parse an expression to create an expression tree
-    public static Expression parseExpression(String expression) {
+    /**
+     * Compiles a tag expression string into a reusable predicate.
+     * The predicate accepts a set of tag strings (e.g., ["minecraft:logs", "forge:ores/coal"])
+     * and returns true if the tags match the expression.
+     * <p>
+     * Compiled expressions are cached.
+     *
+     * @param expression The tag expression string (e.g., "tag1 & (tag2 | tag3)")
+     * @return A predicate for evaluating the expression against tag sets. Returns a predicate
+     * that always evaluates to `true` if the expression is empty or whitespace.
+     */
+    public static Predicate<Set<String>> compile(String expression) {
         if (expression == null || expression.trim().isEmpty()) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Empty expression, returning EmptyExpression");
-            }
-            return new EmptyExpression();
+            // An empty expression matches everything (or could be interpreted as matching nothing,
+            // but matching everything is often more useful for filters where empty means "no filter").
+            // Let's define empty as matching *nothing* for consistency with how filters usually work.
+            // If you want "match all", use "*".
+            return tags -> false;
         }
-        
-        expression = expression.trim();
-        
-        // Check for empty expression
-        if (expression.isEmpty()) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Trimmed expression is empty, returning EmptyExpression");
-            }
-            return new EmptyExpression();
-        }
-        
-        // Handle operators at the beginning or end
-        if (expression.startsWith("&") || expression.startsWith("|") || expression.startsWith("^") ||
-            expression.endsWith("&") || expression.endsWith("|") || expression.endsWith("^")) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Expression '{}' has operators at beginning or end, returning EmptyExpression", expression);
-            }
-            return new EmptyExpression(); // These should match nothing
-        }
-        
-        // Simple expression without operators
-        if (!expression.contains("&") && !expression.contains("|") && !expression.contains("^")) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Expression '{}' has no operators, creating simple TagExpression", expression);
-            }
-            return new TagExpression(expression);
-        }
-        
-        // Split complex expressions by their operators
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Parsing complex expression: '{}'", expression);
-        }
-        return parseComplexExpression(expression);
-    }
-    
-    private static Expression parseComplexExpression(String expr) {
-        // First, handle parentheses
-        if (expr.contains("(")) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Expression '{}' contains parentheses, handling those first", expr);
-            }
-            return parseParentheses(expr);
-        }
-        
-        // Process AND operator (&) with highest precedence
-        if (expr.contains("&")) {
-            String[] parts = expr.split("&", 2);
-            if (parts.length == 2) {
-                String left = parts[0].trim();
-                String right = parts[1].trim();
-                
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Splitting AND expression '{}' into left '{}' and right '{}'", expr, left, right);
-                }
-                
-                if (left.isEmpty() || right.isEmpty()) {
-                    if (DEBUG_ENABLED) {
-                        LOGGER.info("AND expression has empty part, returning EmptyExpression");
-                    }
-                    return new EmptyExpression(); // Invalid expression with empty part
-                }
-                
-                Expression leftExp = parseExpression(left);
-                Expression rightExp = parseExpression(right);
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Created AND expression with {} on left and {} on right", 
-                        leftExp.getClass().getSimpleName(), rightExp.getClass().getSimpleName());
-                }
-                return new AndExpression(leftExp, rightExp);
-            }
-        }
-        
-        // Process OR operator (|) with medium precedence
-        if (expr.contains("|")) {
-            String[] parts = expr.split("\\|", 2);
-            if (parts.length == 2) {
-                String left = parts[0].trim();
-                String right = parts[1].trim();
-                
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Splitting OR expression '{}' into left '{}' and right '{}'", expr, left, right);
-                }
-                
-                if (left.isEmpty() || right.isEmpty()) {
-                    if (DEBUG_ENABLED) {
-                        LOGGER.info("OR expression has empty part, returning EmptyExpression");
-                    }
-                    return new EmptyExpression(); // Invalid expression with empty part
-                }
-                
-                return new OrExpression(parseExpression(left), parseExpression(right));
-            }
-        }
-        
-        // Process XOR operator (^) with lowest precedence
-        if (expr.contains("^")) {
-            String[] parts = expr.split("\\^", 2);
-            if (parts.length == 2) {
-                String left = parts[0].trim();
-                String right = parts[1].trim();
-                
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Splitting XOR expression '{}' into left '{}' and right '{}'", expr, left, right);
-                }
-                
-                if (left.isEmpty() || right.isEmpty()) {
-                    if (DEBUG_ENABLED) {
-                        LOGGER.info("XOR expression has empty part, returning EmptyExpression");
-                    }
-                    return new EmptyExpression(); // Invalid expression with empty part
-                }
-                
-                return new XorExpression(parseExpression(left), parseExpression(right));
-            }
-        }
-        
-        // If we reach here, it's a simple tag expression
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Expression '{}' is a simple tag pattern", expr);
-        }
-        return new TagExpression(expr);
-    }
-    
-    private static Expression parseParentheses(String expr) {
-        // Find the outermost parentheses
-        int level = 0;
-        int start = -1;
-        
-        for (int i = 0; i < expr.length(); i++) {
-            char c = expr.charAt(i);
-            if (c == '(') {
-                if (level == 0) {
-                    start = i;
-                }
-                level++;
-            } else if (c == ')') {
-                level--;
-                if (level == 0 && start != -1) {
-                    // Found matching parentheses
-                    String before = expr.substring(0, start).trim();
-                    String inside = expr.substring(start + 1, i).trim();
-                    String after = expr.substring(i + 1).trim();
-                    
-                    Expression insideExpr = parseExpression(inside);
-                    
-                    if (before.isEmpty() && after.isEmpty()) {
-                        // Just the parentheses
-                        return insideExpr;
-                    }
-                    
-                    // Check for operators before/after the parentheses
-                    if (!before.isEmpty() && before.endsWith("&")) {
-                        String leftPart = before.substring(0, before.length() - 1).trim();
-                        Expression leftExpr = parseExpression(leftPart);
-                        
-                        if (!after.isEmpty()) {
-                            // Handle operator after parentheses
-                            if (after.startsWith("&")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new AndExpression(new AndExpression(leftExpr, insideExpr), rightExpr);
-                            } else if (after.startsWith("|")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new OrExpression(new AndExpression(leftExpr, insideExpr), rightExpr);
-                            } else if (after.startsWith("^")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new XorExpression(new AndExpression(leftExpr, insideExpr), rightExpr);
-                            } else {
-                                // Invalid format
-                                return new EmptyExpression();
-                            }
-                        } else {
-                            // Just & before the parentheses
-                            return new AndExpression(leftExpr, insideExpr);
-                        }
-                    } else if (!before.isEmpty() && before.endsWith("|")) {
-                        String leftPart = before.substring(0, before.length() - 1).trim();
-                        Expression leftExpr = parseExpression(leftPart);
-                        
-                        if (!after.isEmpty()) {
-                            // Handle operator after parentheses
-                            if (after.startsWith("&")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new AndExpression(new OrExpression(leftExpr, insideExpr), rightExpr);
-                            } else if (after.startsWith("|")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new OrExpression(new OrExpression(leftExpr, insideExpr), rightExpr);
-                            } else if (after.startsWith("^")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new XorExpression(new OrExpression(leftExpr, insideExpr), rightExpr);
-                            } else {
-                                // Invalid format
-                                return new EmptyExpression();
-                            }
-                        } else {
-                            // Just | before the parentheses
-                            return new OrExpression(leftExpr, insideExpr);
-                        }
-                    } else if (!before.isEmpty() && before.endsWith("^")) {
-                        String leftPart = before.substring(0, before.length() - 1).trim();
-                        Expression leftExpr = parseExpression(leftPart);
-                        
-                        if (!after.isEmpty()) {
-                            // Handle operator after parentheses
-                            if (after.startsWith("&")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new AndExpression(new XorExpression(leftExpr, insideExpr), rightExpr);
-                            } else if (after.startsWith("|")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new OrExpression(new XorExpression(leftExpr, insideExpr), rightExpr);
-                            } else if (after.startsWith("^")) {
-                                String rightPart = after.substring(1).trim();
-                                Expression rightExpr = parseExpression(rightPart);
-                                return new XorExpression(new XorExpression(leftExpr, insideExpr), rightExpr);
-                            } else {
-                                // Invalid format
-                                return new EmptyExpression();
-                            }
-                        } else {
-                            // Just ^ before the parentheses
-                            return new XorExpression(leftExpr, insideExpr);
-                        }
-                    } else {
-                        // Invalid format or no operator
-                        return new EmptyExpression();
-                    }
-                }
-            }
-        }
-        
-        // Unbalanced parentheses
-        return new EmptyExpression();
+        return COMPILED_EXPRESSION_CACHE.getUnchecked(expression);
     }
 
-    private static String validateExp(String input) {
-        if (input == null || input.trim().isEmpty()) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Validation: input is null or empty");
-            }
-            return "";
+    /**
+     * Evaluates a pre-compiled expression predicate against the tags of a given AEKey's primary object (Item or Fluid).
+     *
+     * @param predicate The compiled expression predicate obtained from {@link #compile(String)}.
+     * @param key       The AEKey representing the item or fluid.
+     * @return True if the key's tags match the expression, false otherwise.
+     */
+    @SuppressWarnings("deprecation") // Holder::tags is deprecated but necessary here.
+    public static boolean evaluate(Predicate<Set<String>> predicate, AEKey key) {
+        Object primaryKey = key.getPrimaryKey();
+        Holder<?> holder = null;
+        if (primaryKey instanceof Item item) {
+            holder = item.builtInRegistryHolder();
+        } else if (primaryKey instanceof Fluid fluid) {
+            holder = fluid.builtInRegistryHolder();
         }
-        
-        String original = input;
-        
-        // Normalize spaces
-        input = input.trim().replaceAll("\\s+", " ");
-        
-        // Remove multiple consecutive operators
-        input = input.replaceAll("&{2,}", "&");
-        input = input.replaceAll("\\|{2,}", "|");
-        input = input.replaceAll("\\^{2,}", "^");
-        input = input.replaceAll("\\*{2,}", "*");
-        
-        if (DEBUG_ENABLED && !original.equals(input)) {
-            LOGGER.info("Validation: normalized '{}' to '{}'", original, input);
+
+        if (holder != null) {
+            // Convert TagKey objects to their string representation for matching.
+            Set<String> tagStrings = holder.tags()
+                    .map(tagKey -> tagKey.location().toString())
+                    .collect(Collectors.toSet());
+            return predicate.test(tagStrings);
         }
-        
-        return input;
+
+        return false; // Cannot evaluate if not an Item or Fluid with tags.
     }
-    
-    // Base expression interface
-    public interface Expression {
-        boolean matches(String tag);
-        Set<String> getRequiredTags();
-    }
-    
-    // Empty expression - matches nothing
-    public static class EmptyExpression implements Expression {
-        @Override
-        public boolean matches(String tag) {
-            return false;
-        }
-        
-        @Override
-        public Set<String> getRequiredTags() {
-            return Set.of();
-        }
-    }
-    
-    // AND expression
-    public static class AndExpression implements Expression {
-        private final Expression left;
-        private final Expression right;
-        private final Set<String> requiredTags;
-        
-        public AndExpression(Expression left, Expression right) {
-            this.left = left;
-            this.right = right;
-            
-            // Collect all required tags from both expressions
-            this.requiredTags = new HashSet<>();
-            this.requiredTags.addAll(left.getRequiredTags());
-            this.requiredTags.addAll(right.getRequiredTags());
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.info("AND Expression created with required tags: {}", 
-                    String.join(", ", requiredTags));
-            }
-        }
-        
-        @Override
-        public boolean matches(String tag) {
-            boolean leftMatch = left.matches(tag);
-            boolean rightMatch = right.matches(tag);
-            boolean result = leftMatch && rightMatch;
-            
-            if (DEBUG_ENABLED && tag.contains("tools") || tag.contains("enchantables")) {
-                LOGGER.debug("AND match for tag '{}': left={}, right={}, result={}", 
-                    tag, leftMatch, rightMatch, result);
-            }
-            
-            return result;
-        }
-        
-        @Override
-        public Set<String> getRequiredTags() {
-            return requiredTags;
+
+
+    // --- Internal Implementation ---
+
+    private static Predicate<Set<String>> compileInternal(String expression) {
+        try {
+            List<Token> tokens = tokenize(expression);
+            Queue<Token> rpn = convertToRPN(tokens);
+            // Return a lambda that captures the RPN queue and evaluates it.
+            return actualTags -> evaluateRPN(rpn, actualTags);
+        } catch (IllegalArgumentException e) {
+            // Log error or handle gracefully? For now, return a predicate that always fails.
+            System.err.println("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+            return tags -> false; // Expression is invalid, so it matches nothing.
         }
     }
-    
-    // OR expression
-    public static class OrExpression implements Expression {
-        private final Expression left;
-        private final Expression right;
-        
-        public OrExpression(Expression left, Expression right) {
-            this.left = left;
-            this.right = right;
-        }
-        
-        @Override
-        public boolean matches(String tag) {
-            boolean leftMatch = left.matches(tag);
-            boolean rightMatch = right.matches(tag);
-            boolean result = leftMatch || rightMatch;
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.debug("OR match for tag '{}': left={}, right={}, result={}", 
-                    tag, leftMatch, rightMatch, result);
-            }
-            
-            return result;
-        }
-        
-        @Override
-        public Set<String> getRequiredTags() {
-            Set<String> tags = new HashSet<>(left.getRequiredTags());
-            tags.addAll(right.getRequiredTags());
-            return tags;
-        }
+
+    // --- Tokenizer ---
+
+    private enum TokenType { TAG, OPERATOR, LPAREN, RPAREN }
+
+    private record Token(TokenType type, String value, Operator op) {
+        Token(TokenType type, String value) { this(type, value, null); } // For TAG, LPAREN, RPAREN
+        Token(Operator op) { this(TokenType.OPERATOR, op.symbol, op); } // For OPERATOR
     }
-    
-    // XOR expression
-    public static class XorExpression implements Expression {
-        private final Expression left;
-        private final Expression right;
-        
-        public XorExpression(Expression left, Expression right) {
-            this.left = left;
-            this.right = right;
+
+    // Define operators with precedence and associativity.
+    // Higher precedence value means it binds tighter.
+    // NOT has highest, then AND, then XOR, then OR.
+    private enum Operator {
+        NOT("!", 3, true),   // Right associative (though usually unary)
+        AND("&", 2, false),  // Left associative
+        XOR("^", 1, false),  // Left associative
+        OR("|", 0, false);   // Left associative
+
+        final String symbol;
+        final int precedence;
+        final boolean rightAssociative;
+
+        Operator(String symbol, int precedence, boolean rightAssociative) {
+            this.symbol = symbol;
+            this.precedence = precedence;
+            this.rightAssociative = rightAssociative;
         }
-        
-        @Override
-        public boolean matches(String tag) {
-            boolean leftMatches = left.matches(tag);
-            boolean rightMatches = right.matches(tag);
-            boolean result = leftMatches != rightMatches;
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.debug("XOR match for tag '{}': left={}, right={}, result={}", 
-                    tag, leftMatches, rightMatches, result);
-            }
-            
-            return result;
-        }
-        
-        @Override
-        public Set<String> getRequiredTags() {
-            Set<String> tags = new HashSet<>(left.getRequiredTags());
-            tags.addAll(right.getRequiredTags());
-            return tags;
-        }
-    }
-    
-    // Tag pattern matcher
-    public static class TagExpression implements Expression {
-        private final String pattern;
-        private final boolean hasWildcard;
-        private final Pattern regex;
-        
-        public TagExpression(String pattern) {
-            this.pattern = pattern;
-            this.hasWildcard = pattern.contains("*");
-            
-            if (hasWildcard) {
-                // Convert wildcard pattern to regex
-                String regexPattern = Pattern.quote(pattern).replace("*", "\\E.*\\Q");
-                if (pattern.startsWith("*")) {
-                    regexPattern = ".*" + regexPattern.substring(4);
+
+        static Operator fromSymbol(char symbol) {
+            for (Operator op : values()) {
+                if (op.symbol.charAt(0) == symbol) {
+                    return op;
                 }
-                if (pattern.endsWith("*")) {
-                    regexPattern = regexPattern.substring(0, regexPattern.length() - 4) + ".*";
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Converts an infix expression string into a list of tokens.
+     * Handles tags (including wildcards), operators (&, |, !, ^), and parentheses.
+     * Ignores whitespace.
+     */
+    private static List<Token> tokenize(String expression) {
+        List<Token> tokens = new ArrayList<>();
+        StringBuilder currentTag = new StringBuilder();
+        boolean expectingOperand = true; // Start expects an operand (tag or '(' or '!')
+
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+
+            if (Character.isWhitespace(c)) {
+                continue; // Skip whitespace
+            }
+
+            Operator op = Operator.fromSymbol(c);
+
+            if (c == '(') {
+                if (!expectingOperand) {
+                    throw new IllegalArgumentException("Unexpected '(' at position " + i + ". Expected operator or ')'.");
                 }
-                this.regex = Pattern.compile(regexPattern);
-                
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Created wildcard pattern: '{}' => regex: '{}'", pattern, regexPattern);
+                flushTag(currentTag, tokens); // Previous tag finished
+                tokens.add(new Token(TokenType.LPAREN, "("));
+                expectingOperand = true; // After '(', expect an operand or '!'
+            } else if (c == ')') {
+                if (expectingOperand && !tokens.isEmpty() && tokens.get(tokens.size()-1).type != TokenType.LPAREN) {
+                    // Check if the state allows ')' (must follow an operand)
+                    throw new IllegalArgumentException("Unexpected ')' at position " + i + ". Expected operand or '('.");
+                 }
+                flushTag(currentTag, tokens); // Finish any tag before ')'
+                tokens.add(new Token(TokenType.RPAREN, ")"));
+                expectingOperand = false; // After ')', expect an operator or end of expression
+            } else if (op != null) {
+                // Handle unary NOT vs binary operators
+                if (op == Operator.NOT && expectingOperand) {
+                    // Unary NOT operator
+                     flushTag(currentTag, tokens); // Ensure no tag is being built
+                     tokens.add(new Token(op));
+                     // Still expecting an operand after '!'
+                     expectingOperand = true;
+                } else if (op != Operator.NOT && !expectingOperand) {
+                    // Binary AND, OR, XOR operator
+                    flushTag(currentTag, tokens); // Finish tag before operator
+                    tokens.add(new Token(op));
+                    expectingOperand = true; // Expect operand after binary operator
+                 } else {
+                     // Operator in wrong place (e.g., "tag1 && tag2", "tag1 | | tag2", or starting with binary op)
+                     throw new IllegalArgumentException("Unexpected operator '" + c + "' at position " + i + ".");
+                 }
+            } else {
+                 // Part of a tag name (including namespace, path, '*', ':')
+                 if (!expectingOperand) {
+                     throw new IllegalArgumentException("Unexpected character '" + c + "' at position " + i + ". Expected operator or ')'.");
+                 }
+                currentTag.append(c);
+            }
+        }
+
+        flushTag(currentTag, tokens); // Flush any remaining tag
+
+        // Check if the expression is valid
+        if (tokens.isEmpty()) {
+            throw new IllegalArgumentException("Expression cannot be empty.");
+        }
+        
+        // If the last token is a tag, we're good. If it's an operator (especially binary op), that's invalid.
+        if (expectingOperand && 
+            tokens.get(tokens.size()-1).type != TokenType.TAG && 
+            tokens.get(tokens.size()-1).type != TokenType.RPAREN) {
+            throw new IllegalArgumentException("Expression ended unexpectedly. Expected operand after last token.");
+        }
+
+        return tokens;
+    }
+
+    // Helper to add a tag token if buffer is not empty
+    private static void flushTag(StringBuilder currentTag, List<Token> tokens) {
+        if (!currentTag.isEmpty()) {
+            tokens.add(new Token(TokenType.TAG, currentTag.toString()));
+            currentTag.setLength(0); // Clear buffer
+            // after a tag, we expect an operator or ')'
+           // expectingOperand = false; // This state change is handled in the main loop logic now
+        }
+    }
+
+
+    // --- Shunting-Yard Algorithm ---
+
+    /**
+     * Converts a list of infix tokens to a queue of postfix (RPN) tokens.
+     * Uses the Shunting-Yard algorithm.
+     *
+     * This algorithm processes tokens one by one. Operands (tags) are added directly
+     * to the output queue. Operators are pushed onto a temporary stack, considering
+     * precedence rules. Lower precedence operators on the stack are popped to the output
+     * before pushing a higher precedence operator. Parentheses are used to manage scope,
+     * ensuring operators within them are evaluated first by popping them off the stack
+     * when a closing parenthesis is encountered.
+     */
+    private static Queue<Token> convertToRPN(List<Token> tokens) {
+        Queue<Token> outputQueue = new LinkedList<>();
+        Deque<Token> operatorStack = new ArrayDeque<>(); // Use Deque as stack
+
+        for (Token token : tokens) {
+            switch (token.type) {
+                case TAG:
+                    outputQueue.offer(token);
+                    break;
+                case OPERATOR:
+                    // Handle operator precedence and associativity
+                    while (!operatorStack.isEmpty() && operatorStack.peek().type == TokenType.OPERATOR) {
+                        Token topOpToken = operatorStack.peek();
+                        Operator currentOp = token.op;
+                        Operator topOp = topOpToken.op;
+
+                        // Check precedence and associativity
+                        if ((!currentOp.rightAssociative && currentOp.precedence <= topOp.precedence) ||
+                            (currentOp.rightAssociative && currentOp.precedence < topOp.precedence)) {
+                            outputQueue.offer(operatorStack.pop());
+                        } else {
+                            break; // Stop popping
+                        }
+                    }
+                    operatorStack.push(token);
+                    break;
+                case LPAREN:
+                    operatorStack.push(token);
+                    break;
+                case RPAREN:
+                    // Pop operators until matching LPAREN is found
+                    boolean foundParen = false;
+                    while (!operatorStack.isEmpty()) {
+                        Token topToken = operatorStack.peek();
+                        if (topToken.type == TokenType.LPAREN) {
+                            operatorStack.pop(); // Discard LPAREN
+                            foundParen = true;
+                            break;
+                        } else {
+                            outputQueue.offer(operatorStack.pop());
+                        }
+                    }
+                    if (!foundParen) {
+                        throw new IllegalArgumentException("Mismatched parentheses: Closing parenthesis without matching opening parenthesis.");
+                    }
+                    break;
+            }
+        }
+
+        // Pop any remaining operators from the stack to the output queue
+        while (!operatorStack.isEmpty()) {
+            Token topToken = operatorStack.peek();
+            if (topToken.type == TokenType.LPAREN) {
+                throw new IllegalArgumentException("Mismatched parentheses: Opening parenthesis without matching closing parenthesis.");
+            }
+             if (topToken.type == TokenType.OPERATOR) {
+                outputQueue.offer(operatorStack.pop());
+             } else {
+                 // Should not happen if tokenization and previous logic is correct
+                 throw new IllegalStateException("Unexpected token type on operator stack: " + topToken.type);
+             }
+        }
+
+        return outputQueue;
+    }
+
+    // --- RPN Evaluator ---
+
+    /**
+     * Evaluates a queue of RPN tokens against a set of actual tags.
+     *
+     * @param rpnQueue   The RPN token queue.
+     * @param actualTags The set of tag strings the item/fluid actually has.
+     * @return True if the expression matches the tags, false otherwise.
+     */
+    private static boolean evaluateRPN(Queue<Token> rpnQueue, Set<String> actualTags) {
+        Deque<Boolean> valueStack = new ArrayDeque<>();
+        // Create a copy to not consume the original queue if it needs to be reused
+        Queue<Token> queueCopy = new LinkedList<>(rpnQueue);
+
+        while (!queueCopy.isEmpty()) {
+            Token token = queueCopy.poll();
+
+            if (token.type == TokenType.TAG) {
+                // Check if any actual tag matches the pattern in the token
+                boolean match = actualTags.stream().anyMatch(tag -> matchesWildcard(token.value, tag));
+                valueStack.push(match);
+            } else if (token.type == TokenType.OPERATOR) {
+                Operator op = token.op;
+                try {
+                    if (op == Operator.NOT) {
+                        if (valueStack.isEmpty()) throw new IllegalArgumentException("Invalid expression: NOT operator requires one operand.");
+                        boolean operand = valueStack.pop();
+                        valueStack.push(!operand);
+                    } else {
+                        // Binary operators (AND, OR, XOR)
+                         if (valueStack.size() < 2) throw new IllegalArgumentException("Invalid expression: Binary operator '" + op.symbol + "' requires two operands.");
+                        boolean right = valueStack.pop();
+                        boolean left = valueStack.pop();
+                        switch (op) {
+                            case AND: valueStack.push(left && right); break;
+                            case OR:  valueStack.push(left || right); break;
+                            case XOR: valueStack.push(left ^ right); break;
+                            default: throw new IllegalStateException("Unexpected binary operator: " + op); // Should not happen
+                        }
+                    }
+                } catch (NoSuchElementException e) {
+                    // This catches errors if pop() is called on an empty stack
+                    throw new IllegalArgumentException("Invalid RPN expression: Not enough operands for operator '" + op.symbol + "'.");
                 }
             } else {
-                this.regex = null;
-                
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Created exact match pattern: '{}'", pattern);
-                }
+                 // LPAREN/RPAREN should not be in the RPN queue
+                 throw new IllegalStateException("Unexpected token type in RPN queue: " + token.type);
             }
         }
-        
-        @Override
-        public boolean matches(String tag) {
-            if (pattern.equals("*")) {
-                return true;
-            }
-            
-            boolean result;
-            if (hasWildcard) {
-                result = regex.matcher(tag).matches();
-            } else {
-                result = tag.equals(pattern);
-            }
-            
-            if (DEBUG_ENABLED && (tag.contains("tools") || tag.contains("enchantables") || result)) {
-                LOGGER.debug("Pattern '{}' match for tag '{}': {}", pattern, tag, result);
-            }
-            
-            return result;
+
+        // The final result should be the only value left on the stack
+        if (valueStack.size() == 1) {
+            return valueStack.pop();
+        } else {
+            // If stack is empty or has multiple values, the expression was malformed
+             if (valueStack.isEmpty() && rpnQueue.isEmpty()) return false; // Empty expression evaluates to false
+            throw new IllegalArgumentException("Invalid RPN expression: Evaluation finished with " + valueStack.size() + " values on the stack (expected 1).");
         }
-        
-        @Override
-        public Set<String> getRequiredTags() {
-            // Only return a concrete tag if this is not a wildcard pattern
-            if (!hasWildcard) {
-                return Set.of(pattern);
-            }
-            return Set.of();
+    }
+
+    // --- Wildcard Matching ---
+
+    /**
+     * Checks if a pattern string matches a text string, allowing for simple wildcards.
+     * A single asterisk (*) matches any sequence of characters in the text.
+     */
+    private static boolean matchesWildcard(@NotNull String pattern, @NotNull String text) {
+        // Fast path for exact match or simple wildcard
+        if (pattern.equals("*") || pattern.equals(text)) {
+            return true;
         }
+
+        // Escape regex special chars except * which we convert to .*
+        String regex = pattern
+                .replace(".", "\\.")
+                .replace("(", "\\(")
+                .replace(")", "\\)")
+                .replace("[", "\\[")
+                .replace("]", "\\]")
+                .replace("{", "\\{")
+                .replace("}", "\\}")
+                .replace("?", "\\?")
+                .replace("+", "\\+")
+                .replace("^", "\\^")
+                .replace("$", "\\$")
+                .replace("|", "\\|")
+                .replace("*", ".*");
+
+        return text.matches(regex);
     }
 }

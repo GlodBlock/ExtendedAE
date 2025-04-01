@@ -175,7 +175,7 @@
   "gui.extendedae.assembler_matrix.threads": "正在运行的工作：%s",
   "gui.extendedae.assembler_matrix.cancel": "停止所有合成工作并归还原料",
   "gui.extendedae.void_cell": "虚空元件配置",
-  "gui.extendedae.void_cell.mode.0": "模式：垃圾",
+  "gui.extendedae.void_cell.mode.0": "模式：销毁",
   "gui.extendedae.void_cell.mode.1": "模式：物质球",
   "gui.extendedae.void_cell.mode.2": "模式：奇点",
   "gui.extendedae.set_output_sides": "输出面",

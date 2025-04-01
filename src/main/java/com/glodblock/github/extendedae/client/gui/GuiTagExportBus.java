@@ -33,12 +33,12 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
         addToLeftToolbar(this.redstoneMode);
         this.filterInputs = widgets.addTextField("filter_input");
         this.filterInputs.setFilter(str -> ORE_DICTIONARY_FILTER.matcher(str).matches());
-        this.filterInputs.setMaxLength(512);
+        this.filterInputs.setMaxLength(1024);
         this.filterInputs.setPlaceholder(Component.translatable("gui.extendedae.tag_storage_bus.tooltip"));
         this.filterInputs.setResponder(s -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s, true)));
         this.filterInputs2 = widgets.addTextField("filter_input_2");
         this.filterInputs2.setFilter(str -> ORE_DICTIONARY_FILTER.matcher(str).matches());
-        this.filterInputs2.setMaxLength(512);
+        this.filterInputs2.setMaxLength(1024);
         this.filterInputs2.setPlaceholder(Component.translatable("gui.extendedae.tag_storage_bus.tooltip"));
         this.filterInputs2.setResponder(s -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s, false)));
         this.actions.put("init", o -> {this.filterInputs.setValue(o.get(0)); this.filterInputs2.setValue(o.get(1));});

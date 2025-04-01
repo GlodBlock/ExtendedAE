@@ -16,221 +16,86 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 public class TagPriorityList implements IPartitionList {
     private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
     private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
-    private final Set<TagKey<?>> whiteSet;
-    private final Set<TagKey<?>> blackSet;
-    private final String tagExpression;
-    private final TagExpParser.Expression parsedExpression;
-    
-    // Cache isn't fast enough here, so we use a map
-    private final Reference2BooleanMap<Object> memory = new Reference2BooleanOpenHashMap<>();
+    // Store raw expressions for isEmpty check and potentially for debugging/recompiling.
+    private final String rawWhiteListExpression;
+    private final String rawBlackListExpression;
 
-    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, String tagExp) {
-        this.whiteSet = whiteKeys;
-        this.blackSet = blackKeys;
-        this.tagExpression = tagExp;
-        this.parsedExpression = TagExpParser.parseExpression(tagExp);
-        
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Created TagPriorityList with expression: '{}'", tagExp);
-            LOGGER.info("White tags ({}): {}", whiteKeys.size(), formatTags(whiteKeys));
-            LOGGER.info("Black tags ({}): {}", blackKeys.size(), formatTags(blackKeys));
-            LOGGER.info("Expression parsed as: {}", parsedExpression.getClass().getSimpleName());
-        }
+    // Compiled predicates for efficient evaluation.
+    private final Predicate<Set<String>> whiteListPredicate;
+    private final Predicate<Set<String>> blackListPredicate;
+
+    private final boolean isWhitelistActive;
+
+    // Cache results per AEKey instance for performance.
+    // Using AEKey directly handles potential variations within the same item/fluid primary key.
+    private final Reference2BooleanMap<AEKey> memory = new Reference2BooleanOpenHashMap<>();
+
+    /**
+     * Creates a tag-based partition list using complex filter expressions.
+     *
+     * @param whiteListExpression The expression for the whitelist (e.g., "forge:ingots & !forge:ingots/iron").
+     *                            If empty or null, the whitelist is inactive.
+     * @param blackListExpression The expression for the blacklist (e.g., "minecraft:logs | minecraft:planks").
+     */
+    public TagPriorityList(String whiteListExpression, String blackListExpression) {
+        this.rawWhiteListExpression = whiteListExpression != null ? whiteListExpression : "";
+        this.rawBlackListExpression = blackListExpression != null ? blackListExpression : "";
+
+        // Compile the expressions using the new parser.
+        this.whiteListPredicate = TagExpParser.compile(this.rawWhiteListExpression);
+        this.blackListPredicate = TagExpParser.compile(this.rawBlackListExpression);
+
+        // Determine if the whitelist should be actively checked.
+        // An empty/whitespace-only expression means the whitelist doesn't restrict anything.
+        this.isWhitelistActive = !this.rawWhiteListExpression.trim().isEmpty();
     }
 
     @Override
     public boolean isListed(AEKey input) {
-        Object key = input.getPrimaryKey();
-        boolean result = this.memory.computeIfAbsent(key, this::eval);
-        
-        if (DEBUG_ENABLED) {
-            LOGGER.info("isListed check for item {} => {}", input, result ? "MATCHED" : "REJECTED");
-        }
-        
-        return result;
+        // Use the AEKey itself as the cache key.
+        // computeIfAbsent ensures eval is called only once per key.
+        return this.memory.computeIfAbsent(input, this::eval);
     }
 
     @Override
     public boolean isEmpty() {
-        return this.tagExpression.isEmpty();
+        // The filter is considered empty if neither a whitelist nor a blacklist expression is provided.
+        return rawWhiteListExpression.trim().isEmpty() && rawBlackListExpression.trim().isEmpty();
     }
 
     @Override
     public Iterable<AEKey> getItems() {
+        // This partition list dynamically evaluates tags, it doesn't hold a predefined list of items.
         return List.of();
     }
 
-    @SuppressWarnings("deprecation")
-    private boolean eval(@NotNull Object obj) {
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Evaluating object: {}", obj);
-        }
-        
-        // First check if we have an empty taglist or a taglist with only operators that should match nothing
-        if (parsedExpression instanceof TagExpParser.EmptyExpression) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Empty expression, returning false immediately");
-            }
-            return false;
-        }
-        
-        Holder<?> refer = null;
-        if (obj instanceof Item item) {
-            refer = item.builtInRegistryHolder();
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Object is an Item: {}", item.getDescriptionId());
-            }
-        } else if (obj instanceof Fluid fluid) {
-            refer = fluid.builtInRegistryHolder();
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Object is a Fluid: {}", fluid.toString());
-            }
-        }
-        
-        if (refer == null) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Object is neither Item nor Fluid, returning false");
-            }
-            return false;
-        }
-        
-        // Collect the object's tags for logging
-        Set<TagKey<?>> objectTags = new HashSet<>();
-        refer.tags().forEach(objectTags::add);
-        
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Object has {} tags: {}", objectTags.size(), formatTags(objectTags));
-        }
-        
-        // Special case: Detect if we're dealing with an AND expression with direct tag expressions
-        if (parsedExpression instanceof TagExpParser.AndExpression andExpression) {
-            // Extract the required tags from the left and right expressions
-            Set<String> requiredTags = andExpression.getRequiredTags();
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.info("AND expression - checking for required tags: {}", requiredTags);
-            }
-            
-            // Check if the item has ALL the required tags
-            for (String tagStr : requiredTags) {
-                // Skip special tags like wildcard
-                if (tagStr.equals("*")) continue;
-                
-                boolean found = false;
-                for (TagKey<?> itemTag : objectTags) {
-                    if (itemTag.location().toString().equals(tagStr)) {
-                        found = true;
-                        if (DEBUG_ENABLED) {
-                            LOGGER.info("Found required tag: {}", tagStr);
-                        }
-                        break;
-                    }
-                }
-                
-                if (!found) {
-                    if (DEBUG_ENABLED) {
-                        LOGGER.info("Missing required tag {}, rejecting item", tagStr);
-                    }
-                    return false;
-                }
-            }
-            
-            // If we reach here, the item has all required tags
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Item has all required tags, PASSED");
-            }
-            
-            // Still need to check blacklist
-            if (!blackSet.isEmpty()) {
-                boolean noneMatch = refer.tags().noneMatch(blackSet::contains);
-                if (DEBUG_ENABLED) {
-                    if (noneMatch) {
-                        LOGGER.info("Object PASSED blacklist check - no blacklisted tags");
-                    } else {
-                        // Log which blacklist tags matched
-                        Set<TagKey<?>> matchedBlackTags = new HashSet<>();
-                        refer.tags().filter(blackSet::contains).forEach(matchedBlackTags::add);
-                        LOGGER.info("Object FAILED blacklist check. Matched blacklist tags: {}", formatTags(matchedBlackTags));
-                    }
-                }
-                return noneMatch;
-            }
-            
-            return true;
-        }
-        
-        // For non-AND expressions, use the original whitelist/blacklist mechanism
-        
-        // Check whitelist
-        boolean pass = true;
-        if (!whiteSet.isEmpty()) {
-            boolean anyMatch = refer.tags().anyMatch(whiteSet::contains);
-            pass = anyMatch;
-            
-            if (DEBUG_ENABLED) {
-                if (pass) {
-                    LOGGER.info("Object PASSED whitelist check");
-                    // Log which tags matched
-                    Set<TagKey<?>> matchedTags = new HashSet<>();
-                    refer.tags().filter(whiteSet::contains).forEach(matchedTags::add);
-                    LOGGER.info("Matched whitelist tags: {}", formatTags(matchedTags));
-                } else {
-                    LOGGER.info("Object FAILED whitelist check - no matching tags");
-                }
-            }
-        } else if (tagExpression.isEmpty()) {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Whitelist is empty, default pass");
-            }
+    /**
+     * Evaluates if the given AEKey matches the filter rules (whitelist/blacklist).
+     * This method is called by the caching mechanism in `isListed`.
+     *
+     * @param input The AEKey (Item or Fluid key) to evaluate.
+     * @return True if the key passes the filter rules, false otherwise.
+     */
+    private boolean eval(@NotNull AEKey input) {
+        // Evaluate both predicates against the key's tags.
+        // TagExpParser.evaluate handles getting the tags from the key.
+        final boolean whiteMatches = TagExpParser.evaluate(this.whiteListPredicate, input);
+        final boolean blackMatches = TagExpParser.evaluate(this.blackListPredicate, input);
+
+        // Apply standard filter logic:
+        // - If whitelist is active, must match whitelist AND NOT match blacklist.
+        // - If whitelist is inactive, must NOT match blacklist.
+        if (this.isWhitelistActive) {
+            return whiteMatches && !blackMatches;
         } else {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Empty whitelist with non-empty expression, checking operators");
-            }
-            
-            // If we have a non-empty expression with operators and empty whitelist, return false
-            if (tagExpression.contains("&") || tagExpression.contains("|") || tagExpression.contains("^")) {
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Expression has operators but whitelist is empty, returning false");
-                }
-                return false;
-            }
+            return !blackMatches;
         }
-        
-        // If passes whitelist check, then check blacklist
-        if (pass) {
-            if (!blackSet.isEmpty()) {
-                boolean noneMatch = refer.tags().noneMatch(blackSet::contains);
-                
-                if (DEBUG_ENABLED) {
-                    if (noneMatch) {
-                        LOGGER.info("Object PASSED blacklist check - no blacklisted tags");
-                    } else {
-                        // Log which blacklist tags matched
-                        Set<TagKey<?>> matchedBlackTags = new HashSet<>();
-                        refer.tags().filter(blackSet::contains).forEach(matchedBlackTags::add);
-                        LOGGER.info("Object FAILED blacklist check. Matched blacklist tags: {}", formatTags(matchedBlackTags));
-                    }
-                }
-                
-                return noneMatch;
-            }
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.info("No blacklist, item PASSED filter");
-            }
-            return true;
-        }
-        
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Item FAILED filter");
-        }
-        return false;
     }
     
     private String formatTags(Set<TagKey<?>> tags) {

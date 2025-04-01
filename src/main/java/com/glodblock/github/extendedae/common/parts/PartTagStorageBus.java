@@ -108,64 +108,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         }
         
         if (this.filter == null) {
-            // Handle special cases or empty filter expressions
-            String whitelist = this.oreExpWhite.trim();
-            String blacklist = this.oreExpBlack.trim();
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Creating new filter with whitelist: '{}', blacklist: '{}'", whitelist, blacklist);
-            }
-            
-            // Handle specific cases where we know the filter should match nothing
-            boolean emptyFilter = whitelist.isEmpty() && blacklist.isEmpty();
-            boolean operatorOnly = !whitelist.isEmpty() && 
-                                  (whitelist.equals("&") || whitelist.equals("|") || whitelist.equals("^") ||
-                                   whitelist.matches("^\\s*[&|^].*") || whitelist.matches(".*[&|^]\\s*$"));
-            
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Filter analysis: emptyFilter={}, operatorOnly={}", emptyFilter, operatorOnly);
-                
-                if (whitelist.contains("&")) {
-                    LOGGER.info("Expression contains '&', parsed as: {}", 
-                        TagExpParser.parseExpression(whitelist).getClass().getSimpleName());
-                }
-            }
-                                    
-            if (operatorOnly) {
-                // Create a filter that matches nothing
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("Creating empty filter that matches nothing");
-                }
-                this.filter = new TagPriorityList(Set.of(), Set.of(), whitelist);
-            } else {
-                // For AND expressions, we need to create a specialized filter
-                if (whitelist.contains("&") && 
-                    TagExpParser.parseExpression(whitelist) instanceof TagExpParser.AndExpression) {
-                    if (DEBUG_ENABLED) {
-                        LOGGER.info("Creating AND filter with expression: {}", whitelist);
-                    }
-                    // For AND expressions, whitelist will be empty but we pass the expression for evaluation
-                    this.filter = new TagPriorityList(
-                        Set.of(), // Empty whitelist for AND expressions
-                        TagExpParser.getMatchingOre(blacklist),
-                        whitelist + (blacklist.isEmpty() ? "" : ";" + blacklist)
-                    );
-                } else {
-                    // Standard filter creation
-                    if (DEBUG_ENABLED) {
-                        LOGGER.info("Creating standard filter");
-                    }
-                    this.filter = new TagPriorityList(
-                        TagExpParser.getMatchingOre(whitelist),
-                        TagExpParser.getMatchingOre(blacklist),
-                        whitelist + (blacklist.isEmpty() ? "" : ";" + blacklist)
-                    );
-                }
-            }
-        } else {
-            if (DEBUG_ENABLED) {
-                LOGGER.info("Using existing filter");
-            }
+            this.filter = new TagPriorityList(this.oreExpWhite, this.oreExpBlack);
         }
         return this.filter;
     }
