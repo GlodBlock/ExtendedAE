@@ -3,331 +3,402 @@ package com.glodblock.github.extendedae.common.me.taglist;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ReferenceSet;
+
+import appeng.api.stacks.AEKey;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
- * @author brachy84
+ * Parses and evaluates tag query expressions with support for logical operators
+ * (&, |, !, ^), parentheses, and wildcards (*).
+ * <p>
+ * The parser uses the Shunting-Yard algorithm to convert infix expressions
+ * to Reverse Polish Notation (RPN), allowing for correct operator precedence
+ * and associativity. The RPN expression is then evaluated against a set of tags.
+ * <p>
+ * Example: "(minecraft:logs & !minecraft:planks) | forge:ores/*"
  */
 public final class TagExpParser {
 
-    private final static ReferenceSet<TagKey<?>> TAGS = new ReferenceOpenHashSet<>();
-    private static boolean isInit = false;
-    private final static LoadingCache<String, Set<TagKey<?>>> CACHE = CacheBuilder.newBuilder().build(
-            new CacheLoader<>() {
+    // Cache compiled predicates for efficiency.
+    private final static LoadingCache<String, Predicate<Set<String>>> COMPILED_EXPRESSION_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(512) // Sensible cache size limit
+            .build(new CacheLoader<>() {
                 @Override
-                public @NotNull Set<TagKey<?>> load(@NotNull String key) {
-                    return getMatchingOreInternal(key);
+                public @NotNull Predicate<Set<String>> load(@NotNull String key) {
+                    return compileInternal(key);
+                }
+            });
+
+    // --- Public API ---
+
+    /**
+     * Compiles a tag expression string into a reusable predicate.
+     * The predicate accepts a set of tag strings (e.g., ["minecraft:logs", "forge:ores/coal"])
+     * and returns true if the tags match the expression.
+     * <p>
+     * Compiled expressions are cached.
+     *
+     * @param expression The tag expression string (e.g., "tag1 & (tag2 | tag3)")
+     * @return A predicate for evaluating the expression against tag sets. Returns a predicate
+     * that always evaluates to `true` if the expression is empty or whitespace.
+     */
+    public static Predicate<Set<String>> compile(String expression) {
+        if (expression == null || expression.trim().isEmpty()) {
+            // An empty expression matches everything (or could be interpreted as matching nothing,
+            // but matching everything is often more useful for filters where empty means "no filter").
+            // Let's define empty as matching *nothing* for consistency with how filters usually work.
+            // If you want "match all", use "*".
+            return tags -> false;
+        }
+        return COMPILED_EXPRESSION_CACHE.getUnchecked(expression);
+    }
+
+    /**
+     * Evaluates a pre-compiled expression predicate against the tags of a given AEKey's primary object (Item or Fluid).
+     *
+     * @param predicate The compiled expression predicate obtained from {@link #compile(String)}.
+     * @param key       The AEKey representing the item or fluid.
+     * @return True if the key's tags match the expression, false otherwise.
+     */
+    @SuppressWarnings("deprecation") // Holder::tags is deprecated but necessary here.
+    public static boolean evaluate(Predicate<Set<String>> predicate, AEKey key) {
+        Object primaryKey = key.getPrimaryKey();
+        Holder<?> holder = null;
+        if (primaryKey instanceof Item item) {
+            holder = item.builtInRegistryHolder();
+        } else if (primaryKey instanceof Fluid fluid) {
+            holder = fluid.builtInRegistryHolder();
+        }
+
+        if (holder != null) {
+            // Convert TagKey objects to their string representation for matching.
+            Set<String> tagStrings = holder.tags()
+                    .map(tagKey -> tagKey.location().toString())
+                    .collect(Collectors.toSet());
+            return predicate.test(tagStrings);
+        }
+
+        return false; // Cannot evaluate if not an Item or Fluid with tags.
+    }
+
+
+    // --- Internal Implementation ---
+
+    private static Predicate<Set<String>> compileInternal(String expression) {
+        try {
+            List<Token> tokens = tokenize(expression);
+            Queue<Token> rpn = convertToRPN(tokens);
+            // Return a lambda that captures the RPN queue and evaluates it.
+            return actualTags -> evaluateRPN(rpn, actualTags);
+        } catch (IllegalArgumentException e) {
+            // Log error or handle gracefully? For now, return a predicate that always fails.
+            System.err.println("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+            return tags -> false; // Expression is invalid, so it matches nothing.
+        }
+    }
+
+    // --- Tokenizer ---
+
+    private enum TokenType { TAG, OPERATOR, LPAREN, RPAREN }
+
+    private record Token(TokenType type, String value, Operator op) {
+        Token(TokenType type, String value) { this(type, value, null); } // For TAG, LPAREN, RPAREN
+        Token(Operator op) { this(TokenType.OPERATOR, op.symbol, op); } // For OPERATOR
+    }
+
+    // Define operators with precedence and associativity.
+    // Higher precedence value means it binds tighter.
+    // NOT has highest, then AND, then XOR, then OR.
+    private enum Operator {
+        NOT("!", 3, true),   // Right associative (though usually unary)
+        AND("&", 2, false),  // Left associative
+        XOR("^", 1, false),  // Left associative
+        OR("|", 0, false);   // Left associative
+
+        final String symbol;
+        final int precedence;
+        final boolean rightAssociative;
+
+        Operator(String symbol, int precedence, boolean rightAssociative) {
+            this.symbol = symbol;
+            this.precedence = precedence;
+            this.rightAssociative = rightAssociative;
+        }
+
+        static Operator fromSymbol(char symbol) {
+            for (Operator op : values()) {
+                if (op.symbol.charAt(0) == symbol) {
+                    return op;
                 }
             }
-    );
-
-    private static void init() {
-        TAGS.addAll(BuiltInRegistries.ITEM.getTagNames().toList());
-        TAGS.addAll(BuiltInRegistries.FLUID.getTagNames().toList());
+            return null;
+        }
     }
 
-    public static Set<TagKey<?>> getMatchingOre(String oreExp) {
-        oreExp = validateExp(oreExp);
-        return CACHE.getUnchecked(oreExp);
-    }
+    /**
+     * Converts an infix expression string into a list of tokens.
+     * Handles tags (including wildcards), operators (&, |, !, ^), and parentheses.
+     * Ignores whitespace.
+     */
+    private static List<Token> tokenize(String expression) {
+        List<Token> tokens = new ArrayList<>();
+        StringBuilder currentTag = new StringBuilder();
+        boolean expectingOperand = true; // Start expects an operand (tag or '(' or '!')
 
-    private static Set<TagKey<?>> getMatchingOreInternal(String oreExp) {
-        if (oreExp.isEmpty()) {
-            return Set.of();
-        }
-        if (!isInit) {
-            init();
-            isInit = true;
-        }
-        Set<TagKey<?>> matchingIds = new HashSet<>();
-        List<MatchRule> rulesList = parseExpression(oreExp);
-        if (rulesList.isEmpty()) {
-            return Set.of();
-        }
-        for (var tag : TAGS) {
-            if (matches(rulesList, tag.location().toString())) {
-                matchingIds.add(tag);
-            }
-        }
-        return matchingIds;
-    }
-
-    public static List<MatchRule> parseExpression(String expression) {
-        List<MatchRule> rules = new ArrayList<>();
-        parseExpression(rules, expression);
-        return rules;
-    }
-
-    public static int parseExpression(List<MatchRule> rules, String expression) {
-        rules.clear();
-
-        StringBuilder builder = new StringBuilder();
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
-            if (c == ' ') {
-                continue;
+
+            if (Character.isWhitespace(c)) {
+                continue; // Skip whitespace
             }
+
+            Operator op = Operator.fromSymbol(c);
+
             if (c == '(') {
-                List<MatchRule> subRules = new ArrayList<>();
-                i = parseExpression(subRules, expression.substring(i + 1)) + i + 1;
-                rules.add(MatchRule.group(subRules));
-                builder = new StringBuilder();
-            } else {
-                switch (c) {
-                    case '&' -> {
-                        rules.add(new MatchRule(builder.toString()));
-                        rules.add(new MatchRule(MatchLogic.AND));
-                        builder = new StringBuilder();
-                    }
-                    case '|' -> {
-                        rules.add(new MatchRule(builder.toString()));
-                        rules.add(new MatchRule(MatchLogic.OR));
-                        builder = new StringBuilder();
-                    }
-                    case '^' -> {
-                        rules.add(new MatchRule(builder.toString()));
-                        rules.add(new MatchRule(MatchLogic.XOR));
-                        builder = new StringBuilder();
-                    }
-                    case ')' -> {
-                        rules.add(new MatchRule(builder.toString()));
-                        return i + 1;
-                    }
-                    default -> builder.append(c);
+                if (!expectingOperand) {
+                    throw new IllegalArgumentException("Unexpected '(' at position " + i + ". Expected operator or ')'.");
                 }
-            }
-        }
-        if (!builder.isEmpty()) {
-            rules.add(new MatchRule(builder.toString()));
-        }
-        return expression.length();
-    }
-
-    public static boolean matches(List<MatchRule> rules, String oreDict) {
-        boolean first = true;
-        boolean lastResult = false;
-        MatchLogic lastLogic = null;
-        for (MatchRule rule : rules) {
-            if (lastLogic == null) {
-                if (rule.logic == MatchLogic.AND || rule.logic == MatchLogic.OR || rule.logic == MatchLogic.XOR) {
-                    lastLogic = rule.logic;
-                    continue;
-                }
-            }
-            if (lastLogic != null || first) {
-                if (lastLogic != null) {
-                    switch (lastLogic) {
-                        case AND -> {
-                            if (!lastResult) {
-                                return false;
-                            }
-                        }
-                        case OR -> {
-                            if (lastResult) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                boolean newResult;
-                if (rule.isGroup()) {
-                    newResult = matches(rule.subRules, oreDict);
-                } else {
-                    newResult = matches(rule, oreDict);
-                }
-
-                if (lastLogic == MatchLogic.XOR) {
-                    if (lastResult == newResult) {
-                        return false;
-                    }
-                }
-
-                lastLogic = null;
-                lastResult = newResult;
-                first = false;
-            }
-
-        }
-
-        return lastResult;
-    }
-
-    private static boolean matches(MatchRule rule, String oreDict) {
-        String filter = rule.expression;
-
-        if (filter.equals("*")) {
-            return true;
-        }
-
-        boolean startWild = filter.startsWith("*"), endWild = filter.endsWith("*");
-        if (startWild) {
-            filter = filter.substring(1);
-        }
-
-        String[] parts = filter.split("\\*+");
-
-        return matches(parts, oreDict, startWild, endWild);
-    }
-
-    private static boolean matches(String[] filter, String oreDict, boolean startWild, boolean endWild) {
-        String lastlastPart = filter[0];
-        String lastPart = filter[0];
-        int index = oreDict.indexOf(lastPart);
-        if ((!startWild && index != 0) || index < 0) {
-            return false;
-        }
-        boolean didGoBack = false;
-
-        for (int i = 1; i < filter.length; i++) {
-            String part = filter[i];
-            int newIndex = oreDict.indexOf(part, index + lastPart.length());
-            if (newIndex < 0) {
-                if (i > 1 && !didGoBack) {
-                    i -= 2;
-                    lastPart = lastlastPart;
-                    didGoBack = true;
-                    continue;
-                }
-                return false;
-            }
-            lastlastPart = lastPart;
-            lastPart = part;
-            index = newIndex;
-            if (didGoBack) {
-                didGoBack = false;
-            }
-        }
-
-        if (endWild || lastPart.length() + index == oreDict.length()) {
-            return true;
-        }
-
-        for (int i = filter.length - 1; i < filter.length; i++) {
-            String part = filter[i];
-            int newIndex = oreDict.indexOf(part, index + lastPart.length());
-            if (newIndex < 0) {
-                if (i > 1 && !didGoBack) {
-                    i -= 2;
-                    lastPart = lastlastPart;
-                    didGoBack = true;
-                    continue;
-                }
-                return false;
-            }
-            lastlastPart = lastPart;
-            lastPart = part;
-            index = newIndex;
-            if (didGoBack) {
-                didGoBack = false;
-            }
-        }
-        return lastPart.length() + index == oreDict.length();
-    }
-
-    private static String validateExp(String input) {
-        // remove all operators that are double
-        input = input.replaceAll("\\*{2,}", "*");
-        input = input.replaceAll("&{2,}", "&");
-        input = input.replaceAll("\\|{2,}", "|");
-        input = input.replaceAll("\\^{2,}", "^");
-        input = input.replaceAll(" {2,}", " ");
-        // move ( and ) so it doesn't create invalid expressions f.e. xxx (& yyy) => xxx & (yyy)
-        // append or prepend ( and ) if the amount is not equal
-        StringBuilder builder = new StringBuilder();
-        int unclosed = 0;
-        char last = ' ';
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-            if (c == ' ') {
-                if (last != '(') {
-                    builder.append(" ");
-                }
-                continue;
-            }
-            if (c == '(') {
-                unclosed++;
+                flushTag(currentTag, tokens); // Previous tag finished
+                tokens.add(new Token(TokenType.LPAREN, "("));
+                expectingOperand = true; // After '(', expect an operand or '!'
             } else if (c == ')') {
-                unclosed--;
-                if (last == '&' || last == '|' || last == '^') {
-                    int l = builder.lastIndexOf(" " + last);
-                    int l2 = builder.lastIndexOf("" + last);
-                    builder.insert(l == l2 - 1 ? l : l2, ")");
-                    continue;
-                }
-                if (i > 0 && builder.charAt(builder.length() - 1) == ' ') {
-                    builder.deleteCharAt(builder.length() - 1);
-                }
-            } else if ((c == '&' || c == '|' || c == '^') && last == '(') {
-                builder.deleteCharAt(builder.lastIndexOf("("));
-                builder.append(c).append(" (");
-                continue;
+                if (expectingOperand && !tokens.isEmpty() && tokens.get(tokens.size()-1).type != TokenType.LPAREN) {
+                    // Check if the state allows ')' (must follow an operand)
+                    throw new IllegalArgumentException("Unexpected ')' at position " + i + ". Expected operand or '('.");
+                 }
+                flushTag(currentTag, tokens); // Finish any tag before ')'
+                tokens.add(new Token(TokenType.RPAREN, ")"));
+                expectingOperand = false; // After ')', expect an operator or end of expression
+            } else if (op != null) {
+                // Handle unary NOT vs binary operators
+                if (op == Operator.NOT && expectingOperand) {
+                    // Unary NOT operator
+                     flushTag(currentTag, tokens); // Ensure no tag is being built
+                     tokens.add(new Token(op));
+                     // Still expecting an operand after '!'
+                     expectingOperand = true;
+                } else if (op != Operator.NOT && !expectingOperand) {
+                    // Binary AND, OR, XOR operator
+                    flushTag(currentTag, tokens); // Finish tag before operator
+                    tokens.add(new Token(op));
+                    expectingOperand = true; // Expect operand after binary operator
+                 } else {
+                     // Operator in wrong place (e.g., "tag1 && tag2", "tag1 | | tag2", or starting with binary op)
+                     throw new IllegalArgumentException("Unexpected operator '" + c + "' at position " + i + ".");
+                 }
+            } else {
+                 // Part of a tag name (including namespace, path, '*', ':')
+                 if (!expectingOperand) {
+                     throw new IllegalArgumentException("Unexpected character '" + c + "' at position " + i + ". Expected operator or ')'.");
+                 }
+                currentTag.append(c);
             }
-
-            builder.append(c);
-            last = c;
         }
-        if (unclosed > 0) {
-            builder.append(")".repeat(unclosed));
-        } else if (unclosed < 0) {
-            unclosed = -unclosed;
-            for (int i = 0; i < unclosed; i++) {
-                builder.insert(0, "(");
+
+        flushTag(currentTag, tokens); // Flush any remaining tag
+
+        // Check if the expression is valid
+        if (tokens.isEmpty()) {
+            throw new IllegalArgumentException("Expression cannot be empty.");
+        }
+        
+        // If the last token is a tag, we're good. If it's an operator (especially binary op), that's invalid.
+        if (expectingOperand && 
+            tokens.get(tokens.size()-1).type != TokenType.TAG && 
+            tokens.get(tokens.size()-1).type != TokenType.RPAREN) {
+            throw new IllegalArgumentException("Expression ended unexpectedly. Expected operand after last token.");
+        }
+
+        return tokens;
+    }
+
+    // Helper to add a tag token if buffer is not empty
+    private static void flushTag(StringBuilder currentTag, List<Token> tokens) {
+        if (!currentTag.isEmpty()) {
+            tokens.add(new Token(TokenType.TAG, currentTag.toString()));
+            currentTag.setLength(0); // Clear buffer
+            // after a tag, we expect an operator or ')'
+           // expectingOperand = false; // This state change is handled in the main loop logic now
+        }
+    }
+
+
+    // --- Shunting-Yard Algorithm ---
+
+    /**
+     * Converts a list of infix tokens to a queue of postfix (RPN) tokens.
+     * Uses the Shunting-Yard algorithm.
+     *
+     * This algorithm processes tokens one by one. Operands (tags) are added directly
+     * to the output queue. Operators are pushed onto a temporary stack, considering
+     * precedence rules. Lower precedence operators on the stack are popped to the output
+     * before pushing a higher precedence operator. Parentheses are used to manage scope,
+     * ensuring operators within them are evaluated first by popping them off the stack
+     * when a closing parenthesis is encountered.
+     */
+    private static Queue<Token> convertToRPN(List<Token> tokens) {
+        Queue<Token> outputQueue = new LinkedList<>();
+        Deque<Token> operatorStack = new ArrayDeque<>(); // Use Deque as stack
+
+        for (Token token : tokens) {
+            switch (token.type) {
+                case TAG:
+                    outputQueue.offer(token);
+                    break;
+                case OPERATOR:
+                    // Handle operator precedence and associativity
+                    while (!operatorStack.isEmpty() && operatorStack.peek().type == TokenType.OPERATOR) {
+                        Token topOpToken = operatorStack.peek();
+                        Operator currentOp = token.op;
+                        Operator topOp = topOpToken.op;
+
+                        // Check precedence and associativity
+                        if ((!currentOp.rightAssociative && currentOp.precedence <= topOp.precedence) ||
+                            (currentOp.rightAssociative && currentOp.precedence < topOp.precedence)) {
+                            outputQueue.offer(operatorStack.pop());
+                        } else {
+                            break; // Stop popping
+                        }
+                    }
+                    operatorStack.push(token);
+                    break;
+                case LPAREN:
+                    operatorStack.push(token);
+                    break;
+                case RPAREN:
+                    // Pop operators until matching LPAREN is found
+                    boolean foundParen = false;
+                    while (!operatorStack.isEmpty()) {
+                        Token topToken = operatorStack.peek();
+                        if (topToken.type == TokenType.LPAREN) {
+                            operatorStack.pop(); // Discard LPAREN
+                            foundParen = true;
+                            break;
+                        } else {
+                            outputQueue.offer(operatorStack.pop());
+                        }
+                    }
+                    if (!foundParen) {
+                        throw new IllegalArgumentException("Mismatched parentheses: Closing parenthesis without matching opening parenthesis.");
+                    }
+                    break;
             }
         }
-        input = builder.toString();
-        input = input.replaceAll(" {2,}", " ");
-        return input;
+
+        // Pop any remaining operators from the stack to the output queue
+        while (!operatorStack.isEmpty()) {
+            Token topToken = operatorStack.peek();
+            if (topToken.type == TokenType.LPAREN) {
+                throw new IllegalArgumentException("Mismatched parentheses: Opening parenthesis without matching closing parenthesis.");
+            }
+             if (topToken.type == TokenType.OPERATOR) {
+                outputQueue.offer(operatorStack.pop());
+             } else {
+                 // Should not happen if tokenization and previous logic is correct
+                 throw new IllegalStateException("Unexpected token type on operator stack: " + topToken.type);
+             }
+        }
+
+        return outputQueue;
     }
 
+    // --- RPN Evaluator ---
 
-    public static class MatchRule {
-        public final MatchLogic logic;
-        public final String expression;
-        private final List<MatchRule> subRules;
+    /**
+     * Evaluates a queue of RPN tokens against a set of actual tags.
+     *
+     * @param rpnQueue   The RPN token queue.
+     * @param actualTags The set of tag strings the item/fluid actually has.
+     * @return True if the expression matches the tags, false otherwise.
+     */
+    private static boolean evaluateRPN(Queue<Token> rpnQueue, Set<String> actualTags) {
+        Deque<Boolean> valueStack = new ArrayDeque<>();
+        // Create a copy to not consume the original queue if it needs to be reused
+        Queue<Token> queueCopy = new LinkedList<>(rpnQueue);
 
-        private MatchRule(MatchLogic logic, String expression, List<MatchRule> subRules) {
-            this.logic = logic;
-            this.expression = expression;
-            this.subRules = subRules;
+        while (!queueCopy.isEmpty()) {
+            Token token = queueCopy.poll();
+
+            if (token.type == TokenType.TAG) {
+                // Check if any actual tag matches the pattern in the token
+                boolean match = actualTags.stream().anyMatch(tag -> matchesWildcard(token.value, tag));
+                valueStack.push(match);
+            } else if (token.type == TokenType.OPERATOR) {
+                Operator op = token.op;
+                try {
+                    if (op == Operator.NOT) {
+                        if (valueStack.isEmpty()) throw new IllegalArgumentException("Invalid expression: NOT operator requires one operand.");
+                        boolean operand = valueStack.pop();
+                        valueStack.push(!operand);
+                    } else {
+                        // Binary operators (AND, OR, XOR)
+                         if (valueStack.size() < 2) throw new IllegalArgumentException("Invalid expression: Binary operator '" + op.symbol + "' requires two operands.");
+                        boolean right = valueStack.pop();
+                        boolean left = valueStack.pop();
+                        switch (op) {
+                            case AND: valueStack.push(left && right); break;
+                            case OR:  valueStack.push(left || right); break;
+                            case XOR: valueStack.push(left ^ right); break;
+                            default: throw new IllegalStateException("Unexpected binary operator: " + op); // Should not happen
+                        }
+                    }
+                } catch (NoSuchElementException e) {
+                    // This catches errors if pop() is called on an empty stack
+                    throw new IllegalArgumentException("Invalid RPN expression: Not enough operands for operator '" + op.symbol + "'.");
+                }
+            } else {
+                 // LPAREN/RPAREN should not be in the RPN queue
+                 throw new IllegalStateException("Unexpected token type in RPN queue: " + token.type);
+            }
         }
 
-        public MatchRule(MatchLogic logic, String expression) {
-            this(logic, expression, null);
-        }
-
-        public MatchRule(MatchLogic logic) {
-            this(logic, "");
-        }
-
-        public MatchRule(String expression) {
-            this(MatchLogic.ANY, expression);
-        }
-
-        public static MatchRule group(List<MatchRule> subRules) {
-            return new MatchRule(MatchLogic.ANY, "", subRules);
-        }
-
-        public boolean isGroup() {
-            return subRules != null;
+        // The final result should be the only value left on the stack
+        if (valueStack.size() == 1) {
+            return valueStack.pop();
+        } else {
+            // If stack is empty or has multiple values, the expression was malformed
+             if (valueStack.isEmpty() && rpnQueue.isEmpty()) return false; // Empty expression evaluates to false
+            throw new IllegalArgumentException("Invalid RPN expression: Evaluation finished with " + valueStack.size() + " values on the stack (expected 1).");
         }
     }
 
+    // --- Wildcard Matching ---
 
-    public enum MatchLogic {
-        OR,
-        AND,
-        XOR,
-        ANY
+    /**
+     * Checks if a pattern string matches a text string, allowing for simple wildcards.
+     * A single asterisk (*) matches any sequence of characters in the text.
+     */
+    private static boolean matchesWildcard(@NotNull String pattern, @NotNull String text) {
+        // Fast path for exact match or simple wildcard
+        if (pattern.equals("*") || pattern.equals(text)) {
+            return true;
+        }
+
+        // Escape regex special chars except * which we convert to .*
+        String regex = pattern
+                .replace(".", "\\.")
+                .replace("(", "\\(")
+                .replace(")", "\\)")
+                .replace("[", "\\[")
+                .replace("]", "\\]")
+                .replace("{", "\\{")
+                .replace("}", "\\}")
+                .replace("?", "\\?")
+                .replace("+", "\\+")
+                .replace("^", "\\^")
+                .replace("$", "\\$")
+                .replace("|", "\\|")
+                .replace("*", ".*");
+
+        return text.matches(regex);
     }
-
 }

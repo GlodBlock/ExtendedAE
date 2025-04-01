@@ -117,7 +117,7 @@ public class PartTagExportBus extends PartSpecialExportBus {
     @Override
     protected IPartitionList createFilter() {
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExpWhite), TagExpParser.getMatchingOre(this.oreExpBlack), this.oreExpWhite.isBlank(), this.oreExpBlack.isBlank());
+            this.filter = new TagPriorityList(this.oreExpWhite, this.oreExpBlack);
         }
         return this.filter;
     }
