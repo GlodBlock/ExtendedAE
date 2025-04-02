@@ -5,69 +5,102 @@ import appeng.util.prioritylist.IPartitionList;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class TagPriorityList implements IPartitionList {
+    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
+    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
-    private final Set<TagKey<?>> whiteSet;
-    private final Set<TagKey<?>> blackSet;
-    private final boolean emptyWhiteExp;
-    private final boolean emptyBlackExp;
-    // Cache isn't fast enough here, so I have to use map here.
-    private final Reference2BooleanMap<Object> memory = new Reference2BooleanOpenHashMap<>();
+    // Store raw expressions for isEmpty check and potentially for debugging/recompiling.
+    private final String rawWhiteListExpression;
+    private final String rawBlackListExpression;
 
-    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, boolean emptyWhiteExp, boolean emptyBlackExp) {
-        this.whiteSet = whiteKeys;
-        this.blackSet = blackKeys;
-        this.emptyWhiteExp = emptyWhiteExp;
-        this.emptyBlackExp = emptyBlackExp;
+    // Compiled predicates for efficient evaluation.
+    private final Predicate<Set<String>> whiteListPredicate;
+    private final Predicate<Set<String>> blackListPredicate;
+
+    private final boolean isWhitelistActive;
+
+    // Cache results per AEKey instance for performance.
+    // Using AEKey directly handles potential variations within the same item/fluid primary key.
+    private final Reference2BooleanMap<AEKey> memory = new Reference2BooleanOpenHashMap<>();
+
+    /**
+     * Creates a tag-based partition list using complex filter expressions.
+     *
+     * @param whiteListExpression The expression for the whitelist (e.g., "forge:ingots & !forge:ingots/iron").
+     *                            If empty or null, the whitelist is inactive.
+     * @param blackListExpression The expression for the blacklist (e.g., "minecraft:logs | minecraft:planks").
+     */
+    public TagPriorityList(String whiteListExpression, String blackListExpression) {
+        this.rawWhiteListExpression = whiteListExpression != null ? whiteListExpression : "";
+        this.rawBlackListExpression = blackListExpression != null ? blackListExpression : "";
+
+        // Compile the expressions using the new parser.
+        this.whiteListPredicate = TagExpParser.compile(this.rawWhiteListExpression);
+        this.blackListPredicate = TagExpParser.compile(this.rawBlackListExpression);
+
+        // Determine if the whitelist should be actively checked.
+        // An empty/whitespace-only expression means the whitelist doesn't restrict anything.
+        this.isWhitelistActive = !this.rawWhiteListExpression.trim().isEmpty();
     }
 
     @Override
     public boolean isListed(AEKey input) {
-        Object key = input.getPrimaryKey();
-        return this.memory.computeIfAbsent(key, this::eval);
+        // Use the AEKey itself as the cache key.
+        // computeIfAbsent ensures eval is called only once per key.
+        return this.memory.computeIfAbsent(input, this::eval);
     }
 
     @Override
     public boolean isEmpty() {
-        return this.emptyWhiteExp && this.emptyBlackExp;
+        // The filter is considered empty if neither a whitelist nor a blacklist expression is provided.
+        return rawWhiteListExpression.trim().isEmpty() && rawBlackListExpression.trim().isEmpty();
     }
 
     @Override
     public Iterable<AEKey> getItems() {
+        // This partition list dynamically evaluates tags, it doesn't hold a predefined list of items.
         return List.of();
     }
 
-    @SuppressWarnings("deprecation")
-    private boolean eval(@NotNull Object obj) {
-        Holder<?> refer = null;
-        if (obj instanceof Item item) {
-            refer = item.builtInRegistryHolder();
-        } else if (obj instanceof Fluid fluid) {
-            refer = fluid.builtInRegistryHolder();
-        }
-        if (refer != null) {
-            boolean pass = true;
+    /**
+     * Evaluates if the given AEKey matches the filter rules (whitelist/blacklist).
+     * This method is called by the caching mechanism in `isListed`.
+     *
+     * @param input The AEKey (Item or Fluid key) to evaluate.
+     * @return True if the key passes the filter rules, false otherwise.
+     */
+    private boolean eval(@NotNull AEKey input) {
+        // Evaluate both predicates against the key's tags.
+        // TagExpParser.evaluate handles getting the tags from the key.
+        final boolean whiteMatches = TagExpParser.evaluate(this.whiteListPredicate, input);
+        final boolean blackMatches = TagExpParser.evaluate(this.blackListPredicate, input);
 
-            if (!this.emptyWhiteExp) {
-                pass = refer.tags().anyMatch(this.whiteSet::contains);
-            }
-
-            if (pass) {
-                if (!this.blackSet.isEmpty()) {
-                    return refer.tags().noneMatch(this.blackSet::contains);
-                }
-                return true;
-            }
+        // Apply standard filter logic:
+        // - If whitelist is active, must match whitelist AND NOT match blacklist.
+        // - If whitelist is inactive, must NOT match blacklist.
+        if (this.isWhitelistActive) {
+            return whiteMatches && !blackMatches;
+        } else {
+            return !blackMatches;
         }
-        return false;
     }
-
+    
+    private String formatTags(Set<TagKey<?>> tags) {
+        return tags.stream()
+                .map(tag -> tag.location().toString())
+                .collect(Collectors.joining(", "));
+    }
 }

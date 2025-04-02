@@ -26,9 +26,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PartTagExportBus extends PartSpecialExportBus {
+    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
+    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
     public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/tag_export_bus_base");
 
@@ -53,6 +59,11 @@ public class PartTagExportBus extends PartSpecialExportBus {
         super.readFromNBT(extra, registries);
         this.oreExpWhite = extra.getString("oreExp");
         this.oreExpBlack = extra.getString("oreExp2");
+        
+        if (DEBUG_ENABLED) {
+            LOGGER.info("TagExportBus loaded from NBT with whitelist: '{}', blacklist: '{}'", 
+                this.oreExpWhite, this.oreExpBlack);
+        }
     }
 
     @Override
@@ -69,6 +80,11 @@ public class PartTagExportBus extends PartSpecialExportBus {
         if (oreExps != null) {
             this.oreExpWhite = oreExps.left();
             this.oreExpBlack = oreExps.right();
+            
+            if (DEBUG_ENABLED) {
+                LOGGER.info("TagExportBus imported settings with whitelist: '{}', blacklist: '{}'", 
+                    this.oreExpWhite, this.oreExpBlack);
+            }
         }
     }
 
@@ -87,11 +103,17 @@ public class PartTagExportBus extends PartSpecialExportBus {
     public void setTagFilter(String exp, boolean isWhite) {
         if (isWhite) {
             if (!exp.equals(this.oreExpWhite)) {
+                if (DEBUG_ENABLED) {
+                    LOGGER.info("TagExportBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
+                }
                 this.oreExpWhite = exp;
                 this.filter = null;
             }
         } else {
             if (!exp.equals(this.oreExpBlack)) {
+                if (DEBUG_ENABLED) {
+                    LOGGER.info("TagExportBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
+                }
                 this.oreExpBlack = exp;
                 this.filter = null;
             }
@@ -105,6 +127,9 @@ public class PartTagExportBus extends PartSpecialExportBus {
 
     @NotNull
     protected StackTransferContext createTransferContext(IStorageService storageService, IEnergyService energyService) {
+        if (DEBUG_ENABLED) {
+            LOGGER.info("Creating TagStackTransferContext for TagExportBus");
+        }
         return new TagStackTransferContext(
                 storageService,
                 energyService,
@@ -116,8 +141,12 @@ public class PartTagExportBus extends PartSpecialExportBus {
 
     @Override
     protected IPartitionList createFilter() {
+        if (DEBUG_ENABLED) {
+            LOGGER.info("Creating filter for TagExportBus");
+        }
+        
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExpWhite), TagExpParser.getMatchingOre(this.oreExpBlack), this.oreExpWhite.isBlank(), this.oreExpBlack.isBlank());
+            this.filter = new TagPriorityList(this.oreExpWhite, this.oreExpBlack);
         }
         return this.filter;
     }
