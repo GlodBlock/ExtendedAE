@@ -12,10 +12,10 @@ import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
-import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.common.me.taglist.TagStackTransferContext;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialExportBus;
+import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.HolderLookup;
@@ -26,15 +26,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PartTagExportBus extends PartSpecialExportBus {
-    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
-    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
     public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(ExtendedAE.MODID, "part/tag_export_bus_base");
 
@@ -60,9 +54,8 @@ public class PartTagExportBus extends PartSpecialExportBus {
         this.oreExpWhite = extra.getString("oreExp");
         this.oreExpBlack = extra.getString("oreExp2");
         
-        if (DEBUG_ENABLED) {
-            LOGGER.info("TagExportBus loaded from NBT with whitelist: '{}', blacklist: '{}'", 
-                this.oreExpWhite, this.oreExpBlack);
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.error("TagExportBus loaded from NBT with whitelist: '{}', blacklist: '{}'", this.oreExpWhite, this.oreExpBlack);
         }
     }
 
@@ -81,8 +74,8 @@ public class PartTagExportBus extends PartSpecialExportBus {
             this.oreExpWhite = oreExps.left();
             this.oreExpBlack = oreExps.right();
             
-            if (DEBUG_ENABLED) {
-                LOGGER.info("TagExportBus imported settings with whitelist: '{}', blacklist: '{}'", 
+            if (EAEConfig.debugMode) {
+                ExtendedAE.LOGGER.error("TagExportBus imported settings with whitelist: '{}', blacklist: '{}'",
                     this.oreExpWhite, this.oreExpBlack);
             }
         }
@@ -103,16 +96,16 @@ public class PartTagExportBus extends PartSpecialExportBus {
     public void setTagFilter(String exp, boolean isWhite) {
         if (isWhite) {
             if (!exp.equals(this.oreExpWhite)) {
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("TagExportBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
+                if (EAEConfig.debugMode) {
+                    ExtendedAE.LOGGER.error("TagExportBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
                 }
                 this.oreExpWhite = exp;
                 this.filter = null;
             }
         } else {
             if (!exp.equals(this.oreExpBlack)) {
-                if (DEBUG_ENABLED) {
-                    LOGGER.info("TagExportBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
+                if (EAEConfig.debugMode) {
+                    ExtendedAE.LOGGER.error("TagExportBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
                 }
                 this.oreExpBlack = exp;
                 this.filter = null;
@@ -127,8 +120,8 @@ public class PartTagExportBus extends PartSpecialExportBus {
 
     @NotNull
     protected StackTransferContext createTransferContext(IStorageService storageService, IEnergyService energyService) {
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Creating TagStackTransferContext for TagExportBus");
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.error("Creating TagStackTransferContext for TagExportBus");
         }
         return new TagStackTransferContext(
                 storageService,
@@ -141,8 +134,8 @@ public class PartTagExportBus extends PartSpecialExportBus {
 
     @Override
     protected IPartitionList createFilter() {
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Creating filter for TagExportBus");
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.error("Creating filter for TagExportBus");
         }
         
         if (this.filter == null) {

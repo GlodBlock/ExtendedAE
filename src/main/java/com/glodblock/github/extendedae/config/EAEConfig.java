@@ -83,6 +83,10 @@ public class EAEConfig {
             .comment("The max size of Assembler Matrix")
             .defineInRange("device.assembler_matrix_max_size", 6, 3, 16);
 
+    private static final ModConfigSpec.BooleanValue DEBUG_MODE = BUILDER
+            .comment("Enable debug logging.")
+            .define("misc.debug_mode", false);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean checkPositive(Object o) {
@@ -99,6 +103,7 @@ public class EAEConfig {
     private static List<? extends Integer> modifierMultiplier;
     public static boolean allowAssemblerCircuits;
     public static int assemblerMatrixSize;
+    public static boolean debugMode;
 
     public static int getPatternModifierNumber(int index) {
         if (index >= modifierMultiplier.size()) {
@@ -129,6 +134,7 @@ public class EAEConfig {
             modifierMultiplier = PATTERN_MODIFIER_NUMBER.get();
             allowAssemblerCircuits = CRYSTAL_INSCRIBER.get();
             assemblerMatrixSize = ASSEMBLER_MATRIX_SIZE.get();
+            debugMode = DEBUG_MODE.get();
         }
     }
 

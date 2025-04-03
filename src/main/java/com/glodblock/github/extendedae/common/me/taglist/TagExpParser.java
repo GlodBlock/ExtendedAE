@@ -1,20 +1,23 @@
 package com.glodblock.github.extendedae.common.me.taglist;
 
+import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.config.EAEConfig;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import appeng.api.stacks.AEKey;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -29,8 +32,6 @@ import java.util.stream.Collectors;
  * Example: "(minecraft:logs & !minecraft:planks) | forge:ores/*"
  */
 public final class TagExpParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
-    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
     // Cache compiled predicates for efficiency.
     private final static LoadingCache<String, Predicate<Set<String>>> COMPILED_EXPRESSION_CACHE = CacheBuilder.newBuilder()
@@ -56,30 +57,35 @@ public final class TagExpParser {
      * that always evaluates to `true` if the expression is empty or whitespace.
      */
     public static Predicate<Set<String>> compile(String expression) {
-        if (expression == null || expression.trim().isEmpty()) {
+        if (expression == null || expression.isBlank()) {
             // An empty expression matches everything (or could be interpreted as matching nothing,
             // but matching everything is often more useful for filters where empty means "no filter").
             // Let's define empty as matching *nothing* for consistency with how filters usually work.
             // If you want "match all", use "*".
             return tags -> false;
         }
-        return COMPILED_EXPRESSION_CACHE.getUnchecked(expression);
+        return COMPILED_EXPRESSION_CACHE.getUnchecked(washExpression(expression));
+    }
+
+    private static String washExpression(String expression) {
+        expression = expression.replace("&&", "&");
+        expression = expression.replace("||", "|");
+        return expression;
     }
 
     /**
-     * Evaluates a pre-compiled expression predicate against the tags of a given AEKey's primary object (Item or Fluid).
+     * Evaluates a pre-compiled expression predicate against the tags of a given Primary Key (Item or Fluid).
      *
      * @param predicate The compiled expression predicate obtained from {@link #compile(String)}.
-     * @param key       The AEKey representing the item or fluid.
+     * @param key       The Primary Key representing the item or fluid.
      * @return True if the key's tags match the expression, false otherwise.
      */
     @SuppressWarnings("deprecation") // Holder::tags is deprecated but necessary here.
-    public static boolean evaluate(Predicate<Set<String>> predicate, AEKey key) {
-        Object primaryKey = key.getPrimaryKey();
+    public static boolean evaluate(Predicate<Set<String>> predicate, Object key) {
         Holder<?> holder = null;
-        if (primaryKey instanceof Item item) {
+        if (key instanceof Item item) {
             holder = item.builtInRegistryHolder();
-        } else if (primaryKey instanceof Fluid fluid) {
+        } else if (key instanceof Fluid fluid) {
             holder = fluid.builtInRegistryHolder();
         }
 
@@ -105,7 +111,9 @@ public final class TagExpParser {
             return actualTags -> evaluateRPN(rpn, actualTags);
         } catch (IllegalArgumentException e) {
             // Log error or handle gracefully? For now, return a predicate that always fails.
-            System.err.println("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+            if (EAEConfig.debugMode) {
+                ExtendedAE.LOGGER.error("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+            }
             return tags -> false; // Expression is invalid, so it matches nothing.
         }
     }
@@ -217,8 +225,8 @@ public final class TagExpParser {
         
         // If the last token is a tag, we're good. If it's an operator (especially binary op), that's invalid.
         if (expectingOperand && 
-            tokens.get(tokens.size()-1).type != TokenType.TAG && 
-            tokens.get(tokens.size()-1).type != TokenType.RPAREN) {
+            tokens.getLast().type != TokenType.TAG &&
+            tokens.getLast().type != TokenType.RPAREN) {
             throw new IllegalArgumentException("Expression ended unexpectedly. Expected operand after last token.");
         }
 
