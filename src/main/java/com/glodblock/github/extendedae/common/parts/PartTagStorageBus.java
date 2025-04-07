@@ -49,7 +49,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         this.oreExpBlack = data.getString("oreExp2");
         
         if (EAEConfig.debugMode) {
-            ExtendedAE.LOGGER.error("TagStorageBus loaded from NBT with whitelist: '{}', blacklist: '{}'", this.oreExpWhite, this.oreExpBlack);
+            ExtendedAE.LOGGER.debug("TagStorageBus loaded from NBT with whitelist: '{}', blacklist: '{}'", this.oreExpWhite, this.oreExpBlack);
         }
     }
 
@@ -73,7 +73,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         if (isWhite) {
             if (!exp.equals(this.oreExpWhite)) {
                 if (EAEConfig.debugMode) {
-                    ExtendedAE.LOGGER.error("TagStorageBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
+                    ExtendedAE.LOGGER.debug("TagStorageBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
                 }
                 this.oreExpWhite = exp;
                 this.filter = null;
@@ -82,7 +82,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         } else {
             if (!exp.equals(this.oreExpBlack)) {
                 if (EAEConfig.debugMode) {
-                    ExtendedAE.LOGGER.error("TagStorageBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
+                    ExtendedAE.LOGGER.debug("TagStorageBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
                 }
                 this.oreExpBlack = exp;
                 this.filter = null;
@@ -97,7 +97,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
 
     protected IPartitionList createFilter() {
         if (EAEConfig.debugMode) {
-            ExtendedAE.LOGGER.error("Creating filter for TagStorageBus");
+            ExtendedAE.LOGGER.debug("Creating filter for TagStorageBus");
         }
         
         if (this.filter == null) {
@@ -115,7 +115,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
             this.oreExpBlack = oreExps.right();
             
             if (EAEConfig.debugMode) {
-                ExtendedAE.LOGGER.error("TagStorageBus imported settings with whitelist: '{}', blacklist: '{}'",
+                ExtendedAE.LOGGER.debug("TagStorageBus imported settings with whitelist: '{}', blacklist: '{}'",
                     this.oreExpWhite, this.oreExpBlack);
             }
         }

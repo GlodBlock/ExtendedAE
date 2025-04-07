@@ -9,14 +9,12 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.config.EAEConfig;
 
 // clueless
 @SuppressWarnings({"UnstableApiUsage", "NonExtendableApiUsage"})
 public class TagStackTransferContext implements StackTransferContext {
-    private static final Logger LOGGER = LoggerFactory.getLogger("ExtendedAE-TagFilter");
-    private static final boolean DEBUG_ENABLED = true; // Set to false to disable logging
 
     private final IStorageService internalStorage;
     private final IEnergySource energySource;
@@ -34,9 +32,9 @@ public class TagStackTransferContext implements StackTransferContext {
         this.initialOperations = operationsRemaining;
         this.operationsRemaining = operationsRemaining;
         
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Created TagStackTransferContext with filter: {}", filter.getClass().getSimpleName());
-            LOGGER.info("Filter isEmpty: {}", filter.isEmpty());
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.debug("Created TagStackTransferContext with filter: {}", filter.getClass().getSimpleName());
+            ExtendedAE.LOGGER.debug("Filter isEmpty: {}", filter.isEmpty());
         }
     }
 
@@ -85,8 +83,8 @@ public class TagStackTransferContext implements StackTransferContext {
         boolean isEmpty = filter.isEmpty();
         boolean isListed = isEmpty || filter.isListed(key);
         
-        if (DEBUG_ENABLED) {
-            LOGGER.info("isInFilter check for item {}: isEmpty={}, isListed={}, final result={}", 
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.debug("isInFilter check for item {}: isEmpty={}, isListed={}, final result={}",
                 key, isEmpty, isListed, isListed);
         }
         
@@ -100,8 +98,8 @@ public class TagStackTransferContext implements StackTransferContext {
 
     @Override
     public void setInverted(boolean inverted) {
-        if (DEBUG_ENABLED && this.isInverted != inverted) {
-            LOGGER.info("Filter inversion changed to: {}", inverted);
+        if (EAEConfig.debugMode && this.isInverted != inverted) {
+            ExtendedAE.LOGGER.debug("Filter inversion changed to: {}", inverted);
         }
         this.isInverted = inverted;
     }
@@ -109,8 +107,8 @@ public class TagStackTransferContext implements StackTransferContext {
     @Override
     public boolean isInverted() {
         boolean result = !filter.isEmpty() && isInverted;
-        if (DEBUG_ENABLED) {
-            LOGGER.info("isInverted check: !filter.isEmpty()={}, isInverted={}, result={}", 
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.debug("isInverted check: !filter.isEmpty()={}, isInverted={}, result={}",
                 !filter.isEmpty(), isInverted, result);
         }
         return result;
@@ -124,8 +122,8 @@ public class TagStackTransferContext implements StackTransferContext {
                 Actionable.SIMULATE,
                 actionSource) > 0;
                 
-        if (DEBUG_ENABLED) {
-            LOGGER.info("canInsert check for item {}: {}", what, canInsert);
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.debug("canInsert check for item {}: {}", what, canInsert);
         }
         
         return canInsert;
@@ -133,8 +131,8 @@ public class TagStackTransferContext implements StackTransferContext {
 
     @Override
     public void reduceOperationsRemaining(long inserted) {
-        if (DEBUG_ENABLED) {
-            LOGGER.info("Reducing operations remaining by {}: {} -> {}", 
+        if (EAEConfig.debugMode) {
+            ExtendedAE.LOGGER.debug("Reducing operations remaining by {}: {} -> {}",
                 inserted, operationsRemaining, operationsRemaining - inserted);
         }
         operationsRemaining -= inserted;
