@@ -165,6 +165,8 @@ public final class TagExpParser {
         List<Token> tokens = new ArrayList<>();
         StringBuilder currentTag = new StringBuilder();
         boolean expectingOperand = true; // Start expects an operand (tag or '(' or '!')
+        boolean lastIsTag = false; // Last processed is a tag.
+        int lp = 0; // Amount of '('
 
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
@@ -182,37 +184,46 @@ public final class TagExpParser {
                 flushTag(currentTag, tokens); // Previous tag finished
                 tokens.add(new Token(TokenType.LPAREN, "("));
                 expectingOperand = true; // After '(', expect an operand or '!'
+                lp ++;
+                lastIsTag = false;
             } else if (c == ')') {
-                if (expectingOperand && !tokens.isEmpty() && tokens.get(tokens.size()-1).type != TokenType.LPAREN) {
-                    // Check if the state allows ')' (must follow an operand)
+                if (expectingOperand && lp <= 0) {
+                    // Check if the state allows ')' (must follow an operand and have '(')
                     throw new IllegalArgumentException("Unexpected ')' at position " + i + ". Expected operand or '('.");
                  }
                 flushTag(currentTag, tokens); // Finish any tag before ')'
                 tokens.add(new Token(TokenType.RPAREN, ")"));
                 expectingOperand = false; // After ')', expect an operator or end of expression
+                lp --;
+                lastIsTag = false;
             } else if (op != null) {
                 // Handle unary NOT vs binary operators
                 if (op == Operator.NOT && expectingOperand) {
                     // Unary NOT operator
-                     flushTag(currentTag, tokens); // Ensure no tag is being built
-                     tokens.add(new Token(op));
-                     // Still expecting an operand after '!'
-                     expectingOperand = true;
-                } else if (op != Operator.NOT && !expectingOperand) {
-                    // Binary AND, OR, XOR operator
-                    flushTag(currentTag, tokens); // Finish tag before operator
+                    flushTag(currentTag, tokens); // Ensure no tag is being built
                     tokens.add(new Token(op));
-                    expectingOperand = true; // Expect operand after binary operator
-                 } else {
-                     // Operator in wrong place (e.g., "tag1 && tag2", "tag1 | | tag2", or starting with binary op)
-                     throw new IllegalArgumentException("Unexpected operator '" + c + "' at position " + i + ".");
-                 }
+                    // Still expecting an operand after '!'
+                    expectingOperand = true;
+                } else if (op != Operator.NOT) {
+                    // Last is a tag or ')'
+                    if (lastIsTag || !expectingOperand) {
+                        // Binary AND, OR, XOR operator
+                        flushTag(currentTag, tokens); // Finish tag before operator
+                        tokens.add(new Token(op));
+                        expectingOperand = true; // Expect operand after binary operator
+                    }
+                } else {
+                    // Operator in wrong place (e.g., "tag1 && tag2", "tag1 | | tag2", or starting with binary op)
+                    throw new IllegalArgumentException("Unexpected operator '" + c + "' at position " + i + ".");
+                }
+                lastIsTag = false;
             } else {
-                 // Part of a tag name (including namespace, path, '*', ':')
-                 if (!expectingOperand) {
-                     throw new IllegalArgumentException("Unexpected character '" + c + "' at position " + i + ". Expected operator or ')'.");
-                 }
+                // Part of a tag name (including namespace, path, '*', ':')
+                if (!expectingOperand) {
+                    throw new IllegalArgumentException("Unexpected character '" + c + "' at position " + i + ". Expected operator or ')'.");
+                }
                 currentTag.append(c);
+                lastIsTag = true;
             }
         }
 
@@ -222,7 +233,11 @@ public final class TagExpParser {
         if (tokens.isEmpty()) {
             throw new IllegalArgumentException("Expression cannot be empty.");
         }
-        
+
+        if (lp > 0) {
+            throw new IllegalArgumentException("Missing ')' at the end of the expression.");
+        }
+
         // If the last token is a tag, we're good. If it's an operator (especially binary op), that's invalid.
         if (expectingOperand && 
             tokens.getLast().type != TokenType.TAG &&
@@ -239,7 +254,7 @@ public final class TagExpParser {
             tokens.add(new Token(TokenType.TAG, currentTag.toString()));
             currentTag.setLength(0); // Clear buffer
             // after a tag, we expect an operator or ')'
-           // expectingOperand = false; // This state change is handled in the main loop logic now
+            // expectingOperand = false; // This state change is handled in the main loop logic now
         }
     }
 
@@ -312,12 +327,12 @@ public final class TagExpParser {
             if (topToken.type == TokenType.LPAREN) {
                 throw new IllegalArgumentException("Mismatched parentheses: Opening parenthesis without matching closing parenthesis.");
             }
-             if (topToken.type == TokenType.OPERATOR) {
+            if (topToken.type == TokenType.OPERATOR) {
                 outputQueue.offer(operatorStack.pop());
-             } else {
-                 // Should not happen if tokenization and previous logic is correct
-                 throw new IllegalStateException("Unexpected token type on operator stack: " + topToken.type);
-             }
+            } else {
+                // Should not happen if tokenization and previous logic is correct
+                throw new IllegalStateException("Unexpected token type on operator stack: " + topToken.type);
+            }
         }
 
         return outputQueue;
@@ -378,7 +393,7 @@ public final class TagExpParser {
             return valueStack.pop();
         } else {
             // If stack is empty or has multiple values, the expression was malformed
-             if (valueStack.isEmpty() && rpnQueue.isEmpty()) return false; // Empty expression evaluates to false
+            if (valueStack.isEmpty() && rpnQueue.isEmpty()) return false; // Empty expression evaluates to false
             throw new IllegalArgumentException("Invalid RPN expression: Evaluation finished with " + valueStack.size() + " values on the stack (expected 1).");
         }
     }

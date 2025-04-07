@@ -43,7 +43,7 @@ public class TagPriorityList implements IPartitionList {
 
         // Determine if the whitelist should be actively checked.
         // An empty/whitespace-only expression means the whitelist doesn't restrict anything.
-        this.isWhitelistActive = this.rawWhiteListExpression.isBlank();
+        this.isWhitelistActive = !this.rawWhiteListExpression.isBlank();
     }
 
     @Override
