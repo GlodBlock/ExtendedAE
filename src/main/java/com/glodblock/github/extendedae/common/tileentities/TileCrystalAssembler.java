@@ -85,10 +85,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
 
     public TileCrystalAssembler(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCrystalAssembler.class, TileCrystalAssembler::new, EAESingletons.CRYSTAL_ASSEMBLER), pos, blockState);
-        this.getMainNode()
-                .setFlags()
-                .setIdlePowerUsage(0)
-                .addService(IGridTickable.class, this);
+        this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
         this.upgrades = UpgradeInventories.forMachine(EAESingletons.CRYSTAL_ASSEMBLER, 4, this::saveChanges);

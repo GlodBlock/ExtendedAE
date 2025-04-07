@@ -10,7 +10,7 @@ import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalBlockPos;
-import appeng.blockentity.grid.AENetworkedInvBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
@@ -36,8 +36,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class TileCrystalFixer extends AENetworkedInvBlockEntity implements IGridTickable, IRecipeMachine<RecipeInput, CrystalFixerRecipe> {
+public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements IGridTickable, IRecipeMachine<RecipeInput, CrystalFixerRecipe> {
 
+    public static final int POWER_MAXIMUM_AMOUNT = 8000;
     public static final int MAX_PROGRESS = 100;
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, 1);
     private final CommonRecipeContext<CrystalFixerRecipe> ctx = new FixerRecipeContext(this);
@@ -47,6 +48,7 @@ public class TileCrystalFixer extends AENetworkedInvBlockEntity implements IGrid
     public TileCrystalFixer(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCrystalFixer.class, TileCrystalFixer::new, EAESingletons.CRYSTAL_FIXER), pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
+        this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.exec = new RecipeExecutor<>(this, r -> new ItemStack(r.getOutput()), MAX_PROGRESS, 50);
     }
 

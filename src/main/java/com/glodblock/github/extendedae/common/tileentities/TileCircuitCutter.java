@@ -78,10 +78,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
 
     public TileCircuitCutter(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileCircuitCutter.class, TileCircuitCutter::new, EAESingletons.CIRCUIT_CUTTER), pos, blockState);
-        this.getMainNode()
-                .setFlags()
-                .setIdlePowerUsage(0)
-                .addService(IGridTickable.class, this);
+        this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
         this.upgrades = UpgradeInventories.forMachine(EAESingletons.CIRCUIT_CUTTER, 4, this::saveChanges);

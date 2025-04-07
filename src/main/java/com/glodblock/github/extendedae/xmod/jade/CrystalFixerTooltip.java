@@ -8,8 +8,8 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class CrystalGrowthChamberTooltip implements IBlockComponentProvider {
-    static final CrystalGrowthChamberTooltip INSTANCE = new CrystalGrowthChamberTooltip();
+public class CrystalFixerTooltip implements IBlockComponentProvider {
+    static final CrystalFixerTooltip INSTANCE = new CrystalFixerTooltip();
 
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig iPluginConfig) {

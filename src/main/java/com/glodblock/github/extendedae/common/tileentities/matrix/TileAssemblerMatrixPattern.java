@@ -11,6 +11,7 @@ import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
+import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
@@ -158,7 +159,10 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
 
         @Override
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
-            return PatternDetailsHelper.decodePattern(stack, world.get()) instanceof IMolecularAssemblerSupportedPattern;
+            if (stack.getItem() instanceof EncodedPatternItem<?>) {
+                return PatternDetailsHelper.decodePattern(stack, world.get()) instanceof IMolecularAssemblerSupportedPattern;
+            }
+            return false;
         }
 
     }

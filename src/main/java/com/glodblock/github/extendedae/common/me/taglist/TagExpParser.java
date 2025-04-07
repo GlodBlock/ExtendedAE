@@ -264,7 +264,6 @@ public final class TagExpParser {
     /**
      * Converts a list of infix tokens to a queue of postfix (RPN) tokens.
      * Uses the Shunting-Yard algorithm.
-     *
      * This algorithm processes tokens one by one. Operands (tags) are added directly
      * to the output queue. Operators are pushed onto a temporary stack, considering
      * precedence rules. Lower precedence operators on the stack are popped to the output
@@ -368,7 +367,7 @@ public final class TagExpParser {
                         valueStack.push(!operand);
                     } else {
                         // Binary operators (AND, OR, XOR)
-                         if (valueStack.size() < 2) throw new IllegalArgumentException("Invalid expression: Binary operator '" + op.symbol + "' requires two operands.");
+                        if (valueStack.size() < 2) throw new IllegalArgumentException("Invalid expression: Binary operator '" + op.symbol + "' requires two operands.");
                         boolean right = valueStack.pop();
                         boolean left = valueStack.pop();
                         switch (op) {
