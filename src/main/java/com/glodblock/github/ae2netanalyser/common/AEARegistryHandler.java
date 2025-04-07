@@ -1,6 +1,5 @@
 package com.glodblock.github.ae2netanalyser.common;
 
-import appeng.core.AppEng;
 import appeng.items.AEBaseItem;
 import com.glodblock.github.ae2netanalyser.AEAnalyser;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
@@ -44,7 +43,7 @@ public class AEARegistryHandler extends RegistryHandler {
     }
 
     private void onRegisterContainer() {
-        Registry.register(BuiltInRegistries.MENU, AppEng.makeId("network_analyser"), ContainerAnalyser.TYPE);
+        Registry.register(BuiltInRegistries.MENU, AEAnalyser.id("network_analyser"), ContainerAnalyser.TYPE);
     }
 
     public void init() {
