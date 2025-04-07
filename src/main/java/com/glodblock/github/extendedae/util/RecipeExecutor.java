@@ -38,12 +38,13 @@ public class RecipeExecutor<T extends Recipe<?>> {
         if (runRecipe != null) {
             this.machine.setWorking(true);
             if (usePower) {
+                final int powerConsumption = this.energyMultiplier * speed;
+                final double powerThreshold = powerConsumption - 0.01;
+                // Use network power when online
                 if (mainNode != null) {
                     mainNode.ifPresent(grid -> {
                         IEnergyService eg = grid.getEnergyService();
                         IEnergySource src = power;
-                        final int powerConsumption = this.energyMultiplier * speed;
-                        final double powerThreshold = powerConsumption - 0.01;
                         double powerReq = 0;
                         if (src != null) {
                             powerReq = src.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
@@ -57,6 +58,15 @@ public class RecipeExecutor<T extends Recipe<?>> {
                             this.machine.addProgress(speed);
                         }
                     });
+                } else {
+                    // Use internal power when offline
+                    if (power != null) {
+                        double powerReq = power.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+                        if (powerReq > powerThreshold) {
+                            power.extractAEPower(powerConsumption, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                            this.machine.addProgress(speed);
+                        }
+                    }
                 }
             } else {
                 this.machine.addProgress(speed);

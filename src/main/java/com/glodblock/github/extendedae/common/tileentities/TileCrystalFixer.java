@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.common.tileentities;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
+import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
@@ -176,6 +177,12 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     protected void onOrientationChanged(BlockOrientation orientation) {
         super.onOrientationChanged(orientation);
         this.ctx.onInvChange();
+    }
+
+    @Override
+    @Nullable
+    public IEnergySource getEnergy() {
+        return this;
     }
 
     public void onChanged() {
