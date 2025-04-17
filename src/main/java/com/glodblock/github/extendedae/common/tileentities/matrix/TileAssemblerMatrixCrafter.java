@@ -1,20 +1,19 @@
 package com.glodblock.github.extendedae.common.tileentities.matrix;
 
-import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.storage.IStorageService;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -39,11 +38,14 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         this.getMainNode().addService(IGridTickable.class, this);
         var invs = new InternalInventory[MAX_THREAD];
         for (int x = 0; x < MAX_THREAD; x ++) {
-            this.threads[x] = new CraftingThread(this);
-            this.threads[x].setPusher(this::pushResult);
+            this.threads[x] = new CraftingMatrixThread(this, this::getSrc);
             invs[x] = this.threads[x].getInternalInventory();
         }
         this.internalInv = new CombinedInternalInventory(invs);
+    }
+
+    private IActionSource getSrc() {
+        return this.cluster.getSrc();
     }
 
     public int usedThread() {
@@ -100,27 +102,6 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
             var item = opt.getCompound("item" + x);
             this.internalInv.setItemDirect(x, ItemStack.parseOptional(registries, item));
         }
-    }
-
-    public ItemStack pushResult(ItemStack stack, Direction d) {
-        if (stack.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-        var grid = this.getMainNode().getGrid();
-        if (grid != null) {
-            var storage = grid.getService(IStorageService.class);
-            var added = storage.getInventory().insert(AEItemKey.of(stack), stack.getCount(), Actionable.MODULATE, this.cluster.getSrc());
-            if (added == 0) {
-                return stack;
-            }
-            this.saveChanges();
-            if (added != stack.getCount()) {
-                return stack.copyWithCount((int) (stack.getCount() - added));
-            } else {
-                return ItemStack.EMPTY;
-            }
-        }
-        return stack;
     }
 
     @Override

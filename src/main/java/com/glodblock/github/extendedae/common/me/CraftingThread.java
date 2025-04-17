@@ -32,8 +32,8 @@ public class CraftingThread {
 
     @NotNull
     private final AEBaseBlockEntity host;
-    private final IGridConnectedBlockEntity girdHost;
-    private final AppEngInternalInventory gridInv;
+    protected final IGridConnectedBlockEntity girdHost;
+    protected final AppEngInternalInventory gridInv;
     private final InternalInventory gridInvExt;
     private final CraftingContainer craftingInv;
     private Direction pushDirection = null;
@@ -41,10 +41,9 @@ public class CraftingThread {
     private IMolecularAssemblerSupportedPattern myPlan = null;
     private double progress = 0;
     private boolean isAwake = false;
-    private boolean forcePlan = false;
+    protected boolean forcePlan = false;
     private boolean reboot = true;
     private ItemStack output = ItemStack.EMPTY;
-    private Pusher pusher = this::pushTo;
 
     public CraftingThread(@NotNull AEBaseBlockEntity host) {
         if (!(host instanceof InternalInventoryHost)) {
@@ -62,10 +61,6 @@ public class CraftingThread {
 
     public boolean isAwake() {
         return this.isAwake;
-    }
-
-    public void setPusher(Pusher pusher) {
-        this.pusher = pusher;
     }
 
     public boolean acceptJob(IPatternDetails patternDetails, KeyCounter[] table, Direction where) {
@@ -238,7 +233,6 @@ public class CraftingThread {
                         this.myPlan = supportedPlan;
                     }
                 }
-
                 this.myPattern = ItemStack.EMPTY;
                 if (myPlan == null) {
                     AELog.warn("Unable to restore auto-crafting pattern after load: %s", myPattern);
@@ -288,13 +282,13 @@ public class CraftingThread {
         }
     }
 
-    private void pushOut(ItemStack output) {
+    protected void pushOut(ItemStack output) {
         if (this.pushDirection == null) {
             for (Direction d : Direction.values()) {
-                output = this.pusher.push(output, d);
+                output = this.pushTo(output, d);
             }
         } else {
-            output = this.pusher.push(output, this.pushDirection);
+            output = this.pushTo(output, this.pushDirection);
         }
         if (output.isEmpty() && this.forcePlan) {
             this.forcePlan = false;
@@ -303,7 +297,7 @@ public class CraftingThread {
         this.gridInv.setItemDirect(9, output);
     }
 
-    private void saveChanges() {
+    protected final void saveChanges() {
         this.host.saveChanges();
     }
 
@@ -382,12 +376,6 @@ public class CraftingThread {
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
             return false;
         }
-    }
-
-    public interface Pusher {
-
-        ItemStack push(ItemStack stack, Direction d);
-
     }
 
 }
