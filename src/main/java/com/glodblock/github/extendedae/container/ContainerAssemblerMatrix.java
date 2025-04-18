@@ -80,12 +80,12 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
     }
 
     @Override
-    protected ItemStack transferStackToMenu(ItemStack input) {
+    protected int transferStackToMenu(ItemStack input) {
         var slot = this.getAvailableSlot();
         if (slot != null) {
-            return slot.addItems(input);
+            return input.getCount() - slot.addItems(input).getCount();
         }
-        return input;
+        return 0;
     }
 
     @Nullable
