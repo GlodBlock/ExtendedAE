@@ -36,7 +36,6 @@ import org.slf4j.Logger;
 public class AppFlux {
 
     public static final String MODID = "appflux";
-    public static final Logger LOGGER = LogUtils.getLogger();
     public static AppFlux INSTANCE;
 
     @SuppressWarnings("UnstableApiUsage")
