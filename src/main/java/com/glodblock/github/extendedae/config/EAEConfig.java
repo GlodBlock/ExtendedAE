@@ -36,6 +36,10 @@ public class EAEConfig {
             .comment("The max range between two wireless connector")
             .defineInRange("device.wireless_connector_max_range", 1000.0, 10.0, 10000.0);
 
+    private static final ModConfigSpec.DoubleValue WIRELESS_CONNECTOR_POWER_MULTIPLIER = BUILDER
+            .comment("Power usage multiplier for wireless connectors")
+            .defineInRange("device.wireless_connector_power_multiplier", 1.0, 0.0, 100.0);
+
     @SuppressWarnings("deprecation")
     private static final ModConfigSpec.ConfigValue<List<? extends Integer>> PATTERN_MODIFIER_NUMBER = BUILDER
             .comment("Pattern modifier multipliers")
@@ -96,6 +100,7 @@ public class EAEConfig {
     public static int busSpeed;
     public static double infCellCost;
     public static double wirelessMaxRange;
+    public static double wirelessPowerMultiplier;
     public static List<ResourceLocation> tapeWhitelist;
     public static boolean disableInscriberRender;
     private static int oversizeMultiplier;
@@ -123,6 +128,7 @@ public class EAEConfig {
             busSpeed = EX_BUS_SPEED.get();
             infCellCost = INFINITY_CELL_ENERGY.get();
             wirelessMaxRange = WIRELESS_CONNECTOR_RANGE.get();
+            wirelessPowerMultiplier = WIRELESS_CONNECTOR_POWER_MULTIPLIER.get();
             tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::parse).collect(Collectors.toList());
             disableInscriberRender = INSCRIBER_RENDER.get();
             oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
