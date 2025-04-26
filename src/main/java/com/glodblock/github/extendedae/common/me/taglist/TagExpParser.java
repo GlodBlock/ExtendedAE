@@ -104,18 +104,20 @@ public final class TagExpParser {
     // --- Internal Implementation ---
 
     private static Predicate<Set<String>> compileInternal(String expression) {
-        try {
-            List<Token> tokens = tokenize(expression);
-            Queue<Token> rpn = convertToRPN(tokens);
-            // Return a lambda that captures the RPN queue and evaluates it.
-            return actualTags -> evaluateRPN(rpn, actualTags);
-        } catch (IllegalArgumentException e) {
-            // Log error or handle gracefully? For now, return a predicate that always fails.
-            if (EAEConfig.debugMode) {
-                ExtendedAE.LOGGER.error("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+        List<Token> tokens = tokenize(expression);
+        Queue<Token> rpn = convertToRPN(tokens);
+        // Return a lambda that captures the RPN queue and evaluates it.
+        return actualTags -> {
+            try {
+                return evaluateRPN(rpn, actualTags);
+            } catch (IllegalArgumentException e) {
+                // Log error or handle gracefully? For now, return a predicate that always fails.
+                if (EAEConfig.debugMode) {
+                    ExtendedAE.LOGGER.error("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+                }
+                return false; // Expression is invalid, so it matches nothing.
             }
-            return tags -> false; // Expression is invalid, so it matches nothing.
-        }
+        };
     }
 
     // --- Tokenizer ---
