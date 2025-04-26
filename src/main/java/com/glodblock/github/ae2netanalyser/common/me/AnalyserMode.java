@@ -22,8 +22,6 @@ public enum AnalyserMode implements StringRepresentable {
 
     public static final Codec<AnalyserMode> CODEC = StringRepresentable.fromEnum(AnalyserMode::values);
 
-    public static final StreamCodec<FriendlyByteBuf, AnalyserMode> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(AnalyserMode.class);
-
     @Override
     public @NotNull String getSerializedName() {
         return this.name();

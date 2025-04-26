@@ -38,6 +38,7 @@ public class AEARegistryHandler extends RegistryHandler {
         this.components.forEach(e -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, AEAnalyser.id(e.getLeft()), e.getRight()));
     }
 
+    @Override
     public void comp(String name, DataComponentType<?> component) {
         this.components.add(Pair.of(name, component));
     }

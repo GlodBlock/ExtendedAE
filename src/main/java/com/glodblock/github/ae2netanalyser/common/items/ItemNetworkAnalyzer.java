@@ -193,7 +193,6 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
 
     public record AnalyserConfig(AnalyserMode mode, float nodeSize, Map<Enum<?>, ColorData> colors) {
 
-
         public static final Codec<AnalyserConfig> CODEC = RecordCodecBuilder.create(
                 builder -> builder
                         .group(
