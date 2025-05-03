@@ -9,6 +9,7 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
+import com.gregtechceu.gtceu.api.capability.compat.EUToFEProvider;
 import com.gregtechceu.gtceu.api.capability.compat.FeCompat;
 import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
 import net.minecraft.core.Direction;
@@ -23,10 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import sonar.fluxnetworks.api.FluxCapabilities;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public final class EnergyHandler {
 
     private static final ArrayList<Pair<Capability<?>, Handler<?>>> HANDLERS = new ArrayList<>();
+    // Blacklist certain handler types.
+    private static final ArrayList<Predicate<Object>> FILTER = new ArrayList<>();
     private static final Handler<IEnergyStorage> DEFAULT = (accepter, side, storage, source) -> {
         var toAdd = accepter.receiveEnergy(AFUtil.clampLong(AFConfig.getFluxAccessorIO()), true);
         if (toAdd > 0) {
@@ -58,6 +62,7 @@ public final class EnergyHandler {
             });
         }
         if (ModList.get().isLoaded("gtceu")) {
+            FILTER.add(o -> o instanceof EUToFEProvider.GTEnergyWrapper);
             addHandler(GTCapability.CAPABILITY_ENERGY_CONTAINER, (accepter, side, storage, source) -> {
                 var toAddEU = accepter.getEnergyCanBeInserted();
                 var toAdd = Math.min(FeCompat.toFeLong(toAddEU, FeCompat.ratio(false)), AFConfig.getFluxAccessorIO());
@@ -88,11 +93,20 @@ public final class EnergyHandler {
         HANDLERS.add(new ImmutablePair<>(cap, handler));
     }
 
+    private static boolean passFilter(Object cap) {
+        for (var f : FILTER) {
+            if (f.test(cap)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> void send(BlockEntity te, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
         for (var entry : HANDLERS) {
             T cap = AFUtil.findCapability(te, side, (Capability<T>) entry.getLeft());
-            if (cap != null) {
+            if (cap != null && passFilter(cap)) {
                 ((Handler<T>) entry.getRight()).send(cap, side, storage, source);
                 return;
             }
