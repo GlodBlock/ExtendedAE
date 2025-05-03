@@ -59,22 +59,18 @@ public final class EnergyHandler {
         }
         if (ModList.get().isLoaded("gtceu")) {
             addHandler(GTCapability.CAPABILITY_ENERGY_CONTAINER, (accepter, side, storage, source) -> {
-                var toAddEU = Math.min(
-                        accepter.getEnergyCanBeInserted(),
-                        accepter.getInputVoltage() * accepter.getInputAmperage()
-                );
+                var toAddEU = accepter.getEnergyCanBeInserted();
                 var toAdd = Math.min(FeCompat.toFeLong(toAddEU, FeCompat.ratio(false)), AFConfig.getFluxAccessorIO());
                 if (toAdd > 0) {
                     var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
                     if (drained > 0) {
                         var drainedEU = FeCompat.toEu(drained, FeCompat.ratio(true));
                         var voltage = accepter.getInputVoltage();
-                        var amp = accepter.getInputAmperage();
+                        var amp = 1L;
                         if (drainedEU <= voltage) {
                             voltage = drainedEU;
-                            amp = 1;
                         } else {
-                            amp = drainedEU / voltage;
+                            amp = Math.min(drainedEU / voltage, accepter.getInputAmperage());
                         }
                         var actuallyDrainedEU = voltage * accepter.acceptEnergyFromNetwork(side, voltage, amp);
                         var actuallyDrained = FeCompat.toFeLong(actuallyDrainedEU, FeCompat.ratio(false));
