@@ -5,7 +5,6 @@ import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
 import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.hooks.CutterHook;
-import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
@@ -65,7 +64,6 @@ public class ExtendedAE {
     }
 
     public void onTagUpdate(TagsUpdatedEvent event) {
-        TagExpParser.reset();
         TagPriorityList.reset();
     }
 

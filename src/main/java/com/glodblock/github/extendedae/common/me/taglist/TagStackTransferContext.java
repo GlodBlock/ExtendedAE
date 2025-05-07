@@ -9,6 +9,8 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
+import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.config.EPPConfig;
 
 // clueless
 @SuppressWarnings({"UnstableApiUsage", "NonExtendableApiUsage"})
@@ -28,6 +30,10 @@ public class TagStackTransferContext implements StackTransferContext {
         this.filter = filter;
         this.initialOperations = operationsRemaining;
         this.operationsRemaining = operationsRemaining;
+        if (EPPConfig.debugMode) {
+            ExtendedAE.LOGGER.debug("Created TagStackTransferContext with filter: {}", filter.getClass().getSimpleName());
+            ExtendedAE.LOGGER.debug("Filter isEmpty: {}", filter.isEmpty());
+        }
     }
 
     @Override

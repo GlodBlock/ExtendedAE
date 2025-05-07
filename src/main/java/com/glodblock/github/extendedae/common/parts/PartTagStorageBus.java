@@ -8,7 +8,6 @@ import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.common.me.taglist.TagExpParser;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
@@ -83,7 +82,7 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
 
     protected IPartitionList createFilter() {
         if (this.filter == null) {
-            this.filter = new TagPriorityList(TagExpParser.getMatchingOre(this.oreExpWhite), TagExpParser.getMatchingOre(this.oreExpBlack), this.oreExpWhite, this.oreExpBlack);
+            this.filter = new TagPriorityList(this.oreExpWhite, this.oreExpBlack);
         }
         return this.filter;
     }

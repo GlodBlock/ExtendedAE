@@ -4,38 +4,51 @@ import appeng.api.stacks.AEKey;
 import appeng.util.prioritylist.IPartitionList;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
-import net.minecraft.core.Holder;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Predicate;
 
 public class TagPriorityList implements IPartitionList {
 
     private static final Map<TagPriorityList, Runnable> INVALIDATOR = new WeakHashMap<>();
-    private Set<TagKey<?>> whiteSet;
-    private Set<TagKey<?>> blackSet;
-    private final String tagExpWhite;
-    private final String tagExpBlack;
-    // Cache isn't fast enough here, so I have to use map here.
+    // Store raw expressions for isEmpty check and potentially for debugging/recompiling.
+    private final String rawWhiteListExpression;
+    private final String rawBlackListExpression;
+
+    // Compiled predicates for efficient evaluation.
+    private final Predicate<Set<String>> whiteListPredicate;
+    private final Predicate<Set<String>> blackListPredicate;
+
+    private final boolean isWhitelistActive;
+
+    // Cache results per AEKey instance for performance.
+    // Using AEKey directly handles potential variations within the same item/fluid primary key.
     private final Reference2BooleanMap<Object> memory = new Reference2BooleanOpenHashMap<>();
 
-    public TagPriorityList(Set<TagKey<?>> whiteKeys, Set<TagKey<?>> blackKeys, String tagExpWhite, String tagExpBlack) {
-        this.whiteSet = whiteKeys;
-        this.blackSet = blackKeys;
-        this.tagExpWhite = tagExpWhite;
-        this.tagExpBlack = tagExpBlack;
-        INVALIDATOR.put(this, () -> {
-            this.whiteSet = TagExpParser.getMatchingOre(this.tagExpWhite);
-            this.blackSet = TagExpParser.getMatchingOre(this.tagExpBlack);
-            this.memory.clear();
-        });
+    /**
+     * Creates a tag-based partition list using complex filter expressions.
+     *
+     * @param whiteListExpression The expression for the whitelist (e.g., "forge:ingots & !forge:ingots/iron").
+     *                            If empty or null, the whitelist is inactive.
+     * @param blackListExpression The expression for the blacklist (e.g., "minecraft:logs | minecraft:planks").
+     */
+    public TagPriorityList(String whiteListExpression, String blackListExpression) {
+        this.rawWhiteListExpression = whiteListExpression != null ? whiteListExpression : "";
+        this.rawBlackListExpression = blackListExpression != null ? blackListExpression : "";
+
+        // Compile the expressions using the new parser.
+        this.whiteListPredicate = TagExpParser.compile(this.rawWhiteListExpression);
+        this.blackListPredicate = TagExpParser.compile(this.rawBlackListExpression);
+
+        // Determine if the whitelist should be actively checked.
+        // An empty/whitespace-only expression means the whitelist doesn't restrict anything.
+        this.isWhitelistActive = !this.rawWhiteListExpression.isBlank();
+
+        INVALIDATOR.put(this, this.memory::clear);
     }
 
     public static void reset() {
@@ -46,40 +59,47 @@ public class TagPriorityList implements IPartitionList {
 
     @Override
     public boolean isListed(AEKey input) {
-        Object key = input.getPrimaryKey();
-        return this.memory.computeIfAbsent(key, this::eval);
+        // empty filter pass all inputs
+        if (this.isEmpty()) {
+            return true;
+        }
+        // computeIfAbsent ensures eval is called only once per key.
+        return this.memory.computeIfAbsent(input.getPrimaryKey(), this::eval);
     }
 
     @Override
     public boolean isEmpty() {
-        return this.tagExpBlack.isEmpty() && this.tagExpWhite.isEmpty();
+        // The filter is considered empty if neither a whitelist nor a blacklist expression is provided.
+        return rawWhiteListExpression.isBlank() && rawBlackListExpression.isBlank();
     }
 
     @Override
     public Iterable<AEKey> getItems() {
+        // This partition list dynamically evaluates tags, it doesn't hold a predefined list of items.
         return List.of();
     }
 
-    private boolean eval(@NotNull Object obj) {
-        Holder<?> refer = null;
-        if (obj instanceof Item item) {
-            refer = ForgeRegistries.ITEMS.getHolder(item).orElse(null);
-        } else if (obj instanceof Fluid fluid) {
-            refer = ForgeRegistries.FLUIDS.getHolder(fluid).orElse(null);
+    /**
+     * Evaluates if the given Primary Key matches the filter rules (whitelist/blacklist).
+     * This method is called by the caching mechanism in `isListed`.
+     *
+     * @param input The Primary Key (Item or Fluid key) to evaluate.
+     * @return True if the key passes the filter rules, false otherwise.
+     */
+    private boolean eval(@NotNull Object input) {
+        // Evaluate both predicates against the key's tags.
+        // TagExpParser.evaluate handles getting the tags from the key.
+        final boolean whiteMatches = TagExpParser.evaluate(this.whiteListPredicate, input);
+        final boolean blackMatches = TagExpParser.evaluate(this.blackListPredicate, input);
+
+        // Apply standard filter logic:
+        // - If whitelist is active, must match whitelist AND NOT match blacklist.
+        // - If whitelist is inactive, must NOT match blacklist.
+        if (this.isWhitelistActive) {
+            return whiteMatches && !blackMatches;
+        } else {
+            return !blackMatches;
         }
-        if (refer != null) {
-            if (whiteSet.isEmpty()) {
-                return false;
-            }
-            boolean pass = refer.tags().anyMatch(whiteSet::contains);
-            if (pass) {
-                if (!blackSet.isEmpty()) {
-                    return refer.tags().noneMatch(blackSet::contains);
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
 }

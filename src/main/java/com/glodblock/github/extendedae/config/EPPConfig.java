@@ -75,6 +75,10 @@ public class EPPConfig {
             .comment("The max size of Assembler Matrix")
             .defineInRange("device.assembler_matrix_max_size", 6, 3, 16);
 
+    private static final ForgeConfigSpec.BooleanValue DEBUG_MODE = BUILDER
+            .comment("Enable debug logging.")
+            .define("misc.debug_mode", false);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     private static boolean checkRL(Object o) {
@@ -91,6 +95,7 @@ public class EPPConfig {
     private static int oversizeMultiplier;
     private static Map<ResourceLocation, Integer> customOversizeMultiplier;
     public static int assemblerMatrixSize;
+    public static boolean debugMode;
 
     public static int getOversizeMultiplier(AEKey key) {
         return customOversizeMultiplier.getOrDefault(key.getType().getId(), oversizeMultiplier);
@@ -121,6 +126,7 @@ public class EPPConfig {
                 .filter(Objects::nonNull)
                 .forEach(p -> customOversizeMultiplier.put(p.getKey(), p.getValue()));
         assemblerMatrixSize = ASSEMBLER_MATRIX_SIZE.get();
+        debugMode = DEBUG_MODE.get();
     }
 
     private static Pair<ResourceLocation, Integer> parseOversizeMultiplier(String s) {
