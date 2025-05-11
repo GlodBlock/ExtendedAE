@@ -24,6 +24,7 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,13 +34,14 @@ public class DisplayServerLevel extends Level implements ServerLevelAccessor {
 
     private final Level delegate;
 
-    public static DisplayServerLevel create(Level world) {
+    public static DisplayServerLevel create(@NotNull Level world) {
         return new DisplayServerLevel(world);
     }
 
     @Override
     public boolean isClientSide() {
-        return delegate.isClientSide();
+        // because fuck forge
+        return true;
     }
 
     @Override
@@ -156,7 +158,7 @@ public class DisplayServerLevel extends Level implements ServerLevelAccessor {
                 world.registryAccess(),
                 world.dimensionTypeRegistration(),
                 world.getProfilerSupplier(),
-                false,
+                true,
                 world.isDebug(),
                 0,
                 10000
