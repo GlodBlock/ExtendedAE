@@ -13,7 +13,8 @@
     "MixinPatternProviderMenu"
   ],
   "client": [
-    "MixinPatternProviderScreen"
+    "MixinPatternProviderScreen",
+    "MixinScreenStyle"
   ],
   "server": []
 }

@@ -3,11 +3,17 @@ package com.glodblock.github.appflux.mixins;
 import appeng.api.upgrades.Upgrades;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.implementations.PatternProviderScreen;
+import appeng.client.gui.layout.SlotGridLayout;
+import appeng.client.gui.style.Blitter;
 import appeng.client.gui.style.ScreenStyle;
+import appeng.client.gui.style.SlotPosition;
+import appeng.client.gui.style.WidgetStyle;
+import appeng.client.gui.widgets.ToolboxPanel;
 import appeng.client.gui.widgets.UpgradesPanel;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.PatternProviderMenu;
+import com.glodblock.github.appflux.util.helpers.IStyleAccessor;
 import com.glodblock.github.appflux.util.helpers.IUpgradableMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,6 +36,21 @@ public abstract class MixinPatternProviderScreen<C extends PatternProviderMenu> 
     )
     private void initUpgrade(PatternProviderMenu menu, Inventory playerInventory, Component title, ScreenStyle style, CallbackInfo ci) {
         this.widgets.add("upgrades", new UpgradesPanel(menu.getSlots(SlotSemantics.UPGRADE), this::af_$getCompatibleUpgrades));
+        var sp = new SlotPosition();
+        sp.setBottom(84);
+        sp.setRight(1);
+        sp.setGrid(SlotGridLayout.BREAK_AFTER_3COLS);
+        var ws = new WidgetStyle();
+        ws.setRight(2);
+        ws.setBottom(90);
+        ws.setWidth(59);
+        ws.setHeight(66);
+        style.getSlots().put("TOOLBOX", sp);
+        ((IStyleAccessor) style).getImages().put("toolbox", Blitter.texture("guis/extra_panels.png", 128, 128).src(69, 62, 59, 66));
+        ((IStyleAccessor) style).getWidgets().put("toolbox", ws);
+        if (((IUpgradableMenu) menu).getToolbox().isPresent()) {
+            this.widgets.add("toolbox", new ToolboxPanel(style, ((IUpgradableMenu) menu).getToolbox().getName()));
+        }
     }
 
     @Unique
