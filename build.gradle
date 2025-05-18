@@ -116,6 +116,7 @@ dependencies {
     compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.0-build.171"
     compileOnly "curse.maven:framedblocks-441647:6127891"
     compileOnly "curse.maven:advancedae-1084104:6225993"
+    compileOnly "curse.maven:functional-storage-556861:6467726"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5614830"
     runtimeOnly "de.mari_023:ae2wtlib:19.2.1"

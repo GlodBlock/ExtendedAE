@@ -6,6 +6,7 @@
   "mixins": [
     "MixinAbstractLevelEmitterPart",
     "MixinAEBasePart",
+    "MixinEnderSavedData",
     "MixinPatternAccessTermMenu"
   ],
   "client": [
