@@ -9,9 +9,12 @@ import appeng.helpers.InterfaceLogic;
 import appeng.helpers.InterfaceLogicHost;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -21,8 +24,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @Mixin(value = InterfaceLogic.class, remap = false)
 public abstract class MixinInterfaceLogic implements IEnergyDistributor {
+
+    @Unique
+    private List<Direction> af_$sides = List.of();
+    @Unique
+    private EnergyDistributeService af_$service = null;
 
     @Final
     @Mutable
@@ -56,17 +66,15 @@ public abstract class MixinInterfaceLogic implements IEnergyDistributor {
     @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public void distribute() {
-        if (this.upgrades.isInstalled(AFItemAndBlock.INDUCTION_CARD)) {
-            var storage = this.af_getStorage();
-            var gird = this.mainNode.getGrid();
-            var self = this.host.getBlockEntity();
-            if (storage != null && self.getLevel() != null) {
-                for (var d : AFUtil.getSides(this.host)) {
-                    var te = self.getLevel().getBlockEntity(self.getBlockPos().offset(d.getNormal()));
-                    var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-                    if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                        EnergyHandler.send(te, d.getOpposite(), storage, this.actionSource);
-                    }
+        var storage = this.af_getStorage();
+        var gird = this.mainNode.getGrid();
+        var self = this.host.getBlockEntity();
+        if (storage != null && self.getLevel() != null) {
+            for (var d : this.af_$sides) {
+                var te = self.getLevel().getBlockEntity(self.getBlockPos().offset(d.getNormal()));
+                var thatGrid = AFUtil.getGrid(te, d.getOpposite());
+                if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                    EnergyHandler.send(te, d.getOpposite(), storage, this.actionSource);
                 }
             }
         }
@@ -78,6 +86,42 @@ public abstract class MixinInterfaceLogic implements IEnergyDistributor {
             return this.mainNode.getGrid().getStorageService();
         }
         return null;
+    }
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public boolean isActive() {
+        return this.mainNode.isActive();
+    }
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        this.af_$service = service;
+        this.af_$updateSleep();
+        if (service != null) {
+            this.af_$sides = AFUtil.getSides(this.host);
+        }
+    }
+
+    @Unique
+    public void af_$updateSleep() {
+        if (this.af_$service != null) {
+            if (this.upgrades.isInstalled(AFItemAndBlock.INDUCTION_CARD)) {
+                this.af_$service.wake(this);
+            } else {
+                this.af_$service.sleep(this);
+            }
+        }
+    }
+
+    @Inject(
+            method = "onUpgradesChanged",
+            at = @At("TAIL"),
+            remap = false
+    )
+    private void notifyUpgrade(CallbackInfo ci) {
+        this.af_$updateSleep();
     }
 
 }

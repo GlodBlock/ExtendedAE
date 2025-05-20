@@ -13,6 +13,7 @@ import appeng.parts.PartModel;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.Nullable;
 
 public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
@@ -104,6 +106,18 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
             if (storage != null && d != null && this.getLevel() != null && gird != null) {
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
+        }
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.getMainNode().isActive();
+    }
+
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        if (service != null) {
+            service.wake(this);
         }
     }
 

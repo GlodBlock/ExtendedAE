@@ -17,8 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
 
 public class AFUtil {
 
@@ -75,16 +74,16 @@ public class AFUtil {
         return true;
     }
 
-    public static Set<Direction> getSides(Object host) {
+    public static List<Direction> getSides(Object host) {
         if (host instanceof BlockEntity) {
-            return EnumSet.allOf(Direction.class);
+            return Constants.ALL_DIRECTIONS_LIST;
         } else if (host instanceof AEBasePart part) {
             if (part.getSide() == null) {
-                return EnumSet.noneOf(Direction.class);
+                return List.of();
             }
-            return EnumSet.of(part.getSide());
+            return List.of(part.getSide());
         } else {
-            return EnumSet.noneOf(Direction.class);
+            return List.of();
         }
     }
 

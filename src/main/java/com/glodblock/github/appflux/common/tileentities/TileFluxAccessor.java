@@ -8,9 +8,11 @@ import appeng.blockentity.grid.AENetworkBlockEntity;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.me.energy.CapAdaptor;
 import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
+import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
+import com.glodblock.github.appflux.util.Constants;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -68,7 +70,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
         var storage = this.getStorage();
         var gird = AFUtil.getGrid(this, null);
         if (storage != null && this.level != null) {
-            for (var d : Direction.values()) {
+            for (var d : Constants.ALL_DIRECTIONS_LIST) {
                 var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
                 var thatGrid = AFUtil.getGrid(te, d.getOpposite());
                 if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
@@ -86,6 +88,18 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
             if (storage != null && gird != null) {
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
+        }
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.getMainNode().isActive();
+    }
+
+    @Override
+    public void setServiceHost(@Nullable EnergyDistributeService service) {
+        if (service != null) {
+            service.wake(this);
         }
     }
 
