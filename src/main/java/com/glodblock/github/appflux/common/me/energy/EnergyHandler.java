@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import sonar.fluxnetworks.api.FluxCapabilities;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public final class EnergyHandler {
@@ -117,6 +118,21 @@ public final class EnergyHandler {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> SendAction getHandler(BlockEntity te, Direction side) {
+        for (var entry : HANDLERS) {
+            T cap = AFUtil.findCapability(te, side, (Capability<T>) entry.getLeft());
+            if (cap != null && passFilter(cap)) {
+                return (service, source) -> ((Handler<T>) entry.getRight()).send(cap, side, service, source);
+            }
+        }
+        var cap = AFUtil.findCapability(te, side, ForgeCapabilities.ENERGY);
+        if (cap != null) {
+            return (service, source) -> DEFAULT.send(cap, side, service, source);
+        }
+        return SendAction.NOOP;
+    }
+
     public static void chargeNetwork(@NotNull IEnergyService energy,  @NotNull IStorageService storage, @NotNull IActionSource source) {
         var toAdd = Math.floor(Integer.MAX_VALUE - energy.injectPower(Integer.MAX_VALUE, Actionable.SIMULATE));
         var toDrain = storage.getInventory().extract(FluxKey.of(EnergyType.FE), (long) PowerUnits.AE.convertTo(PowerUnits.FE, toAdd), Actionable.MODULATE, source);
@@ -126,6 +142,14 @@ public final class EnergyHandler {
     public interface Handler<T> {
 
         void send(@NotNull T cap, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source);
+
+    }
+
+    public interface SendAction {
+
+        SendAction NOOP = (a, b) -> {};
+
+        void send(@NotNull IStorageService storage, @NotNull IActionSource source);
 
     }
 

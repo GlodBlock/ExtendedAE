@@ -11,12 +11,14 @@ import appeng.parts.AEBasePart;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class AFUtil {
@@ -85,6 +87,19 @@ public class AFUtil {
         } else {
             return List.of();
         }
+    }
+
+    public static Direction getBlockDirection(@Nonnull BlockPos base, @Nonnull BlockPos target) {
+        if (!base.equals(target)) {
+            var test = new BlockPos.MutableBlockPos();
+            for (var dir : Constants.ALL_DIRECTIONS_LIST) {
+                test.set(base);
+                if (test.move(dir).equals(target)) {
+                    return dir;
+                }
+            }
+        }
+        return null;
     }
 
 }

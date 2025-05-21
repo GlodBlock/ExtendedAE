@@ -26,11 +26,16 @@ import org.jetbrains.annotations.Nullable;
 public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDistributor {
 
     private CompoundTag extraData = new CompoundTag();
+    private final EnergyHandler.SendAction[] actions = new EnergyHandler.SendAction[6];
 
     public TileFluxAccessor(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileFluxAccessor.class, TileFluxAccessor::new, AFItemAndBlock.FLUX_ACCESSOR), pos, blockState);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
+    }
+
+    public void invalidateAction(Direction side) {
+        this.actions[side.get3DDataValue()] = null;
     }
 
     @Override
@@ -71,11 +76,16 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
         var gird = AFUtil.getGrid(this, null);
         if (storage != null && this.level != null) {
             for (var d : Constants.ALL_DIRECTIONS_LIST) {
-                var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
-                var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-                if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                    EnergyHandler.send(te, d.getOpposite(), storage, this.getSource());
+                if (this.actions[d.get3DDataValue()] == null) {
+                    var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
+                    var thatGrid = AFUtil.getGrid(te, d.getOpposite());
+                    if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                        this.actions[d.get3DDataValue()] = EnergyHandler.getHandler(te, d.getOpposite());
+                    } else {
+                        this.actions[d.get3DDataValue()] = EnergyHandler.SendAction.NOOP;
+                    }
                 }
+                this.actions[d.get3DDataValue()].send(storage, this.getSource());
             }
         }
     }

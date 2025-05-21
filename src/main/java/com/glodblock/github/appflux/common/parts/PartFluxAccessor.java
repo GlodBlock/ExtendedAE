@@ -17,8 +17,10 @@ import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.AFUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
@@ -28,11 +30,20 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     public static final ResourceLocation RL = AppFlux.id("part/flux_accessor");
     public static final IPartModel MODEL = new PartModel(RL);
     private CompoundTag extraData = new CompoundTag();
+    private EnergyHandler.SendAction action = null;
 
     public PartFluxAccessor(IPartItem<?> partItem) {
         super(partItem);
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL);
         this.getMainNode().setIdlePowerUsage(1.0).addService(IEnergyDistributor.class, this);
+    }
+
+    @Override
+    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+        var d = AFUtil.getBlockDirection(pos, neighbor);
+        if (d == this.getSide()) {
+            this.action = null;
+        }
     }
 
     @Override
@@ -89,11 +100,16 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         var d = this.getSide();
         var gird = this.getGridNode() == null ? null : this.getGridNode().getGrid();
         if (storage != null && d != null && this.getLevel() != null) {
-            var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
-            var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-            if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                EnergyHandler.send(te, d.getOpposite(), storage, this.getSource());
+            if (this.action == null) {
+                var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
+                var thatGrid = AFUtil.getGrid(te, d.getOpposite());
+                if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                    this.action = EnergyHandler.getHandler(te, d.getOpposite());
+                } else {
+                    this.action = EnergyHandler.SendAction.NOOP;
+                }
             }
+            this.action.send(storage, this.getSource());
         }
     }
 
