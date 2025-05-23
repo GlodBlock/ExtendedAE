@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae;
 
 import com.glodblock.github.extendedae.client.ClientRegistryHandler;
+import com.glodblock.github.extendedae.client.hooks.TagHook;
 import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
 import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.common.EAESingletons;
@@ -89,6 +90,7 @@ public class ExtendedAE {
 
     public void clientSetup(FMLClientSetupEvent event) {
         PatternHotKey.onInit();
+        TagHook.onInit();
         CutterHook.addTooltip();
     }
 
