@@ -55,6 +55,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -98,6 +99,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     @Override
     protected InternalInventory getExposedInventoryForSide(Direction facing) {
         return this.invExposed;
+    }
+
+    @Override
+    public IItemHandler getExposedItemHandler(@Nullable Direction side) {
+        return this.invExposed.toItemHandler();
     }
 
     private void onConfigChanged(IConfigManager manager, Setting<?> setting) {

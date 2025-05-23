@@ -50,6 +50,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -90,6 +91,11 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     @Override
     protected InternalInventory getExposedInventoryForSide(Direction facing) {
         return this.invExposed;
+    }
+
+    @Override
+    public IItemHandler getExposedItemHandler(@Nullable Direction side) {
+        return this.invExposed.toItemHandler();
     }
 
     @Override
