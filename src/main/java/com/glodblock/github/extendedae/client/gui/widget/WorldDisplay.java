@@ -78,18 +78,22 @@ public class WorldDisplay extends AbstractWidget {
         var settings = new StructurePlaceSettings();
         var random = new SingleThreadedRandomSource(0L);
         settings.setIgnoreEntities(true);
-        if (this.hideNeighbor) {
-            tmp.fillFromWorld(clientWorld, blockPos, new Vec3i(1, 1, 1), false, Blocks.AIR);
-            tmp.placeInWorld(wrap, new BlockPos(1, 1, 1), BlockPos.ZERO, settings, random, 0);
-        } else {
-            tmp.fillFromWorld(clientWorld, blockPos.offset(-1, 0, 0), sizeX, false, Blocks.AIR);
-            tmp.placeInWorld(wrap, startX, BlockPos.ZERO, settings, random, 0);
-            tmp = new StructureTemplate();
-            tmp.fillFromWorld(clientWorld, blockPos.offset(0, -1, 0), sizeY, false, Blocks.AIR);
-            tmp.placeInWorld(wrap, startY, BlockPos.ZERO, settings, random, 0);
-            tmp = new StructureTemplate();
-            tmp.fillFromWorld(clientWorld, blockPos.offset(0, 0, -1), sizeZ, false, Blocks.AIR);
-            tmp.placeInWorld(wrap, startZ, BlockPos.ZERO, settings, random, 0);
+        try {
+            if (this.hideNeighbor) {
+                tmp.fillFromWorld(clientWorld, blockPos, new Vec3i(1, 1, 1), false, Blocks.AIR);
+                tmp.placeInWorld(wrap, new BlockPos(1, 1, 1), BlockPos.ZERO, settings, random, 0);
+            } else {
+                tmp.fillFromWorld(clientWorld, blockPos.offset(-1, 0, 0), sizeX, false, Blocks.AIR);
+                tmp.placeInWorld(wrap, startX, BlockPos.ZERO, settings, random, 0);
+                tmp = new StructureTemplate();
+                tmp.fillFromWorld(clientWorld, blockPos.offset(0, -1, 0), sizeY, false, Blocks.AIR);
+                tmp.placeInWorld(wrap, startY, BlockPos.ZERO, settings, random, 0);
+                tmp = new StructureTemplate();
+                tmp.fillFromWorld(clientWorld, blockPos.offset(0, 0, -1), sizeZ, false, Blocks.AIR);
+                tmp.placeInWorld(wrap, startZ, BlockPos.ZERO, settings, random, 0);
+            }
+        } catch (Throwable ignored) {
+            this.scene = new GuidebookScene(new GuidebookLevel(), new CameraSettings());
         }
         this.scene.getCameraSettings().setRotationCenter(this.scene.getWorldCenter());
         this.scene.getCameraSettings().setZoom(this.zoom);

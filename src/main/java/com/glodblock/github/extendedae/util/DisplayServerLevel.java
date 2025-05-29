@@ -224,8 +224,9 @@ public class DisplayServerLevel extends Level implements ServerLevelAccessor {
     }
 
     @Override
-    public @NotNull ServerLevel getLevel() {
-        throw new UnsupportedOperationException();
+    public ServerLevel getLevel() {
+        // No way
+        return null;
     }
 
     @Override
