@@ -11,6 +11,7 @@ import appeng.parts.AEBasePart;
 import com.glodblock.github.appflux.common.AFItemAndBlock;
 import com.glodblock.github.appflux.common.parts.PartFluxAccessor;
 import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import com.glodblock.github.appflux.util.helpers.INeighborListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -100,6 +101,13 @@ public class AFUtil {
             }
         }
         return null;
+    }
+
+    public static void notifyNeighbor(INeighborListener listener, BlockPos pos, BlockPos neighbor) {
+        Direction dir = AFUtil.getBlockDirection(pos, neighbor);
+        if (dir != null) {
+            listener.onChange(dir);
+        }
     }
 
 }

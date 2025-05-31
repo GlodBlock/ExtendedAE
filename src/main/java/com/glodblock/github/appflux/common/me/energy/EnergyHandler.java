@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import sonar.fluxnetworks.api.FluxCapabilities;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public final class EnergyHandler {
@@ -101,21 +100,6 @@ public final class EnergyHandler {
             }
         }
         return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> void send(BlockEntity te, Direction side, @NotNull IStorageService storage, @NotNull IActionSource source) {
-        for (var entry : HANDLERS) {
-            T cap = AFUtil.findCapability(te, side, (Capability<T>) entry.getLeft());
-            if (cap != null && passFilter(cap)) {
-                ((Handler<T>) entry.getRight()).send(cap, side, storage, source);
-                return;
-            }
-        }
-        var cap = AFUtil.findCapability(te, side, ForgeCapabilities.ENERGY);
-        if (cap != null) {
-            DEFAULT.send(cap, side, storage, source);
-        }
     }
 
     @SuppressWarnings("unchecked")

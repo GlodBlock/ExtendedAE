@@ -7,10 +7,18 @@
   "mixins": [
     "MixinChargerBlockEntity",
     "MixinCreativeEnergyCellBlockEntity",
+    "MixinInterfaceBlock",
     "MixinInterfaceLogic",
+    "MixinInterfacePart",
+    "MixinPatternProviderBlock",
     "MixinPatternProviderLogic",
     "MixinPatternProviderLogicHost",
-    "MixinPatternProviderMenu"
+    "MixinPatternProviderMenu",
+    "MixinPatternProviderPart",
+    "extendedae.MixinBlockExInterface",
+    "extendedae.MixinBlockExPatternProvider",
+    "extendedae.MixinPartExInterface",
+    "extendedae.MixinPartExPatternProvider"
   ],
   "client": [
     "MixinPatternProviderScreen"

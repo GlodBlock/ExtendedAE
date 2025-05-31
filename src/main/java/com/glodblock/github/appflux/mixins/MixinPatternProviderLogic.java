@@ -13,6 +13,7 @@ import com.glodblock.github.appflux.common.me.energy.EnergyHandler;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.util.AFUtil;
+import com.glodblock.github.appflux.util.helpers.INeighborListener;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(value = PatternProviderLogic.class, remap = false)
-public abstract class MixinPatternProviderLogic implements IUpgradeableObject, IEnergyDistributor {
+public abstract class MixinPatternProviderLogic implements IUpgradeableObject, IEnergyDistributor, INeighborListener {
 
     @Unique
     private IUpgradeInventory af_$upgrades = UpgradeInventories.empty();
@@ -36,6 +37,8 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
     private List<Direction> af_$sides = List.of();
     @Unique
     private EnergyDistributeService af_$service = null;
+    @Unique
+    private final EnergyHandler.SendAction[] af_$actions = new EnergyHandler.SendAction[6];
     @Final
     @Shadow
     private PatternProviderLogicHost host;
@@ -112,11 +115,16 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
         var self = this.host.getBlockEntity();
         if (storage != null && self.getLevel() != null) {
             for (var d : this.af_$sides) {
-                var te = self.getLevel().getBlockEntity(self.getBlockPos().offset(d.getNormal()));
-                var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-                if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
-                    EnergyHandler.send(te, d.getOpposite(), storage, this.actionSource);
+                if (this.af_$actions[d.get3DDataValue()] == null) {
+                    var te = self.getLevel().getBlockEntity(self.getBlockPos().offset(d.getNormal()));
+                    var thatGrid = AFUtil.getGrid(te, d.getOpposite());
+                    if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                        this.af_$actions[d.get3DDataValue()] = EnergyHandler.getHandler(te, d.getOpposite());
+                    } else {
+                        this.af_$actions[d.get3DDataValue()] = EnergyHandler.SendAction.NOOP;
+                    }
                 }
+                this.af_$actions[d.get3DDataValue()].send(storage, this.actionSource);
             }
         }
     }
@@ -143,6 +151,12 @@ public abstract class MixinPatternProviderLogic implements IUpgradeableObject, I
         if (service != null) {
             this.af_$sides = AFUtil.getSides(this.host);
         }
+    }
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public void onChange(Direction side) {
+        this.af_$actions[side.get3DDataValue()] = null;
     }
 
     @Unique
