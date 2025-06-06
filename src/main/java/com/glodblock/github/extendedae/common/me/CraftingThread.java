@@ -24,6 +24,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class CraftingThread {
     private final CraftingContainer craftingInv;
     private Direction pushDirection = null;
     private ItemStack myPattern = ItemStack.EMPTY;
-    private IMolecularAssemblerSupportedPattern myPlan = null;
+    protected IMolecularAssemblerSupportedPattern myPlan = null;
     private double progress = 0;
     private boolean isAwake = false;
     protected boolean forcePlan = false;
@@ -172,7 +173,7 @@ public class CraftingThread {
             var positionedInput = this.craftingInv.asPositionedCraftInput();
             var craftinginput = positionedInput.input();
             this.progress = 0;
-            this.output = this.myPlan.assemble(craftinginput, this.host.getLevel());
+            this.output = this.assemblePattern(craftinginput);
             if (!this.output.isEmpty() && this.host.getLevel() != null) {
                 output.onCraftedBySystem(this.host.getLevel());
 
@@ -224,6 +225,10 @@ public class CraftingThread {
         this.isAwake = true;
     }
 
+    protected ItemStack assemblePattern(CraftingInput input) {
+        return this.myPlan.assemble(input, this.host.getLevel());
+    }
+
     public void recalculatePlan() {
         this.reboot = true;
         if (this.forcePlan) {
@@ -268,7 +273,7 @@ public class CraftingThread {
         }
     }
 
-    private void ejectHeldItems() {
+    protected void ejectHeldItems() {
         if (this.gridInv.getStackInSlot(9).isEmpty()) {
             for (int x = 0; x < 9; x++) {
                 final ItemStack is = this.gridInv.getStackInSlot(x);
@@ -348,7 +353,7 @@ public class CraftingThread {
         }
     }
 
-    private boolean hasMats() {
+    protected boolean hasMats() {
         if (this.myPlan == null) {
             return false;
         }

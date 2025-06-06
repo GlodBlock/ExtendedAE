@@ -6,7 +6,10 @@ import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.stacks.AEItemKey;
 import appeng.blockentity.AEBaseBlockEntity;
+import appeng.crafting.pattern.AECraftingPattern;
+import com.glodblock.github.extendedae.util.Ae2Reflect;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -23,12 +26,48 @@ public class CraftingMatrixThread extends CraftingThread {
     }
 
     @Override
+    protected boolean hasMats() {
+        if (this.myPlan == null) {
+            return false;
+        }
+        return !this.gridInv.isEmpty();
+    }
+
+    @Override
+    protected void ejectHeldItems() {
+        if (this.gridInv.getStackInSlot(9).isEmpty()) {
+            for (int x = 0; x < 9; x++) {
+                final ItemStack is = this.gridInv.getStackInSlot(x);
+                if (!is.isEmpty()) {
+                    this.gridInv.setItemDirect(9, is);
+                    this.gridInv.setItemDirect(x, ItemStack.EMPTY);
+                    this.saveChanges();
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
     public TickRateModulation tick(int cards, int ticksSinceLastCall) {
         if (this.blockCoolDown > 0) {
             this.blockCoolDown -= ticksSinceLastCall;
             return TickRateModulation.SLOWER;
         } else {
             return super.tick(cards, ticksSinceLastCall);
+        }
+    }
+
+    @Override
+    protected ItemStack assemblePattern(CraftingInput input) {
+        if (this.myPlan instanceof AECraftingPattern crafting) {
+            var recipe = Ae2Reflect.getCraftRecipe(crafting).value();
+            if (crafting.canSubstitute && recipe.isSpecial()) {
+                return super.assemblePattern(input);
+            }
+            return Ae2Reflect.getCraftRecipeResult(crafting);
+        } else {
+            return super.assemblePattern(input);
         }
     }
 
