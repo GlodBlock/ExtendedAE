@@ -32,14 +32,16 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     public static final int MAX_THREAD = 8;
     private final CraftingThread[] threads = new CraftingThread[MAX_THREAD];
     private final InternalInventory internalInv;
+    private short states = 0b000000;
 
     public TileAssemblerMatrixCrafter(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new, EAESingletons.ASSEMBLER_MATRIX_CRAFTER), pos, blockState);
         this.getMainNode().addService(IGridTickable.class, this);
         var invs = new InternalInventory[MAX_THREAD];
         for (int x = 0; x < MAX_THREAD; x ++) {
-            this.threads[x] = new CraftingMatrixThread(this, this::getSrc);
-            invs[x] = this.threads[x].getInternalInventory();
+            final int index = x;
+            this.threads[index] = new CraftingMatrixThread(this, this::getSrc, signal -> this.changeState(index, signal));
+            invs[index] = this.threads[index].getInternalInventory();
         }
         this.internalInv = new CombinedInternalInventory(invs);
     }
@@ -48,10 +50,30 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         return this.cluster.getSrc();
     }
 
+    private void changeState(int index, boolean state) {
+        boolean oldState = this.states > 0;
+        if (state) {
+            this.states |= (1 << index);
+        } else {
+            this.states &= ~(1 << index);
+        }
+        if (state) {
+            if (!oldState) {
+                this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
+            }
+        } else {
+            if (oldState && this.states <= 0) {
+                this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().sleepDevice(node));
+            }
+        }
+    }
+
     public int usedThread() {
         int cnt = 0;
         for (var t : this.threads) {
-            if (!t.getInternalInventory().isEmpty()) {
+            if (t.getCurrentPattern() != null) {
+                cnt ++;
+            } else if (!t.getInternalInventory().isEmpty()) {
                 cnt ++;
             }
         }
@@ -117,11 +139,6 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
             t.updateSleepiness();
             isAwake |= t.isAwake();
         }
-        if (isAwake) {
-            for (var t : this.threads) {
-                t.forceAwake();
-            }
-        }
         return new TickingRequest(1, 1, !isAwake);
     }
 
@@ -151,6 +168,12 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
                 break;
             }
         }
+        this.saveChanges();
+    }
+
+    @Override
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
+        this.saveChangedInventory(inv);
     }
 
     @Override

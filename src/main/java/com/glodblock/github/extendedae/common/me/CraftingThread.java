@@ -21,6 +21,7 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +29,8 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class CraftingThread {
 
@@ -45,8 +48,9 @@ public class CraftingThread {
     protected boolean forcePlan = false;
     private boolean reboot = true;
     private ItemStack output = ItemStack.EMPTY;
+    private final SignalAccepter accepter;
 
-    public CraftingThread(@NotNull AEBaseBlockEntity host) {
+    public CraftingThread(@NotNull AEBaseBlockEntity host, SignalAccepter accepter) {
         if (!(host instanceof InternalInventoryHost)) {
             throw new IllegalArgumentException("Host isn't InternalInventoryHost.");
         }
@@ -57,7 +61,8 @@ public class CraftingThread {
         this.girdHost = (IGridConnectedBlockEntity) host;
         this.gridInv = new AppEngInternalInventory((InternalInventoryHost) this.host, 10, 1);
         this.gridInvExt = new FilteredInternalInventory(this.gridInv, new CraftingGridFilter());
-        this.craftingInv = new TransientCraftingContainer(new AutoCraftingMenu(), 3, 3);
+        this.craftingInv = new TransientCraftingContainer(new DummyMenu(), 3, 3);
+        this.accepter = accepter;
     }
 
     public boolean isAwake() {
@@ -89,14 +94,10 @@ public class CraftingThread {
 
     public CompoundTag writeNBT(HolderLookup.Provider register) {
         var data = new CompoundTag();
-        if (this.forcePlan) {
-            var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
-            if (!pattern.isEmpty()) {
-                var compound = new CompoundTag();
-                pattern.save(register, compound);
-                data.put("myPlan", compound);
-                data.putInt("pushDirection", this.pushDirection.ordinal());
-            }
+        var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
+        if (!pattern.isEmpty()) {
+            data.put("myPlan", pattern.save(register));
+            data.putInt("pushDirection", this.pushDirection.ordinal());
         }
         return data;
     }
@@ -175,7 +176,7 @@ public class CraftingThread {
             this.progress = 0;
             this.output = this.assemblePattern(craftinginput);
             if (!this.output.isEmpty() && this.host.getLevel() != null) {
-                output.onCraftedBySystem(this.host.getLevel());
+                this.output.onCraftedBySystem(this.host.getLevel());
 
                 // pushOut might reset the plan back to null, so get the remaining items before
                 var craftingRemainders = this.myPlan.getRemainingItems(craftinginput);
@@ -219,10 +220,6 @@ public class CraftingThread {
             }
         }
         return TickRateModulation.FASTER;
-    }
-
-    public void forceAwake() {
-        this.isAwake = true;
     }
 
     protected ItemStack assemblePattern(CraftingInput input) {
@@ -343,13 +340,7 @@ public class CraftingThread {
         final boolean wasEnabled = this.isAwake;
         this.isAwake = this.myPlan != null && this.hasMats() || this.canPush();
         if (wasEnabled != this.isAwake) {
-            this.girdHost.getMainNode().ifPresent((grid, node) -> {
-                if (this.isAwake) {
-                    grid.getTickManager().wakeDevice(node);
-                } else {
-                    grid.getTickManager().sleepDevice(node);
-                }
-            });
+            this.accepter.send(this.isAwake);
         }
     }
 
@@ -381,6 +372,21 @@ public class CraftingThread {
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
             return false;
         }
+    }
+
+    private static class DummyMenu extends AutoCraftingMenu {
+
+        @Override
+        public void slotsChanged(@NotNull Container container) {
+            // NO-OP
+        }
+
+    }
+
+    public interface SignalAccepter {
+
+        void send(boolean signal);
+
     }
 
 }

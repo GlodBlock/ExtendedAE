@@ -20,8 +20,8 @@ public class CraftingMatrixThread extends CraftingThread {
     private int blockCoolDown = 0;
     private final Supplier<IActionSource> sourceGetter;
 
-    public CraftingMatrixThread(@NotNull AEBaseBlockEntity host, @NotNull Supplier<IActionSource> sourceGetter) {
-        super(host);
+    public CraftingMatrixThread(@NotNull AEBaseBlockEntity host, @NotNull Supplier<IActionSource> sourceGetter, SignalAccepter accepter) {
+        super(host, accepter);
         this.sourceGetter = sourceGetter;
     }
 
@@ -52,7 +52,7 @@ public class CraftingMatrixThread extends CraftingThread {
     public TickRateModulation tick(int cards, int ticksSinceLastCall) {
         if (this.blockCoolDown > 0) {
             this.blockCoolDown -= ticksSinceLastCall;
-            return TickRateModulation.SLOWER;
+            return TickRateModulation.SAME;
         } else {
             return super.tick(cards, ticksSinceLastCall);
         }

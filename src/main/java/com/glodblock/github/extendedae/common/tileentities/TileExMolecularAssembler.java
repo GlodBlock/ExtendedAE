@@ -60,6 +60,7 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
     private final CraftingThread[] threads = new CraftingThread[MAX_THREAD];
     private final InternalInventory internalInv;
     private final InternalInventory gridInvExt;
+    private short states = 0b000000;
     @OnlyIn(Dist.CLIENT)
     private AssemblerAnimationStatus animationStatus;
 
@@ -70,12 +71,31 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
         var invs = new ArrayList<InternalInventory>();
         var invs2 = new ArrayList<InternalInventory>();
         for (int x = 0; x < MAX_THREAD; x ++) {
-            this.threads[x] = new CraftingThread(this);
-            invs.add(this.threads[x].getInternalInventory());
-            invs2.add(this.threads[x].getExposedInventoryForSide());
+            final int index = x;
+            this.threads[index] = new CraftingThread(this, signal -> this.changeState(index, signal));
+            invs.add(this.threads[index].getInternalInventory());
+            invs2.add(this.threads[index].getExposedInventoryForSide());
         }
         this.internalInv = new CombinedInternalInventory(invs.toArray(new InternalInventory[0]));
         this.gridInvExt = new CombinedInternalInventory(invs2.toArray(new InternalInventory[0]));
+    }
+
+    private void changeState(int index, boolean state) {
+        boolean oldState = this.states > 0;
+        if (state) {
+            this.states |= (1 << index);
+        } else {
+            this.states &= ~(1 << index);
+        }
+        if (state) {
+            if (!oldState) {
+                this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
+            }
+        } else {
+            if (oldState && this.states <= 0) {
+                this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().sleepDevice(node));
+            }
+        }
     }
 
     public int getUpgradeSlots() {
@@ -191,11 +211,6 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
             t.recalculatePlan();
             t.updateSleepiness();
             isAwake |= t.isAwake();
-        }
-        if (isAwake) {
-            for (var t : this.threads) {
-                t.forceAwake();
-            }
         }
         return new TickingRequest(1, 1, !isAwake);
     }
