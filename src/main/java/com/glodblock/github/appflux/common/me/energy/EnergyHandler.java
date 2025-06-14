@@ -65,12 +65,15 @@ public final class EnergyHandler {
             FILTER.add(o -> o instanceof EUToFEProvider.GTEnergyWrapper);
             addHandler(GTCapability.CAPABILITY_ENERGY_CONTAINER, (accepter, side, storage, source) -> {
                 var toAddEU = accepter.getEnergyCanBeInserted();
+                var voltage = accepter.getInputVoltage();
+                if (voltage <= 0) {
+                    return;
+                }
                 var toAdd = Math.min(FeCompat.toFeLong(toAddEU, FeCompat.ratio(false)), AFConfig.getFluxAccessorIO());
                 if (toAdd > 0) {
                     var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
                     if (drained > 0) {
                         var drainedEU = FeCompat.toEu(drained, FeCompat.ratio(true));
-                        var voltage = accepter.getInputVoltage();
                         var amp = 1L;
                         if (drainedEU <= voltage) {
                             voltage = drainedEU;
