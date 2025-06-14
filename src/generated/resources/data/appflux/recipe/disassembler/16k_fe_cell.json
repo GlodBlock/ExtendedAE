@@ -1,0 +1,14 @@
+{
+  "type": "ae2:storage_cell_disassembly",
+  "cell": "appflux:fe_16k_cell",
+  "cell_disassembly_items": [
+    {
+      "count": 1,
+      "id": "appflux:fe_cell_housing"
+    },
+    {
+      "count": 1,
+      "id": "appflux:core_16k"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.datagen.providers.recipes.AE2RecipeProvider;
 import appeng.datagen.providers.tags.ConventionTags;
+import appeng.recipes.game.StorageCellDisassemblyRecipe;
 import appeng.recipes.handlers.ChargerRecipeBuilder;
 import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipeBuilder;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -313,6 +315,11 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(core)
                 .unlockedBy(C, has(AFSingletons.FE_HOUSING))
                 .save(consumer, AppFlux.id(id + "_fe_cell_assemble"));
+        consumer.accept(
+                AppFlux.id("disassembler/" + id + "_fe_cell"),
+                new StorageCellDisassemblyRecipe(result, List.of(AFSingletons.FE_HOUSING.getDefaultInstance(), core.getDefaultInstance())),
+                null
+        );
     }
 
     private void addFEPortableCellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
@@ -324,6 +331,15 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(AFSingletons.FE_HOUSING)
                 .unlockedBy(C, has(AFSingletons.FE_HOUSING))
                 .save(consumer, AppFlux.id("tools/" + "fe_" + id + "_portable_cell"));
+        consumer.accept(
+                AppFlux.id("disassembler/" + "fe_" + id + "_portable_cell"),
+                new StorageCellDisassemblyRecipe(result, List.of(
+                        AFSingletons.FE_HOUSING.getDefaultInstance(),
+                        AEBlocks.ME_CHEST.stack(),
+                        AEBlocks.ENERGY_CELL.stack(),
+                        core.getDefaultInstance())),
+                null
+        );
     }
 
     private void addFEMEGAPortableCellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
@@ -335,6 +351,15 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                 .requires(AFSingletons.FE_HOUSING)
                 .unlockedBy(C, has(AFSingletons.FE_HOUSING))
                 .save(consumer, AppFlux.id("tools/" + "fe_" + id + "_portable_cell"));
+        consumer.accept(
+                AppFlux.id("disassembler/" + "fe_" + id + "_portable_cell"),
+                new StorageCellDisassemblyRecipe(result, List.of(
+                        AFSingletons.FE_HOUSING.getDefaultInstance(),
+                        AEBlocks.ME_CHEST.stack(),
+                        AEBlocks.DENSE_ENERGY_CELL.stack(),
+                        core.getDefaultInstance())),
+                null
+        );
     }
 
 }

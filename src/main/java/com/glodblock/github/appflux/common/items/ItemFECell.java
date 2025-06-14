@@ -5,6 +5,7 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.AEBaseItem;
+import appeng.recipes.game.StorageCellDisassemblyRecipe;
 import appeng.util.InteractionUtil;
 import com.glodblock.github.appflux.api.IFluxCell;
 import com.glodblock.github.appflux.common.AFSingletons;
@@ -89,30 +90,36 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
     }
 
     private boolean disassembleDrive(ItemStack stack, Level level, Player player) {
-        if (InteractionUtil.isInAlternateUseMode(player)) {
-            if (level.isClientSide()) {
-                return false;
-            }
-
-            var playerInventory = player.getInventory();
-            var inv = StorageCells.getCellInventory(stack, null);
-
-            if (inv != null && playerInventory.getSelected() == stack) {
-                var list = inv.getAvailableStacks();
-                if (list.isEmpty()) {
-                    playerInventory.setItem(playerInventory.selected, ItemStack.EMPTY);
-                    playerInventory.placeItemBackInInventory(new ItemStack(this.coreItem));
-                    for (var upgrade : this.getUpgrades(stack)) {
-                        playerInventory.placeItemBackInInventory(upgrade);
-                    }
-                    playerInventory.placeItemBackInInventory(new ItemStack(AFSingletons.FE_HOUSING));
-                    return true;
-                } else {
-                    player.displayClientMessage(PlayerMessages.OnlyEmptyCellsCanBeDisassembled.text(), true);
-                }
-            }
+        if (!InteractionUtil.isInAlternateUseMode(player)) {
+            return false;
         }
-        return false;
+
+        var disassembledStacks = StorageCellDisassemblyRecipe.getDisassemblyResult(level, stack.getItem());
+        if (disassembledStacks.isEmpty()) {
+            return false;
+        }
+
+        var playerInventory = player.getInventory();
+        if (playerInventory.getSelected() != stack) {
+            return false;
+        }
+
+        var inv = StorageCells.getCellInventory(stack, null);
+        if (inv != null && !inv.getAvailableStacks().isEmpty()) {
+            player.displayClientMessage(PlayerMessages.OnlyEmptyCellsCanBeDisassembled.text(), true);
+            return false;
+        }
+
+        playerInventory.setItem(playerInventory.selected, ItemStack.EMPTY);
+
+        // Drop items from the recipe.
+        for (var disassembledStack : disassembledStacks) {
+            playerInventory.placeItemBackInInventory(disassembledStack.copy());
+        }
+
+        // Drop upgrades
+        getUpgrades(stack).forEach(playerInventory::placeItemBackInInventory);
+        return true;
     }
 
     @Override
