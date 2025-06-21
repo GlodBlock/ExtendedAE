@@ -1,19 +1,18 @@
 package com.glodblock.github.extendedae.common.tileentities.matrix;
 
-import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.storage.IStorageService;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -31,23 +30,48 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     public static final int MAX_THREAD = 8;
     private final CraftingThread[] threads = new CraftingThread[MAX_THREAD];
     private final InternalInventory internalInv;
+    private short states = 0b000000;
 
     public TileAssemblerMatrixCrafter(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new, EPPItemAndBlock.ASSEMBLER_MATRIX_CRAFTER), pos, blockState);
         this.getMainNode().addService(IGridTickable.class, this);
         var invs = new InternalInventory[MAX_THREAD];
         for (int x = 0; x < MAX_THREAD; x ++) {
-            this.threads[x] = new CraftingThread(this);
-            this.threads[x].setPusher(this::pushResult);
+            final int index = x;
+            this.threads[x] = new CraftingMatrixThread(this, this::getSrc, signal -> this.changeState(index, signal));
             invs[x] = this.threads[x].getInternalInventory();
         }
         this.internalInv = new CombinedInternalInventory(invs);
     }
 
+    private IActionSource getSrc() {
+        return this.cluster.getSrc();
+    }
+
+    private void changeState(int index, boolean state) {
+        boolean oldState = this.states > 0;
+        if (state) {
+            this.states |= (short) (1 << index);
+        } else {
+            this.states &= (short) ~(1 << index);
+        }
+        if (state) {
+            if (!oldState) {
+                this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
+            }
+        } else {
+            if (oldState && this.states <= 0) {
+                this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().sleepDevice(node));
+            }
+        }
+    }
+
     public int usedThread() {
         int cnt = 0;
         for (var t : this.threads) {
-            if (!t.getInternalInventory().isEmpty()) {
+            if (t.getCurrentPattern() != null) {
+                cnt ++;
+            } else if (!t.getInternalInventory().isEmpty()) {
                 cnt ++;
             }
         }
@@ -100,27 +124,6 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         }
     }
 
-    public ItemStack pushResult(ItemStack stack, Direction d) {
-        if (stack.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-        var grid = this.getMainNode().getGrid();
-        if (grid != null) {
-            var storage = grid.getService(IStorageService.class);
-            var added = storage.getInventory().insert(AEItemKey.of(stack), stack.getCount(), Actionable.MODULATE, this.cluster.getSrc());
-            if (added == 0) {
-                return stack;
-            }
-            this.saveChanges();
-            if (added != stack.getCount()) {
-                return stack.copyWithCount((int) (stack.getCount() - added));
-            } else {
-                return ItemStack.EMPTY;
-            }
-        }
-        return stack;
-    }
-
     @Override
     public void add(ClusterAssemblerMatrix c) {
         c.addCrafter(this);
@@ -133,11 +136,6 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
             t.recalculatePlan();
             t.updateSleepiness();
             isAwake |= t.isAwake();
-        }
-        if (isAwake) {
-            for (var t : this.threads) {
-                t.forceAwake();
-            }
         }
         return new TickingRequest(1, 1, !isAwake, false);
     }

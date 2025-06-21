@@ -20,6 +20,7 @@ import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -31,21 +32,21 @@ public class CraftingThread {
 
     @NotNull
     private final AEBaseBlockEntity host;
-    private final IGridConnectedBlockEntity girdHost;
-    private final AppEngInternalInventory gridInv;
+    protected final IGridConnectedBlockEntity girdHost;
+    protected final AppEngInternalInventory gridInv;
     private final InternalInventory gridInvExt;
     private final CraftingContainer craftingInv;
     private Direction pushDirection = null;
     private ItemStack myPattern = ItemStack.EMPTY;
-    private IMolecularAssemblerSupportedPattern myPlan = null;
+    protected IMolecularAssemblerSupportedPattern myPlan = null;
     private double progress = 0;
     private boolean isAwake = false;
-    private boolean forcePlan = false;
+    protected boolean forcePlan = false;
     private boolean reboot = true;
     private ItemStack output = ItemStack.EMPTY;
-    private Pusher pusher = this::pushTo;
+    private final SignalAccepter accepter;
 
-    public CraftingThread(@NotNull AEBaseBlockEntity host) {
+    public CraftingThread(@NotNull AEBaseBlockEntity host, SignalAccepter accepter) {
         if (!(host instanceof InternalInventoryHost)) {
             throw new IllegalArgumentException("Host isn't InternalInventoryHost.");
         }
@@ -56,11 +57,8 @@ public class CraftingThread {
         this.girdHost = (IGridConnectedBlockEntity) host;
         this.gridInv = new AppEngInternalInventory((InternalInventoryHost) this.host, 10, 1);
         this.gridInvExt = new FilteredInternalInventory(this.gridInv, new CraftingGridFilter());
-        this.craftingInv = new TransientCraftingContainer(new AutoCraftingMenu(), 3, 3);
-    }
-
-    public void setPusher(Pusher pusher) {
-        this.pusher = pusher;
+        this.craftingInv = new TransientCraftingContainer(new DummyMenu(), 3, 3);
+        this.accepter = accepter;
     }
 
     public boolean isAwake() {
@@ -92,14 +90,12 @@ public class CraftingThread {
 
     public CompoundTag writeNBT() {
         var data = new CompoundTag();
-        if (this.forcePlan) {
-            var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
-            if (!pattern.isEmpty()) {
-                var compound = new CompoundTag();
-                pattern.save(compound);
-                data.put("myPlan", compound);
-                data.putInt("pushDirection", this.pushDirection.ordinal());
-            }
+        var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
+        if (!pattern.isEmpty()) {
+            var compound = new CompoundTag();
+            pattern.save(compound);
+            data.put("myPlan", compound);
+            data.putInt("pushDirection", this.pushDirection.ordinal());
         }
         return data;
     }
@@ -174,7 +170,7 @@ public class CraftingThread {
             }
 
             this.progress = 0;
-            this.output = this.myPlan.assemble(this.craftingInv, this.host.getLevel());
+            this.output = this.assemblePattern(this.craftingInv);
             if (!this.output.isEmpty()) {
                 // pushOut might reset the plan back to null, so get the remaining items before
                 var craftingRemainders = this.myPlan.getRemainingItems(this.craftingInv);
@@ -204,8 +200,8 @@ public class CraftingThread {
         return TickRateModulation.FASTER;
     }
 
-    public void forceAwake() {
-        this.isAwake = true;
+    protected ItemStack assemblePattern(CraftingContainer input) {
+        return this.myPlan.assemble(input, this.host.getLevel());
     }
 
     public void recalculatePlan() {
@@ -253,7 +249,7 @@ public class CraftingThread {
         }
     }
 
-    private void ejectHeldItems() {
+    protected void ejectHeldItems() {
         if (this.gridInv.getStackInSlot(9).isEmpty()) {
             for (int x = 0; x < 9; x++) {
                 final ItemStack is = this.gridInv.getStackInSlot(x);
@@ -267,13 +263,13 @@ public class CraftingThread {
         }
     }
 
-    private void pushOut(ItemStack output) {
+    protected void pushOut(ItemStack output) {
         if (this.pushDirection == null) {
             for (Direction d : Direction.values()) {
-                output = this.pusher.push(output, d);
+                output = this.pushTo(output, d);
             }
         } else {
-            output = this.pusher.push(output, this.pushDirection);
+            output = this.pushTo(output, this.pushDirection);
         }
         if (output.isEmpty() && this.forcePlan) {
             this.forcePlan = false;
@@ -282,7 +278,7 @@ public class CraftingThread {
         this.gridInv.setItemDirect(9, output);
     }
 
-    private void saveChanges() {
+    protected void saveChanges() {
         this.host.saveChanges();
     }
 
@@ -323,17 +319,11 @@ public class CraftingThread {
         final boolean wasEnabled = this.isAwake;
         this.isAwake = this.myPlan != null && this.hasMats() || this.canPush();
         if (wasEnabled != this.isAwake) {
-            this.girdHost.getMainNode().ifPresent((grid, node) -> {
-                if (this.isAwake) {
-                    grid.getTickManager().wakeDevice(node);
-                } else {
-                    grid.getTickManager().sleepDevice(node);
-                }
-            });
+            this.accepter.send(this.isAwake);
         }
     }
 
-    private boolean hasMats() {
+    protected boolean hasMats() {
         if (this.myPlan == null) {
             return false;
         }
@@ -363,9 +353,18 @@ public class CraftingThread {
         }
     }
 
-    public interface Pusher {
+    private static class DummyMenu extends AutoCraftingMenu {
 
-        ItemStack push(ItemStack stack, Direction d);
+        @Override
+        public void slotsChanged(@NotNull Container container) {
+            // NO-OP
+        }
+
+    }
+
+    public interface SignalAccepter {
+
+        void send(boolean signal);
 
     }
 

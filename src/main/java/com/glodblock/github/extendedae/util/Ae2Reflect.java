@@ -21,6 +21,7 @@ import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.glodium.reflect.ReflectKit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,6 +40,7 @@ public class Ae2Reflect {
     private static final Field fAEBaseBlockEntity_customName;
     private static final Field fAEBasePart_customName;
     private static final Field fAECraftingPattern_recipe;
+    private static final Field fAECraftingPattern_output;
     private static final Field fIOPortBlockEntity_inputCells;
     private static final Field fIOPortBlockEntity_upgrades;
     private static final Field fInterfaceLogic_config;
@@ -63,6 +65,7 @@ public class Ae2Reflect {
             fAEBaseBlockEntity_customName = ReflectKit.reflectField(AEBaseBlockEntity.class, "customName");
             fAEBasePart_customName = ReflectKit.reflectField(AEBasePart.class, "customName");
             fAECraftingPattern_recipe = ReflectKit.reflectField(AECraftingPattern.class, "recipe");
+            fAECraftingPattern_output = ReflectKit.reflectField(AECraftingPattern.class, "output");
             fIOPortBlockEntity_inputCells = ReflectKit.reflectField(IOPortBlockEntity.class, "inputCells");
             fIOPortBlockEntity_upgrades = ReflectKit.reflectField(IOPortBlockEntity.class, "upgrades");
             fInterfaceLogic_config = ReflectKit.reflectField(InterfaceLogic.class, "config");
@@ -135,6 +138,10 @@ public class Ae2Reflect {
 
     public static CraftingRecipe getCraftRecipe(AECraftingPattern owner) {
         return ReflectKit.readField(owner, fAECraftingPattern_recipe);
+    }
+
+    public static ItemStack getCraftRecipeResult(AECraftingPattern owner) {
+        return ReflectKit.readField(owner, fAECraftingPattern_output);
     }
 
     public static AppEngInternalInventory getInputCellInv(IOPortBlockEntity owner) {
