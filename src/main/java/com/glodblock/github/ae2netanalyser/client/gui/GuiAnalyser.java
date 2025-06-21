@@ -18,7 +18,6 @@ import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserConfigSave;
 import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserGeneric;
 import com.glodblock.github.ae2netanalyser.util.Util;
 import com.glodblock.github.glodium.client.render.ColorData;
-import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.util.GlodUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
@@ -42,6 +41,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
     private final DraggableArea colorRed;
     private final DraggableArea colorGreen;
     private final DraggableArea colorBlue;
+    private final DraggableArea colorAlpha;
     private final ColorArea colorShow;
 
     private static final List<Enum<?>> COLOR_ORDER = List.of(
@@ -63,13 +63,14 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
             this.clickables.add(btn);
             this.colorBtns.put(mode, btn);
         }
-        this.colorWindow = new ColorWindow(73, 48, 110, 80, this);
+        this.colorWindow = new ColorWindow(73, 48, 110, 95, this);
         this.colorWindow.addElement(this.colorRed = new DraggableArea(73 + 8, 48 + 9, 90, 7, this));
         this.colorWindow.addElement(this.colorGreen = new DraggableArea(73 + 8, 48 + 24, 90, 7, this));
         this.colorWindow.addElement(this.colorBlue = new DraggableArea(73 + 8, 48 + 39, 90, 7, this));
-        this.colorWindow.addElement(this.colorShow = new ColorArea(73 + 41, 48 + 58, 27, 7, this, () -> {}));
-        this.colorWindow.addElement(new ClickableArea(73 + 17, 48 + 55, 13, 13, this, () -> this.closeColorConfig(true)));
-        this.colorWindow.addElement(new ClickableArea(73 + 79, 48 + 55, 13, 13, this, () -> this.closeColorConfig(false)));
+        this.colorWindow.addElement(this.colorAlpha = new DraggableArea(73 + 8, 48 + 54, 90, 7, this));
+        this.colorWindow.addElement(this.colorShow = new ColorArea(73 + 41, 48 + 73, 27, 7, this, () -> {}));
+        this.colorWindow.addElement(new ClickableArea(73 + 17, 48 + 70, 13, 13, this, () -> this.closeColorConfig(true)));
+        this.colorWindow.addElement(new ClickableArea(73 + 79, 48 + 70, 13, 13, this, () -> this.closeColorConfig(false)));
         AEANetworkHandler.INSTANCE.sendToServer(new CAnalyserGeneric("update"));
     }
 
@@ -110,6 +111,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
         this.colorRed.setValue(color.getRf());
         this.colorGreen.setValue(color.getGf());
         this.colorBlue.setValue(color.getBf());
+        this.colorAlpha.setValue(color.getAf());
     }
 
     @Override
@@ -122,7 +124,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
             }
         }
         if (this.colorWindow.isOn) {
-            this.colorShow.setColor(new ColorData(0.8f, this.colorRed.getValue(), this.colorGreen.getValue(), this.colorBlue.getValue()));
+            this.colorShow.setColor(new ColorData(this.colorAlpha.getValue(), this.colorRed.getValue(), this.colorGreen.getValue(), this.colorBlue.getValue()));
             this.colorWindow.draw(guiGraphics);
         }
         RenderSystem.enableDepthTest();

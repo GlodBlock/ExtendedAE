@@ -8,7 +8,7 @@ public class Blitters {
 
     private static final ResourceLocation TEXTURE = AEAnalyser.id("textures/gui/color_configer.png");
 
-    public static final Blitter COLOR_SUB_MENU = Blitter.texture(TEXTURE, 200, 200).src(0, 0, 110, 80);
+    public static final Blitter COLOR_SUB_MENU = Blitter.texture(TEXTURE, 200, 200).src(0, 0, 110, 95);
     public static final Blitter SLIDER = Blitter.texture(TEXTURE, 200, 200).src(110, 0, 4, 7);
 
 }
