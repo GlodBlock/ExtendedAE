@@ -75,8 +75,7 @@ public class PartTagExportBus extends PartSpecialExportBus {
             this.oreExpBlack = oreExps.right();
             
             if (EAEConfig.debugMode) {
-                ExtendedAE.LOGGER.debug("TagExportBus imported settings with whitelist: '{}', blacklist: '{}'",
-                    this.oreExpWhite, this.oreExpBlack);
+                ExtendedAE.LOGGER.debug("TagExportBus imported settings with whitelist: '{}', blacklist: '{}'", this.oreExpWhite, this.oreExpBlack);
             }
         }
     }

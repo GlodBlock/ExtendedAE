@@ -5,6 +5,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
@@ -19,6 +20,8 @@ import appeng.util.ConfigInventory;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -36,10 +39,11 @@ public class PartPreciseExportBus extends ExportBusPart {
             ResourceLocation.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_has_channel")
     );
 
-    public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
-    public static final PartModel MODELS_ON = new PartModel(MODELS.get(0), MODELS.get(1));
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(0), MODELS.get(3));
+    public static final PartModel MODELS_OFF = new PartModel(MODELS.getFirst(), MODELS.get(2));
+    public static final PartModel MODELS_ON = new PartModel(MODELS.getFirst(), MODELS.get(1));
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.getFirst(), MODELS.get(3));
     private ConfigInventory config;
+    private Object2LongMap<AEKey> amountMap;
 
     public PartPreciseExportBus(IPartItem<?> partItem) {
         super(partItem);
@@ -49,6 +53,17 @@ public class PartPreciseExportBus extends ExportBusPart {
     public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
         super.readFromNBT(extra, registries);
         this.config.readFromChildTag(extra, "config2", registries);
+        this.rebuildAmountMap();
+    }
+
+    private void rebuildAmountMap() {
+        this.amountMap = new Object2LongOpenHashMap<>();
+        for (int x = 0; x < this.config.size(); x ++) {
+            var stack = this.config.getStack(x);
+            if (stack != null && stack.amount() > 0) {
+                this.amountMap.put(stack.what(), stack.amount());
+            }
+        }
     }
 
     @Override
@@ -62,11 +77,16 @@ public class PartPreciseExportBus extends ExportBusPart {
         if (this.config == null) {
             this.config = ConfigInventory.configStacks(63)
                     .supportedTypes(StackWorldBehaviors.withExportStrategy())
-                    .changeListener(() -> Ae2Reflect.updatePartState(this))
+                    .changeListener(this::onConfigChange)
                     .allowOverstacking(true)
                     .build();
         }
         return this.config;
+    }
+
+    private void onConfigChange() {
+        Ae2Reflect.updatePartState(this);
+        this.amountMap = null;
     }
 
     private boolean craftOnly() {
@@ -84,6 +104,22 @@ public class PartPreciseExportBus extends ExportBusPart {
             requestCrafting(cg, slotToExport, what, amount);
             context.reduceOperationsRemaining(Math.max(1, amount / what.getAmountPerOperation()));
         }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    @Override
+    public long insertCraftedItems(ICraftingLink link, AEKey what, long amount, Actionable mode) {
+        if (this.amountMap == null) {
+            this.rebuildAmountMap();
+        }
+        var amt = this.amountMap.getLong(what);
+        if (amt > 0 && amount >= amt) {
+            var added = getExportStrategy().push(what, amt, Actionable.SIMULATE);
+            if (added == amt) {
+                return super.insertCraftedItems(link, what, amt, mode);
+            }
+        }
+        return 0;
     }
 
     @SuppressWarnings("UnstableApiUsage")
