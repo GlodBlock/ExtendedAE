@@ -3,6 +3,7 @@ package com.glodblock.github.appflux.common;
 import appeng.items.materials.MaterialItem;
 import appeng.items.parts.PartItem;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
+import com.glodblock.github.appflux.common.items.ItemCreativeFECell;
 import com.glodblock.github.appflux.common.items.ItemFECell;
 import com.glodblock.github.appflux.common.items.ItemInductionCard;
 import com.glodblock.github.appflux.common.items.ItemMEGAFECell;
@@ -62,6 +63,7 @@ public class AFItemAndBlock {
     public static ItemPortableMEGAFECell FE_PORTABLE_CELL_16M;
     public static ItemPortableMEGAFECell FE_PORTABLE_CELL_64M;
     public static ItemPortableMEGAFECell FE_PORTABLE_CELL_256M;
+    public static ItemCreativeFECell FE_CREATIVE_CELL;
     public static BlockFluxAccessor FLUX_ACCESSOR;
     public static PartItem<PartFluxAccessor> PART_FLUX_ACCESSOR;
     public static ItemInductionCard INDUCTION_CARD;
@@ -107,6 +109,7 @@ public class AFItemAndBlock {
         FE_PORTABLE_CELL_16M = new ItemPortableMEGAFECell(16 * 1024, 4.0, 0xDDDDDD);
         FE_PORTABLE_CELL_64M = new ItemPortableMEGAFECell(64 * 1024, 4.5, 0xDDDDDD);
         FE_PORTABLE_CELL_256M = new ItemPortableMEGAFECell(256 * 1024, 5.0, 0xDDDDDD);
+        FE_CREATIVE_CELL = new ItemCreativeFECell();
         FLUX_ACCESSOR = new BlockFluxAccessor();
         PART_FLUX_ACCESSOR = new PartItem<>(new Item.Properties(), PartFluxAccessor.class, PartFluxAccessor::new) {
             @Override
@@ -156,6 +159,7 @@ public class AFItemAndBlock {
         regHandler.item("fe_16m_portable_cell", FE_PORTABLE_CELL_16M);
         regHandler.item("fe_64m_portable_cell", FE_PORTABLE_CELL_64M);
         regHandler.item("fe_256m_portable_cell", FE_PORTABLE_CELL_256M);
+        regHandler.item("fe_creative_cell", FE_CREATIVE_CELL);
         regHandler.item("part_flux_accessor", PART_FLUX_ACCESSOR);
         regHandler.item("induction_card", INDUCTION_CARD);
         regHandler.block("flux_accessor", FLUX_ACCESSOR, TileFluxAccessor.class, TileFluxAccessor::new);

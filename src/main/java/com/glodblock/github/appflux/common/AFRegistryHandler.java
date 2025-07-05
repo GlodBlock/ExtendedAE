@@ -22,6 +22,7 @@ import appeng.items.AEBaseItem;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.me.cell.FECellHandler;
+import com.glodblock.github.appflux.common.me.cell.FECreativeCellHandler;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
@@ -35,6 +36,7 @@ import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -82,6 +84,7 @@ public class AFRegistryHandler extends RegistryHandler {
         ContainerItemStrategy.register(FluxKeyType.TYPE, FluxKey.class, new FEContainerItemStrategy());
         GenericSlotCapacities.register(FluxKeyType.TYPE, 1000000L);
         StorageCells.addCellHandler(FECellHandler.HANDLER);
+        StorageCells.addCellHandler(FECreativeCellHandler.HANDLER);
         GridServices.register(EnergyDistributeService.class, EnergyDistributeService.class);
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_1k, AppFlux.id("block/drive/fe_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_CELL_4k, AppFlux.id("block/drive/fe_cell"));
@@ -103,6 +106,7 @@ public class AFRegistryHandler extends RegistryHandler {
         StorageCellModels.registerModel(AFItemAndBlock.FE_PORTABLE_CELL_16M, AppFlux.id("block/drive/fe_mega_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_PORTABLE_CELL_64M, AppFlux.id("block/drive/fe_mega_cell"));
         StorageCellModels.registerModel(AFItemAndBlock.FE_PORTABLE_CELL_256M, AppFlux.id("block/drive/fe_mega_cell"));
+        StorageCellModels.registerModel(AFItemAndBlock.FE_CREATIVE_CELL, new ResourceLocation("ae2:block/drive/cells/creative_cell"));
         for (Pair<String, Block> entry : blocks) {
             Block block = ForgeRegistries.BLOCKS.getValue(AppFlux.id(entry.getKey()));
             if (block instanceof AEBaseEntityBlock<?>) {
