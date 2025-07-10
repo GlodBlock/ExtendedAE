@@ -3,6 +3,7 @@ package com.glodblock.github.appflux.common.me.energy;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
+import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.xmod.fluxnetwork.FluxNetworkPower;
 import com.glodblock.github.appflux.xmod.gtceu.GTEUPower;
 import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
@@ -27,7 +28,7 @@ public final class CapAdaptor {
         if (ModList.get().isLoaded("fluxnetworks")) {
             addCap(FluxCapabilities.FN_ENERGY_STORAGE, FluxNetworkPower::of);
         }
-        if (ModList.get().isLoaded("gtceu")) {
+        if (ModList.get().isLoaded("gtceu") && AFConfig.gteuSupport()) {
             addCap(GTCapability.CAPABILITY_ENERGY_CONTAINER, GTEUPower::of);
         }
     }

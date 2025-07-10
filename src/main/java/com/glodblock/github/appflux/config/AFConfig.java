@@ -23,6 +23,9 @@ public class AFConfig {
     private static final ForgeConfigSpec.BooleanValue FE_IMPORT = BUILDER
             .comment("Allow ME Import Bus to pull FE.")
             .define("enable_FE_pull", false);
+    private static final ForgeConfigSpec.BooleanValue GTEU = BUILDER
+            .comment("Enable GTCEu-EU support")
+            .define("enable_gteu", true);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
@@ -42,10 +45,15 @@ public class AFConfig {
         return pullFE;
     }
 
+    public static boolean gteuSupport() {
+        return gtce;
+    }
+
     private static int fluxPerByte;
     private static long fluxAccessorIO;
     private static boolean selfCharge;
     private static boolean pullFE;
+    private static boolean gtce;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -53,6 +61,7 @@ public class AFConfig {
         fluxAccessorIO = FLUX_ACCESSOR_IO.get();
         selfCharge = NETWORK_CHARGE.get();
         pullFE = FE_IMPORT.get();
+        gtce = GTEU.get();
     }
 
 }

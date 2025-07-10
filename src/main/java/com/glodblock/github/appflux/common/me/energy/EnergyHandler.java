@@ -61,7 +61,7 @@ public final class EnergyHandler {
                 }
             });
         }
-        if (ModList.get().isLoaded("gtceu")) {
+        if (ModList.get().isLoaded("gtceu") && AFConfig.gteuSupport()) {
             FILTER.add(o -> o instanceof EUToFEProvider.GTEnergyWrapper);
             addHandler(GTCapability.CAPABILITY_ENERGY_CONTAINER, (accepter, side, storage, source) -> {
                 var toAddEU = accepter.getEnergyCanBeInserted();
