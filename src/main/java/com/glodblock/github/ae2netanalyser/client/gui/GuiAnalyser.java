@@ -165,9 +165,9 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
     @Override
     public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         drawCenteredText(guiGraphics, this.mode.getTranslatedName(), 76, 27, 0xFFFFFFFF);
-        drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.mode"), 24, 26, 0xFFFFFFFF);
+        drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.mode"), 24, 26, 0xFF413F54);
         drawCenteredText(guiGraphics, String.valueOf((int) (this.size * 10)), 76, 55, 0xFFFFFFFF);
-        drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.node_size"), 24, 54, 0xFFFFFFFF);
+        drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.node_size"), 24, 54, 0xFF413F54);
         drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.reset"), 179, 149, 0xFFFFFFFF);
         for (int i = 0; i < COLOR_ORDER.size(); i ++) {
             var m = COLOR_ORDER.get(i);
@@ -176,7 +176,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
                         this.font,
                         Component.translatable("gui.ae2netanalyser.network_analyser.NODE." + m.name()),
                         134, 23 + 21 * i,
-                        0xFFFFFFFF,
+                        0xFF413F54,
                         false
                         );
             }
@@ -185,7 +185,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
                         this.font,
                         Component.translatable("gui.ae2netanalyser.network_analyser.LINK." + m.name()),
                         134, 23 + 21 * i,
-                        0xFFFFFFFF,
+                        0xFF413F54,
                         false
                 );
             }
@@ -194,28 +194,28 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.channel." + Util.getChannelMode().name()),
                 16, 72,
-                0xFFFFFFFF,
+                0xFF413F54,
                 false
         );
         guiGraphics.drawString(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.state.normal_nodes", this.countNode(NodeFlag.NORMAL)),
                 16, 86,
-                0xFF00FF00,
+                0xFF32A843,
                 false
         );
         guiGraphics.drawString(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.state.dense_nodes", this.countNode(NodeFlag.DENSE)),
                 16, 100,
-                0xFF00FFFF,
+                0xFF19B3A3,
                 false
         );
         guiGraphics.drawString(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.state.missing_nodes", this.countNode(NodeFlag.MISSING)),
                 16, 114,
-                0xFFFF0000,
+                0xFFAA1A1A,
                 false
         );
     }
