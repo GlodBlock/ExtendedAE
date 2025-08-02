@@ -74,7 +74,7 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
             this.powerUse = Math.max(1.0, dis * Math.log(dis) * disc);
             this.powerUse *= EAEConfig.wirelessPowerMultiplier;
         } else {
-            this.powerUse = 1.0 * EAEConfig.wirelessPowerMultiplier;
+            this.powerUse = EAEConfig.wirelessPowerMultiplier;
         }
         this.getMainNode().setIdlePowerUsage(this.powerUse);
     }
