@@ -68,7 +68,12 @@ public class TileCircuitCutter extends AENetworkPowerBlockEntity implements IGri
     private final AppEngInternalInventory input = new AppEngInternalInventory(this, 1, 64);
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1, 64);
     private final CombinedInternalInventory inv = new CombinedInternalInventory(input, output);
-    private final GenericStackInv tank = new FluidInventory(this::onChangeTank, GenericStackInv.Mode.STORAGE, 1, TANK_CAP);
+    private final GenericStackInv tank = new FluidInventory(this::onChangeTank, GenericStackInv.Mode.STORAGE, 1, TANK_CAP) {
+        @Override
+        public boolean canExtract() {
+            return false;
+        }
+    };
     private final FilteredInternalInventory outputExposed = new FilteredInternalInventory(output, AEItemFilters.EXTRACT_ONLY);
     private final FilteredInternalInventory inputExposed = new FilteredInternalInventory(input, AEItemFilters.INSERT_ONLY);
     private final CombinedInternalInventory invExposed = new CombinedInternalInventory(inputExposed, outputExposed);
