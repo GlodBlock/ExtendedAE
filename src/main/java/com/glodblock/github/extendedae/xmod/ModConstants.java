@@ -12,6 +12,7 @@ public final class ModConstants {
 
     public static final String REI = "roughlyenoughitems";
     public static final String EMI = "emi";
+    public static final String AE_JEI = "ae2jeiintegration";
     public static final String APPFLUX = "appflux";
     public static final String MEGA = "megacells";
     public static final String DARK_MODE = "darkmodeeverywhere";

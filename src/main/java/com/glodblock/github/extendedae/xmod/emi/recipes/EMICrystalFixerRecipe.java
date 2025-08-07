@@ -45,8 +45,7 @@ public class EMICrystalFixerRecipe extends BasicEmiRecipe {
         widgets.addSlot(EmiStack.of(this.recipe.getInput()), 0, 18).drawBack(false);
         widgets.addSlot(EmiStack.of(this.recipe.getOutput()), 96, 18).recipeContext(this).drawBack(false);
         widgets.addSlot(EMIStackUtil.of(this.recipe.getFuel()), 48, 11).drawBack(false);
-        widgets.addText(Component.translatable("emi.extendedae.text.success_chance", F.format(this.recipe.getChance())),
-                1, 2, 0x7E7E7E, false);
+        widgets.addText(Component.translatable("emi.extendedae.text.success_chance", F.format(this.recipe.getChance())), 1, 2, 0x7E7E7E, false);
     }
 
 }

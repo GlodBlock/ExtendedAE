@@ -64,33 +64,17 @@ repositories {
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
-        content {
-            includeGroup "dev.emi"
-        }
     }
     maven {
         name 'cursemaven'
         url = "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
     }
     maven {
         name = "Modmaven"
         url = uri("https://modmaven.dev/")
-        content {
-            includeGroup("appeng")
-            includeGroup("de.mari_023")
-            includeGroup("mekanism")
-        }
     }
     maven {
         url = "https://maven.shedaniel.me/"
-        content {
-            includeGroup "me.shedaniel"
-            includeGroup "me.shedaniel.cloth"
-            includeGroup "dev.architectury"
-        }
     }
     mavenCentral()
 }
@@ -112,6 +96,8 @@ dependencies {
     compileOnly "curse.maven:framedblocks-441647:6127891"
     compileOnly "curse.maven:advancedae-1084104:6225993"
     compileOnly "curse.maven:functional-storage-556861:6467726"
+    compileOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
+    compileOnly "curse.maven:ae2-jei-integration-1074338:5748513"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5614830"
     runtimeOnly "de.mari_023:ae2wtlib:19.2.1"
@@ -127,6 +113,10 @@ dependencies {
             runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
             runtimeOnly "dev.architectury:architectury-neoforge:13.0.1"
             runtimeOnly "curse.maven:cloth-config-348521:5424576"
+            break
+        case "jei":
+            runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
+            runtimeOnly "curse.maven:ae2-jei-integration-1074338:5748513"
             break
     }
 }

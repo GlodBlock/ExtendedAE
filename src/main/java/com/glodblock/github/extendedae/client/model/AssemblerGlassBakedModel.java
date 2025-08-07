@@ -282,7 +282,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         private int face;
 
         int getFace(Direction face) {
-            if (!validCheck(face)) {
+            if (blocked(face)) {
                 return -1;
             }
             return this.face;
@@ -297,7 +297,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         }
 
         int getIndex(Direction face, int corner) {
-            if (!validCheck(face)) {
+            if (blocked(face)) {
                 return -1;
             }
             return switch (face) {
@@ -313,9 +313,9 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
             };
         }
 
-        boolean validCheck(Direction face) {
+        boolean blocked(Direction face) {
             var pos = face.getNormal().offset(1, 1, 1);
-            return !this.connects[pos.getX()][pos.getY()][pos.getZ()];
+            return this.connects[pos.getX()][pos.getY()][pos.getZ()];
         }
 
         int getIndexX(Direction face, int corner) {
