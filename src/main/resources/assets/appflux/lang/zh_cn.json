@@ -44,7 +44,7 @@
   "item.appflux.induction_card.tooltip": "允许AE设备接收能量",
   "item.appflux.part_flux_accessor": "通量访问点",
   "block.appflux.flux_accessor": "通量访问点",
-  "block.appflux.charged_redstone_block": "充能红石晶体块",
+  "block.appflux.charged_redstone_block": "充能红石水晶块",
   "block.appflux.flux_accessor.tooltip.1": "从网络中抽取能量",
   "block.appflux.flux_accessor.tooltip.2": "需要外部电缆来输入能量",
   "appflux.key.flux": "能源",
