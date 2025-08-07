@@ -27,7 +27,7 @@
   "item.expatternprovider.pattern_provider_upgrade": "Mejora de proveedor de patrones",
   "item.expatternprovider.interface_upgrade": "Mejora de interfaz",
   "item.expatternprovider.io_bus_upgrade": "Mejora de bus de importación/exportación",
-  "item.expatternprovider.infinity_cell_name": "Celda ME de agua infinita",
+  "item.expatternprovider.infinity_cell_name": "Celda ME infinita (%s)",
   "item.expatternprovider.infinity_cell": "Celda ME infinita",
   "item.expatternprovider.ex_export_bus_part": "Bus de exportación ME extendido",
   "item.expatternprovider.ex_import_bus_part": "Bus de importación ME extendido",
