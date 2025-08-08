@@ -104,8 +104,8 @@ public class JEIPlugin implements IModPlugin {
         }
     }
 
-    private <I extends RecipeInput, T extends Recipe<I>> List<T> getRecipes(RecipeType<T> type, RecipeManager manager) {
-        return manager.byType(type).stream().map(RecipeHolder::value).toList();
+    private <I extends RecipeInput, T extends Recipe<I>> List<RecipeHolder<T>> getRecipes(RecipeType<T> type, RecipeManager manager) {
+        return manager.getAllRecipesFor(type);
     }
 
 }
