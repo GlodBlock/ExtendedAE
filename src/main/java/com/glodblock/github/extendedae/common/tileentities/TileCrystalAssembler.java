@@ -77,7 +77,12 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     private final CombinedInternalInventory invExposed = new CombinedInternalInventory(inputExposed, outputExposed);
     private final IUpgradeInventory upgrades;
     private final ConfigManager configManager;
-    private final GenericStackInv tank = new GenericStackInv(Set.of(AEKeyType.fluids()), this::onChangeTank, GenericStackInv.Mode.STORAGE, 1);
+    private final GenericStackInv tank = new GenericStackInv(Set.of(AEKeyType.fluids()), this::onChangeTank, GenericStackInv.Mode.STORAGE, 1) {
+        @Override
+        public boolean canExtract() {
+            return false;
+        }
+    };
     private final CommonRecipeContext<CrystalAssemblerRecipe> ctx = new CrystalRecipeContext(this);
     private final RecipeExecutor<CrystalAssemblerRecipe> exec;
     private boolean isWorking = false;
