@@ -34,7 +34,6 @@ import java.util.function.Function;
 
 public class AssemblerGlassBakedModel implements IDynamicBakedModel {
 
-    private static final ChunkRenderTypeSet RENDER_TYPES = ChunkRenderTypeSet.of(RenderType.CUTOUT);
     private static final Object2ReferenceMap<FaceCorner, List<Vector3f>> V_MAP = createVertexMap();
     private static final EnumMap<Direction, List<Vector3f>> F_MAP = createFaceMap();
     public static final ModelProperty<Connect> CONNECT_STATE = new ModelProperty<>();
@@ -85,11 +84,13 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
             return Collections.emptyList();
         }
         List<BakedQuad> quads = new ArrayList<>();
-        this.addQuad(quads, side, connect.getIndex(side, LU), LU);
-        this.addQuad(quads, side, connect.getIndex(side, RU), RU);
-        this.addQuad(quads, side, connect.getIndex(side, LD), LD);
-        this.addQuad(quads, side, connect.getIndex(side, RD), RD);
-        this.addQuad(quads, side, connect.getFace(side));
+        if (renderType == null || renderType == RenderType.CUTOUT) {
+            this.addQuad(quads, side, connect.getIndex(side, LU), LU);
+            this.addQuad(quads, side, connect.getIndex(side, RU), RU);
+            this.addQuad(quads, side, connect.getIndex(side, LD), LD);
+            this.addQuad(quads, side, connect.getIndex(side, RD), RD);
+            this.addQuad(quads, side, connect.getFace(side));
+        }
         return quads;
     }
 
@@ -106,6 +107,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         var cons = F_MAP.get(side);
         builder.setSprite(sprite);
         builder.setDirection(side);
+        builder.setShade(true);
         var normal = side.getNormal();
         var c1 = cons.get(0);
         var c2 = cons.get(1);
@@ -126,6 +128,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         var cons = this.calculateCorners(side, corner);
         builder.setSprite(this.glassSide);
         builder.setDirection(side);
+        builder.setShade(true);
         var normal = side.getNormal();
         var c1 = cons.get(0);
         var c2 = cons.get(1);
@@ -273,7 +276,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
 
     @Override
     public @NotNull ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
-        return RENDER_TYPES;
+        return ChunkRenderTypeSet.all();
     }
 
     public static class Connect {

@@ -76,6 +76,9 @@ repositories {
     maven {
         url = "https://maven.shedaniel.me/"
     }
+    maven {
+        url = "https://maven.latvian.dev/releases/"
+    }
     mavenCentral()
 }
 
@@ -91,8 +94,8 @@ dependencies {
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
     compileOnly "mekanism:Mekanism:1.21.1-10.7.0.55"
     compileOnly "curse.maven:applied-mekanistics-574300:5978711"
-    compileOnly "curse.maven:kubejs-238086:5810100"
-    compileOnly "curse.maven:rhino-416294:6184623"
+    compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.1-build.188"
+    compileOnly "dev.latvian.mods:rhino:2101.2.5-build.54"
     compileOnly "curse.maven:framedblocks-441647:6127891"
     compileOnly "curse.maven:advancedae-1084104:6225993"
     compileOnly "curse.maven:functional-storage-556861:6467726"
