@@ -19,10 +19,10 @@
         "translate": "gui.expatternprovider.tag_storage_bus.whitelist"
       },
       "position": {
-        "right": 8,
-        "top": 16
+        "left": 8,
+        "top": 54
       },
-      "align": "RIGHT"
+      "align": "LEFT"
     },
     "blacklist": {
       "text": {
@@ -30,7 +30,7 @@
       },
       "position": {
         "right": 8,
-        "top": 54
+        "top": 56
       },
       "align": "RIGHT"
     },
