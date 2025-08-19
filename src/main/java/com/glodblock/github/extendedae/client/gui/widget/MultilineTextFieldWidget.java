@@ -12,11 +12,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -49,8 +49,8 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         this.textField.setCursorListener(this::ensureCursorVisible);
     }
 
-    public void setResponder(Consumer<String> responder) {
-        this.responder = Objects.requireNonNull(responder);
+    public void setResponder(@NotNull Consumer<String> responder) {
+        this.responder = responder;
     }
 
     public void setFilter(Pattern filter) {
@@ -119,8 +119,6 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mx, double my, int btn) {
         if (!isActive() || !isValidClickButton(btn) || !clicked(mx, my)) return false;
-
-        Minecraft.getInstance().screen.setFocused(this);
         setFocused(true);
 
         if (!hasShiftDown()) {
@@ -150,7 +148,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {}
 
     @Override
     public boolean mouseScrolled(double mx, double my, double horizontal, double vertical) {
@@ -307,8 +305,8 @@ public class MultilineTextFieldWidget extends AbstractWidget {
             return new Selection(sv.beginIndex(), sv.endIndex());
         }
 
-        @Override public void setValue(String v)   { super.setValue(v);   rebuild(); }
-        @Override public void insertText(String t) { super.insertText(t); rebuild(); }
+        @Override public void setValue(@NotNull String v)   { super.setValue(v);   rebuild(); }
+        @Override public void insertText(@NotNull String t) { super.insertText(t); rebuild(); }
 
         private void rebuild() {
             if (cache == null) cache = new ArrayList<>();

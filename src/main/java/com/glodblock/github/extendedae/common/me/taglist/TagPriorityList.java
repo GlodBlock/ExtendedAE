@@ -34,8 +34,8 @@ public class TagPriorityList implements IPartitionList {
      * @param blackListExpression The expression for the blacklist (e.g., "minecraft:logs | minecraft:planks").
      */
     public TagPriorityList(String whiteListExpression, String blackListExpression) {
-        this.rawWhiteListExpression = whiteListExpression != null ? whiteListExpression : "";
-        this.rawBlackListExpression = blackListExpression != null ? blackListExpression : "";
+        this.rawWhiteListExpression = this.removeBlank(whiteListExpression != null ? whiteListExpression : "");
+        this.rawBlackListExpression = this.removeBlank(blackListExpression != null ? blackListExpression : "");
 
         // Compile the expressions using the new parser.
         this.whiteListPredicate = TagExpParser.compile(this.rawWhiteListExpression);
@@ -44,6 +44,10 @@ public class TagPriorityList implements IPartitionList {
         // Determine if the whitelist should be actively checked.
         // An empty/whitespace-only expression means the whitelist doesn't restrict anything.
         this.isWhitelistActive = !this.rawWhiteListExpression.isBlank();
+    }
+
+    private String removeBlank(String raw) {
+        return raw.replaceAll("\\s+", "");
     }
 
     @Override

@@ -16,12 +16,10 @@ import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidge
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +33,8 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
 
-    private MultilineTextFieldWidget filterInputs;
-    private MultilineTextFieldWidget filterInputs2;
+    private final MultilineTextFieldWidget filterInputs;
+    private final MultilineTextFieldWidget filterInputs2;
 
     private static final Pattern ORE_DICTIONARY_FILTER =
             Pattern.compile("[0-9a-zA-Z* &|^!():/_\\n]*");
@@ -52,11 +50,6 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         this.addToLeftToolbar(this.storageFilter);
         this.addToLeftToolbar(this.filterOnExtract);
         this.addToLeftToolbar(this.rwMode);
-
-        this.actions.put("init", o -> {
-            if (this.filterInputs != null)  this.filterInputs.setValue(o.get(0));
-            if (this.filterInputs2 != null) this.filterInputs2.setValue(o.get(1));
-        });
 
         var placeholder = Component.translatable("gui.extendedae.tag_storage_bus.tooltip");
 
@@ -79,14 +72,18 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
 
         setInitialFocus(this.filterInputs);
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
+        this.actions.put("init", o -> {
+            this.filterInputs.setValue(o.get(0));
+            this.filterInputs2.setValue(o.get(1));
+        });
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int btn) {
-        if (btn == 1 && this.filterInputs != null && this.filterInputs.isMouseOver(x, y)) {
+        if (btn == 1 && this.filterInputs.isMouseOver(x, y)) {
             this.filterInputs.setValue("");
         }
-        if (btn == 1 && this.filterInputs2 != null && this.filterInputs2.isMouseOver(x, y)) {
+        if (btn == 1 && this.filterInputs2.isMouseOver(x, y)) {
             this.filterInputs2.setValue("");
         }
         return super.mouseClicked(x, y, btn);
