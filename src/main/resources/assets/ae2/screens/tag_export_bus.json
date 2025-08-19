@@ -7,71 +7,48 @@
   },
   "text": {
     "dialog_title": {
-      "text": {
-        "translate": "gui.extendedae.tag_export_bus"
-      },
-      "position": {
-        "left": 8,
-        "top": 6
-      }
-    },"whitelist": {
-      "text": {
-        "translate": "gui.extendedae.tag_storage_bus.whitelist"
-      },
-      "position": {
-        "left": 8,
-        "top": 27
-      }
+      "text": { "translate": "gui.extendedae.tag_export_bus" },
+      "position": { "left": 8, "top": 6 }
+    },
+    "whitelist": {
+      "text": { "translate": "gui.extendedae.tag_storage_bus.whitelist" },
+      "position": { "left": 8, "top": 54 },
+      "align": "LEFT"
     },
     "blacklist": {
-      "text": {
-        "translate": "gui.extendedae.tag_storage_bus.blacklist"
-      },
-      "position": {
-        "left": 8,
-        "top": 54
-      }
+      "text": { "translate": "gui.extendedae.tag_storage_bus.blacklist" },
+      "position": { "right": 8, "top": 56 },
+      "align": "RIGHT"
     },
-    "tooltip_01": {
-      "text": {
-        "translate": "gui.extendedae.tag_storage_bus.desc.01"
-      },
-      "position": {
-        "left": 8,
-        "top": 81
-      }
+
+    "tooltip_left": {
+      "text": { "translate": "gui.extendedae.tag_storage_bus.desc.01" },
+      "position": { "left": 8, "top": 94 },
+      "align": "LEFT"
     },
-    "tooltip_02": {
-      "text": {
-        "translate": "gui.extendedae.tag_storage_bus.desc.02"
-      },
-      "position": {
-        "left": 8,
-        "top": 91
-      }
+    "tooltip_right": {
+      "text": { "translate": "gui.extendedae.tag_storage_bus.desc.02" },
+      "position": { "right": 8, "top": 94 },
+      "align": "RIGHT"
     },
-    "tooltip_03": {
-      "text": {
-        "translate": "gui.extendedae.tag_storage_bus.desc.03"
-      },
-      "position": {
-        "left": 8,
-        "top": 101
-      }
+    "tooltip_bottom": {
+      "text": { "translate": "gui.extendedae.tag_storage_bus.desc.03" },
+      "position": { "left": 8, "top": 104 },
+      "align": "LEFT"
     }
   },
   "widgets": {
     "filter_input": {
       "left": 8,
-      "top": 38,
-      "width": 120,
-      "height": 12
+      "top": 26,
+      "width": 160,
+      "height": 26
     },
     "filter_input_2": {
       "left": 8,
-      "top": 65,
-      "width": 120,
-      "height": 12
+      "top": 66,
+      "width": 160,
+      "height": 26
     },
     "openPriority": {
       "left": 152,
