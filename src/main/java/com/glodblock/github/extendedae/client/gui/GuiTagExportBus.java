@@ -4,15 +4,17 @@ import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.widgets.AETextField;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
+import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidget;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import com.glodblock.github.glodium.network.packet.sync.Paras;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -25,43 +27,41 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
 
     private final Map<String, Consumer<Paras>> actions = createHolder();
     private final SettingToggleButton<RedstoneMode> redstoneMode;
-    private final AETextField filterInputs;
-    private final AETextField filterInputs2;
-    private static final Pattern ORE_DICTIONARY_FILTER = Pattern.compile("[0-9a-zA-Z* &|^!():/_]*");
+
+    private MultilineTextFieldWidget filterInputs;
+    private MultilineTextFieldWidget filterInputs2;
+
+    private static final Pattern ORE_DICTIONARY_FILTER =
+            Pattern.compile("[0-9a-zA-Z* &|^!():/_\\n]*");
 
     public GuiTagExportBus(ContainerTagExportBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.redstoneMode = new ServerSettingToggleButton<>(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
         addToLeftToolbar(this.redstoneMode);
-        this.filterInputs = widgets.addTextField("filter_input");
-        this.filterInputs.setFilter(str -> ORE_DICTIONARY_FILTER.matcher(str).matches());
-        this.filterInputs.setMaxLength(512);
-        this.filterInputs.setPlaceholder(Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip"));
-        this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, true)));
-        this.filterInputs2 = widgets.addTextField("filter_input_2");
-        this.filterInputs2.setFilter(str -> ORE_DICTIONARY_FILTER.matcher(str).matches());
-        this.filterInputs2.setMaxLength(512);
-        this.filterInputs2.setPlaceholder(Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip"));
-        this.filterInputs2.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, false)));
-        this.actions.put("init", o -> {this.filterInputs.setValue(o.get(0)); this.filterInputs2.setValue(o.get(1));});
+
+        this.actions.put("init", o -> {
+            if (this.filterInputs != null)  this.filterInputs.setValue(o.get(0));
+            if (this.filterInputs2 != null) this.filterInputs2.setValue(o.get(1));
+        });
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
+    }
+
+    private MultilineTextFieldWidget createMultiline(int x, int y, int w, int h, boolean first) {
+        Font font = Minecraft.getInstance().font;
+        var placeholder = Component.translatable("gui.expatternprovider.tag_storage_bus.tooltip");
+        var tf = new MultilineTextFieldWidget(font, x, y, w, h, placeholder);
+        tf.setFilter(ORE_DICTIONARY_FILTER);
+        tf.setMaxLength(512);
+        tf.setResponder(s ->
+                EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, first))
+        );
+        return tf;
     }
 
     @NotNull
     @Override
     public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
-    }
-
-    @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.filterInputs.isMouseOver(xCoord, yCoord)) {
-            this.filterInputs.setValue("");
-        }
-        if (btn == 1 && this.filterInputs2.isMouseOver(xCoord, yCoord)) {
-            this.filterInputs2.setValue("");
-        }
-        return super.mouseClicked(xCoord, yCoord, btn);
     }
 
     @Override
@@ -74,7 +74,21 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
     @Override
     protected void init() {
         super.init();
+
+        if (this.filterInputs == null || this.filterInputs2 == null) {
+            var a = style.getWidget("filter_input");
+            var b = style.getWidget("filter_input_2");
+
+            int ax = a.getLeft(), ay = a.getTop(), aw = a.getWidth(), ah = a.getHeight();
+            int bx = b.getLeft(), by = b.getTop(), bw = b.getWidth(), bh = b.getHeight();
+
+            this.filterInputs  = createMultiline(this.getGuiLeft() + ax, this.getGuiTop() + ay, aw, ah, true);
+            this.filterInputs2 = createMultiline(this.getGuiLeft() + bx, this.getGuiTop() + by, bw, bh, false);
+
+            addRenderableWidget(this.filterInputs);
+            addRenderableWidget(this.filterInputs2);
+        }
+
         setInitialFocus(this.filterInputs);
     }
-
 }

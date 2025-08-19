@@ -12,7 +12,7 @@
       },
       "position": {
         "left": 8,
-        "top": 6
+        "top": 4
       }
     },
     "whitelist": {
@@ -21,17 +21,19 @@
       },
       "position": {
         "left": 8,
-        "top": 27
-      }
+        "top": 54
+      },
+      "align": "LEFT"
     },
     "blacklist": {
       "text": {
         "translate": "gui.expatternprovider.tag_storage_bus.blacklist"
       },
       "position": {
-        "left": 8,
-        "top": 54
-      }
+        "right": 8,
+        "top": 56
+      },
+      "align": "RIGHT"
     },
     "tooltip_01": {
       "text": {
@@ -39,17 +41,19 @@
       },
       "position": {
         "left": 8,
-        "top": 81
-      }
+        "top": 94
+      },
+      "align": "LEFT"
     },
     "tooltip_02": {
       "text": {
         "translate": "gui.expatternprovider.tag_storage_bus.desc.02"
       },
       "position": {
-        "left": 8,
-        "top": 91
-      }
+        "right": 8,
+        "top": 94
+      },
+      "align": "RIGHT"
     },
     "tooltip_03": {
       "text": {
@@ -57,22 +61,23 @@
       },
       "position": {
         "left": 8,
-        "top": 101
-      }
+        "top": 104
+      },
+      "align": "LEFT"
     }
   },
   "widgets": {
     "filter_input": {
       "left": 8,
-      "top": 38,
-      "width": 120,
-      "height": 12
+      "top": 26,
+      "width": 160,
+      "height": 26
     },
     "filter_input_2": {
       "left": 8,
-      "top": 65,
-      "width": 120,
-      "height": 12
+      "top": 66,
+      "width": 160,
+      "height": 26
     },
     "openPriority": {
       "left": 154,
