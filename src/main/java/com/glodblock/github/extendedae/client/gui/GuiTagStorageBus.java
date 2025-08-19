@@ -16,6 +16,7 @@ import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidge
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.Minecraft;
@@ -57,18 +58,27 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
             if (this.filterInputs2 != null) this.filterInputs2.setValue(o.get(1));
         });
 
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
-    }
-
-    private MultilineTextFieldWidget createMultiline(int x, int y, int w, int h, boolean first) {
-        Font font = Minecraft.getInstance().font;
         var placeholder = Component.translatable("gui.extendedae.tag_storage_bus.tooltip");
-        var tf = new MultilineTextFieldWidget(font, x, y, w, h, placeholder);
-        tf.setFilter(ORE_DICTIONARY_FILTER);
-        tf.setMaxLength(1024);
-        tf.setResponder(s -> EAENetworkHandler.INSTANCE
-                .sendToServer(new CEAEGenericPacket("set", s, first)));
-        return tf;
+
+        this.filterInputs = new MultilineTextFieldWidget(
+                Minecraft.getInstance().font, 0, 0, 160, 26, placeholder);
+        this.filterInputs.setFilter(ORE_DICTIONARY_FILTER);
+        this.filterInputs.setMaxLength(1024);
+        this.filterInputs.setResponder(s -> EAENetworkHandler.INSTANCE
+                .sendToServer(new CEAEGenericPacket("set", s, true)));
+
+        this.filterInputs2 = new MultilineTextFieldWidget(
+                Minecraft.getInstance().font, 0, 0, 160, 26, placeholder);
+        this.filterInputs2.setFilter(ORE_DICTIONARY_FILTER);
+        this.filterInputs2.setMaxLength(1024);
+        this.filterInputs2.setResponder(s -> EAENetworkHandler.INSTANCE
+                .sendToServer(new CEAEGenericPacket("set", s, false)));
+
+        widgets.add("filter_input", this.filterInputs);
+        widgets.add("filter_input_2", this.filterInputs2);
+
+        setInitialFocus(this.filterInputs);
+        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
     @Override
@@ -104,27 +114,6 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
             guiGraphics.drawString(font, GuiText.Unattached.text(), 0, 0, color.toARGB(), false);
         }
         poseStack.popPose();
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        if (this.filterInputs == null || this.filterInputs2 == null) {
-            var a = style.getWidget("filter_input");
-            var b = style.getWidget("filter_input_2");
-
-            int ax = a.getLeft(), ay = a.getTop(), aw = a.getWidth(), ah = a.getHeight();
-            int bx = b.getLeft(), by = b.getTop(), bw = b.getWidth(), bh = b.getHeight();
-
-            this.filterInputs  = createMultiline(this.getGuiLeft() + ax, this.getGuiTop() + ay, aw, ah, true);
-            this.filterInputs2 = createMultiline(this.getGuiLeft() + bx, this.getGuiTop() + by, bw, bh, false);
-
-            addRenderableWidget(this.filterInputs);
-            addRenderableWidget(this.filterInputs2);
-        }
-
-        setInitialFocus(this.filterInputs);
     }
 
     @NotNull

@@ -44,19 +44,28 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
             if (this.filterInputs2 != null) this.filterInputs2.setValue(o.get(1));
         });
 
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
-    }
-
-    // Factory wspólne dla obu pól
-    private MultilineTextFieldWidget createMultiline(int x, int y, int w, int h, boolean isFirst) {
-        Font font = Minecraft.getInstance().font;
         var placeholder = Component.translatable("gui.extendedae.tag_storage_bus.tooltip");
-        var tf = new MultilineTextFieldWidget(font, x, y, w, h, placeholder);
-        tf.setFilter(ORE_DICTIONARY_FILTER);
-        tf.setMaxLength(1024);
-        tf.setResponder(s -> EAENetworkHandler.INSTANCE
-                .sendToServer(new CEAEGenericPacket("set", s, isFirst)));
-        return tf;
+
+        this.filterInputs = new MultilineTextFieldWidget(
+                Minecraft.getInstance().font, 0, 0, 160, 26, placeholder);
+        this.filterInputs.setFilter(ORE_DICTIONARY_FILTER);
+        this.filterInputs.setMaxLength(1024);
+        this.filterInputs.setResponder(s -> EAENetworkHandler.INSTANCE
+                .sendToServer(new CEAEGenericPacket("set", s, true)));
+
+        this.filterInputs2 = new MultilineTextFieldWidget(
+                Minecraft.getInstance().font, 0, 0, 160, 26, placeholder);
+        this.filterInputs2.setFilter(ORE_DICTIONARY_FILTER);
+        this.filterInputs2.setMaxLength(1024);
+        this.filterInputs2.setResponder(s -> EAENetworkHandler.INSTANCE
+                .sendToServer(new CEAEGenericPacket("set", s, false)));
+
+        widgets.add("filter_input", this.filterInputs);
+        widgets.add("filter_input_2", this.filterInputs2);
+
+        setInitialFocus(this.filterInputs);
+
+        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
     @NotNull
@@ -81,26 +90,5 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
         super.updateBeforeRender();
         this.redstoneMode.set(menu.getRedStoneMode());
         this.redstoneMode.setVisibility(menu.hasUpgrade(AEItems.REDSTONE_CARD));
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        if (this.filterInputs == null || this.filterInputs2 == null) {
-            var a = style.getWidget("filter_input");
-            var b = style.getWidget("filter_input_2");
-
-            int ax = a.getLeft(), ay = a.getTop(), aw = a.getWidth(), ah = a.getHeight();
-            int bx = b.getLeft(), by = b.getTop(), bw = b.getWidth(), bh = b.getHeight();
-
-            this.filterInputs  = createMultiline(this.getGuiLeft() + ax, this.getGuiTop() + ay, aw, ah, true);
-            this.filterInputs2 = createMultiline(this.getGuiLeft() + bx, this.getGuiTop() + by, bw, bh, false);
-
-            addRenderableWidget(this.filterInputs);
-            addRenderableWidget(this.filterInputs2);
-        }
-
-        setInitialFocus(this.filterInputs);
     }
 }

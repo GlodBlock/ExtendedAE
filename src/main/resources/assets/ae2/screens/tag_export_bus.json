@@ -12,12 +12,12 @@
     },
     "whitelist": {
       "text": { "translate": "gui.extendedae.tag_storage_bus.whitelist" },
-      "position": { "right": 8, "top": 16 },
-      "align": "RIGHT"
+      "position": { "left": 8, "top": 54 },
+      "align": "LEFT"
     },
     "blacklist": {
       "text": { "translate": "gui.extendedae.tag_storage_bus.blacklist" },
-      "position": { "right": 8, "top": 54 },
+      "position": { "right": 8, "top": 56 },
       "align": "RIGHT"
     },
 
