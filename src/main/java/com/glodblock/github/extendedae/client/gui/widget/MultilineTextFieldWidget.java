@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.client.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -8,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.MultilineTextField;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
@@ -189,14 +189,12 @@ public class MultilineTextFieldWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics g, int mX, int mY, float partial) {
-        RenderSystem.enableDepthTest();
-
         int bg = 0xFF202020, border = isFocused() ? 0xFFFFFFFF : 0xFF808080;
-        g.fill(getX(), getY(), getX() + width, getY() + height, bg);
-        g.fill(getX(), getY(), getX() + width, getY() + 1, border);
-        g.fill(getX(), getY() + height - 1, getX() + width, getY() + height, border);
-        g.fill(getX(), getY(), getX() + 1, getY() + height, border);
-        g.fill(getX() + width - 1, getY(), getX() + width, getY() + height, border);
+        g.fill(RenderType.guiOverlay(), getX(), getY(), getX() + width, getY() + height, bg);
+        g.fill(RenderType.guiOverlay(), getX(), getY(), getX() + width, getY() + 1, border);
+        g.fill(RenderType.guiOverlay(), getX(), getY() + height - 1, getX() + width, getY() + height, border);
+        g.fill(RenderType.guiOverlay(), getX(), getY(), getX() + 1, getY() + height, border);
+        g.fill(RenderType.guiOverlay(), getX() + width - 1, getY(), getX() + width, getY() + height, border);
 
         int clipL = getX() + 2, clipT = getY() + 2, clipR = getX() + width - 2, clipB = getY() + height - 2;
         g.enableScissor(clipL, clipT, clipR, clipB);
@@ -208,11 +206,20 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         int selectionEnd   = textField.hasSelection() ? textField.selection().end()   : -1;
         int selectionColor = 0x80007FFF;
 
+        if (isFocused() && blink()) {
+            int curLine = textField.lineAtCursor();
+            Line ln = textField.line(curLine);
+            int cx = clipL + font.width(textField.value().substring(ln.begin(), textField.cursor()));
+            int cy = clipT + curLine * font.lineHeight - (int) scrollAmount;
+            if (cy >= clipT && cy < clipB) g.fill(RenderType.guiOverlay(), cx, cy, cx + 1, cy + font.lineHeight, 0xFFFFFFFF);
+        }
+
         for (int idx = firstLine; idx < textField.lineCount() && y <= clipB; idx++) {
             Line ln = textField.line(idx);
             String str = textField.value().substring(ln.begin(), ln.end());
             int xOff = clipL;
 
+            g.drawString(font, str, xOff, y, 0xFFE0E0E0);
             if (textField.hasSelection()) {
                 int lineStartChar = ln.begin();
                 int lineEndChar   = ln.end();
@@ -228,21 +235,11 @@ public class MultilineTextFieldWidget extends AbstractWidget {
                         int selX = xOff + font.width(preSel);
                         int selW = font.width(selectionText);
 
-                        g.fill(selX, y, selX + selW, y + font.lineHeight, selectionColor);
+                        g.fill(RenderType.guiTextHighlight(), selX, y, selX + selW, y + font.lineHeight, selectionColor);
                     }
                 }
             }
-
-            g.drawString(font, str, xOff, y, 0xFFFFFFFF);
             y += font.lineHeight;
-        }
-
-        if (isFocused() && blink()) {
-            int curLine = textField.lineAtCursor();
-            Line ln = textField.line(curLine);
-            int cx = clipL + font.width(textField.value().substring(ln.begin(), textField.cursor()));
-            int cy = clipT + curLine * font.lineHeight - (int) scrollAmount;
-            if (cy >= clipT && cy < clipB) g.fill(cx, cy, cx + 1, cy + font.lineHeight, 0xFFFFFFFF);
         }
 
         g.disableScissor();
@@ -299,7 +296,6 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         Line line(int idx)  { return cache.get(Mth.clamp(idx, 0, cache.size()-1)); }
         int  lineAtCursor() { return super.getLineAtCursor(); }
 
-        public boolean hasSelection() { return super.hasSelection(); }
         Selection selection() {
             var sv = super.getSelected();
             return new Selection(sv.beginIndex(), sv.endIndex());

@@ -18,7 +18,6 @@ import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -53,15 +52,13 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
 
         var placeholder = Component.translatable("gui.extendedae.tag_storage_bus.tooltip");
 
-        this.filterInputs = new MultilineTextFieldWidget(
-                Minecraft.getInstance().font, 0, 0, 160, 26, placeholder);
+        this.filterInputs = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, placeholder);
         this.filterInputs.setFilter(ORE_DICTIONARY_FILTER);
         this.filterInputs.setMaxLength(1024);
         this.filterInputs.setResponder(s -> EAENetworkHandler.INSTANCE
                 .sendToServer(new CEAEGenericPacket("set", s, true)));
 
-        this.filterInputs2 = new MultilineTextFieldWidget(
-                Minecraft.getInstance().font, 0, 0, 160, 26, placeholder);
+        this.filterInputs2 = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, placeholder);
         this.filterInputs2.setFilter(ORE_DICTIONARY_FILTER);
         this.filterInputs2.setMaxLength(1024);
         this.filterInputs2.setResponder(s -> EAENetworkHandler.INSTANCE
