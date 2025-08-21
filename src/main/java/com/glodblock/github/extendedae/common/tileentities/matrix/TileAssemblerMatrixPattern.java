@@ -152,7 +152,8 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
     @Override
     public PatternContainerGroup getTerminalGroup() {
         var icon = AEItemKey.of(EAESingletons.ASSEMBLER_MATRIX_PATTERN);
-        return new PatternContainerGroup(icon, icon.getDisplayName(), List.of(Component.translatable("gui.extendedae.assembler_matrix.pattern")));
+        var name = this.hasCustomName() ? this.getCustomName() : icon.getDisplayName();
+        return new PatternContainerGroup(icon, name, List.of(Component.translatable("gui.extendedae.assembler_matrix.pattern")));
     }
 
     public record Filter(Supplier<Level> world) implements IAEItemFilter {
