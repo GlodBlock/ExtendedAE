@@ -37,8 +37,8 @@ public class TagPriorityList implements IPartitionList {
      * @param blackListExpression The expression for the blacklist (e.g., "minecraft:logs | minecraft:planks").
      */
     public TagPriorityList(String whiteListExpression, String blackListExpression) {
-        this.rawWhiteListExpression = whiteListExpression != null ? whiteListExpression : "";
-        this.rawBlackListExpression = blackListExpression != null ? blackListExpression : "";
+        this.rawWhiteListExpression = this.removeBlank(whiteListExpression != null ? whiteListExpression : "");
+        this.rawBlackListExpression = this.removeBlank(blackListExpression != null ? blackListExpression : "");
 
         // Compile the expressions using the new parser.
         this.whiteListPredicate = TagExpParser.compile(this.rawWhiteListExpression);
@@ -49,6 +49,10 @@ public class TagPriorityList implements IPartitionList {
         this.isWhitelistActive = !this.rawWhiteListExpression.isBlank();
 
         INVALIDATOR.put(this, this.memory::clear);
+    }
+
+    private String removeBlank(String raw) {
+        return raw.replaceAll("\\s+", "");
     }
 
     public static void reset() {
