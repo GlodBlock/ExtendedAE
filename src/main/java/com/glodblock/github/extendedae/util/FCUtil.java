@@ -2,11 +2,17 @@ package com.glodblock.github.extendedae.util;
 
 import appeng.api.inventories.InternalInventory;
 import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.networking.CableBusBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.Predicate;
@@ -66,6 +72,26 @@ public class FCUtil {
             sp[i] = sp[i].trim();
         }
         return sp;
+    }
+
+    public static <E extends Enum<E>> StreamCodec<RegistryFriendlyByteBuf, E> enumStreamCodec(Class<E> clazz) {
+        return StreamCodec.of(FriendlyByteBuf::writeEnum, buf -> buf.readEnum(clazz));
+    }
+
+    @Nullable
+    public static <T> T findDevice(Class<T> clazz, Level world, BlockPos pos, Vec3 clicked) {
+        var tile = world.getBlockEntity(pos);
+        if (clazz.isInstance(tile)) {
+            return clazz.cast(tile);
+        }
+        if (tile instanceof CableBusBlockEntity cable) {
+            Vec3 hitInBlock = new Vec3(clicked.x - pos.getX(), clicked.y - pos.getY(), clicked.z - pos.getZ());
+            var part = cable.getCableBus().selectPartLocal(hitInBlock).part;
+            if (clazz.isInstance(part)) {
+                return clazz.cast(part);
+            }
+        }
+        return null;
     }
 
 }

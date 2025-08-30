@@ -54,6 +54,7 @@ import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
 import com.glodblock.github.extendedae.container.ContainerCaner;
 import com.glodblock.github.extendedae.container.ContainerCircuitCutter;
+import com.glodblock.github.extendedae.container.ContainerConfigModifier;
 import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
@@ -202,6 +203,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("oversize_interface"), ContainerExInterface.TYPE_OVERSIZE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("assembler_matrix"), ContainerAssemblerMatrix.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("void_cell"), ContainerVoidCell.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("config_modifier"), ContainerConfigModifier.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);

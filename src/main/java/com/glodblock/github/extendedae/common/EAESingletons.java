@@ -39,6 +39,7 @@ import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpg
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemVoidCell;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
+import com.glodblock.github.extendedae.common.items.tools.ItemConfigModifier;
 import com.glodblock.github.extendedae.common.items.tools.ItemPatternModifier;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
@@ -105,6 +106,7 @@ public class EAESingletons {
     public static DataComponentType<Pair<Long, GlobalPos>> WIRELESS_LOCATOR;
     public static DataComponentType<VoidMode> VOID_MODE;
     public static DataComponentType<Double> VOID_ENERGY;
+    public static DataComponentType<ItemConfigModifier.ConfigSettings> MODIFIER_CONFIG_SETTINGS;
 
     public static CommonItem ENTRO_CRYSTAL;
     public static ItemEntroSeed ENTRO_SEED;
@@ -176,6 +178,7 @@ public class EAESingletons {
     public static BlockAssemblerMatrixSpeed ASSEMBLER_MATRIX_SPEED;
     public static ItemVoidCell VOID_CELL;
     public static CommonItem QUARTZ_BLEND;
+    public static ItemConfigModifier CONFIG_MODIFIER;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -189,6 +192,7 @@ public class EAESingletons {
         WIRELESS_LOCATOR = GlodUtil.getComponentType(GlodCodecs.pair(Codec.LONG, GlobalPos.CODEC), GlodCodecs.pair(ByteBufCodecs.VAR_LONG, GlobalPos.STREAM_CODEC));
         VOID_MODE = GlodUtil.getComponentType(VoidMode.CODEC, VoidMode.STREAM_CODEC);
         VOID_ENERGY = GlodUtil.getComponentType(Codec.DOUBLE, ByteBufCodecs.DOUBLE);
+        MODIFIER_CONFIG_SETTINGS = GlodUtil.getComponentType(ItemConfigModifier.ConfigSettings.CODEC, ItemConfigModifier.ConfigSettings.STREAM_CODEC);
         ENTRO_CRYSTAL = new CommonItem();
         ENTRO_SEED = new ItemEntroSeed();
         ENTRO_DUST = new CommonItem();
@@ -259,6 +263,7 @@ public class EAESingletons {
         ASSEMBLER_MATRIX_SPEED = new BlockAssemblerMatrixSpeed();
         WIRELESS_EX_PAT = new ItemWirelessExPAT();
         VOID_CELL = new ItemVoidCell();
+        CONFIG_MODIFIER = new  ItemConfigModifier();
         regHandler.comp("is_part", IS_PART);
         regHandler.comp("tape_part_data", TAPE_PART_DATA);
         regHandler.comp("tape_tile_data", TAPE_TILE_DATA);
@@ -270,6 +275,7 @@ public class EAESingletons {
         regHandler.comp("wireless_locator", WIRELESS_LOCATOR);
         regHandler.comp("void_mode", VOID_MODE);
         regHandler.comp("void_energy", VOID_ENERGY);
+        regHandler.comp("modifier_config_settings", MODIFIER_CONFIG_SETTINGS);
         regHandler.block("entro_cluster_small", ENTRO_BUD_SMALL);
         regHandler.block("entro_cluster_medium", ENTRO_BUD_MEDIUM);
         regHandler.block("entro_cluster_large", ENTRO_BUD_LARGE);
@@ -340,6 +346,7 @@ public class EAESingletons {
         regHandler.item("oversize_interface_part", OVERSIZE_INTERFACE_PART);
         regHandler.item("void_cell", VOID_CELL);
         regHandler.item("quartz_blend", QUARTZ_BLEND);
+        regHandler.item("config_modifier", CONFIG_MODIFIER);
     }
 
 }
