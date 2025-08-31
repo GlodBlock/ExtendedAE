@@ -10,6 +10,7 @@ import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,6 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
 
     private final ActionMap actions = ActionMap.create();
     private ItemConfigModifier.ConfigSettings.Mode mode = ItemConfigModifier.ConfigSettings.Mode.MUL;
-    private long data = 1;
     private final AE2Button changeMode;
     private final AETextField dataInput;
     private static final Pattern NUMBER = Pattern.compile("[0-9]*");
@@ -29,6 +29,7 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
         super(menu, playerInventory, title, style);
         this.changeMode = new AE2Button(Component.empty(), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_mode", this.mode.getNext().ordinal())));
         this.changeMode.setSize(50, 20);
+        this.changeMode.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.config_modifier.change_mode")));
         this.dataInput = widgets.addTextField("data_input");
         this.dataInput.setMaxLength(15);
         this.dataInput.setFilter(NUMBER.asMatchPredicate());
@@ -40,7 +41,6 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
 
     private void setMode(int mode, long data) {
         this.mode = ItemConfigModifier.ConfigSettings.Mode.values()[mode];
-        this.data = data;
         this.dataInput.setValue(String.valueOf(data));
     }
 
@@ -64,7 +64,6 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
     public void updateBeforeRender() {
         super.updateBeforeRender();
         this.mode = this.getMenu().mode;
-        this.data = this.getMenu().data;
         this.changeMode.setMessage(Component.translatable("gui.extendedae.config_modifier.mode." + this.mode.getSerializedName()));
     }
 

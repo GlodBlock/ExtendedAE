@@ -16,6 +16,7 @@ import appeng.core.localization.Tooltips;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
+import com.glodblock.github.extendedae.client.hotkey.EAEHotKey;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import net.minecraft.client.gui.GuiGraphics;
@@ -72,7 +73,7 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
     @Override
     public boolean mouseClicked(double xCoord, double yCoord, int btn) {
         assert this.minecraft != null;
-        if (this.minecraft.options.keyPickItem.matchesMouse(btn)) {
+        if (EAEHotKey.SET_AMOUNT.matchesMouse(btn)) {
             var slot = findSlot(xCoord, yCoord);
             if (isValidSlot(slot)) {
                 var currentStack = GenericStack.fromItemStack(slot.getItem());

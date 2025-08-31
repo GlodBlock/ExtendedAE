@@ -36,7 +36,7 @@ import com.glodblock.github.extendedae.client.gui.pattern.GuiCraftingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiProcessingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiSmithingTablePattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiStonecuttingPattern;
-import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
+import com.glodblock.github.extendedae.client.hotkey.EAEHotKey;
 import com.glodblock.github.extendedae.client.model.AssemblerGlassModel;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
 import com.glodblock.github.extendedae.client.model.ExPlaneModel;
@@ -177,7 +177,8 @@ public class ClientRegistryHandler {
 
     @SubscribeEvent
     public void registerHotKey(RegisterKeyMappingsEvent e) {
-        e.register(PatternHotKey.getHotKey());
+        e.register(EAEHotKey.VIEW_PATTERN);
+        e.register(EAEHotKey.SET_AMOUNT);
     }
 
     private static ItemColor makeOpaque(ItemColor itemColor) {

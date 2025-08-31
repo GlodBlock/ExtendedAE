@@ -18,6 +18,7 @@ import com.glodblock.github.extendedae.api.ThresholdMode;
 import com.glodblock.github.extendedae.client.button.CycleEPPButton;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
+import com.glodblock.github.extendedae.client.hotkey.EAEHotKey;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
@@ -76,7 +77,7 @@ public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdE
     @Override
     public boolean mouseClicked(double xCoord, double yCoord, int btn) {
         assert this.minecraft != null;
-        if (this.minecraft.options.keyPickItem.matchesMouse(btn)) {
+        if (EAEHotKey.SET_AMOUNT.matchesMouse(btn)) {
             var slot = findSlot(xCoord, yCoord);
             if (isValidSlot(slot)) {
                 var currentStack = GenericStack.fromItemStack(slot.getItem());

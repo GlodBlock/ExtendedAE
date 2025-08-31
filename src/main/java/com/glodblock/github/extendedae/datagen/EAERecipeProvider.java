@@ -723,6 +723,17 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.QUARTZ_BLEND))
                 .save(c,  ExtendedAE.id("blasting/quartz_blend"));
 
+        // Config Modifier
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EAESingletons.CONFIG_MODIFIER)
+                .pattern("BPB")
+                .pattern(" E ")
+                .define('B', ConventionTags.dye(DyeColor.BLUE))
+                .define('P', AEItems.BLANK_PATTERN)
+                .define('E', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(EAESingletons.CONFIG_MODIFIER))
+                .save(c, ExtendedAE.id("config_modifier"));
+
         transformation(c);
         circuit(c);
         assemblerCircuit(c);
