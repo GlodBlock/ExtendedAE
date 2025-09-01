@@ -19,7 +19,7 @@ El bus de almacenamiento ME de etiquetas es un <ItemLink id="ae2:storage_bus" />
 
 Aquí hay algunos ejemplos:
 
-- Solo aceptar mena cruda
+- Solo aceptar minerales crudos
 
 c:raw_materials/*
 
