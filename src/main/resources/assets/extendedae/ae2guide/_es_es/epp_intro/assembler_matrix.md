@@ -55,7 +55,7 @@ La matriz ensambladora solo toma patrones de su núcleo de patrón. Cada núcleo
 
 - Núcleo de fabricación de matriz ensambladora
 
-La matriz ensambladora puede tener múltiples núcleos de fabricación para aumentar la cantidad de trabajos de fabricación que puede ejecutar al mismo tiempo.
+La matriz ensambladora asignará los trabajos de fabricación recibidos a su núcleo de fabricación. Cada núcleo de fabricación puede ejecutar 8 trabajos de fabricación al mismo tiempo.
 
 - Núcleo de velocidad de matriz ensambladora
 
@@ -64,7 +64,7 @@ Instalar más de 5 núcleos de velocidad no proporcionará un aumento de velocid
 
 ## Interfaz
 
-Al hacer clic derecho en una matriz ensambladora formada y en línea, se abrirá su interfaz.
+Hacer clic derecho en una matriz ensambladora formada y en línea abrirá su interfaz gráfica.
 
 ![GUI](../pic/assembler_matrix.png)
 
