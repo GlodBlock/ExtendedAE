@@ -8,6 +8,7 @@ public class MEGACommonLoad {
 
     public static void init() {
         Upgrades.add(MEGAItems.GREATER_ENERGY_CARD, EAESingletons.WIRELESS_CONNECTOR, 4);
+        Upgrades.add(MEGAItems.GREATER_ENERGY_CARD, EAESingletons.WIRELESS_HUB, 4);
     }
 
 }
