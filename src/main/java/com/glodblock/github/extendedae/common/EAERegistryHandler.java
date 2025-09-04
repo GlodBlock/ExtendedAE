@@ -272,6 +272,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.EX_IMPORT_BUS, 1, "group.ex_io_bus_part");
         Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_CONNECTOR, 4);
+        Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_HUB, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_ASSEMBLER, 5);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_INSCRIBER, 4);
         Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.TAG_STORAGE_BUS, 1);

@@ -212,6 +212,15 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SINGULARITY)
                 .save(c, ExtendedAE.id("assembler/wireless_kit"));
 
+        // Wireless Hub
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.WIRELESS_HUB)
+                .input(EAESingletons.WIRELESS_CONNECTOR)
+                .input(ConventionTags.SMART_CABLE, 8)
+                .input(EAESingletons.CONCURRENT_PROCESSOR, 4)
+                .input(AEBlocks.QUANTUM_LINK)
+                .save(c, ExtendedAE.id("assembler/wireless_hub"));
+
         // Ingredient Buffer
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EAESingletons.INGREDIENT_BUFFER)
