@@ -79,7 +79,7 @@ public abstract class BlockAssemblerMatrixBase<M extends TileAssemblerMatrixBase
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         var tile = this.getBlockEntity(level, pos);
         if (tile != null && !tile.isFormed()) {
             return InteractionResult.PASS;

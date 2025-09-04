@@ -77,6 +77,7 @@ import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.container.ContainerVoidCell;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
+import com.glodblock.github.extendedae.container.ContainerWirelessHub;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
@@ -204,6 +205,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("assembler_matrix"), ContainerAssemblerMatrix.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("void_cell"), ContainerVoidCell.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("config_modifier"), ContainerConfigModifier.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("wireless_hub"), ContainerWirelessHub.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);

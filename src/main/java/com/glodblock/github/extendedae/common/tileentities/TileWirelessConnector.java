@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.common.tileentities;
 
 import appeng.api.implementations.blockentities.IColorableBlockEntity;
 import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
@@ -12,8 +13,8 @@ import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.common.EAESingletons;
-import com.glodblock.github.extendedae.common.me.FreqGenerator;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
+import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.extendedae.xmod.ModConstants;
@@ -28,12 +29,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
 
 // Adapt from Quantum Bridge code
-public class TileWirelessConnector extends AENetworkedBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity {
+public class TileWirelessConnector extends AENetworkedBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity, WirelessNode {
 
     private boolean updateStatus = true;
     private long freq = 0;
@@ -41,7 +43,6 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
     private double powerUse;
     private final IUpgradeInventory upgrades;
     private final CacheHolder<BlockPos> other = CacheHolder.empty();
-    private static final FreqGenerator<Long> G = FreqGenerator.createLong();
     @NotNull
     private AEColor color = AEColor.TRANSPARENT;
 
@@ -65,6 +66,11 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
             this.markForUpdate();
             this.reactive();
         }
+    }
+
+    @Override
+    public IGridNode getGridNode() {
+        return this.getMainNode().getNode();
     }
 
     public void updatePowerUsage() {
@@ -91,6 +97,7 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
         return this.powerUse;
     }
 
+    @Nullable
     public BlockPos getOtherSide() {
         if (this.connect.isConnected()) {
             if (!this.other.isValid()) {
@@ -139,7 +146,7 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
             this.color = AEColor.TRANSPARENT;
         }
         this.getMainNode().setGridColor(this.color);
-        G.markUsed(this.freq);
+        WirelessConnect.G.markUsed(this.freq);
     }
 
     @Override
@@ -148,16 +155,17 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
         data.putLong("freq", this.freq);
         this.upgrades.writeToNBT(data, "upgrades", registries);
         data.putString("color", this.color.name());
-        G.markUsed(this.freq);
+        WirelessConnect.G.markUsed(this.freq);
     }
 
-    public void setFreq(long freq) {
+    public void setFrequency(long freq) {
         this.freq = freq;
         this.updateStatus = true;
+        this.setChanged();
     }
 
     public long getNewFreq() {
-        return G.genFreq();
+        return WirelessConnect.G.genFreq();
     }
 
     public void disconnect() {
@@ -177,6 +185,7 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
         this.connect.destroy();
     }
 
+    @Override
     public long getFrequency() {
         return this.freq;
     }
@@ -216,4 +225,5 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
         this.getMainNode().setGridColor(this.color);
         return true;
     }
+
 }

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "connected=false": {
+      "model": "extendedae:block/wireless_hub_off"
+    },
+    "connected=true": {
+      "model": "extendedae:block/wireless_hub_on"
+    }
+  }
+}

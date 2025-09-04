@@ -6,7 +6,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
 import appeng.me.service.helpers.ConnectionWrapper;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
+import com.glodblock.github.extendedae.common.me.FreqGenerator;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import net.minecraft.core.BlockPos;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,7 +18,8 @@ import java.util.Objects;
 
 public class WirelessConnect implements IActionHost {
 
-    private static final Locatables.Type<IActionHost> CONNECTORS = new Locatables.Type<>();
+    public static final FreqGenerator<Long> G = FreqGenerator.createLong();
+    private static final Locatables.Type<WirelessConnect> CONNECTORS = new Locatables.Type<>();
     private boolean isDestroyed = false;
     private boolean registered;
     private ConnectionWrapper connection;
@@ -26,9 +27,9 @@ public class WirelessConnect implements IActionHost {
     private long otherSide;
     private boolean shutdown;
     private double dis;
-    private TileWirelessConnector host;
+    private WirelessNode host;
 
-    public WirelessConnect(TileWirelessConnector connector) {
+    public WirelessConnect(WirelessNode connector) {
         this.host = connector;
         this.registered = true;
         NeoForge.EVENT_BUS.register(this);
@@ -68,12 +69,12 @@ public class WirelessConnect implements IActionHost {
             }
         }
 
-        var myOtherSide = this.otherSide == 0 ? null : CONNECTORS.get(host.getLevel(), this.otherSide);
+        var sideB = this.otherSide == 0 ? null : CONNECTORS.get(host.getLevel(), this.otherSide);
 
         this.shutdown = false;
         this.dis = 0;
 
-        if (myOtherSide instanceof WirelessConnect sideB) {
+        if (sideB != null) {
             var sideA = this;
             this.dis = Math.sqrt(sideA.host.getBlockPos().distSqr(sideB.host.getBlockPos()));
             if (sideA.isActive() && sideB.isActive()
@@ -127,14 +128,14 @@ public class WirelessConnect implements IActionHost {
 
     @SuppressWarnings("deprecation")
     private boolean canUseNode(long qe) {
-        var locatable = CONNECTORS.get(host.getLevel(), qe);
-        if (locatable instanceof WirelessConnect qc) {
+        var qc = CONNECTORS.get(host.getLevel(), qe);
+        if (qc != null) {
             var world = qc.host.getLevel();
             if (!qc.isDestroyed && world != null) {
                 if (world.hasChunkAt(qc.host.getBlockPos())) {
                     final var cur = Objects.requireNonNull(world.getServer()).getLevel(world.dimension());
                     final var te = world.getBlockEntity(qc.host.getBlockPos());
-                    return te != qc.host || world != cur;
+                    return te != qc.host.getBlockEntity() || world != cur;
                 } else {
                     ExtendedAE.LOGGER.warn(String.format("Found a registered Wireless Connector with serial %s whose chunk seems to be unloaded: %s", qe, qc));
                 }
@@ -172,6 +173,7 @@ public class WirelessConnect implements IActionHost {
             return;
         }
         this.isDestroyed = true;
+        this.shutdown = true;
         try {
             if (this.registered) {
                 NeoForge.EVENT_BUS.unregister(this);
@@ -193,7 +195,7 @@ public class WirelessConnect implements IActionHost {
 
     @Override
     public IGridNode getActionableNode() {
-        return host.getMainNode().getNode();
+        return this.host.getGridNode();
     }
 
 }
