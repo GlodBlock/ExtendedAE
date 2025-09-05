@@ -199,6 +199,18 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .save(c, ExtendedAE.id("wireless_connector"));
 
         ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.WIRELESS_HUB)
+                .pattern("SQS")
+                .pattern("EWE")
+                .pattern("SES")
+                .define('S', ConventionTags.SMART_CABLE)
+                .define('Q', AEBlocks.QUANTUM_LINK)
+                .define('E', AEItems.ENGINEERING_PROCESSOR)
+                .define('W', EPPItemAndBlock.WIRELESS_CONNECTOR)
+                .unlockedBy(C, has(EPPItemAndBlock.WIRELESS_HUB))
+                .save(c, ExtendedAE.id("wireless_hub"));
+
+        ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.WIRELESS_TOOL)
                 .pattern(" W ")
                 .pattern("ICI")

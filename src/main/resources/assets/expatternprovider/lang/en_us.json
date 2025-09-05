@@ -154,7 +154,7 @@
   "gui.expatternprovider.circuit_cutter": "Circuit Slicer",
   "gui.expatternprovider.tank_empty": "Empty",
   "gui.expatternprovider.tank_amount": "%s mb / %s mb",
-  "gui.extendedae.wireless_hub": "ME Wireless Hub",
+  "gui.expatternprovider.wireless_hub": "ME Wireless Hub",
   "gui.wireless_hub.disconnect.tooltip": "Disconnect",
   "gui.wireless_hub.empty_port.tooltip": "Available Port",
   "chat.ex_pattern_access_terminal.pos": "The pattern provider is now highlighted at: %s, Dim: %s",

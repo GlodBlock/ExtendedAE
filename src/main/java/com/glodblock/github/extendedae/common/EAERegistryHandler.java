@@ -70,6 +70,7 @@ import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeSerializer;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
 import com.glodblock.github.extendedae.xmod.appliede.APECommonLoad;
+import com.glodblock.github.extendedae.xmod.mega.MEGACommonLoad;
 import com.glodblock.github.extendedae.xmod.wt.WTCommonLoad;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -196,6 +197,9 @@ public class EAERegistryHandler extends RegistryHandler {
         }
         if (ModList.get().isLoaded("appliede")) {
             APECommonLoad.init();
+        }
+        if (ModList.get().isLoaded("megacells")) {
+            MEGACommonLoad.init();
         }
     }
 
