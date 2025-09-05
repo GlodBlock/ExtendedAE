@@ -1,8 +1,8 @@
 {
   "itemGroup.extendedae": "Extended AE",
-  "block.extendedae.entro_cluster_small": "Pequeno Cristal de Entro",
+  "block.extendedae.entro_cluster_small": "Cristal de Entro Pequeno",
   "block.extendedae.entro_cluster_medium": "Cristal de Entro Médio",
-  "block.extendedae.entro_cluster_large": "Grande Cristal de Entro",
+  "block.extendedae.entro_cluster_large": "Cristal de Entro Grande",
   "block.extendedae.entro_cluster": "Agregado de Entro",
   "block.extendedae.entro_budding_fully": "Drusa de Fluix Totalmente Entroizado",
   "block.extendedae.entro_budding_mostly": "Drusa de Fluix Majoritariamente Entroizado",
