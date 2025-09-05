@@ -21,13 +21,15 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
     public static final int PADDING_X = 8;
     public static final int PADDING_Y = 6;
     private final TooltipIcon statusIcon = new TooltipIcon();
-    private HighlightButton highlight;
+    private final HighlightButton highlight;
     private final WorldDisplay remote;
     private BlockPos lastPos = null;
 
     public GuiWirelessConnector(ContainerWirelessConnector menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.remote = new WorldDisplay(this, 0, 0, 129, 63);
+        this.highlight = new HighlightButton();
+        this.highlight.setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.highlight.tooltip")));
     }
 
     @Override
@@ -35,8 +37,6 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
         super.init();
         this.statusIcon.setPosition(this.leftPos + 152, this.topPos + PADDING_Y);
         this.remote.setPosition(this.leftPos + 24, this.topPos + 76);
-        this.highlight = new HighlightButton();
-        this.highlight.setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.highlight.tooltip")));
         this.highlight.setPosition(this.leftPos + 152, this.topPos + PADDING_Y + 18);
         this.remote.refreshBounds();
         this.addRenderableOnly(this.statusIcon);
@@ -57,7 +57,7 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
             this.highlight.setMultiplier(this.playerToBlockDis(remotePos));
             this.highlight.setSuccessJob(() -> {
                 if (this.getPlayer() != null) {
-                    this.getPlayer().displayClientMessage(Component.translatable("chat.wireless.highlight", remotePos.toShortString(), this.getPlayer().level().dimension().location().getPath()), false);
+                    this.getPlayer().displayClientMessage(Component.translatable("chat.wireless.highlight", remotePos.toShortString(), this.getPlayer().clientLevel.dimension().location().getPath()), false);
                 }
             });
             this.highlight.setVisibility(true);
