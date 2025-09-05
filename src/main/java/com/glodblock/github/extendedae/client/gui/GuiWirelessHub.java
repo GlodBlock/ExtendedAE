@@ -57,8 +57,8 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
             int X = i < 4 ? COL1_X : COL2_X;
             int Y = i % 4;
             this.remotes[i].setPosition(this.leftPos + X, this.topPos + COL_Y + Y * Y_OFFSET);
-            this.highlightBtn[i].setPosition(this.leftPos + X - 18, this.topPos + COL_Y + Y * Y_OFFSET - 2);
-            this.disconnectBtn[i].setPosition(this.leftPos + X + 18, this.topPos + COL_Y + Y * Y_OFFSET - 2);
+            this.highlightBtn[i].setPosition(this.leftPos + X - 18, this.topPos + COL_Y + Y * Y_OFFSET);
+            this.disconnectBtn[i].setPosition(this.leftPos + X + 18, this.topPos + COL_Y + Y * Y_OFFSET);
             this.addRenderableOnly(this.remotes[i]);
             this.addRenderableWidget(this.highlightBtn[i]);
             this.addRenderableWidget(this.disconnectBtn[i]);
