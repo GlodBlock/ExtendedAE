@@ -18,7 +18,8 @@ item_ids:
 </Row>
 
 El conector ME inalámbrico puede vincular dos redes como un <ItemLink id="ae2:quantum_link" />, pero con distancias limitadas
-y no puede cruzar dimensiones.
+y no puede cruzar dimensiones. El conector ME inalámbrico solo admite conexiones uno a uno, necesitas usar un <ItemLink id="extendedae:wireless_hub" />
+si deseas conexiones muchos a muchos.
 
 ## Vincular los conectores inalámbricos
 
