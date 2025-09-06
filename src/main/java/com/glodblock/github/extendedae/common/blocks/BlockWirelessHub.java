@@ -74,6 +74,10 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
     public InteractionResult check(TileWirelessHub tile, ItemStack stack, Level world, BlockPos thisPos, BlockHitResult hit, Player p) {
         if (stack.getItem() == EPPItemAndBlock.WIRELESS_TOOL && world instanceof ServerLevel server) {
             var port = tile.allocatePort();
+            if (port < 0) {
+                p.displayClientMessage(WirelessFail.OUT_OF_PORT.getTranslation(), true);
+                return InteractionResult.FAIL;
+            }
             var nbt = stack.hasTag() ? stack.getTag() : new CompoundTag();
             assert nbt != null;
             if (nbt.getLong("freq") != 0) {
@@ -119,7 +123,7 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 } if (otherTile instanceof TileWirelessHub otherHub) {
                     int otherPort = otherHub.allocatePort();
-                    if (port < 0) {
+                    if (otherPort < 0) {
                         p.displayClientMessage(WirelessFail.OUT_OF_PORT.getTranslation(), true);
                         return InteractionResult.FAIL;
                     } else {
