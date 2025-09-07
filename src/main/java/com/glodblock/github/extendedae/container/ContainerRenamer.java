@@ -73,10 +73,16 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
     }
 
     private static Consumer<String> setter(Object o) {
-        if (o instanceof AEBaseBlockEntity || o instanceof AEBasePart) {
+        if (o instanceof AEBaseBlockEntity || o instanceof AEBasePart){
             return s -> {
                 var c = s.isBlank() ? null : Component.literal(s);
                 Ae2Reflect.setCustomName(o, c);
+                if (o instanceof AEBaseBlockEntity te) {
+                    te.setChanged();
+                }
+                if (o instanceof AEBasePart part) {
+                    part.getHost().markForSave();
+                }
             };
         }
         return null;

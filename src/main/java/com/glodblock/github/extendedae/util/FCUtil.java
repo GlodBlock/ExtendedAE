@@ -1,9 +1,7 @@
 package com.glodblock.github.extendedae.util;
 
 import appeng.api.inventories.InternalInventory;
-import appeng.api.parts.IPart;
 import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.networking.CableBusBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -38,13 +36,6 @@ public class FCUtil {
         return itemStack.getHoverName();
     }
 
-    public static IPart getPart(BlockEntity te, Direction face) {
-        if (te instanceof CableBusBlockEntity cable) {
-            return cable.getPart(face);
-        }
-        return null;
-    }
-
     public static boolean checkInvalidRL(String rl, IForgeRegistry<?> registry) {
         return checkInvalidRL(new ResourceLocation(rl), registry);
     }
@@ -67,11 +58,11 @@ public class FCUtil {
 
     public static int speedCardMap(int card, int multi) {
         return multi * switch (card) {
-            default -> 2;
             case 1 -> 3;
             case 2 -> 5;
             case 3 -> 10;
             case 4 -> 50;
+            default -> 2;
         };
     }
 
