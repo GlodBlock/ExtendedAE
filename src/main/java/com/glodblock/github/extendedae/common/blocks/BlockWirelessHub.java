@@ -47,6 +47,7 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
         return currentState.setValue(CONNECTED, be.isConnected());
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         var te = this.getBlockEntity(level, pos);
@@ -67,8 +68,6 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
             super.onRemove(state, level, pos, newState, isMoving);
         }
     }
-
-
 
     @Override
     public InteractionResult check(TileWirelessHub tile, ItemStack stack, Level world, BlockPos thisPos, BlockHitResult hit, Player p) {
@@ -154,4 +153,5 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
     public void openGui(TileWirelessHub tile, Player p) {
         MenuOpener.open(ContainerWirelessHub.TYPE, p, MenuLocators.forBlockEntity(tile));
     }
+
 }

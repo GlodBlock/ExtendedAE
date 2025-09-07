@@ -61,6 +61,7 @@ public class PartModStorageBus extends PartSpecialStorageBus {
         if (!exp.equals(this.modid)) {
             this.modid = exp;
             this.filter = null;
+            this.getHost().markForSave();
             this.forceUpdate();
         }
     }

@@ -65,12 +65,14 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
             if (!exp.equals(this.oreExpWhite)) {
                 this.oreExpWhite = exp;
                 this.filter = null;
+                this.getHost().markForSave();
                 this.forceUpdate();
             }
         } else {
             if (!exp.equals(this.oreExpBlack)) {
                 this.oreExpBlack = exp;
                 this.filter = null;
+                this.getHost().markForSave();
                 this.forceUpdate();
             }
         }

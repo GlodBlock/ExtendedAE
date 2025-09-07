@@ -93,11 +93,13 @@ public class PartTagExportBus extends PartSpecialExportBus {
             if (!exp.equals(this.oreExpWhite)) {
                 this.oreExpWhite = exp;
                 this.filter = null;
+                this.getHost().markForSave();
             }
         } else {
             if (!exp.equals(this.oreExpBlack)) {
                 this.oreExpBlack = exp;
                 this.filter = null;
+                this.getHost().markForSave();
             }
         }
     }

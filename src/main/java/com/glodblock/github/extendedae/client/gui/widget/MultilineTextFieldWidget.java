@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.client.gui.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

@@ -18,7 +18,6 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -34,15 +33,8 @@ public class WorldDisplay extends AbstractWidget {
     private float zoom = 2.0f;
     private GuidebookScene scene;
     private boolean ready;
-    @NotNull
-    private final static Level clientWorld;
     private final static GuidebookLevelRenderer worldRender = GuidebookLevelRenderer.getInstance();
     private LytRect bounds;
-
-    static {
-        assert Minecraft.getInstance().level != null;
-        clientWorld = Minecraft.getInstance().level;
-    }
 
     public WorldDisplay(AEBaseScreen<?> addedOn, int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
@@ -56,7 +48,11 @@ public class WorldDisplay extends AbstractWidget {
 
     public void locate(BlockPos blockPos) {
         // holy crap what shit i just made
-        // TODO: 2023/8/25 optimize it later 
+        // TODO: 2023/8/25 optimize it later
+        var clientWorld = Minecraft.getInstance().level;
+        if (clientWorld == null) {
+            return;
+        }
         this.zoom = 2.0f;
         this.ready = false;
         var block = clientWorld.getBlockState(blockPos);
