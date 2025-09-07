@@ -1,18 +1,17 @@
-buildscript {
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
+    id 'java-library'
+    id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.86'
 }
 
-version = "${mod_version}"
-group = 'com.github.glodblock.epp'
+version = mod_version
+group = mod_group_id
+
+repositories {
+    mavenLocal()
+}
 
 base {
     archivesName = mod_name
@@ -20,44 +19,47 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-    copyIdeResources = true
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
+legacyForge {
 
+    version = "${minecraft_version}-${forge_version}"
+
+    mods {
+        extendedae {
+            sourceSet sourceSets.main
+        }
+    }
+
+    runs {
         client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            arg "-mixin.config=" + "mixins.epp.json"
+            client()
         }
 
         server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            arg "-mixin.config=" + "mixins.epp.json"
-            args '--nogui'
+            server()
         }
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
+
+        gametestWorld {
+            client()
+            programArguments.addAll("--username", "EAEDev", "--quickPlaySingleplayer", "GametestWorld")
         }
 
         data {
-            workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
+
+        gametest {
+            type = "gameTestServer"
+            gameDirectory = project.file("build/gametest")
+        }
+
     }
+
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 repositories {
     mavenLocal()
@@ -89,73 +91,72 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
-    implementation fg.deobf("curse.maven:glodium-957920:5006780")
-    implementation fg.deobf("appeng:appliedenergistics2-forge:15.4.2")
-    implementation fg.deobf("org.appliedenergistics:guideme:20.1.7")
-    compileOnly fg.deobf("curse.maven:applied-energistics-2-wireless-terminals-459929:5162352")
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
-    compileOnly fg.deobf("curse.maven:applied-flux-965012:5329825")
-    compileOnly fg.deobf("curse.maven:mega-cells-622112:5320730")
-    compileOnly fg.deobf("curse.maven:jade-324717:4768593")
+    modImplementation "curse.maven:glodium-957920:5006780"
+    modImplementation "appeng:appliedenergistics2-forge:15.4.2"
+    modImplementation "org.appliedenergistics:guideme:20.1.7"
+    modCompileOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:5162352"
+    modCompileOnly "mezz.jei:jei-1.20.1-forge:15.0.0.12"
+    modCompileOnly "curse.maven:applied-flux-965012:5329825"
+    modCompileOnly "curse.maven:mega-cells-622112:5320730"
+    modCompileOnly "curse.maven:jade-324717:4768593"
     // rei
     compileOnly "me.shedaniel.cloth:basic-math:0.6.1"
-    compileOnly fg.deobf("dev.architectury:architectury-forge:7.0.66")
-    compileOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:12.0.622")
-    compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
+    modCompileOnly "dev.architectury:architectury-forge:7.0.66"
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-forge:12.0.622"
+    modCompileOnly "me.shedaniel.cloth:cloth-config-forge:9.0.94"
     // project e
-    compileOnly fg.deobf("curse.maven:projecte-226410:4901949")
-    compileOnly fg.deobf("curse.maven:appliede-1009940:5364294")
+    modCompileOnly "curse.maven:projecte-226410:4901949"
+    modCompileOnly "curse.maven:appliede-1009940:5364294"
     // gregtech
-    compileOnly fg.deobf("curse.maven:gregtechceu-modern-890405:5369020")
-    compileOnly fg.deobf("curse.maven:ldlib-626676:5394816")
+    modCompileOnly "curse.maven:gregtechceu-modern-890405:5369020"
+    modCompileOnly "curse.maven:ldlib-626676:5394816"
     // immersive engineering
-    compileOnly fg.deobf("curse.maven:immersive-engineering-231951:5224387")
+    modCompileOnly "curse.maven:immersive-engineering-231951:5224387"
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     // runtime test
-    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
-    runtimeOnly fg.deobf("curse.maven:jade-324717:4768593")
-    runtimeOnly fg.deobf("curse.maven:mega-cells-622112:5320730")
-    runtimeOnly fg.deobf("curse.maven:projecte-226410:4901949")
-    runtimeOnly fg.deobf("curse.maven:appliede-1009940:5364294")
-    runtimeOnly fg.deobf("curse.maven:cloth-config-348521:5729105")
-}
+    modRuntimeOnly "mezz.jei:jei-1.20.1-forge:15.0.0.12"
+    modRuntimeOnly "curse.maven:jade-324717:4768593"
+    modRuntimeOnly "curse.maven:mega-cells-622112:5320730"
+    modRuntimeOnly "curse.maven:projecte-226410:4901949"
+    modRuntimeOnly "curse.maven:appliede-1009940:5364294"
+    modRuntimeOnly "curse.maven:cloth-config-348521:5729105"
 
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            neo_version: forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
-    ]
-    inputs.properties replaceProperties
-
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'TweakClass': "org.spongepowered.asm.launch.MixinTweaker",
-                'TweakOrder': 0,
-                'MixinConfigs': "mixins.epp.json"
-        ])
-    }
-    finalizedBy 'reobfJar'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    testCompileOnly 'org.jetbrains:annotations:24.1.0'
 }
 
 mixin {
-    add sourceSets.main, "mixins.epp.refmap.json"
+    var refmap = add sourceSets.main, "mixins.epp.refmap.json"
+    jar.from refmap
+    config "mixins.epp.json"
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version         : forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
