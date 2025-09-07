@@ -14,7 +14,6 @@ public class ContainerWirelessConnector extends UpgradeableMenu<TileWirelessConn
             .create(ContainerWirelessConnector::new, TileWirelessConnector.class)
             .build("wireless_connector");
 
-    private final TileWirelessConnector connector;
     @GuiSync(7)
     public double powerUse;
     @GuiSync(8)
@@ -28,13 +27,12 @@ public class ContainerWirelessConnector extends UpgradeableMenu<TileWirelessConn
 
     public ContainerWirelessConnector(int id, Inventory playerInventory, TileWirelessConnector host) {
         super(TYPE, id, playerInventory, host);
-        this.connector = host;
     }
 
     @Override
     public void broadcastChanges() {
-        this.powerUse = this.connector.getPowerUse();
-        var node = this.connector.getMainNode().getNode();
+        this.powerUse = this.getHost().getPowerUse();
+        var node = this.getHost().getMainNode().getNode();
         if (node != null) {
             this.usedChannel = node.getUsedChannels();
             this.maxChannel = node.getMaxChannels();
@@ -42,15 +40,15 @@ public class ContainerWirelessConnector extends UpgradeableMenu<TileWirelessConn
             this.usedChannel = 0;
             this.maxChannel = 0;
         }
-        var otherSide = this.connector.getOtherSide();
+        var otherSide = this.getHost().getOtherSide();
         if (otherSide == null) {
             this.otherSide = 0;
-            this.status = this.connector.getFrequency() == 0 ? WirelessStatus.UNCONNECTED : WirelessStatus.REMOTE_ERROR;
+            this.status = this.getHost().getFrequency() == 0 ? WirelessStatus.UNCONNECTED : WirelessStatus.REMOTE_ERROR;
         } else {
             this.otherSide = otherSide.asLong();
             this.status = WirelessStatus.WORKING;
         }
-        if (!this.connector.getMainNode().isPowered() && this.status == WirelessStatus.WORKING) {
+        if (!this.getHost().getMainNode().isPowered() && this.status == WirelessStatus.WORKING) {
             this.status = WirelessStatus.NO_POWER;
         }
         super.broadcastChanges();

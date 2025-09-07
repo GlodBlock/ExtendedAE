@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.common.tileentities;
 
 import appeng.api.implementations.blockentities.IColorableBlockEntity;
 import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
@@ -12,10 +13,11 @@ import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
-import com.glodblock.github.extendedae.common.me.FreqGenerator;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
+import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
 import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.glodium.util.GlodUtil;
+import gripe._90.megacells.definition.MEGAItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,13 +25,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 // Adapt from Quantum Bridge code
-public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity {
+public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity, WirelessNode {
 
     private boolean updateStatus = true;
     private long freq = 0;
@@ -37,7 +41,6 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     private double powerUse;
     private final IUpgradeInventory upgrades;
     private final CacheHolder<BlockPos> other = CacheHolder.empty();
-    private static final FreqGenerator<Long> G = FreqGenerator.createLong();
     @NotNull
     private AEColor color = AEColor.TRANSPARENT;
 
@@ -63,8 +66,13 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         }
     }
 
+    @Override
+    public IGridNode getGridNode() {
+        return this.getMainNode().getNode();
+    }
+
     public void updatePowerUsage() {
-        var disc = 1 - 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
+        var disc = 1 - this.calculateDisc();
         if (this.connect.isConnected()) {
             var dis = Math.max(this.connect.getDistance(), Math.E);
             this.powerUse = Math.max(1.0, dis * Math.log(dis) * disc);
@@ -74,10 +82,19 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         this.getMainNode().setIdlePowerUsage(this.powerUse);
     }
 
+    private double calculateDisc() {
+        double disc = 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
+        if (ModList.get().isLoaded("megacells")) {
+            disc += 0.2 * this.upgrades.getInstalledUpgrades(MEGAItems.GREATER_ENERGY_CARD);
+        }
+        return disc;
+    }
+
     public double getPowerUse() {
         return this.powerUse;
     }
 
+    @Nullable
     public BlockPos getOtherSide() {
         if (this.connect.isConnected()) {
             if (!this.other.isValid()) {
@@ -126,7 +143,7 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
             this.color = AEColor.TRANSPARENT;
         }
         this.getMainNode().setGridColor(this.color);
-        G.markUsed(this.freq);
+        WirelessConnect.G.markUsed(this.freq);
     }
 
     @Override
@@ -135,16 +152,16 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         data.putLong("freq", this.freq);
         this.upgrades.writeToNBT(data, "upgrades");
         data.putString("color", this.color.name());
-        G.markUsed(this.freq);
+        WirelessConnect.G.markUsed(this.freq);
     }
 
-    public void setFreq(long freq) {
+    public void setFrequency(long freq) {
         this.freq = freq;
         this.updateStatus = true;
     }
 
     public long getNewFreq() {
-        return G.genFreq();
+        return WirelessConnect.G.genFreq();
     }
 
     public void disconnect() {

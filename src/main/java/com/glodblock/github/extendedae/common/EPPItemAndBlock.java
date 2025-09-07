@@ -17,6 +17,7 @@ import com.glodblock.github.extendedae.common.blocks.BlockFishbig;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
+import com.glodblock.github.extendedae.common.blocks.BlockWirelessHub;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixCrafter;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixFrame;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixGlass;
@@ -63,6 +64,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileOversizeInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
+import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixFrame;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixGlass;
@@ -93,6 +95,7 @@ public class EPPItemAndBlock {
     public static ItemIOBusUpgrade IO_BUS_UPGRADE;
     public static ItemPatternAccessTerminalUpgrade PATTERN_UPGRADE;
     public static BlockWirelessConnector WIRELESS_CONNECTOR;
+    public static BlockWirelessHub WIRELESS_HUB;
     public static ItemWirelessConnectTool WIRELESS_TOOL;
     public static BlockIngredientBuffer INGREDIENT_BUFFER;
     public static BlockExDrive EX_DRIVE;
@@ -149,6 +152,7 @@ public class EPPItemAndBlock {
         PACKING_TAPE = new ItemMEPackingTape();
         PACKAGE = new ItemPackedDevice();
         WIRELESS_CONNECTOR = new BlockWirelessConnector();
+        WIRELESS_HUB = new BlockWirelessHub();
         WIRELESS_TOOL = new ItemWirelessConnectTool();
         INGREDIENT_BUFFER = new BlockIngredientBuffer();
         EX_DRIVE = new BlockExDrive();
@@ -195,6 +199,7 @@ public class EPPItemAndBlock {
         regHandler.block("ex_pattern_provider", EX_PATTERN_PROVIDER, TileExPatternProvider.class, TileExPatternProvider::new);
         regHandler.block("ex_interface", EX_INTERFACE, TileExInterface.class, TileExInterface::new);
         regHandler.block("wireless_connect", WIRELESS_CONNECTOR, TileWirelessConnector.class, TileWirelessConnector::new);
+        regHandler.block("wireless_hub", WIRELESS_HUB, TileWirelessHub.class, TileWirelessHub::new);
         regHandler.block("ingredient_buffer", INGREDIENT_BUFFER, TileIngredientBuffer.class, TileIngredientBuffer::new);
         regHandler.block("ex_drive", EX_DRIVE, TileExDrive.class, TileExDrive::new);
         regHandler.block("ex_molecular_assembler", EX_ASSEMBLER, TileExMolecularAssembler.class, TileExMolecularAssembler::new);
