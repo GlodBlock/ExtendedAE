@@ -12,8 +12,7 @@ public abstract class MixinAbstractLevelEmitterPart {
 
     @Redirect(
             method = "animateTick",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/core/particles/DustParticleOptions;REDSTONE:Lnet/minecraft/core/particles/DustParticleOptions;"),
-            remap = false
+            at = @At(value = "FIELD", target = "Lnet/minecraft/core/particles/DustParticleOptions;REDSTONE:Lnet/minecraft/core/particles/DustParticleOptions;")
     )
     private DustParticleOptions setBlueColor() {
         if (((Object) this) instanceof PartThresholdLevelEmitter) {
