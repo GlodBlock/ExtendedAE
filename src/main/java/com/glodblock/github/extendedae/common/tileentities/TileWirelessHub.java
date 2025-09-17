@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.common.tileentities;
 
+import appeng.api.implementations.blockentities.IColorableBlockEntity;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
@@ -7,6 +8,7 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.grid.AENetworkBlockEntity;
 import appeng.core.definitions.AEItems;
@@ -22,14 +24,16 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.ModList;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TileWirelessHub extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject {
+public class TileWirelessHub extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity {
     public static final int MAX_PORT = 8;
     private final boolean[] updateStatus = new boolean[MAX_PORT];
     private final long[] freq = new long[MAX_PORT];
@@ -38,6 +42,8 @@ public class TileWirelessHub extends AENetworkBlockEntity implements ServerTicki
     private final IUpgradeInventory upgrades;
     @SuppressWarnings("unchecked")
     private final CacheHolder<BlockPos>[] other = new CacheHolder[MAX_PORT];
+    @NotNull
+    private AEColor color = AEColor.TRANSPARENT;
 
     public TileWirelessHub(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileWirelessHub.class, TileWirelessHub::new, EPPItemAndBlock.WIRELESS_HUB), pos, blockState);
@@ -162,6 +168,12 @@ public class TileWirelessHub extends AENetworkBlockEntity implements ServerTicki
             this.freq[i] = data.getLong("freq" + i);
             WirelessConnect.G.markUsed(this.freq[i]);
         }
+        if (data.contains("color")) {
+            this.color = AEColor.valueOf(data.getString("color"));
+        } else {
+            this.color = AEColor.TRANSPARENT;
+        }
+        this.getMainNode().setGridColor(this.color);
     }
 
     @Override
@@ -172,6 +184,7 @@ public class TileWirelessHub extends AENetworkBlockEntity implements ServerTicki
             data.putLong("freq" + i, freq[i]);
             WirelessConnect.G.markUsed(this.freq[i]);
         }
+        data.putString("color", this.color.name());
     }
 
     public void setFrequency(long freq, int port) {
@@ -227,6 +240,23 @@ public class TileWirelessHub extends AENetworkBlockEntity implements ServerTicki
     public void clearContent() {
         super.clearContent();
         this.upgrades.clear();
+    }
+
+    @Override
+    public @NotNull AEColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public boolean recolourBlock(Direction direction, AEColor colour, Player player) {
+        if (colour == this.color) {
+            return false;
+        }
+        this.color = colour;
+        this.saveChanges();
+        this.markForUpdate();
+        this.getMainNode().setGridColor(this.color);
+        return true;
     }
 
     private record Stock(TileWirelessHub hub, int port) implements WirelessNode {
