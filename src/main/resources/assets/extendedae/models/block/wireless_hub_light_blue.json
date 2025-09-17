@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+        "all": "extendedae:block/wireless_hub/wireless_hub_light_blue"
+    }
+}
