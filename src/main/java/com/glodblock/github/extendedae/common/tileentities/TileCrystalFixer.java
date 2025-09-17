@@ -18,6 +18,7 @@ import com.glodblock.github.extendedae.api.IRecipeMachine;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.util.RecipeExecutor;
+import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
 import com.glodblock.github.glodium.recipe.CommonRecipeContext;
 import com.glodblock.github.glodium.recipe.RecipeSearchContext;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements IGridTickable, IRecipeMachine<RecipeInput, CrystalFixerRecipe> {
+public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements IGridTickable, IRecipeMachine<RecipeInput, CrystalFixerRecipe>, JadeDataProvider {
 
     public static final int POWER_MAXIMUM_AMOUNT = 8000;
     public static final int MAX_PROGRESS = 100;
@@ -204,6 +205,16 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
             var notAdded = this.inv.insertItem(0, held, false);
             playerInv.setItem(playerInv.selected, notAdded);
         }
+    }
+
+    @Override
+    public String jadeID() {
+        return "crystal_fixer";
+    }
+
+    @Override
+    public void collectJadeInfo(CompoundTag tag) {
+        tag.putInt("progress", this.progress);
     }
 
     private static class FixerRecipeContext extends CommonRecipeContext<CrystalFixerRecipe> {

@@ -20,6 +20,7 @@ public class WirelessConnectorTooltip implements IBlockComponentProvider {
             var data = target.getCompound(ExtendedAE.MODID);
             if (data.contains("wireless")) {
                 var color = data.getCompound("wireless").getString("color");
+                var used = data.getCompound("wireless").getInt("used");
                 var aeColor = AEColor.valueOf(color);
                 if (aeColor != AEColor.TRANSPARENT) {
                     tooltip.add(
@@ -29,8 +30,13 @@ public class WirelessConnectorTooltip implements IBlockComponentProvider {
                             )
                     );
                 }
+                tooltip.add(
+                        Component.translatable(
+                                "jade.wireless_connector.used",
+                                used
+                        )
+                );
             }
-
         }
     }
 
