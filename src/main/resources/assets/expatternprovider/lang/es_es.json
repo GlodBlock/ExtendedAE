@@ -171,6 +171,7 @@
   "group.ex_io_bus_part": "Bus de importación/exportación ME extendido",
   "group.ex_emc_io_bus_part": "Bus de importación/exportación de transmutación ME extendido",
   "jade.wireless_connector.color": "Color: %s",
+  "jade.wireless_connector.used": "Canal usado: %s",
   "jade.crystal_chamber.progress": "Progreso: %s",
   "config.jade.plugin_expatternprovider.jade_chamber": "Reparador de cristales ME",
   "config.jade.plugin_expatternprovider.jade_wireless": "Color del conector ME inalámbrico",
