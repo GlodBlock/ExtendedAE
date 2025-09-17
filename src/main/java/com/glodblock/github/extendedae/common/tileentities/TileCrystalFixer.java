@@ -18,6 +18,7 @@ import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.AEItemDefinitionFilter;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +33,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 
-public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTickable {
+public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTickable, JadeDataProvider {
     
     private int progress = 0;
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, 1);
@@ -99,10 +100,6 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
         if (random.nextInt(10) < 1) {
             this.inv.extractItem(0, 1, false);
         }
-    }
-
-    public int getProgress() {
-        return this.progress;
     }
 
     private long userPower(int value) {
@@ -177,6 +174,16 @@ public class TileCrystalFixer extends AENetworkInvBlockEntity implements IGridTi
             var notAdded = this.inv.insertItem(0, held, false);
             playerInv.setItem(playerInv.selected, notAdded);
         }
+    }
+
+    @Override
+    public String jadeID() {
+        return "crystal_fixer";
+    }
+
+    @Override
+    public void collectJadeInfo(CompoundTag tag) {
+        tag.putInt("progress", this.progress);
     }
 
 }

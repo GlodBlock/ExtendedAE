@@ -16,8 +16,8 @@ public class CrystalGrowthChamberTooltip implements IBlockComponentProvider {
         var target = accessor.getServerData();
         if (target.contains(ExtendedAE.MODID)) {
             var data = target.getCompound(ExtendedAE.MODID);
-            if (data.contains("state")) {
-                var progress = data.getCompound("state").getInt("progress");
+            if (data.contains("crystal_fixer")) {
+                var progress = data.getCompound("crystal_fixer").getInt("progress");
                 tooltip.add(Component.translatable("jade.crystal_chamber.progress", progress));
             }
         }

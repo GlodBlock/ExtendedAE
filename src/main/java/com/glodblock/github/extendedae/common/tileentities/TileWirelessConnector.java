@@ -16,6 +16,7 @@ import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
 import com.glodblock.github.extendedae.util.CacheHolder;
+import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
 import com.glodblock.github.glodium.util.GlodUtil;
 import gripe._90.megacells.definition.MEGAItems;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,7 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 // Adapt from Quantum Bridge code
-public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity, WirelessNode {
+public class TileWirelessConnector extends AENetworkBlockEntity implements ServerTickingBlockEntity, IUpgradeableObject, IColorableBlockEntity, WirelessNode, JadeDataProvider {
 
     private boolean updateStatus = true;
     private long freq = 0;
@@ -214,4 +215,16 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         this.getMainNode().setGridColor(this.color);
         return true;
     }
+
+    @Override
+    public String jadeID() {
+        return "wireless";
+    }
+
+    @Override
+    public void collectJadeInfo(CompoundTag tag) {
+        tag.putString("color", this.color.name());
+        this.getMainNode().ifPresent((gird, node) -> tag.putInt("used", node.getUsedChannels()));
+    }
+
 }
