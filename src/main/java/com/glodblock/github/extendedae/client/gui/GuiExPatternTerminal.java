@@ -30,6 +30,7 @@ import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.client.button.HighlightButtonSmall;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
+import com.glodblock.github.extendedae.util.MessageUtil;
 import com.google.common.collect.HashMultimap;
 import guideme.color.ConstantColor;
 import guideme.document.LytRect;
@@ -577,10 +578,11 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                     if (info != null) {
                         var btn = new HighlightButtonSmall();
                         btn.setMultiplier(this.playerToBlockDis(info.pos()));
-                        btn.setTarget(info.pos, info.face, info.playerWorld);
+                        btn.setTarget(info.pos, info.face, info.BlockWorld);
                         btn.setSuccessJob(() -> {
-                            if (this.getPlayer() != null && info.pos != null && info.playerWorld != null) {
-                                this.getPlayer().displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", info.pos.toShortString(), info.playerWorld.location().getPath()), false);
+                            if (this.getPlayer() != null && info.pos != null && info.BlockWorld != null) {
+                                Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.BlockWorld, "chat.ex_pattern_access_terminal.pos");
+                                this.getPlayer().displayClientMessage(message, false);
                             }
                         });
                         btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.03")));
@@ -713,7 +715,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
     }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> playerWorld) {
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> BlockWorld) {
 
     }
 
