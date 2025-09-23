@@ -12,6 +12,7 @@ import com.glodblock.github.extendedae.common.me.wireless.WirelessStatus;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
 import com.glodblock.github.extendedae.container.ContainerWirelessHub;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
+import com.glodblock.github.extendedae.util.MessageUtil;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
@@ -78,7 +79,8 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
                 this.highlightBtn[i].setMultiplier(this.playerToBlockDis(remotePos));
                 this.highlightBtn[i].setSuccessJob(() -> {
                     if (this.getPlayer() != null) {
-                        this.getPlayer().displayClientMessage(Component.translatable("chat.wireless.highlight", remotePos.toShortString(), this.getPlayer().clientLevel.dimension().location().getPath()), false);
+                        Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, this.getPlayer().clientLevel.dimension(), "chat.wireless.highlight");
+                        this.getPlayer().displayClientMessage(message, false);
                     }
                 });
                 this.remotes[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.remote", remotePos.getX(), remotePos.getY(), remotePos.getZ())));
