@@ -137,6 +137,8 @@ tasks.withType(ProcessResources).configureEach {
     filesMatching(['META-INF/neoforge.mods.toml']) {
         expand replaceProperties
     }
+
+    exclude(".cache/**")
 }
 
 publishing {

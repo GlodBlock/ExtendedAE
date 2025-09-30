@@ -186,18 +186,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         modeBtn.nextMode();
         this.refreshList();
         switch (modeBtn.mode) {
-            case IN -> {
-                this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.02")));
-            }
-            case OUT -> {
-                this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.01")));
-            }
-            case IN_OUT -> {
-                this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.04")));
-            }
-            default -> {
-                throw new IllegalStateException("Unexpected search mode: " + modeBtn.mode);
-            }
+            case IN -> this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.02")));
+            case OUT -> this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.01")));
+            case IN_OUT -> this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.04")));
+            default -> throw new IllegalStateException("Unexpected search mode: " + modeBtn.mode);
         }
     }
 
@@ -237,13 +229,12 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                     btn.setPosition(this.leftPos + GUI_PADDING_X + (SLOT_SIZE * 9) - 1, this.topPos + (i + 1) * SLOT_SIZE + 12);
                     btn.setVisibility(true);
                 }
-                if (row instanceof SlotsRow slotsRow) {
+                if (row instanceof SlotsRow(PatternContainerRecord container, int offset, int slots)) {
                     // Note: We have to shift everything after the header up by 1 to avoid black line duplication.
-                    var container = slotsRow.container;
-                    for (int col = 0; col < slotsRow.slots; col++) {
+                    for (int col = 0; col < slots; col++) {
                         var slot = new PatternSlot(
                                 container,
-                                slotsRow.offset + col,
+                                offset + col,
                                 col * SLOT_SIZE + GUI_PADDING_X,
                                 (i + 1) * SLOT_SIZE + 13);
                         this.menu.slots.add(slot);
@@ -255,8 +246,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                             }
                         }
                     }
-                } else if (row instanceof GroupHeaderRow headerRow) {
-                    var group = headerRow.group;
+                } else if (row instanceof GroupHeaderRow(PatternContainerGroup group)) {
                     if (group.icon() != null) {
                         var renderContext = new SimpleRenderContext(LytRect.empty(), guiGraphics);
                         renderContext.renderItem(
@@ -317,8 +307,8 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             var hoveredLineIndex = getHoveredLineIndex(x, y);
             if (hoveredLineIndex != -1) {
                 var row = rows.get(hoveredLineIndex);
-                if (row instanceof GroupHeaderRow headerRow && !headerRow.group.tooltip().isEmpty()) {
-                    guiGraphics.renderTooltip(font, headerRow.group.tooltip(), Optional.empty(), x, y);
+                if (row instanceof GroupHeaderRow(PatternContainerGroup group) && !group.tooltip().isEmpty()) {
+                    guiGraphics.renderTooltip(font, group.tooltip(), Optional.empty(), x, y);
                     return;
                 }
             }
@@ -354,7 +344,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     @Override
     protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
-        if (slot instanceof PatternSlot) {
+        if (slot instanceof PatternSlot machineSlot) {
             InventoryAction action = null;
 
             switch (clickType) {
@@ -378,7 +368,6 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
 
             if (action != null) {
-                PatternSlot machineSlot = (PatternSlot) slot;
                 final InventoryActionPacket p = new InventoryActionPacket(action, machineSlot.getSlotIndex(), machineSlot.getMachineInv().getServerId());
                 PacketDistributor.sendToServer(p);
             }
@@ -578,10 +567,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                     if (info != null) {
                         var btn = new HighlightButtonSmall();
                         btn.setMultiplier(this.playerToBlockDis(info.pos()));
-                        btn.setTarget(info.pos, info.face, info.BlockWorld);
+                        btn.setTarget(info.pos, info.face, info.world);
                         btn.setSuccessJob(() -> {
-                            if (this.getPlayer() != null && info.pos != null && info.BlockWorld != null) {
-                                Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.BlockWorld, "chat.ex_pattern_access_terminal.pos");
+                            if (this.getPlayer() != null && info.pos != null && info.world != null) {
+                                Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.world, "chat.ex_pattern_access_terminal.pos");
                                 this.getPlayer().displayClientMessage(message, false);
                             }
                         });
@@ -715,7 +704,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
     }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> BlockWorld) {
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) {
 
     }
 
@@ -750,9 +739,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                 case IN_OUT -> {
                     return EPPIcon.SEARCH_IO;
                 }
-                default -> {
-                    throw new IllegalStateException("Unexpected search mode: " + this.mode);
-                }
+                default -> throw new IllegalStateException("Unexpected search mode: " + this.mode);
             }
         }
 
