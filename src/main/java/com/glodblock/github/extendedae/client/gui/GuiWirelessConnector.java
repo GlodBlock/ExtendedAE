@@ -8,6 +8,7 @@ import com.glodblock.github.extendedae.client.button.TooltipIcon;
 import com.glodblock.github.extendedae.client.gui.widget.WorldDisplay;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessStatus;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
+import com.glodblock.github.extendedae.util.MessageUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.core.BlockPos;
@@ -57,7 +58,8 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
             this.highlight.setMultiplier(this.playerToBlockDis(remotePos));
             this.highlight.setSuccessJob(() -> {
                 if (this.getPlayer() != null) {
-                    this.getPlayer().displayClientMessage(Component.translatable("chat.wireless.highlight", remotePos.toShortString(), this.getPlayer().clientLevel.dimension().location().getPath()), false);
+                    Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, this.getPlayer().clientLevel.dimension(), "chat.wireless.highlight");
+                    this.getPlayer().displayClientMessage(message, false);
                 }
             });
             this.highlight.setVisibility(true);
