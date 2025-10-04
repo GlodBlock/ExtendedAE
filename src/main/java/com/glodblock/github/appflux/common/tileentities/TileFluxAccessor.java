@@ -79,7 +79,7 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
                 if (this.actions[d.get3DDataValue()] == null) {
                     var te = this.level.getBlockEntity(this.worldPosition.offset(d.getNormal()));
                     var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-                    if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                    if (te != null && thatGrid != gird && AFUtil.isWhiteListTE(te, d.getOpposite())) {
                         this.actions[d.get3DDataValue()] = EnergyHandler.getHandler(te, d.getOpposite());
                     } else {
                         this.actions[d.get3DDataValue()] = EnergyHandler.SendAction.NOOP;

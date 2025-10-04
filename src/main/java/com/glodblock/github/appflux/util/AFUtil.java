@@ -44,18 +44,18 @@ public class AFUtil {
         return null;
     }
 
-    public static boolean isBlackListTE(BlockEntity te, Direction face) {
+    public static boolean isWhiteListTE(BlockEntity te, Direction face) {
         if (te instanceof CableBusBlockEntity cable) {
             var part = cable.getPart(face);
-            return part instanceof PatternProviderLogicHost ||
-                    part instanceof PartFluxAccessor;
+            return !(part instanceof PatternProviderLogicHost) &&
+                    !(part instanceof PartFluxAccessor);
         }
-        return te instanceof TileFluxAccessor ||
-                te instanceof PatternProviderLogicHost;
+        return !(te instanceof TileFluxAccessor) &&
+                !(te instanceof PatternProviderLogicHost);
     }
 
     public static IGrid getGrid(Object a, Direction side) {
-        if (a instanceof IGridConnectedBlockEntity ba) {
+        if (a instanceof IGridConnectedBlockEntity ba && ba.getMainNode() != null) {
             var gn = ba.getGridNode();
             return gn == null ? null : gn.getGrid();
         } else if (a instanceof IInWorldGridNodeHost ha) {

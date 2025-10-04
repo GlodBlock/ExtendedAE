@@ -77,7 +77,7 @@ public abstract class MixinInterfaceLogic implements IEnergyDistributor, INeighb
                 if (this.af_$actions[d.get3DDataValue()] == null) {
                     var te = self.getLevel().getBlockEntity(self.getBlockPos().offset(d.getNormal()));
                     var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-                    if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                    if (te != null && thatGrid != gird && AFUtil.isWhiteListTE(te, d.getOpposite())) {
                         this.af_$actions[d.get3DDataValue()] = EnergyHandler.getHandler(te, d.getOpposite());
                     } else {
                         this.af_$actions[d.get3DDataValue()] = EnergyHandler.SendAction.NOOP;

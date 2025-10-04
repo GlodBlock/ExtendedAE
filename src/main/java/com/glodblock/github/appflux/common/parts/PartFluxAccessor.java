@@ -103,7 +103,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
             if (this.action == null) {
                 var te = this.getLevel().getBlockEntity(this.getBlockEntity().getBlockPos().offset(d.getNormal()));
                 var thatGrid = AFUtil.getGrid(te, d.getOpposite());
-                if (te != null && thatGrid != gird && !AFUtil.isBlackListTE(te, d.getOpposite())) {
+                if (te != null && thatGrid != gird && AFUtil.isWhiteListTE(te, d.getOpposite())) {
                     this.action = EnergyHandler.getHandler(te, d.getOpposite());
                 } else {
                     this.action = EnergyHandler.SendAction.NOOP;
