@@ -228,7 +228,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         }
         if (this.getConfigManager().getSetting(Settings.PLACE_BLOCK) == YesNo.YES) {
             var block = self.getLevel().getBlockState(targetPos);
-            return block.canBeReplaced();
+            return block.isAir();
         }
         return Platform.areBlockEntitiesTicking(self.getLevel(), targetPos);
     }

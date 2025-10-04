@@ -525,10 +525,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                     var info = this.infoMap.get(container.getServerId());
                     var btn = new HighlightButton();
                     btn.setMultiplier(this.playerToBlockDis(info.pos()));
-                    btn.setTarget(info.pos, info.face, info.BlockWorld);
+                    btn.setTarget(info.pos, info.face, info.world);
                     btn.setSuccessJob(() -> {
-                        if (this.getPlayer() != null && info.pos != null && info.BlockWorld != null) {
-                            Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.BlockWorld, "chat.ex_pattern_access_terminal.pos");
+                        if (this.getPlayer() != null && info.pos != null && info.world != null) {
+                            Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.world, "chat.ex_pattern_access_terminal.pos");
                             this.getPlayer().displayClientMessage(message, false);
                         }
                     });
@@ -664,7 +664,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
     }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> BlockWorld) {
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) {
 
     }
 }
