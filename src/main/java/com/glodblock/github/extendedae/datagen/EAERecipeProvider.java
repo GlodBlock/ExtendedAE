@@ -357,6 +357,15 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.EX_EXPORT_BUS)
                 .save(c, ExtendedAE.id("assembler/active_formation_plane"));
 
+        // Smart Annihilation Plane
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.SMART_ANNIHILATION_PLANE)
+                .input(AEParts.ANNIHILATION_PLANE)
+                .input(Blocks.PISTON, 3)
+                .input(AEItems.ANNIHILATION_CORE, 2)
+                .input(EAESingletons.EX_IMPORT_BUS)
+                .save(c, ExtendedAE.id("assembler/smart_annihilation_plane"));
+
         // ME Caner
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.CANER)

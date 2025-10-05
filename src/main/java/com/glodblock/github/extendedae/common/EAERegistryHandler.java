@@ -304,6 +304,9 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.CIRCUIT_CUTTER, 4);
         Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.VOID_CELL, 1);
         Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.VOID_CELL, 1);
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.SMART_ANNIHILATION_PLANE, 1);
+        Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.SMART_ANNIHILATION_PLANE, 1);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.SMART_ANNIHILATION_PLANE, 5);
     }
 
     private void registerStorageHandler() {
