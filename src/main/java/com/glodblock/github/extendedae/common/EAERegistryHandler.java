@@ -43,6 +43,7 @@ import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartOversizeInterface;
 import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
@@ -71,6 +72,7 @@ import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
+import com.glodblock.github.extendedae.container.ContainerSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
@@ -206,6 +208,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("void_cell"), ContainerVoidCell.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("config_modifier"), ContainerConfigModifier.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("wireless_hub"), ContainerWirelessHub.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("smart_annihilation_plane"), ContainerSmartAnnihilationPlane.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -327,6 +330,7 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartPreciseStorageBus.MODEL_BASE);
         PartModels.registerModels(PartThresholdExportBus.MODELS);
         PartModels.registerModels(PartOversizeInterface.MODELS);
+        PartModels.registerModels(PartSmartAnnihilationPlane.MODELS);
     }
 
     private void initPackageList() {

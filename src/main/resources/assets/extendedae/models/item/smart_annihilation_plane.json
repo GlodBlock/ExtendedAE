@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:item/annihilation_plane",
+  "textures": {
+    "plane": "extendedae:part/smart_annihilation_plane"
+  }
+}

@@ -38,6 +38,7 @@ import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
 import com.glodblock.github.extendedae.common.items.ItemPackedDevice;
 import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpgrade;
 import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
+import com.glodblock.github.extendedae.common.items.ItemSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.common.items.ItemVoidCell;
 import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
 import com.glodblock.github.extendedae.common.items.tools.ItemConfigModifier;
@@ -53,6 +54,7 @@ import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartOversizeInterface;
 import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
@@ -182,6 +184,7 @@ public class EAESingletons {
     public static CommonItem QUARTZ_BLEND;
     public static ItemConfigModifier CONFIG_MODIFIER;
     public static BlockWirelessHub WIRELESS_HUB;
+    public static PartItem<PartSmartAnnihilationPlane> SMART_ANNIHILATION_PLANE;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -268,6 +271,7 @@ public class EAESingletons {
         VOID_CELL = new ItemVoidCell();
         CONFIG_MODIFIER = new ItemConfigModifier();
         WIRELESS_HUB = new BlockWirelessHub();
+        SMART_ANNIHILATION_PLANE = new ItemSmartAnnihilationPlane();
         regHandler.comp("is_part", IS_PART);
         regHandler.comp("tape_part_data", TAPE_PART_DATA);
         regHandler.comp("tape_tile_data", TAPE_TILE_DATA);
@@ -352,6 +356,7 @@ public class EAESingletons {
         regHandler.item("void_cell", VOID_CELL);
         regHandler.item("quartz_blend", QUARTZ_BLEND);
         regHandler.item("config_modifier", CONFIG_MODIFIER);
+        regHandler.item("smart_annihilation_plane", SMART_ANNIHILATION_PLANE);
     }
 
 }

@@ -26,6 +26,7 @@ import com.glodblock.github.extendedae.client.gui.GuiPatternModifier;
 import com.glodblock.github.extendedae.client.gui.GuiPreciseExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiPreciseStorageBus;
 import com.glodblock.github.extendedae.client.gui.GuiRenamer;
+import com.glodblock.github.extendedae.client.gui.GuiSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.client.gui.GuiTagExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiTagStorageBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdExportBus;
@@ -79,6 +80,7 @@ import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
+import com.glodblock.github.extendedae.container.ContainerSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
@@ -142,6 +144,7 @@ public class ClientRegistryHandler {
         InitScreens.register(event, ContainerVoidCell.TYPE, GuiVoidCell::new, "/screens/void_cell.json");
         InitScreens.register(event, ContainerConfigModifier.TYPE, GuiConfigModifier::new, "/screens/config_modifier.json");
         InitScreens.register(event, ContainerWirelessHub.TYPE, GuiWirelessHub::new, "/screens/wireless_hub.json");
+        InitScreens.register(event, ContainerSmartAnnihilationPlane.TYPE, GuiSmartAnnihilationPlane::new, "/screens/smart_annihilation_plane.json");
         event.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -175,6 +178,8 @@ public class ClientRegistryHandler {
         event.register(ExtendedAE.id("ex_drive"), new ExDriveModel.Loader());
         event.register(ExtendedAE.id("active_formation_plane"), new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane")));
         event.register(ExtendedAE.id("active_formation_plane_on"), new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane_on")));
+        event.register(ExtendedAE.id("smart_annihilation_plane"), new ExPlaneModel.Loader(ExtendedAE.id("part/smart_annihilation_plane")));
+        event.register(ExtendedAE.id("smart_annihilation_plane_on"), new ExPlaneModel.Loader(ExtendedAE.id("part/smart_annihilation_plane_on")));
         event.register(ExtendedAE.id("assembler_matrix_glass"), new AssemblerGlassModel.Loader());
     }
 
