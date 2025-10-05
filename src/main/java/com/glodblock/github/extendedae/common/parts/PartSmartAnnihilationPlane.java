@@ -18,6 +18,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.storage.StorageHelper;
+import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.AEConfig;
@@ -210,6 +211,11 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
         return new TickingRequest(TickRates.AnnihilationPlane, false);
+    }
+
+    @Override
+    public float getCableConnectionLength(AECableType cable) {
+        return 1;
     }
 
     @Override

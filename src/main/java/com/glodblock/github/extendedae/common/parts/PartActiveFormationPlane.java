@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.common.parts;
 import appeng.api.behaviors.PlacementStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
+import appeng.api.config.RedstoneMode;
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
@@ -88,6 +89,8 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     private PlacementStrategy placementStrategies;
     private final MultiCraftingTracker craftingTracker;
     protected final IActionSource source;
+    private boolean lastRedstone = false;
+    private boolean pendingPulse = false;
 
     public PartActiveFormationPlane(IPartItem<?> partItem) {
         super(partItem);
@@ -107,6 +110,16 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         builder.registerSetting(Settings.PLACE_BLOCK, YesNo.YES);
         builder.registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
         builder.registerSetting(Settings.CRAFT_ONLY, YesNo.NO);
+        builder.registerSetting(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
+    }
+
+    @Override
+    public RedstoneMode getRSMode() {
+        return this.getConfigManager().getSetting(Settings.REDSTONE_CONTROLLED);
+    }
+
+    private boolean isInPulseMode() {
+        return getRSMode() == RedstoneMode.SIGNAL_PULSE;
     }
 
     protected final PlacementStrategy getPlacementStrategies() {
@@ -133,7 +146,21 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     @Override
     public void onSettingChanged(IConfigManager manager, Setting<?> setting) {
         this.getHost().markForSave();
+        updateRedstoneState();
+        if (isInPulseMode()) {
+            this.lastRedstone = getHost().hasRedstone();
+        }
     }
+
+    @Override
+    public void addToWorld() {
+        super.addToWorld();
+        this.lastRedstone = this.getHost().hasRedstone();
+        if (this.pendingPulse) {
+            getMainNode().ifPresent((grid, node) -> grid.getTickManager().alertDevice(node));
+        }
+    }
+
 
     @Override
     protected void onMainNodeStateChanged(IGridNodeListener.State reason) {
@@ -153,8 +180,35 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         return connectionHelper.getConnections();
     }
 
+    private void updateRedstoneState() {
+        // Clear the pending pulse flag if the upgrade is removed or the config is toggled off
+        if (!this.isInPulseMode()) {
+            this.pendingPulse = false;
+        }
+
+        getMainNode().ifPresent((grid, node) -> {
+            if (!this.isSleeping()) {
+                grid.getTickManager().wakeDevice(node);
+            } else {
+                grid.getTickManager().sleepDevice(node);
+            }
+        });
+    }
+
     @Override
     public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+        if (isInPulseMode()) {
+            var hostIsPowered = this.getHost().hasRedstone();
+            if (this.lastRedstone != hostIsPowered) {
+                this.lastRedstone = hostIsPowered;
+                if (this.lastRedstone && !this.pendingPulse) {
+                    this.pendingPulse = true;
+                    getMainNode().ifPresent((grid, node) -> grid.getTickManager().alertDevice(node));
+                }
+            }
+        } else {
+            updateRedstoneState();
+        }
         if (pos.relative(this.getSide()).equals(neighbor)) {
             // The neighbor this plane is facing has changed
             if (!isClientSide()) {
@@ -200,6 +254,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         this.priority = data.getInt("priority");
         this.config.readFromChildTag(data, "config", registries);
         this.craftingTracker.readFromNBT(data);
+        this.pendingPulse = isInPulseMode() && data.getBoolean("pendingPulse");
     }
 
     @Override
@@ -208,6 +263,9 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         data.putInt("priority", this.getPriority());
         this.config.writeToChildTag(data, "config", registries);
         this.craftingTracker.writeToNBT(data);
+        if (isInPulseMode() && this.pendingPulse) {
+            data.putBoolean("pendingPulse", true);
+        }
     }
 
     @Override
@@ -240,8 +298,17 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     }
 
     @Override
+    protected boolean isSleeping() {
+        if (isInPulseMode() && this.pendingPulse) {
+            return false;
+        } else {
+            return super.isSleeping();
+        }
+    }
+
+    @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.ExportBus.getMin(), TickRates.ExportBus.getMax(), isSleeping());
+        return new TickingRequest(2, TickRates.ExportBus.getMax(), isSleeping());
     }
 
     @Override
@@ -253,7 +320,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         if (!canWork()) {
             return TickRateModulation.IDLE;
         }
-
+        this.pendingPulse = false;
         var hasDoneWork = this.doWork(node.getGrid());
 
         return hasDoneWork ? TickRateModulation.FASTER : TickRateModulation.SLOWER;

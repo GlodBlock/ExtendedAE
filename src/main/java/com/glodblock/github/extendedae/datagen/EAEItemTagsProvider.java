@@ -7,6 +7,7 @@ import com.glodblock.github.extendedae.util.EAETags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -61,5 +62,11 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
                 .add(EAESingletons.ENTRO_BUD_LARGE.asItem());
         tag(EAETags.SILICON_BLOCK)
                 .add(EAESingletons.SILICON_BLOCK.asItem());
+        tag(ItemTags.DURABILITY_ENCHANTABLE)
+                .add(EAESingletons.SMART_ANNIHILATION_PLANE);
+        tag(ItemTags.MINING_ENCHANTABLE)
+                .add(EAESingletons.SMART_ANNIHILATION_PLANE);
+        tag(ItemTags.MINING_LOOT_ENCHANTABLE)
+                .add(EAESingletons.SMART_ANNIHILATION_PLANE);
     }
 }

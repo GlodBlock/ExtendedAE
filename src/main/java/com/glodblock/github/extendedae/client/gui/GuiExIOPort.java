@@ -34,7 +34,6 @@ public class GuiExIOPort extends UpgradeableScreen<ContainerExIOPort> {
     @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
-
         this.redstoneMode.set(this.menu.getRedStoneMode());
         this.redstoneMode.setVisibility(menu.hasUpgrade(AEItems.REDSTONE_CARD));
         this.operationMode.set(this.menu.getOperationMode());

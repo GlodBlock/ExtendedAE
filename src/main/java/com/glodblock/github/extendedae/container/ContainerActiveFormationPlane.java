@@ -38,6 +38,7 @@ public class ContainerActiveFormationPlane extends UpgradeableMenu<PartActiveFor
         }
         this.setPlaceMode(cm.getSetting(Settings.PLACE_BLOCK));
         this.setCraftingMode(cm.getSetting(Settings.CRAFT_ONLY));
+        this.setRedStoneMode(cm.getSetting(Settings.REDSTONE_CONTROLLED));
     }
 
     @Override
