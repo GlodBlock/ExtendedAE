@@ -44,6 +44,10 @@ public class AFUtil {
         return null;
     }
 
+    public static boolean isBlackListTE(BlockEntity te, Direction face) {
+        return !isWhiteListTE(te, face);
+    }
+
     public static boolean isWhiteListTE(BlockEntity te, Direction face) {
         if (te instanceof CableBusBlockEntity cable) {
             var part = cable.getPart(face);
