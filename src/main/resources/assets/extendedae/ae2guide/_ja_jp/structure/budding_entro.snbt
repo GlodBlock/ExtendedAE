@@ -1,0 +1,25 @@
+{
+    DataVersion: 3337,
+    size: [4, 2, 1],
+    data: [
+        {pos: [0, 0, 0], state: "extendedae:entro_budding_fully"},
+        {pos: [1, 0, 0], state: "extendedae:entro_budding_mostly"},
+        {pos: [2, 0, 0], state: "extendedae:entro_budding_half"},
+        {pos: [3, 0, 0], state: "extendedae:entro_budding_hardly"},
+        {pos: [0, 1, 0], state: "extendedae:entro_cluster{facing:up,waterlogged:false}"},
+        {pos: [1, 1, 0], state: "extendedae:entro_cluster_large{facing:up,waterlogged:false}"},
+        {pos: [2, 1, 0], state: "extendedae:entro_cluster_medium{facing:up,waterlogged:false}"},
+        {pos: [3, 1, 0], state: "extendedae:entro_cluster_small{facing:up,waterlogged:false}"}
+    ],
+    entities: [],
+    palette: [
+        "extendedae:entro_budding_fully",
+        "extendedae:entro_budding_mostly",
+        "extendedae:entro_budding_half",
+        "extendedae:entro_budding_hardly",
+        "extendedae:entro_cluster{facing:up,waterlogged:false}",
+        "extendedae:entro_cluster_large{facing:up,waterlogged:false}",
+        "extendedae:entro_cluster_medium{facing:up,waterlogged:false}",
+        "extendedae:entro_cluster_small{facing:up,waterlogged:false}"
+    ]
+}
