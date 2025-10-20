@@ -64,7 +64,7 @@ public class InfinityCellBuilder extends ItemBuilder {
         public AEKey get() {
             var key = this.supplier.get();
             if (key == null) {
-                throw new NullPointerException("Invalid custom infinity cell, AEKey: %s is null.".formatted(this.err));
+                throw new NullPointerException("Invalid custom infinity cell, check your KubeJS script. ID: %s.".formatted(this.err));
             }
             return key;
         }
