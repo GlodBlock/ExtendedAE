@@ -33,13 +33,13 @@ public class InfinityCellBuilder extends ItemBuilder {
 
     @Info("Create an infinity cell with given item.")
     public InfinityCellBuilder itemType(ResourceLocation id) {
-        this.record = () -> AEItemKey.of(BuiltInRegistries.ITEM.get(id));
+        this.record = new TraceableSupplier(id.toString(), () -> AEItemKey.of(BuiltInRegistries.ITEM.get(id)));
         return this;
     }
 
     @Info("Create an infinity cell with given fluid.")
     public InfinityCellBuilder fluidType(ResourceLocation id) {
-        this.record = () -> AEFluidKey.of(BuiltInRegistries.FLUID.get(id));
+        this.record = new TraceableSupplier(id.toString(), () -> AEFluidKey.of(BuiltInRegistries.FLUID.get(id)));
         return this;
     }
 
@@ -56,6 +56,19 @@ public class InfinityCellBuilder extends ItemBuilder {
             LazyInits.addCommon(() -> StorageCellModels.registerModel(cell, this.model));
         }
         return cell;
+    }
+
+    record TraceableSupplier(String err, Supplier<AEKey> supplier) implements Supplier<AEKey> {
+
+        @Override
+        public AEKey get() {
+            var key = this.supplier.get();
+            if (key == null) {
+                throw new NullPointerException("Invalid custom infinity cell, AEKey: %s is null.".formatted(this.err));
+            }
+            return key;
+        }
+
     }
 
 }
