@@ -104,7 +104,9 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         final CompoundTag opt = new CompoundTag();
         for (int x = 0; x < this.internalInv.size(); x++) {
             var is = this.internalInv.getStackInSlot(x);
-            opt.put("item" + x, is.save(new CompoundTag()));
+            if (!is.isEmpty()) {
+                opt.put("item" + x, is.save(new CompoundTag()));
+            }
         }
         data.put("inv", opt);
     }
@@ -119,8 +121,12 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         }
         var opt = data.getCompound("inv");
         for (int x = 0; x < this.internalInv.size(); x++) {
-            var item = opt.getCompound("item" + x);
-            this.internalInv.setItemDirect(x, ItemStack.of(item));
+            if (opt.contains("item" + x)) {
+                var item = opt.getCompound("item" + x);
+                this.internalInv.setItemDirect(x, ItemStack.of(item));
+            } else {
+                this.internalInv.setItemDirect(x, ItemStack.EMPTY);
+            }
         }
     }
 

@@ -201,7 +201,9 @@ public class TileCaner extends AENetworkPowerBlockEntity implements IGridTickabl
     public void saveAdditional(CompoundTag data) {
         super.saveAdditional(data);
         this.stuff.writeToChildTag(data, "stuff");
-        data.put("target", this.target.save(new CompoundTag()));
+        if (!this.target.isEmpty()) {
+            data.put("target", this.target.save(new CompoundTag()));
+        }
         if (this.ejectSide != null) {
             data.putString("ejectSide", this.ejectSide.name());
         }
