@@ -239,18 +239,6 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
         }
 
         @Override
-        public RecipeHolder<CrystalFixerRecipe> searchRecipe() {
-            if (host.getLevel() == null) {
-                return null;
-            }
-            var recipe = CrystalFixerRecipe.lookup(this.host.getFacingBlock().getBlock(), host.getLevel());
-            if (recipe != null && this.testRecipe(recipe)) {
-                return recipe;
-            }
-            return null;
-        }
-
-        @Override
         public boolean testRecipe(RecipeHolder<CrystalFixerRecipe> recipeHolder) {
             var recipe = recipeHolder.value();
             var block = this.host.getFacingBlock().getBlock();

@@ -8,7 +8,6 @@ import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.hooks.CutterHook;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.util.LazyInits;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.darkmode.BlacklistGUI;
@@ -30,7 +29,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.slf4j.Logger;
@@ -72,7 +70,6 @@ public class ExtendedAE {
         });
         if (FMLEnvironment.dist.isClient()) {
             bus.register(ClientRegistryHandler.INSTANCE);
-            NeoForge.EVENT_BUS.addListener(this::onRecipeUpdate);
         }
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);
@@ -100,10 +97,6 @@ public class ExtendedAE {
                 InterModComms.sendTo(ModConstants.DARK_MODE, "dme-shaderblacklist", () -> method);
             }
         }
-    }
-
-    public void onRecipeUpdate(RecipesUpdatedEvent event) {
-        CrystalFixerRecipe.clearLookup();
     }
 
     public void onFinalization(FMLLoadCompleteEvent event) {

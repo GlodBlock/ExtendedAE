@@ -8,23 +8,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.IdentityHashMap;
 
 public class CrystalFixerRecipe implements Recipe<RecipeInput> {
 
     public static final ResourceLocation ID = ExtendedAE.id("crystal_fixer");
     public static final RecipeType<CrystalFixerRecipe> TYPE = RecipeType.simple(ID);
     public static final int FULL_CHANCE = 10000;
-    private static final IdentityHashMap<Block, RecipeHolder<CrystalFixerRecipe>> FAST_LOOKUP = new IdentityHashMap<>();
     protected final Block input;
     protected final Block output;
     protected final int chance;
@@ -42,20 +37,8 @@ public class CrystalFixerRecipe implements Recipe<RecipeInput> {
         this.chance = chance;
     }
 
-    public static void clearLookup() {
-        FAST_LOOKUP.clear();
-    }
-
     private static Block asBlock(ItemStack stack) {
         return ((BlockItem) stack.getItem()).getBlock();
-    }
-
-    @Nullable
-    public static RecipeHolder<CrystalFixerRecipe> lookup(Block block, @NotNull Level world) {
-        if (FAST_LOOKUP.isEmpty()) {
-            initLookup(world);
-        }
-        return FAST_LOOKUP.get(block);
     }
 
     public boolean roll(RandomSource random) {
@@ -114,13 +97,6 @@ public class CrystalFixerRecipe implements Recipe<RecipeInput> {
     @Override
     public boolean isSpecial() {
         return true;
-    }
-
-    private static void initLookup(Level world) {
-        var recipes = world.getRecipeManager().byType(TYPE);
-        for (var recipe : recipes) {
-            FAST_LOOKUP.put(recipe.value().getInput(), recipe);
-        }
     }
 
 }
