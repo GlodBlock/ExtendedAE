@@ -48,7 +48,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     public TileAssemblerMatrixBase(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.getMainNode().setFlags(GridFlags.MULTIBLOCK, GridFlags.REQUIRE_CHANNEL).addService(IGridMultiblock.class, this::getMultiblockNodes);
-        this.getMainNode().setIdlePowerUsage(0);
+        this.getMainNode().setIdlePowerUsage(0.5);
         this.manager = new ConfigManager(this::saveChanges);
         this.manager.registerSetting(Settings.PATTERN_ACCESS_TERMINAL, YesNo.YES);
     }
@@ -106,22 +106,6 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
 
     public void breakCluster() {
         if (this.cluster != null) {
-            var places = new ArrayList<BlockPos>();
-            for (var blockEntity : (Iterable<? extends TileAssemblerMatrixBase>) this.cluster::getBlockEntities) {
-                if (this == blockEntity) {
-                    places.add(worldPosition);
-                } else {
-                    for (var d : Direction.values()) {
-                        var p = blockEntity.worldPosition.relative(d);
-                        if (this.level.isEmptyBlock(p)) {
-                            places.add(p);
-                        }
-                    }
-                }
-            }
-            if (places.isEmpty()) {
-                throw new IllegalStateException(this.cluster + " does not contain any kind of blocks, which were destroyed.");
-            }
             this.cluster.destroy();
         }
     }
@@ -192,7 +176,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     }
 
     @Nullable
-    public IItemHandler getPatternInv(Direction side) {
+    public IItemHandler getPatternInv(Direction ignored) {
         if (this.cluster == null) {
             return null;
         }
@@ -217,7 +201,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
         }
 
         final boolean formed = this.isFormed();
-        boolean power = this.getMainNode().isOnline();
+        final boolean power = formed & this.getMainNode().isOnline();
 
         final BlockState current = this.level.getBlockState(this.worldPosition);
 
