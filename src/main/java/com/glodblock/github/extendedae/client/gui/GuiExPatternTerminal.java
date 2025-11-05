@@ -23,6 +23,7 @@ import appeng.core.AEConfig;
 import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
 import appeng.core.network.serverbound.InventoryActionPacket;
+import appeng.core.network.serverbound.QuickMovePatternPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.api.PatternSearchMode;
@@ -67,6 +68,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -346,7 +348,6 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
         if (slot instanceof PatternSlot machineSlot) {
             InventoryAction action = null;
-
             switch (clickType) {
                 case PICKUP: // pickup / set-down.
                     action = mouseButton == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE
@@ -374,7 +375,18 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
             return;
         }
-
+        if (clickType == ClickType.QUICK_MOVE && this.menu.isPlayerSideSlot(slot)) {
+            Set<Long> visiblePatternContainers = new LinkedHashSet<>();
+            for (var row : this.rows) {
+                if (row instanceof SlotsRow slotsRow) {
+                    visiblePatternContainers.add(slotsRow.container.getServerId());
+                }
+            }
+            int clickedSlot = slot.getContainerSlot();
+            var packet = new QuickMovePatternPacket(this.menu.containerId, clickedSlot, List.copyOf(visiblePatternContainers));
+            PacketDistributor.sendToServer(packet);
+            return;
+        }
         super.slotClicked(slot, slotIdx, mouseButton, clickType);
     }
 
