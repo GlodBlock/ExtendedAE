@@ -11,18 +11,28 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
+import com.glodblock.github.extendedae.api.EPPSettings;
+import com.glodblock.github.extendedae.api.StorageMode;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
+import com.glodblock.github.extendedae.network.EPPNetworkHandler;
+import com.glodblock.github.glodium.network.packet.SGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import com.google.common.collect.Iterators;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Consumer;
 
-public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStorageBus> {
+public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStorageBus> implements IActionHolder {
 
     private static final String ACTION_CLEAR = "clear";
     private static final String ACTION_PARTITION = "partition";
@@ -44,6 +54,11 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
     @Nullable
     public Component connectedTo;
 
+    @GuiSync(9)
+    public StorageMode storageMode = StorageMode.DEFAULT;
+
+    private final Map<String, Consumer<Paras>> actions = createHolder();
+
     public ContainerPreciseStorageBus(int id, Inventory ip, PartPreciseStorageBus te) {
         super(TYPE, id, ip, te);
 
@@ -51,6 +66,13 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
         registerClientAction(ACTION_PARTITION, this::partition);
 
         this.connectedTo = te.getConnectedToDescription();
+
+        this.actions.put("set", o -> this.setMode(o.get(0)));
+        this.actions.put("update", o -> {
+            if (this.getPlayer() instanceof ServerPlayer sp) {
+                EPPNetworkHandler.INSTANCE.sendTo(new SGenericPacket("init", this.storageMode.ordinal()), sp);
+            }
+        });
     }
 
     @Override
@@ -62,6 +84,9 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
     public void broadcastChanges() {
         super.broadcastChanges();
         this.connectedTo = getHost().getConnectedToDescription();
+        if (this.storageMode != this.getHost().getStorageMode()) {
+            this.storageMode = this.getHost().getStorageMode();
+        }
     }
 
     @Override
@@ -69,6 +94,7 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
         this.setReadWriteMode(cm.getSetting(Settings.ACCESS));
         this.setStorageFilter(cm.getSetting(Settings.STORAGE_FILTER));
         this.setFilterOnExtract(cm.getSetting(Settings.FILTER_ON_EXTRACT));
+        this.setStorageMode(cm.getSetting(EPPSettings.STORAGE_MODE));
     }
 
     @Override
@@ -149,4 +175,21 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
         return this.getSlots(SlotSemantics.CONFIG).contains(slot);
     }
 
+    public void setStorageMode(StorageMode mode) {
+        this.storageMode = mode;
+    }
+
+    public StorageMode getStorageMode() {
+        return this.storageMode;
+    }
+
+    public void setMode(int mode) {
+        this.getHost().setStorageMode(StorageMode.values()[mode]);
+        this.broadcastChanges();
+    }
+
+    @Override
+    public @NotNull Map<String, Consumer<Paras>> getActionMap() {
+        return Map.of();
+    }
 }
