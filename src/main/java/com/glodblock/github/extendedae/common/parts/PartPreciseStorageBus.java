@@ -11,14 +11,12 @@ import appeng.api.storage.MEStorage;
 import appeng.api.util.IConfigManager;
 import appeng.core.AppEng;
 import appeng.helpers.IConfigInvHost;
-import appeng.items.parts.PartModels;
 import appeng.me.storage.NullInventory;
 import appeng.parts.PartModel;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.api.EPPSettings;
 import com.glodblock.github.extendedae.api.StorageMode;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
@@ -41,13 +39,11 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
 
     public PartPreciseStorageBus(IPartItem<?> partItem) {
         super(partItem);
-        this.getConfigManager().registerSetting(EPPSettings.STORAGE_MODE, StorageMode.DEFAULT);
     }
 
     protected void onConfigurationChanged() {
         if (getMainNode().isReady()) {
             updateTarget(true);
-            this.setStorageMode(this.getConfigManager().getSetting(EPPSettings.STORAGE_MODE));
         }
     }
 
@@ -92,9 +88,9 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     @Override
     public void exportSettings(SettingsFrom mode, CompoundTag output) {
         super.exportSettings(mode, output);
+        output.putByte("storageMode", (byte) this.storageMode.ordinal());
         if (mode == SettingsFrom.MEMORY_CARD) {
             this.config.writeToChildTag(output, "config");
-            output.putByte("storageMode", (byte) this.storageMode.ordinal());
         }
     }
 

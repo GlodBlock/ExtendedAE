@@ -11,7 +11,6 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
-import com.glodblock.github.extendedae.api.EPPSettings;
 import com.glodblock.github.extendedae.api.StorageMode;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
@@ -36,6 +35,7 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
 
     private static final String ACTION_CLEAR = "clear";
     private static final String ACTION_PARTITION = "partition";
+    private final Map<String, Consumer<Paras>> actions = createHolder();
 
     public static final MenuType<ContainerPreciseStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerPreciseStorageBus::new, PartPreciseStorageBus.class)
@@ -56,8 +56,6 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
 
     @GuiSync(9)
     public StorageMode storageMode = StorageMode.DEFAULT;
-
-    private final Map<String, Consumer<Paras>> actions = createHolder();
 
     public ContainerPreciseStorageBus(int id, Inventory ip, PartPreciseStorageBus te) {
         super(TYPE, id, ip, te);
@@ -94,7 +92,6 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
         this.setReadWriteMode(cm.getSetting(Settings.ACCESS));
         this.setStorageFilter(cm.getSetting(Settings.STORAGE_FILTER));
         this.setFilterOnExtract(cm.getSetting(Settings.FILTER_ON_EXTRACT));
-        this.setStorageMode(cm.getSetting(EPPSettings.STORAGE_MODE));
     }
 
     @Override
@@ -175,11 +172,7 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
         return this.getSlots(SlotSemantics.CONFIG).contains(slot);
     }
 
-    public void setStorageMode(StorageMode mode) {
-        this.storageMode = mode;
-    }
-
-    public StorageMode getStorageMode() {
+    public StorageMode getMode() {
         return this.storageMode;
     }
 
@@ -190,6 +183,6 @@ public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStora
 
     @Override
     public @NotNull Map<String, Consumer<Paras>> getActionMap() {
-        return Map.of();
+        return actions;
     }
 }
