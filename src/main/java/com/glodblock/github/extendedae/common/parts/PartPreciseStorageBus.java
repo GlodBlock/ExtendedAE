@@ -11,13 +11,13 @@ import appeng.api.storage.MEStorage;
 import appeng.api.util.IConfigManager;
 import appeng.core.AppEng;
 import appeng.helpers.IConfigInvHost;
-import appeng.items.parts.PartModels;
 import appeng.me.storage.NullInventory;
 import appeng.parts.PartModel;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.api.StorageMode;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiPredicate;
+
 public class PartPreciseStorageBus extends PartSpecialStorageBus implements IConfigInvHost {
 
     public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/precise_storage_bus_base");
@@ -33,6 +35,7 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_on"));
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
     private final ConfigInventory config = ConfigInventory.configStacks(null, 63, this::onConfigurationChanged, true);
+    private StorageMode storageMode = StorageMode.DEFAULT;
 
     public PartPreciseStorageBus(IPartItem<?> partItem) {
         super(partItem);
@@ -42,6 +45,11 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
         if (getMainNode().isReady()) {
             updateTarget(true);
         }
+    }
+
+    @Override
+    protected void updateTarget(boolean forceFullUpdate) {
+        super.updateTarget(forceFullUpdate);
     }
 
     @Override
@@ -60,23 +68,27 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     public void readFromNBT(CompoundTag data) {
         super.readFromNBT(data);
         this.config.readFromChildTag(data, "config");
+        this.storageMode = StorageMode.values()[data.getByte("storageMode")];
     }
 
     @Override
     public void writeToNBT(CompoundTag data) {
         super.writeToNBT(data);
         this.config.writeToChildTag(data, "config");
+        data.putByte("storageMode", (byte) this.storageMode.ordinal());
     }
 
     @Override
     public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
         super.importSettings(mode, input, player);
         this.config.readFromChildTag(input, "config");
+        this.storageMode = StorageMode.values()[input.getByte("storageMode")];
     }
 
     @Override
     public void exportSettings(SettingsFrom mode, CompoundTag output) {
         super.exportSettings(mode, output);
+        output.putByte("storageMode", (byte) this.storageMode.ordinal());
         if (mode == SettingsFrom.MEMORY_CARD) {
             this.config.writeToChildTag(output, "config");
         }
@@ -117,7 +129,7 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
         return this.handler.getDelegate();
     }
 
-    public static class PreciseInventory extends StorageBusInventory {
+    public class PreciseInventory extends StorageBusInventory {
 
         public PreciseInventory(MEStorage inventory) {
             super(inventory);
@@ -133,7 +145,7 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
             if (toAdd <= 0) {
                 return 0;
             }
-            toAdd -= this.getAvailableStacks().get(what);
+            toAdd -= super.getAvailableStacks().get(what);
             if (toAdd <= 0) {
                 return 0;
             }
@@ -141,6 +153,34 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
             return super.insert(what, toAdd, mode, source);
         }
 
+        @Override
+        public void getAvailableStacks(KeyCounter out) {
+            var filter = (PreciseFilter) this.getPartitionList();
+            var current = new KeyCounter();
+            super.getAvailableStacks(current);
+
+            BiPredicate<Long, Long> comparator = switch (storageMode) {
+                case GREATER_EQUAL -> (value, threshold) -> value >= threshold;
+                case GREATER      -> (value, threshold) -> value > threshold;
+                case EQUAL        -> Long::equals;
+                case LESS         -> (value, threshold) -> value < threshold;
+                case LESS_EQUAL   -> (value, threshold) -> value <= threshold;
+                default           -> null;
+            };
+
+            if (comparator == null) {
+                super.getAvailableStacks(out);
+                return;
+            }
+
+            for (var entry : current) {
+                long value = entry.getLongValue();
+                long threshold = filter.getAmount(entry.getKey());
+                if (comparator.test(value, threshold)) {
+                    out.add(entry.getKey(), value);
+                }
+            }
+        }
     }
 
     public static class PreciseFilter implements IPartitionList {
@@ -172,4 +212,11 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
 
     }
 
+    public void setStorageMode(StorageMode mode) {
+        storageMode = mode;
+    }
+
+    public StorageMode getStorageMode() {
+        return storageMode;
+    }
 }

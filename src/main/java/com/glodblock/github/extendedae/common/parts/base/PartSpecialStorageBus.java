@@ -42,6 +42,7 @@ import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.automation.UpgradeablePart;
 import appeng.util.Platform;
 import appeng.util.prioritylist.IPartitionList;
+import com.glodblock.github.extendedae.api.EPPSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 public class EPPIcon {
 
     private static final ResourceLocation TEXTURE = ExtendedAE.id("textures/guis/nicons.png");
+    private static final ResourceLocation SYMBOL_TEXTURE = ExtendedAE.id("textures/guis/symbols.png");
 
     public static final Blitter INFO = Blitter.texture(TEXTURE, 64, 64).src(0, 0, 16, 16);
     public static final Blitter HIGHLIGHT_BLOCK = Blitter.texture(TEXTURE, 64, 64).src(16, 0, 16, 16);
@@ -19,4 +20,10 @@ public class EPPIcon {
     public static final Blitter OVER_STACK = Blitter.texture(TEXTURE, 64, 64).src(0, 32, 16, 16);
     public static final Blitter BELOW_STACK = Blitter.texture(TEXTURE, 64, 64).src(16, 32, 16, 16);
 
+    public static final Blitter DEFAULT = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(0, 0, 16, 16);
+    public static final Blitter GREATER_EQUAL = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(16, 16, 16, 16);
+    public static final Blitter GREATER = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(16, 0, 16, 16);
+    public static final Blitter EQUAL = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(0, 16, 16, 16);
+    public static final Blitter LESS = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(32, 0, 16, 16);
+    public static final Blitter LESS_EQUAL = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(32, 16, 16, 16);
 }

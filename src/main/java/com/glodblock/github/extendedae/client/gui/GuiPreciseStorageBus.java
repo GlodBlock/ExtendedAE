@@ -18,10 +18,18 @@ import appeng.core.localization.Tooltips;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
+import appeng.util.EnumCycler;
+import com.glodblock.github.extendedae.api.StorageMode;
+import com.glodblock.github.extendedae.client.button.CycleEPPButton;
+import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
+import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
+import com.glodblock.github.glodium.network.packet.CGenericPacket;
+import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,12 +38,17 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.function.Consumer;
 
-public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStorageBus> {
+public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStorageBus> implements IActionHolder {
 
     private final SettingToggleButton<AccessRestriction> rwMode;
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
+    private final CycleEPPButton storageMode;
+    private final Map<String, Consumer<Paras>> actions = createHolder();
 
     public GuiPreciseStorageBus(ContainerPreciseStorageBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -51,7 +64,31 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
         this.addToLeftToolbar(this.storageFilter);
         this.addToLeftToolbar(this.filterOnExtract);
         this.addToLeftToolbar(this.rwMode);
+
+        this.storageMode = new CycleEPPButton();
+        this.storageMode.addActionPair(EPPIcon.DEFAULT, Component.translatable("gui.expatternprovider.precise_storage_bus.default"),
+                b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", packetBuilder(StorageMode.DEFAULT))));
+        this.storageMode.addActionPair(EPPIcon.GREATER_EQUAL, Component.translatable("gui.expatternprovider.precise_storage_bus.greater_equal"),
+                b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", packetBuilder(StorageMode.GREATER_EQUAL))));
+        this.storageMode.addActionPair(EPPIcon.GREATER, Component.translatable("gui.expatternprovider.precise_storage_bus.greater"),
+                b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", packetBuilder(StorageMode.GREATER))));
+        this.storageMode.addActionPair(EPPIcon.EQUAL, Component.translatable("gui.expatternprovider.precise_storage_bus.equal"),
+                b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", packetBuilder(StorageMode.EQUAL))));
+        this.storageMode.addActionPair(EPPIcon.LESS, Component.translatable("gui.expatternprovider.precise_storage_bus.less"),
+                b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", packetBuilder(StorageMode.LESS))));
+        this.storageMode.addActionPair(EPPIcon.LESS_EQUAL, Component.translatable("gui.expatternprovider.precise_storage_bus.less_equal"),
+                b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", packetBuilder(StorageMode.LESS_EQUAL))));
+
+        this.actions.put("init", o -> this.storageMode.setState(o.get(0)));
+        EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
+        this.addToLeftToolbar(this.storageMode);
     }
+
+    private int packetBuilder(StorageMode currentMode) {
+        boolean rightClick = isHandlingRightClick();
+        return EnumCycler.rotateEnum(currentMode, rightClick, EnumSet.allOf(StorageMode.class)).ordinal();
+    }
+
 
     @Override
     protected void updateBeforeRender() {
@@ -59,6 +96,7 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
         this.storageFilter.set(this.menu.getStorageFilter());
         this.rwMode.set(this.menu.getReadWriteMode());
         this.filterOnExtract.set(this.menu.getFilterOnExtract());
+        this.storageMode.setState(this.menu.getMode().ordinal());
     }
 
     @Override
@@ -121,4 +159,8 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
         return slot != null && slot.isActive() && slot.hasItem() && this.menu.isConfigSlot(slot);
     }
 
+    @Override
+    public @NotNull Map<String, Consumer<Paras>> getActionMap() {
+        return this.actions;
+    }
 }
