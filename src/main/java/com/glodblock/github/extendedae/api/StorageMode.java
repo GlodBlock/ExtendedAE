@@ -2,8 +2,8 @@ package com.glodblock.github.extendedae.api;
 
 public enum StorageMode {
     DEFAULT((value, threshold) -> true),
-    GREATER_EQUAL((value, threshold) -> threshold >= value),
-    GREATER((value, threshold) -> threshold > value),
+    GREATER_EQUAL((value, threshold) -> value >= threshold),
+    GREATER((value, threshold) -> value > threshold),
     EQUAL((value, threshold) -> value == threshold),
     LESS((value, threshold) -> value < threshold),
     LESS_EQUAL((value, threshold) -> value <= threshold);
