@@ -39,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public abstract class TileAssemblerMatrixBase extends AENetworkBlockEntity implements IAEMultiBlock<ClusterAssemblerMatrix>, IPowerChannelState {
@@ -53,7 +52,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkBlockEntity imple
     public TileAssemblerMatrixBase(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.getMainNode().setFlags(GridFlags.MULTIBLOCK, GridFlags.REQUIRE_CHANNEL).addService(IGridMultiblock.class, this::getMultiblockNodes);
-        this.getMainNode().setIdlePowerUsage(0);
+        this.getMainNode().setIdlePowerUsage(0.5);
         this.manager = new ConfigManager(this::saveChanges);
         this.manager.registerSetting(Settings.PATTERN_ACCESS_TERMINAL, YesNo.YES);
     }
@@ -111,22 +110,6 @@ public abstract class TileAssemblerMatrixBase extends AENetworkBlockEntity imple
 
     public void breakCluster() {
         if (this.cluster != null) {
-            var places = new ArrayList<BlockPos>();
-            for (var blockEntity : (Iterable<? extends TileAssemblerMatrixBase>) this.cluster::getBlockEntities) {
-                if (this == blockEntity) {
-                    places.add(worldPosition);
-                } else {
-                    for (var d : Direction.values()) {
-                        var p = blockEntity.worldPosition.relative(d);
-                        if (this.level.isEmptyBlock(p)) {
-                            places.add(p);
-                        }
-                    }
-                }
-            }
-            if (places.isEmpty()) {
-                throw new IllegalStateException(this.cluster + " does not contain any kind of blocks, which were destroyed.");
-            }
             this.cluster.destroy();
         }
     }
