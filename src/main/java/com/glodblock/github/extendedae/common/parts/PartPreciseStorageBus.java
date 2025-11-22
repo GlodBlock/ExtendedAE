@@ -26,8 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiPredicate;
-
 public class PartPreciseStorageBus extends PartSpecialStorageBus implements IConfigInvHost {
 
     public static final ResourceLocation MODEL_BASE = new ResourceLocation(ExtendedAE.MODID, "part/precise_storage_bus_base");
@@ -45,11 +43,6 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
         if (getMainNode().isReady()) {
             updateTarget(true);
         }
-    }
-
-    @Override
-    protected void updateTarget(boolean forceFullUpdate) {
-        super.updateTarget(forceFullUpdate);
     }
 
     @Override
@@ -155,28 +148,17 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
 
         @Override
         public void getAvailableStacks(KeyCounter out) {
-            var filter = (PreciseFilter) this.getPartitionList();
-            var current = new KeyCounter();
-            super.getAvailableStacks(current);
-
-            BiPredicate<Long, Long> comparator = switch (storageMode) {
-                case GREATER_EQUAL -> (value, threshold) -> value >= threshold;
-                case GREATER      -> (value, threshold) -> value > threshold;
-                case EQUAL        -> Long::equals;
-                case LESS         -> (value, threshold) -> value < threshold;
-                case LESS_EQUAL   -> (value, threshold) -> value <= threshold;
-                default           -> null;
-            };
-
-            if (comparator == null) {
+            if (storageMode == StorageMode.DEFAULT || storageMode == null) {
                 super.getAvailableStacks(out);
                 return;
             }
-
+            var filter = (PreciseFilter) this.getPartitionList();
+            var current = new KeyCounter();
+            super.getAvailableStacks(current);
             for (var entry : current) {
                 long value = entry.getLongValue();
                 long threshold = filter.getAmount(entry.getKey());
-                if (comparator.test(value, threshold)) {
+                if (storageMode.test(value, threshold)) {
                     out.add(entry.getKey(), value);
                 }
             }
