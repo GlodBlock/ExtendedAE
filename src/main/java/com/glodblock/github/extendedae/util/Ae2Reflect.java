@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.util;
 
 import appeng.api.behaviors.StackTransferContext;
+import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.storage.IStorageService;
@@ -14,6 +15,7 @@ import appeng.blockentity.storage.IOPortBlockEntity;
 import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.patternprovider.PatternContainer;
+import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.parts.automation.ExportBusPart;
@@ -21,6 +23,7 @@ import appeng.parts.automation.IOBusPart;
 import appeng.util.ConfigInventory;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.glodium.reflect.ReflectKit;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +37,7 @@ public class Ae2Reflect {
 
     private static final Field fContainerTracker_serverId;
     private static final Field fContainerTracker_container;
+    private static final Field fContainerTracker_server;
     private static final Field fDriveBlockEntity_clientSideCellState;
     private static final Field fDriveBlockEntity_clientSideCellItems;
     private static final Field fDriveBlockEntity_clientSideOnline;
@@ -46,6 +50,7 @@ public class Ae2Reflect {
     private static final Field fIOPortBlockEntity_upgrades;
     private static final Field fInterfaceLogic_config;
     private static final Field fInterfaceLogic_storage;
+    private static final Field fPatternAccessTermMenu_byId;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
     private static final Method mIOBusPart_updateState;
@@ -55,11 +60,13 @@ public class Ae2Reflect {
     private static final Method mInterfaceLogic_onConfigRowChanged;
     private static final Method mInterfaceLogic_isAllowedInStorageSlot;
     private static final Method mInterfaceLogic_onStorageChanged;
+    private static final Method mPatternAccessTermMenu_isVisible;
 
     static {
         try {
             fContainerTracker_serverId = ReflectKit.reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "serverId");
             fContainerTracker_container = ReflectKit.reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "container");
+            fContainerTracker_server = ReflectKit.reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "server");
             fDriveBlockEntity_clientSideCellState = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideCellState");
             fDriveBlockEntity_clientSideCellItems = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideCellItems");
             fDriveBlockEntity_clientSideOnline = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideOnline");
@@ -72,6 +79,7 @@ public class Ae2Reflect {
             fIOPortBlockEntity_upgrades = ReflectKit.reflectField(IOPortBlockEntity.class, "upgrades");
             fInterfaceLogic_config = ReflectKit.reflectField(InterfaceLogic.class, "config");
             fInterfaceLogic_storage = ReflectKit.reflectField(InterfaceLogic.class, "storage");
+            fPatternAccessTermMenu_byId = ReflectKit.reflectField(PatternAccessTermMenu.class, "byId");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
             mIOBusPart_updateState = ReflectKit.reflectMethod(IOBusPart.class, "updateState");
@@ -81,6 +89,7 @@ public class Ae2Reflect {
             mInterfaceLogic_onConfigRowChanged = ReflectKit.reflectMethod(InterfaceLogic.class, "onConfigRowChanged");
             mInterfaceLogic_isAllowedInStorageSlot = ReflectKit.reflectMethod(InterfaceLogic.class, "isAllowedInStorageSlot", int.class, AEKey.class);
             mInterfaceLogic_onStorageChanged = ReflectKit.reflectMethod(InterfaceLogic.class, "onStorageChanged");
+            mPatternAccessTermMenu_isVisible = ReflectKit.reflectMethod(PatternAccessTermMenu.class, "isVisible", PatternContainer.class);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -92,6 +101,18 @@ public class Ae2Reflect {
 
     public static PatternContainer getContainer(Object owner) {
         return ReflectKit.readField(owner, fContainerTracker_container);
+    }
+
+    public static InternalInventory getServerInventory(Object owner) {
+        return ReflectKit.readField(owner, fContainerTracker_server);
+    }
+
+    public static Long2ObjectOpenHashMap<Object> getIDMap(Object owner) {
+        return ReflectKit.readField(owner, fPatternAccessTermMenu_byId);
+    }
+
+    public static boolean checkVisibility(PatternAccessTermMenu owner, PatternContainer container) {
+        return ReflectKit.executeMethod2(owner, mPatternAccessTermMenu_isVisible, container);
     }
 
     public static void updateDriveClientSideState(DriveBlockEntity owner) {
