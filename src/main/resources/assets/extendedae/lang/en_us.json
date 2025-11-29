@@ -168,6 +168,7 @@
   "gui.wireless_connect.power": "Power Usage: %s AE/t",
   "gui.wireless_connect.channel": "Channel: %s/%s",
   "gui.wireless_connect.remote": "Position X: %s, Y: %s, Z: %s",
+  "gui.wireless_connect.remote_channel": "Position X: %s, Y: %s, Z: %s\nUsed Channel: %s",
   "gui.wireless_connect.highlight.tooltip": "Highlight the remote Wireless Connector in world.",
   "gui.extendedae.caner": "ME Caner",
   "gui.extendedae.caner.fill": "Fill Mode",

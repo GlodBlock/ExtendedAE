@@ -85,7 +85,7 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
                         this.getPlayer().displayClientMessage(message, false);
                     }
                 });
-                this.remotes[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.remote", remotePos.getX(), remotePos.getY(), remotePos.getZ())));
+                this.remotes[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.remote_channel", remotePos.getX(), remotePos.getY(), remotePos.getZ(), this.menu.getRemoteChannel(i))));
                 this.remotes[i].setConnected(true);
             } else {
                 this.highlightBtn[i].active = false;

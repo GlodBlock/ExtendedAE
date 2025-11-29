@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.container;
 
+import appeng.me.helpers.IGridConnectedBlockEntity;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.guisync.PacketWritable;
 import appeng.menu.implementations.MenuTypeBuilder;
@@ -50,6 +51,10 @@ public class ContainerWirelessHub extends UpgradeableMenu<TileWirelessHub> imple
         return BlockPos.of(this.status.getStatus(port).pos);
     }
 
+    public int getRemoteChannel(int port) {
+        return this.status.getStatus(port).channel;
+    }
+
     @Override
     public void broadcastChanges() {
         this.powerUse = this.getHost().getPowerUse();
@@ -65,18 +70,28 @@ public class ContainerWirelessHub extends UpgradeableMenu<TileWirelessHub> imple
         for (int i = 0; i < TileWirelessHub.MAX_PORT; i++) {
             var otherSide = this.getHost().getOtherSide(i);
             var localStatus = this.status.getStatus(i).status;
+            var localChannel = this.status.getStatus(i).channel;
             var localPos = this.status.getStatus(i).pos;
             if (otherSide == null) {
                 localPos = 0;
+                localChannel = 0;
                 localStatus = this.getHost().getFrequency(i) == 0 ? WirelessStatus.UNCONNECTED : WirelessStatus.REMOTE_ERROR;
             } else {
+                var remote = this.getHost().getLevel().getBlockEntity(otherSide);
+                if (remote instanceof IGridConnectedBlockEntity gridHost) {
+                    var remoteNode = gridHost.getMainNode().getNode();
+                    if (remoteNode != null) {
+                        localChannel = remoteNode.getUsedChannels();
+                    }
+                }
                 localPos = otherSide.asLong();
+
                 localStatus = WirelessStatus.WORKING;
             }
             if (!this.getHost().getMainNode().isPowered() && localStatus == WirelessStatus.WORKING) {
                 localStatus = WirelessStatus.NO_POWER;
             }
-            hostStatus.setStatus(i, new PortStatus.Status(localPos, localStatus));
+            hostStatus.setStatus(i, new PortStatus.Status(localPos, localChannel, localStatus));
         }
         this.status = hostStatus;
         super.broadcastChanges();
@@ -92,7 +107,7 @@ public class ContainerWirelessHub extends UpgradeableMenu<TileWirelessHub> imple
 
         public PortStatus() {
             this(new Status[TileWirelessHub.MAX_PORT]);
-            Arrays.fill(this.statuses, new Status(0, WirelessStatus.UNCONNECTED));
+            Arrays.fill(this.statuses, new Status(0, 0, WirelessStatus.UNCONNECTED));
         }
 
         public PortStatus(RegistryFriendlyByteBuf data) {
@@ -133,15 +148,16 @@ public class ContainerWirelessHub extends UpgradeableMenu<TileWirelessHub> imple
             return false;
         }
 
-        private record Status(long pos, WirelessStatus status) implements PacketWritable {
+        private record Status(long pos, int channel, WirelessStatus status) implements PacketWritable {
 
             static Status readFromPacket(RegistryFriendlyByteBuf data) {
-                return new Status(data.readLong(), data.readEnum(WirelessStatus.class));
+                return new Status(data.readLong(), data.readInt(), data.readEnum(WirelessStatus.class));
             }
 
             @Override
             public void writeToPacket(RegistryFriendlyByteBuf data) {
                 data.writeLong(this.pos);
+                data.writeInt(this.channel);
                 data.writeEnum(this.status);
             }
 
