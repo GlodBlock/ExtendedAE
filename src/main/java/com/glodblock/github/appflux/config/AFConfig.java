@@ -14,6 +14,9 @@ public class AFConfig {
     private static final ModConfigSpec.IntValue FLUX_PER_BYTE = BUILDER
             .comment("FE can be stored per byte.")
             .defineInRange("flux_cell.amount", 1024 * 1024, 1, Integer.MAX_VALUE);
+    private static final ModConfigSpec.DoubleValue CONVERSION_LOSS_RATE = BUILDER
+            .comment("Percentage of FE lost when stored into Flux Cells.")
+            .defineInRange("flux_cell.conversion_loss_percentage", 0.025, 0, 0.999999);
     private static final ModConfigSpec.LongValue FLUX_ACCESSOR_IO = BUILDER
             .comment("The I/O limit of Flux Accessor. 0 means no limitation.")
             .defineInRange("flux_accessor.io_limit", 0L, 0L, Integer.MAX_VALUE);
@@ -34,6 +37,10 @@ public class AFConfig {
         return fluxPerByte;
     }
 
+    public static double getConversionRate() {
+        return conversionRate;
+    }
+
     public static long getFluxAccessorIO() {
         return fluxAccessorIO <= 0 ? Long.MAX_VALUE : fluxAccessorIO;
     }
@@ -51,6 +58,7 @@ public class AFConfig {
     }
 
     private static int fluxPerByte;
+    private static double conversionRate;
     private static long fluxAccessorIO;
     private static boolean selfCharge;
     private static boolean allowImportBus;
@@ -59,6 +67,7 @@ public class AFConfig {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         fluxPerByte = FLUX_PER_BYTE.get();
+        conversionRate = 1.0 - CONVERSION_LOSS_RATE.get();
         fluxAccessorIO = FLUX_ACCESSOR_IO.get();
         selfCharge = NETWORK_CHARGE.get();
         allowImportBus = ENABLE_IMPORT.get();
