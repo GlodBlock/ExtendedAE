@@ -174,9 +174,14 @@ public class TileWirelessHub extends AENetworkedBlockEntity implements ServerTic
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
         this.upgrades.readFromNBT(data, "upgrades", registries);
-        for (int i = 0; i < MAX_PORT; i ++) {
-            this.freq[i] = data.getLong("freq" + i);
-            WirelessConnect.G.markUsed(this.freq[i]);
+        if (data.contains("freq")) {
+            this.freq[0] = data.getLong("freq");
+            WirelessConnect.G.markUsed(this.freq[0]);
+        } else {
+            for (int i = 0; i < MAX_PORT; i ++) {
+                this.freq[i] = data.getLong("freq" + i);
+                WirelessConnect.G.markUsed(this.freq[i]);
+            }
         }
         if (data.contains("color")) {
             this.color = AEColor.valueOf(data.getString("color"));

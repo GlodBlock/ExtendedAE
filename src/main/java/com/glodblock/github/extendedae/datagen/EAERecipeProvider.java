@@ -220,6 +220,12 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 4)
                 .input(AEBlocks.QUANTUM_LINK)
                 .save(c, ExtendedAE.id("assembler/wireless_hub"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EAESingletons.WIRELESS_CONNECTOR_UPGRADE)
+                .requires(EAESingletons.WIRELESS_HUB)
+                .requires(Tags.Items.INGOTS)
+                .unlockedBy(C, has(EAESingletons.WIRELESS_HUB))
+                .save(c, ExtendedAE.id("wireless_hub_upgrade"));
 
         // Ingredient Buffer
         ShapedRecipeBuilder
