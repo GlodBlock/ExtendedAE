@@ -1,5 +1,7 @@
 package com.glodblock.github.extendedae.xmod.jade;
 
+import appeng.api.integrations.igtooltip.PartTooltips;
+import com.glodblock.github.extendedae.common.parts.PartSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
@@ -23,8 +25,11 @@ public class JadePlugin implements IWailaPlugin {
         registration.registerBlockDataProvider(JadeDateSender.INSTANCE, BlockEntity.class);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void registerClient(IWailaClientRegistration registration) {
+        PartTooltips.addBody(PartSmartAnnihilationPlane.class, PlaneTooltip.INSTANCE);
+        PartTooltips.addServerData(PartSmartAnnihilationPlane.class, PlaneTooltip.INSTANCE);
         registration.registerBlockComponent(WirelessConnectorTooltip.INSTANCE, Block.class);
         registration.registerBlockComponent(CrystalFixerTooltip.INSTANCE, Block.class);
         registration.addTooltipCollectedCallback((tooltip, accessor) -> {

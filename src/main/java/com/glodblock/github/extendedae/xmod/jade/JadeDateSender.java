@@ -18,7 +18,9 @@ public class JadeDateSender implements IServerDataProvider<BlockAccessor> {
         if (tile instanceof JadeDataProvider provider) {
             var holder = new CompoundTag();
             provider.collectJadeInfo(holder);
-            jade.put(provider.jadeID(), holder);
+            if (!holder.isEmpty()) {
+                jade.put(provider.jadeID(), holder);
+            }
         }
         if (!jade.isEmpty()) {
             data.put(ExtendedAE.MODID, jade);

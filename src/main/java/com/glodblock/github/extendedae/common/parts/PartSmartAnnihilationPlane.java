@@ -154,12 +154,14 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
     public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
         super.readFromNBT(data, registries);
         this.config.readFromChildTag(data, "config", registries);
-        var enchantmentsTag = data.getCompound("enchantments");
-        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        this.enchantments = ItemEnchantments.CODEC.decode(ops, enchantmentsTag)
-                .ifError(err -> ExtendedAE.LOGGER.warn("Failed to load enchantments for part {}: {}", this, err.message()))
-                .getOrThrow()
-                .getFirst();
+        if (data.contains("enchantments")) {
+            var enchantmentsTag = data.getCompound("enchantments");
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            this.enchantments = ItemEnchantments.CODEC.decode(ops, enchantmentsTag)
+                    .ifError(err -> ExtendedAE.LOGGER.warn("Failed to load enchantments for part {}: {}", this, err.message()))
+                    .getOrThrow()
+                    .getFirst();
+        }
     }
 
     @Override
@@ -167,7 +169,7 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
         super.writeToNBT(data, registries);
         this.config.writeToChildTag(data, "config", registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        var enchantmentsTag = ItemEnchantments.CODEC.encodeStart(ops, enchantments).getOrThrow();
+        var enchantmentsTag = ItemEnchantments.CODEC.encodeStart(ops, this.enchantments).getOrThrow();
         if (enchantmentsTag instanceof CompoundTag compoundTag && !compoundTag.isEmpty()) {
             data.put("enchantments", enchantmentsTag);
         }
@@ -178,7 +180,7 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
         super.importSettings(mode, data, player);
         // Import enchants only when the plan is placed, not from memory cards
         if (mode == SettingsFrom.DISMANTLE_ITEM) {
-            this.enchantments = data.get(DataComponents.ENCHANTMENTS);
+            this.enchantments = data.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         }
         pickupStrategies = null;
     }
@@ -188,7 +190,7 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
         super.exportSettings(mode, data);
         // Save enchants only when the actual plane is dismantled
         if (mode == SettingsFrom.DISMANTLE_ITEM) {
-            data.set(DataComponents.ENCHANTMENTS, enchantments);
+            data.set(DataComponents.ENCHANTMENTS, this.enchantments);
         }
     }
 
@@ -362,6 +364,9 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
             var pos = self.getBlockPos().relative(this.getSide());
             var side = getSide().getOpposite();
             var owner = node.getOwningPlayerProfileId();
+            if (this.enchantments == null) {
+                this.enchantments = ItemEnchantments.EMPTY;
+            }
             pickupStrategies = StackWorldBehaviors.createPickupStrategies((ServerLevel) self.getLevel(), pos, side, self, enchantments, owner);
         }
         return pickupStrategies;
@@ -393,6 +398,10 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
     @Override
     public ModelData getModelData() {
         return ModelData.builder().with(PlaneModelData.CONNECTIONS, getConnections()).build();
+    }
+
+    public ItemEnchantments getEnchantments() {
+        return this.enchantments;
     }
 
     private record ContinuousGeneration(AEKey what, long amount, int ticks) {
