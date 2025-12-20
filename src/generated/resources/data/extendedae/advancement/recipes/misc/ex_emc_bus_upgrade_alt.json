@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": "extendedae:ex_emc_interface_part"
+            "items": "extendedae:ex_emc_export_bus_part"
           }
         ]
       },
@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:ex_emc_interface_alt"
+        "recipe": "extendedae:ex_emc_bus_upgrade_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -32,7 +32,7 @@
   ],
   "rewards": {
     "recipes": [
-      "extendedae:ex_emc_interface_alt"
+      "extendedae:ex_emc_bus_upgrade_alt"
     ]
   }
 }

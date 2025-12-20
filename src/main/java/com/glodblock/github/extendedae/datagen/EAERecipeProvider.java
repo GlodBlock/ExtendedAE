@@ -952,17 +952,43 @@ public class EAERecipeProvider extends RecipeProvider {
                 .requires(EAETags.EX_EMC_INTERFACE)
                 .requires(Tags.Items.INGOTS)
                 .unlockedBy(C, has(EAETags.EX_EMC_INTERFACE))
-                .save(c, ExtendedAE.id("ex_emc_interface_upgrade"));
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("ex_emc_interface_upgrade"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, APESingletons.EX_EMC_INTERFACE_PART)
                 .requires(APESingletons.EX_EMC_INTERFACE)
                 .unlockedBy(C, has(APESingletons.EX_EMC_INTERFACE))
-                .save(c, ExtendedAE.id("ex_emc_interface_part"));
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("ex_emc_interface_part"));
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, APESingletons.EX_EMC_INTERFACE)
                 .requires(APESingletons.EX_EMC_INTERFACE_PART)
                 .unlockedBy(C, has(APESingletons.EX_EMC_INTERFACE_PART))
-                .save(c, ExtendedAE.id("ex_emc_interface_alt"));
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("ex_emc_interface_alt"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(APESingletons.EX_EMC_EXPORT_BUS)
+                .input(AppliedE.EMC_EXPORT_BUS)
+                .input(AEItems.SPEED_CARD, 3)
+                .input(PEItems.RED_MATTER)
+                .input(AEItems.FORMATION_CORE)
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("assembler/ex_emc_export_bus"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(APESingletons.EX_EMC_IMPORT_BUS)
+                .input(AppliedE.EMC_IMPORT_BUS)
+                .input(AEItems.SPEED_CARD, 3)
+                .input(PEItems.RED_MATTER)
+                .input(AEItems.ANNIHILATION_CORE)
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("assembler/ex_emc_import_bus"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, APESingletons.EMC_IO_BUS_UPGRADE)
+                .requires(APESingletons.EX_EMC_IMPORT_BUS)
+                .requires(Tags.Items.INGOTS)
+                .unlockedBy(C, has(APESingletons.EX_EMC_IMPORT_BUS))
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("ex_emc_bus_upgrade"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, APESingletons.EMC_IO_BUS_UPGRADE)
+                .requires(APESingletons.EX_EMC_EXPORT_BUS)
+                .requires(Tags.Items.INGOTS)
+                .unlockedBy(C, has(APESingletons.EX_EMC_EXPORT_BUS))
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("ex_emc_bus_upgrade_alt"));
     }
 
     private void fixer(@NotNull RecipeOutput c) {

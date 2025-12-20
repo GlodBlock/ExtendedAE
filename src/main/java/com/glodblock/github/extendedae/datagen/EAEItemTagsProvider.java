@@ -17,6 +17,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class EAEItemTagsProvider extends ItemTagsProvider {
@@ -73,8 +74,8 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
                 .add(EAESingletons.SMART_ANNIHILATION_PLANE);
         if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
             tag(EAETags.EX_EMC_INTERFACE)
-                    .add(APESingletons.EX_EMC_INTERFACE.asItem())
-                    .add(APESingletons.EX_EMC_INTERFACE_PART);
+                    .addOptional(Objects.requireNonNull(APESingletons.EX_EMC_INTERFACE.getRegistryName()))
+                    .addOptional(Objects.requireNonNull(APESingletons.EX_EMC_INTERFACE_PART.getRegistryName()));
         }
     }
 }

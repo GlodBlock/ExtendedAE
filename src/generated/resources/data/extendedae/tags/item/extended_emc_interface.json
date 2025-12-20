@@ -1,6 +1,12 @@
 {
   "values": [
-    "extendedae:ex_emc_interface",
-    "extendedae:ex_emc_interface_part"
+    {
+      "id": "extendedae:ex_emc_interface",
+      "required": false
+    },
+    {
+      "id": "extendedae:ex_emc_interface_part",
+      "required": false
+    }
   ]
 }
