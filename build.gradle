@@ -85,7 +85,7 @@ repositories {
 dependencies {
     implementation "curse.maven:glodium-957920:5821676"
     implementation "org.appliedenergistics:appliedenergistics2:19.2.17"
-    implementation "org.appliedenergistics:guideme:2.5.1"
+    implementation "org.appliedenergistics:guideme:21.1.1"
     jarJar(implementation ("de.mari_023:ae2wtlib_api:19.2.0") { transitive = false })
     compileOnly "curse.maven:applied-flux-965012:5614830"
     compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
