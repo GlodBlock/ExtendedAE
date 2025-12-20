@@ -10,6 +10,7 @@ import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.util.LazyInits;
 import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.appliede.APESingletons;
 import com.glodblock.github.extendedae.xmod.darkmode.BlacklistGUI;
 import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.extendedae.xmod.wt.HostWirelessExPAT;
@@ -54,7 +55,13 @@ public class ExtendedAE {
             }
             if (e.getRegistryKey().equals(Registries.BLOCK)) {
                 EAESingletons.init(EAERegistryHandler.INSTANCE);
+                if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
+                    APESingletons.init(EAERegistryHandler.INSTANCE);
+                }
                 EAERegistryHandler.INSTANCE.runRegister();
+                if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
+                    APESingletons.register();
+                }
                 return;
             }
             if (e.getRegistryKey().equals(Registries.ITEM)) {

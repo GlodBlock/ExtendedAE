@@ -18,11 +18,14 @@ import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
 import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.appliede.APESingletons;
 import com.glodblock.github.glodium.util.GlodUtil;
+import gripe._90.appliede.AppliedE;
 import gripe._90.megacells.definition.MEGABlocks;
 import gripe._90.megacells.definition.MEGAItems;
 import mekanism.api.datagen.recipe.builder.ItemStackToItemStackRecipeBuilder;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
+import moze_intel.projecte.gameObjs.registries.PEItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -772,6 +775,9 @@ public class EAERecipeProvider extends RecipeProvider {
         if (GlodUtil.checkMod(ModConstants.MEK)) {
             mek(c);
         }
+        if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
+            appliede(c);
+        }
 
     }
 
@@ -929,7 +935,34 @@ public class EAERecipeProvider extends RecipeProvider {
         ItemStackToItemStackRecipeBuilder.crushing(ItemStackIngredient.of(SizedIngredient.of(EAETags.ENTRO_CRYSTAL, 1)), new ItemStack(EAESingletons.ENTRO_DUST))
                 .build(c.withConditions(mod(ModConstants.MEK)), ExtendedAE.id("mek/entro_dust"));
         ItemStackToItemStackRecipeBuilder.enriching(ItemStackIngredient.of(SizedIngredient.of(EAESingletons.QUARTZ_BLEND, 1)), new ItemStack(AEItems.SILICON, 6))
-                .build(c.withConditions(mod((ModConstants.MEK))), ExtendedAE.id("mek/quartz_blend"));
+                .build(c.withConditions(mod(ModConstants.MEK)), ExtendedAE.id("mek/quartz_blend"));
+    }
+
+    private void appliede(@NotNull RecipeOutput c) {
+        CrystalAssemblerRecipeBuilder
+                .assemble(APESingletons.EX_EMC_INTERFACE)
+                .input(Ingredient.of(AppliedE.EMC_INTERFACE, AppliedE.CABLE_EMC_INTERFACE))
+                .input(AEItems.CAPACITY_CARD, 3)
+                .input(PEItems.DARK_MATTER, 3)
+                .input(EAESingletons.CONCURRENT_PROCESSOR)
+                .input(ConventionTags.GLASS_CABLE, 6)
+                .save(c.withConditions(mod(ModConstants.APPLIED_E)), ExtendedAE.id("assembler/ex_emc_interface"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, APESingletons.EMC_INTERFACE_UPGRADE)
+                .requires(EAETags.EX_EMC_INTERFACE)
+                .requires(Tags.Items.INGOTS)
+                .unlockedBy(C, has(EAETags.EX_EMC_INTERFACE))
+                .save(c, ExtendedAE.id("ex_emc_interface_upgrade"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, APESingletons.EX_EMC_INTERFACE_PART)
+                .requires(APESingletons.EX_EMC_INTERFACE)
+                .unlockedBy(C, has(APESingletons.EX_EMC_INTERFACE))
+                .save(c, ExtendedAE.id("ex_emc_interface_part"));
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, APESingletons.EX_EMC_INTERFACE)
+                .requires(APESingletons.EX_EMC_INTERFACE_PART)
+                .unlockedBy(C, has(APESingletons.EX_EMC_INTERFACE_PART))
+                .save(c, ExtendedAE.id("ex_emc_interface_alt"));
     }
 
     private void fixer(@NotNull RecipeOutput c) {

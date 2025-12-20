@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.datagen;
 
-import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.api.ISpecialDrop;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.EAERegistryHandler;

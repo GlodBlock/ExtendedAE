@@ -95,6 +95,7 @@ import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.aae.AAECommonLoad;
 import com.glodblock.github.extendedae.xmod.aae.AAERegister;
 import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
+import com.glodblock.github.extendedae.xmod.appliede.APECommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBCommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBRegister;
 import com.glodblock.github.extendedae.xmod.megacells.MEGACommonLoad;
@@ -252,6 +253,9 @@ public class EAERegistryHandler extends RegistryHandler {
         }
         if (GlodUtil.checkMod(ModConstants.MEGA)) {
             MEGACommonLoad.init();
+        }
+        if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
+            APECommonLoad.init();
         }
     }
 

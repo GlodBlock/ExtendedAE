@@ -4,6 +4,9 @@ import appeng.datagen.providers.tags.ConventionTags;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.util.EAETags;
+import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.appliede.APESingletons;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -68,5 +71,10 @@ public class EAEItemTagsProvider extends ItemTagsProvider {
                 .add(EAESingletons.SMART_ANNIHILATION_PLANE);
         tag(ItemTags.MINING_LOOT_ENCHANTABLE)
                 .add(EAESingletons.SMART_ANNIHILATION_PLANE);
+        if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
+            tag(EAETags.EX_EMC_INTERFACE)
+                    .add(APESingletons.EX_EMC_INTERFACE.asItem())
+                    .add(APESingletons.EX_EMC_INTERFACE_PART);
+        }
     }
 }

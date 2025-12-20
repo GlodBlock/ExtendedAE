@@ -72,6 +72,11 @@ public class CrystalAssemblerRecipeBuilder {
         return this;
     }
 
+    public CrystalAssemblerRecipeBuilder input(Ingredient ingredient) {
+        this.inputs.add(IngredientStack.of(ingredient, 1));
+        return this;
+    }
+
     public CrystalAssemblerRecipeBuilder input(TagKey<Item> tag, int count) {
         this.inputs.add(IngredientStack.of(Ingredient.of(tag), count));
         return this;

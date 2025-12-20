@@ -1,8 +1,6 @@
-package com.glodblock.github.extendedae.common.tileentities;
+package com.glodblock.github.extendedae.xmod.appliede.tileentities;
 
 import appeng.api.storage.MEStorage;
-import appeng.blockentity.misc.InterfaceBlockEntity;
-import appeng.helpers.InterfaceLogic;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
@@ -10,45 +8,48 @@ import appeng.menu.locator.MenuHostLocator;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.api.caps.IMEStorageAccess;
-import com.glodblock.github.extendedae.common.EAESingletons;
-import com.glodblock.github.extendedae.container.ContainerExInterface;
+import com.glodblock.github.extendedae.xmod.appliede.APESingletons;
+import com.glodblock.github.extendedae.xmod.appliede.containers.ContainerExEMCInterface;
 import com.glodblock.github.glodium.util.GlodUtil;
+import gripe._90.appliede.block.EMCInterfaceBlockEntity;
+import gripe._90.appliede.me.misc.EMCInterfaceLogic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileExInterface extends InterfaceBlockEntity implements IPage, IGenericInvHost, IMEStorageAccess {
+public class TileExEMCInterface extends EMCInterfaceBlockEntity implements IPage, IGenericInvHost, IMEStorageAccess {
 
     private int page = 0;
 
-    public TileExInterface(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExInterface.class, TileExInterface::new, EAESingletons.EX_INTERFACE), pos, blockState);
-    }
-
-    public TileExInterface(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
+    public TileExEMCInterface(BlockPos pos, BlockState state) {
+        super(GlodUtil.getTileType(TileExEMCInterface.class, TileExEMCInterface::new, APESingletons.EX_EMC_INTERFACE), pos, state);
     }
 
     @Override
-    protected InterfaceLogic createLogic() {
-        return new InterfaceLogic(getMainNode(), this, getItemFromBlockEntity().asItem(), 36);
+    protected EMCInterfaceLogic createLogic() {
+        return new EMCInterfaceLogic(getMainNode(), this, APESingletons.EX_EMC_INTERFACE.asItem(), 36);
+    }
+
+    @Override
+    protected Item getItemFromBlockEntity() {
+        return APESingletons.EX_EMC_INTERFACE.asItem();
     }
 
     @Override
     public void openMenu(Player player, MenuHostLocator locator) {
-        MenuOpener.open(ContainerExInterface.TYPE, player, locator);
+        MenuOpener.open(ContainerExEMCInterface.TYPE, player, locator);
     }
 
     @Override
     public void returnToMainMenu(Player player, ISubMenu subMenu) {
-        MenuOpener.returnTo(ContainerExInterface.TYPE, player, subMenu.getLocator());
+        MenuOpener.returnTo(ContainerExEMCInterface.TYPE, player, subMenu.getLocator());
     }
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAESingletons.EX_INTERFACE);
+        return new ItemStack(APESingletons.EX_EMC_INTERFACE);
     }
 
     @Override

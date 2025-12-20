@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@EventBusSubscriber(modid = ExtendedAE.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ExtendedAE.MODID)
 public class EAEConfig {
 
     private static final IntList defaultModifierMultiplier = new IntImmutableList(new int[]{2, 3, 5, 7});

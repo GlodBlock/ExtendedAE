@@ -92,7 +92,7 @@ dependencies {
     compileOnly "curse.maven:mega-cells-622112:6005043"
     compileOnly "curse.maven:jade-324717:5427817"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
-    compileOnly "mekanism:Mekanism:1.21.1-10.7.0.55"
+    compileOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     compileOnly "curse.maven:applied-mekanistics-574300:5978711"
     compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.1-build.188"
     compileOnly "dev.latvian.mods:rhino:2101.2.5-build.54"
@@ -101,12 +101,16 @@ dependencies {
     compileOnly "curse.maven:functional-storage-556861:6467726"
     compileOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
     compileOnly "curse.maven:ae2-jei-integration-1074338:5748513"
+    compileOnly "curse.maven:appliede-1009940:6500056"
+    compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
     runtimeOnly "curse.maven:applied-flux-965012:5614830"
     runtimeOnly "de.mari_023:ae2wtlib:19.2.1"
     runtimeOnly "curse.maven:jade-324717:5427817"
     runtimeOnly "curse.maven:mega-cells-622112:6005043"
-    runtimeOnly "mekanism:Mekanism:1.21.1-10.7.0.55"
+    runtimeOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
+    runtimeOnly "curse.maven:appliede-1009940:6500056"
+    runtimeOnly "curse.maven:projecte-226410:6611984"
     // setup Xei
     switch(use_Xei) {
         case "emi":

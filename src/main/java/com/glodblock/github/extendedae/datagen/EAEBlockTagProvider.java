@@ -3,9 +3,13 @@ package com.glodblock.github.extendedae.datagen;
 import appeng.api.ids.AETags;
 import appeng.datagen.providers.tags.ConventionTags;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.api.OptionalBlock;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.util.EAETags;
+import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.extendedae.xmod.appliede.APESingletons;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -14,6 +18,7 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class EAEBlockTagProvider extends BlockTagsProvider {
@@ -25,7 +30,9 @@ public class EAEBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         for (var block : EAERegistryHandler.INSTANCE.getBlocks()) {
-            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+            if (!(block instanceof OptionalBlock)) {
+                tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+            }
         }
         tag(AETags.GROWTH_ACCELERATABLE)
                 .add(EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING)
@@ -48,5 +55,8 @@ public class EAEBlockTagProvider extends BlockTagsProvider {
                 .add(EAESingletons.ENTRO_BLOCK);
         tag(EAETags.SILICON_BLOCK_BLOCK)
                 .add(EAESingletons.SILICON_BLOCK);
+        if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).addOptional(Objects.requireNonNull(APESingletons.EX_EMC_INTERFACE.getRegistryName()));
+        }
     }
 }

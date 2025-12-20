@@ -1,21 +1,16 @@
-package com.glodblock.github.extendedae.client.gui;
+package com.glodblock.github.extendedae.xmod.appliede.guis;
 
-import appeng.api.config.FuzzyMode;
-import appeng.api.config.Settings;
 import appeng.client.gui.Icon;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.IconButton;
-import appeng.client.gui.widgets.ServerSettingToggleButton;
-import appeng.client.gui.widgets.SettingToggleButton;
-import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
-import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CUpdatePage;
+import com.glodblock.github.extendedae.xmod.appliede.containers.ContainerExEMCInterface;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -24,27 +19,21 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
+public class GuiExEMCInterface extends UpgradeableScreen<ContainerExEMCInterface> {
 
-    private final SettingToggleButton<FuzzyMode> fuzzyMode;
     private final List<Button> amountButtons = new ArrayList<>();
     private final ActionEPPButton nextPage;
     private final ActionEPPButton prePage;
 
-    public GuiExInterface(ContainerExInterface menu, Inventory playerInventory, Component title, ScreenStyle style) {
+    public GuiExEMCInterface(ContainerExEMCInterface menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
 
-        this.fuzzyMode = new ServerSettingToggleButton<>(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
         this.nextPage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.ARROW_RIGHT);
         this.prePage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.ARROW_LEFT);
         this.nextPage.setMessage(Component.translatable("gui.extendedae.ex_interface.next"));
         this.prePage.setMessage(Component.translatable("gui.extendedae.ex_interface.pre"));
-        addToLeftToolbar(this.fuzzyMode);
         addToLeftToolbar(this.nextPage);
         addToLeftToolbar(this.prePage);
-
-        widgets.addOpenPriorityButton();
-
         var configSlots = menu.getSlots(ExSemantics.EX_1);
         configSlots.addAll(menu.getSlots(ExSemantics.EX_3));
         configSlots.addAll(menu.getSlots(ExSemantics.EX_5));
@@ -78,9 +67,6 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
     protected void updateBeforeRender() {
         super.updateBeforeRender();
 
-        this.fuzzyMode.set(menu.getFuzzyMode());
-        this.fuzzyMode.setVisibility(menu.hasUpgrade(AEItems.FUZZY_CARD));
-
         this.menu.showPage(this.menu.page);
         this.amountButtons.forEach(s -> s.visible = false);
 
@@ -100,7 +86,7 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
     }
 
     static class SetAmountButton extends IconButton {
-        public SetAmountButton(OnPress onPress) {
+        public SetAmountButton(Button.OnPress onPress) {
             super(onPress);
         }
 
@@ -109,5 +95,4 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
             return isHoveredOrFocused() ? Icon.COG : Icon.COG_DISABLED;
         }
     }
-
 }

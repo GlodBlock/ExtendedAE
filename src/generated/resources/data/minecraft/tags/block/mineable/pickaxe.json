@@ -33,6 +33,10 @@
     "extendedae:wireless_hub",
     "extendedae:silicon_block",
     "extendedae:fishbig",
-    "extendedae:mddyue"
+    "extendedae:mddyue",
+    {
+      "id": "extendedae:ex_emc_interface",
+      "required": false
+    }
   ]
 }
