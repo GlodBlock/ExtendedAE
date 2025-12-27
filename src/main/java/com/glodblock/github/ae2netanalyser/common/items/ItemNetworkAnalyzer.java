@@ -73,7 +73,7 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
     }
 
     public ItemNetworkAnalyzer() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Properties().stacksTo(1));
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
     }
 
     @Override
-    public @Nullable ItemMenuHost<ItemNetworkAnalyzer> getMenuHost(Player player, ItemMenuHostLocator locator, @Nullable BlockHitResult hitResult) {
+    public @Nullable ItemMenuHost<Item> getMenuHost(Player player, ItemMenuHostLocator locator, @Nullable BlockHitResult hitResult) {
         return new DummyItemInventory(this, player, locator);
     }
 

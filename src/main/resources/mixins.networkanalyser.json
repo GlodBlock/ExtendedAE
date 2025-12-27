@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.glodblock.github.ae2netanalyser.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinTickManagerService"
+  ],
+  "client": [],
+  "server": []
+}

@@ -2,11 +2,15 @@ package com.glodblock.github.ae2netanalyser;
 
 import appeng.init.client.InitScreens;
 import com.glodblock.github.ae2netanalyser.client.gui.GuiAnalyser;
+import com.glodblock.github.ae2netanalyser.client.gui.GuiProfiler;
 import com.glodblock.github.ae2netanalyser.client.render.NetworkRender;
+import com.glodblock.github.ae2netanalyser.client.render.ProfileRender;
 import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.AEARegistryHandler;
+import com.glodblock.github.ae2netanalyser.common.me.ticker.RequestBox;
 import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
+import com.glodblock.github.ae2netanalyser.container.ContainerProfiler;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
@@ -31,8 +35,10 @@ public class AEAnalyser {
         assert INSTANCE == null;
         INSTANCE = this;
         PlayerTracker.init();
+        RequestBox.init();
         if (FMLEnvironment.dist.isClient()) {
             NeoForge.EVENT_BUS.addListener(NetworkRender::hook);
+            NeoForge.EVENT_BUS.addListener(ProfileRender::hook);
         }
         bus.addListener(this::commonSetup);
         bus.addListener(this::guiRegister);
@@ -55,6 +61,7 @@ public class AEAnalyser {
 
     public void guiRegister(RegisterMenuScreensEvent event) {
         InitScreens.register(event, ContainerAnalyser.TYPE, GuiAnalyser::new, "/screens/network_analyser.json");
+        InitScreens.register(event, ContainerProfiler.TYPE, GuiProfiler::new, "/screens/tick_analyser.json");
     }
 
     public static ResourceLocation id(String id) {

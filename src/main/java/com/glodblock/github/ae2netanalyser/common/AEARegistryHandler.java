@@ -3,6 +3,7 @@ package com.glodblock.github.ae2netanalyser.common;
 import appeng.items.AEBaseItem;
 import com.glodblock.github.ae2netanalyser.AEAnalyser;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
+import com.glodblock.github.ae2netanalyser.container.ContainerProfiler;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -45,6 +46,7 @@ public class AEARegistryHandler extends RegistryHandler {
 
     private void onRegisterContainer() {
         Registry.register(BuiltInRegistries.MENU, AEAnalyser.id("network_analyser"), ContainerAnalyser.TYPE);
+        Registry.register(BuiltInRegistries.MENU, AEAnalyser.id("tick_analyser"), ContainerProfiler.TYPE);
     }
 
     public void init() {

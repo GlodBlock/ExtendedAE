@@ -12,6 +12,9 @@ license="${mod_license}"
     logoFile="logo.png"
     description='''${mod_description}'''
 
+[[mixins]]
+    config="mixins.networkanalyser.json"
+
 [[dependencies.ae2netanalyser]]
     modId="neoforge"
     type="REQUIRED"

@@ -49,7 +49,7 @@ public class NetworkRender extends RenderType {
     private static final ColorData WHITE = new ColorData(1f, 1f, 1f);
     private static VertexBuffer VBO = null;
 
-    private final TransparencyStateShard STO = new RenderStateShard.TransparencyStateShard(
+    public final TransparencyStateShard STO = new RenderStateShard.TransparencyStateShard(
             "sto",
             () -> {
                 RenderSystem.enableBlend();
@@ -63,7 +63,7 @@ public class NetworkRender extends RenderType {
                 RenderSystem.defaultBlendFunc();
             }
     );
-    private final RenderType CUBE_RENDER = create(
+    public final RenderType CUBE_RENDER = create(
             "aea_cube",
             DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS,
