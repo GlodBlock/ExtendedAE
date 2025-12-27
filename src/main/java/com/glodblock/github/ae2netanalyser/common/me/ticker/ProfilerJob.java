@@ -1,20 +1,24 @@
 package com.glodblock.github.ae2netanalyser.common.me.ticker;
 
+import com.google.common.base.Stopwatch;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.GlobalPos;
 
+import java.util.concurrent.TimeUnit;
+
 public class ProfilerJob {
 
-    private long waitingTicks;
+    private final long waitingTicks;
+    private final Stopwatch stopwatch = Stopwatch.createUnstarted();
     private final Object2ReferenceMap<GlobalPos, GridTickProfiler> results = new Object2ReferenceOpenHashMap<>();
 
     public ProfilerJob(long waitingTicks) {
         this.waitingTicks = waitingTicks;
+        this.stopwatch.start();
     }
 
-    public boolean tick(GlobalPos pos, long ns, long tick) {
-        this.waitingTicks -= ns;
+    public void tick(GlobalPos pos, long ns, long tick) {
         var profiler = this.results.get(pos);
         if (profiler == null) {
             profiler = new GridTickProfiler();
@@ -22,7 +26,10 @@ public class ProfilerJob {
             this.results.put(pos, profiler);
         }
         profiler.update(tick, ns);
-        return this.waitingTicks <= 0;
+    }
+
+    public boolean isFinished() {
+        return this.waitingTicks <= this.stopwatch.elapsed(TimeUnit.NANOSECONDS);
     }
 
     public ProfileData generateData() {

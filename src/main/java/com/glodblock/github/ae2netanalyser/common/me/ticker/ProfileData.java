@@ -59,7 +59,7 @@ public class ProfileData {
 
     public static ColorData getColor(double rate) {
         float gradient = (float) GlodUtil.clamp(rate / 100.0, 0.0, 1.0);
-        return new ColorData((float) GlodUtil.clamp(gradient, 0.078, 0.7), gradient, 1 - gradient, 0);
+        return new ColorData((float) GlodUtil.clamp(gradient, 0.07, 0.7), gradient, 1 - gradient, 0);
     }
 
     public void writeBytes(FriendlyByteBuf buf) {

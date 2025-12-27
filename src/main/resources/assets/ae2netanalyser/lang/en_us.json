@@ -32,6 +32,7 @@
   "gui.ae2netanalyser.tick_analyser.range3": "100-500μs/tick",
   "gui.ae2netanalyser.tick_analyser.range4": ">500μs/tick",
   "chat.ae2netanalyser.tick_analyser.begin": "Run profile for %s seconds.",
+  "chat.ae2netanalyser.tick_analyser.finish": "Profile finished.",
   "chat.ae2netanalyser.tick_analyser.waiting": "You have sent the profile request, Please wait it done.",
   "chat.ae2netanalyser.tick_analyser.cannel": "Profile cancelled.",
   "chat.ae2netanalyser.tick_analyser.no_cannel": "You don't have any running profile jobs."

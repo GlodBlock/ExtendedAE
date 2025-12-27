@@ -11,10 +11,10 @@ public class GridTickProfiler {
     }
 
     public double rate() {
-        if (this.nanoseconds == 0) {
+        if (this.ticks == 0) {
             return 0;
         }
-        return (double) this.ticks / this.nanoseconds;
+        return (double) this.nanoseconds / this.ticks;
     }
 
     public void update(long tick, long nanosecond) {

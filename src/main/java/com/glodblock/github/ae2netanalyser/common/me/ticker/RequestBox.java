@@ -8,12 +8,14 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +33,27 @@ public class RequestBox {
         WAITING.clear();
     }
 
+    @SubscribeEvent
+    public static void check(LevelTickEvent.Pre event) {
+        if (hasJob()) {
+            List<Player> toRemove = new ArrayList<>();
+            for (var e : WAITING.entrySet()) {
+                if (e.getValue().isFinished()) {
+                    toRemove.add(e.getKey());
+                    sendData(e.getKey(), e.getValue().generateData());
+                }
+            }
+            for (var e : toRemove) {
+                WAITING.remove(e);
+            }
+        }
+    }
+
     public static boolean requestProfile(Player player, int duration) {
         if (WAITING.containsKey(player)) {
             return false;
         }
-        WAITING.put(player, new ProfilerJob(duration));
+        WAITING.put(player, new ProfilerJob(duration * 1000L * 1000L * 1000L));
         return true;
     }
 
@@ -65,15 +83,8 @@ public class RequestBox {
             }
             if (pos != null) {
                 var gp = GlobalPos.of(world.dimension(), pos);
-                List<Player> toRemove = new ArrayList<>();
                 for (var e : WAITING.entrySet()) {
-                    if (e.getValue().tick(gp, ns, tick)) {
-                        toRemove.add(e.getKey());
-                        sendData(e.getKey(), e.getValue().generateData());
-                    }
-                }
-                for (var player : toRemove) {
-                    WAITING.remove(player);
+                    e.getValue().tick(gp, ns, tick);
                 }
             }
         }
@@ -82,6 +93,7 @@ public class RequestBox {
     private static void sendData(Player player, ProfileData data) {
         if (player instanceof ServerPlayer server) {
             AEANetworkHandler.INSTANCE.sendTo(new SProfileDataUpdate(data), server);
+            player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.finish"), false);
         }
     }
 
