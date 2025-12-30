@@ -86,6 +86,9 @@ public class RequestBox {
     }
 
     public static void acceptTick(long ns, long tick, IGridNode node) {
+        if (WAITING.isEmpty()) {
+            return;
+        }
         var world = node.getLevel();
         var host = node.getOwner();
         if (world != null && host != null && ns > 0 && tick > 0) {
