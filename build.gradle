@@ -88,10 +88,8 @@ dependencies {
     implementation "io.github.glodblock:Glodium:1.21-2.2-neoforge"
     implementation "appeng:appliedenergistics2:19.1.2-beta"
     compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
-    compileOnly "curse.maven:jade-324717:5427817"
     // runtime test
     runtimeOnly "dev.emi:emi-neoforge:1.1.10+1.21"
-    runtimeOnly "curse.maven:jade-324717:5427817"
 }
 
 tasks.withType(ProcessResources).configureEach {

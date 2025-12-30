@@ -4,6 +4,7 @@ import appeng.api.networking.IGridNode;
 import appeng.parts.AEBasePart;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.SProfileDataUpdate;
+import com.glodblock.github.glodium.Glodium;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -49,12 +50,27 @@ public class RequestBox {
         }
     }
 
-    public static boolean requestProfile(Player player, int duration) {
+    public static boolean checkPermission(Player player) {
+        var server = Glodium.INSTANCE.getServer();
+        if (server != null) {
+            if (server.isSingleplayer()) {
+                return true;
+            } else {
+                return server.getPlayerList().isOp(player.getGameProfile());
+            }
+        }
+        return false;
+    }
+
+    public static RespondCode requestProfile(Player player, int duration) {
         if (WAITING.containsKey(player)) {
-            return false;
+            return RespondCode.WAIT;
+        }
+        if (!checkPermission(player)) {
+            return RespondCode.DENY;
         }
         WAITING.put(player, new ProfilerJob(duration * 1000L * 1000L * 1000L));
-        return true;
+        return RespondCode.OK;
     }
 
     public static boolean cancelProfile(Player player) {
@@ -95,6 +111,10 @@ public class RequestBox {
             AEANetworkHandler.INSTANCE.sendTo(new SProfileDataUpdate(data), server);
             player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.finish"), false);
         }
+    }
+
+    public enum RespondCode {
+        OK, WAIT, DENY
     }
 
 }

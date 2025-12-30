@@ -35,5 +35,6 @@
   "chat.ae2netanalyser.tick_analyser.finish": "Profile finished.",
   "chat.ae2netanalyser.tick_analyser.waiting": "You have sent the profile request, Please wait it done.",
   "chat.ae2netanalyser.tick_analyser.cannel": "Profile cancelled.",
-  "chat.ae2netanalyser.tick_analyser.no_cannel": "You don't have any running profile jobs."
+  "chat.ae2netanalyser.tick_analyser.no_cannel": "You don't have any running profile jobs.",
+  "chat.ae2netanalyser.tick_analyser.user_control": "You don't have permissions to profile in this server."
 }

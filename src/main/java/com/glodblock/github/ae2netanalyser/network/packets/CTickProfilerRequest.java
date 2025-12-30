@@ -40,10 +40,10 @@ public class CTickProfilerRequest implements IMessage {
                 player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.no_cannel"), false);
             }
         } else {
-            if (RequestBox.requestProfile(player, this.duration)) {
-                player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.begin", this.duration), false);
-            } else {
-                player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.waiting"), false);
+            switch (RequestBox.requestProfile(player, this.duration)) {
+                case OK -> player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.begin", this.duration), false);
+                case WAIT -> player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.waiting", this.duration), false);
+                case DENY -> player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.user_control", this.duration), false);
             }
         }
     }
