@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
@@ -48,6 +49,11 @@ public class RequestBox {
                 WAITING.remove(e);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        WAITING.remove(event.getEntity());
     }
 
     public static boolean checkPermission(Player player) {
