@@ -5,8 +5,6 @@ import appeng.parts.AEBasePart;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.SProfileDataUpdate;
 import com.glodblock.github.glodium.Glodium;
-import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
-import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
@@ -21,10 +19,12 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RequestBox {
 
-    private static final Object2ReferenceMap<Player, ProfilerJob> WAITING = new Object2ReferenceOpenHashMap<>();
+    private static final Map<Player, ProfilerJob> WAITING = new ConcurrentHashMap<>();
 
     public static void init() {
         NeoForge.EVENT_BUS.register(RequestBox.class);
