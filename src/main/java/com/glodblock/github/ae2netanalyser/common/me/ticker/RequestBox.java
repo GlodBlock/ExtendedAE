@@ -37,7 +37,7 @@ public class RequestBox {
 
     @SubscribeEvent
     public static void check(LevelTickEvent.Pre event) {
-        if (hasJob()) {
+        if (!event.getLevel().isClientSide() && hasJob()) {
             List<Player> toRemove = new ArrayList<>();
             for (var e : WAITING.entrySet()) {
                 if (e.getValue().isFinished()) {
@@ -97,7 +97,7 @@ public class RequestBox {
         }
         var world = node.getLevel();
         var host = node.getOwner();
-        if (world != null && host != null && ns > 0 && tick > 0) {
+        if (world != null && !world.isClientSide() && host != null && ns > 0 && tick > 0) {
             BlockPos pos = null;
             if (host instanceof BlockEntity te) {
                 pos = te.getBlockPos();
