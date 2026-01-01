@@ -73,6 +73,6 @@ public class SetAmount<C extends AEBaseMenu, P extends AEBaseScreen<C>> extends 
     }
 
     private long getMaxAmount() {
-        return 64L * (long) currentStack.what().getAmountPerUnit();
+        return 64L * (long) currentStack.what().getAmountPerOperation();
     }
 }
