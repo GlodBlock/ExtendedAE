@@ -32,12 +32,12 @@ public class LongEnergyCap implements ILongEnergyStorage {
         }
     }
 
-    public static long send(ILongEnergyStorage accepter, IStorageService storage, IActionSource source) {
-        var toAdd = accepter.receive(AFConfig.getFluxAccessorIO(), true);
+    public static long send(ILongEnergyStorage acceptor, IStorageService storage, IActionSource source) {
+        var toAdd = acceptor.receive(AFConfig.getFluxAccessorIO(), true);
         if (toAdd > 0) {
             var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
             if (drained > 0) {
-                var actuallyDrained = accepter.receive(drained, false);
+                var actuallyDrained = acceptor.receive(drained, false);
                 var differ = drained - actuallyDrained;
                 if (differ > 0) {
                     storage.getInventory().insert(FluxKey.of(EnergyType.FE), differ, Actionable.MODULATE, source);
