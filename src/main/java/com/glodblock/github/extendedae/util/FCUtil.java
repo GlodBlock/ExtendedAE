@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class FCUtil {
@@ -80,6 +82,43 @@ public class FCUtil {
                 if (startItems != endItems) {
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    public static List<String> tokenize(String text) {
+        if (text.isBlank()) {
+            return List.of();
+        }
+        text = text.trim().toLowerCase();
+        List<String> tokens = new ArrayList<>();
+        for (var token : text.split(" ")) {
+            if (!token.isBlank()) {
+                tokens.add(token.trim());
+            }
+        }
+        return tokens;
+    }
+
+    public static boolean compareTokens(List<String> filter, List<String> target) {
+        int p = 0;
+        while (p <= target.size() - filter.size()) {
+            int q = p, f = 0;
+            while (q < target.size() && f < filter.size()) {
+                var tt = target.get(q);
+                var ft = filter.get(f);
+                if (tt.contains(ft)) {
+                    q++;
+                    f++;
+                } else {
+                    q++;
+                }
+            }
+            if (f >= filter.size()) {
+                return true;
+            } else {
+                p++;
             }
         }
         return false;

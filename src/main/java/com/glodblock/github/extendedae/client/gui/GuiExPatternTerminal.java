@@ -25,6 +25,7 @@ import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
+import com.glodblock.github.extendedae.util.FCUtil;
 import com.glodblock.github.extendedae.util.MessageUtil;
 import com.google.common.collect.HashMultimap;
 import it.unimi.dsi.fastutil.Hash;
@@ -51,7 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 // 1.12holic
 public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends AEBaseScreen<T> {
@@ -108,6 +108,8 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     private static final Comparator<PatternContainerGroup> GROUP_COMPARATOR = Comparator
             .comparing(group -> group.name().getString().toLowerCase(Locale.ROOT));
+    private static String lastInputSearch = "";
+    private static String lastOutputSearch = "";
 
     private final HashMap<Long, PatternContainerRecord> byId = new HashMap<>();
     private final HashMap<Integer, HighlightButton> highlightBtns = new HashMap<>();
@@ -153,20 +155,33 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.addToLeftToolbar(showPatternProviders);
 
         this.searchOutField = widgets.addTextField("search_out");
-        this.searchOutField.setResponder(str -> this.refreshList());
+        this.searchOutField.setResponder(str -> {
+            this.refreshList();
+            lastOutputSearch = str;
+        });
         this.searchOutField.setPlaceholder(GuiText.SearchPlaceholder.text());
         this.searchOutField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.expatternprovider.ex_pattern_access_terminal.tooltip.01")));
 
         this.searchInField = widgets.addTextField("search_in");
-        this.searchInField.setResponder(str -> this.refreshList());
+        this.searchInField.setResponder(str -> {
+            this.refreshList();
+            lastInputSearch = str;
+        });
         this.searchInField.setPlaceholder(GuiText.SearchPlaceholder.text());
         this.searchInField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.expatternprovider.ex_pattern_access_terminal.tooltip.02")));
-
+        if (menu.isReturnedFromSubScreen() || this.config.isRememberLastSearch()) {
+            if (!lastInputSearch.isBlank()) {
+                this.searchInField.setValue(lastInputSearch);
+            }
+            if (!lastOutputSearch.isBlank()) {
+                this.searchOutField.setValue(lastOutputSearch);
+            }
+        }
     }
 
     @Override
     public void init() {
-        this.visibleRows = config.getTerminalStyle().getRows(
+        this.visibleRows = this.config.getTerminalStyle().getRows(
                 (this.height - GUI_HEADER_HEIGHT - GUI_FOOTER_HEIGHT - GUI_TOP_AND_BOTTOM_PADDING + MAGIC_NUMBER) / ROW_HEIGHT);
         if (this.visibleRows < 2) {
             this.visibleRows = 2;
@@ -299,7 +314,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     @Override
     protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
-        if (slot instanceof PatternSlot) {
+        if (slot instanceof PatternSlot machineSlot) {
             InventoryAction action = null;
 
             switch (clickType) {
@@ -323,7 +338,6 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
 
             if (action != null) {
-                PatternSlot machineSlot = (PatternSlot) slot;
                 final InventoryActionPacket p = new InventoryActionPacket(action, machineSlot.getSlotIndex(),
                         machineSlot.getMachineInv().getServerId());
                 NetworkHandler.instance().sendToServer(p);
@@ -460,10 +474,12 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.matchedStack.clear();
         this.matchedProvider.clear();
 
-        final String outputFilter = this.searchOutField.getValue().toLowerCase();
-        final String inputFilter = this.searchInField.getValue().toLowerCase();
+        final String outputFilter = this.searchOutField.getValue().trim().toLowerCase();
+        final String inputFilter = this.searchInField.getValue().trim().toLowerCase();
 
         final Set<Object> cachedSearch = this.getCacheForSearchTerm("out:" + outputFilter + "in:" + inputFilter);
+        final List<String> outputTokens = FCUtil.tokenize(outputFilter);
+        final List<String> inputTokens = FCUtil.tokenize(inputFilter);
         final boolean rebuild = cachedSearch.isEmpty();
 
         for (PatternContainerRecord entry : this.byId.values()) {
@@ -473,19 +489,19 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
 
             // Shortcut to skip any filter if search term is ""/empty
-            boolean found = outputFilter.isEmpty() && inputFilter.isEmpty();
+            boolean found = outputTokens.isEmpty() && inputTokens.isEmpty();
 
             // Search if the current inventory holds a pattern containing the search term.
             if (!found) {
                 boolean midRes;
                 for (ItemStack itemStack : entry.getInventory()) {
-                    if (!outputFilter.isEmpty()) {
-                        midRes = this.itemStackMatchesSearchTerm(itemStack, outputFilter, true);
+                    if (!outputTokens.isEmpty()) {
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, outputTokens, true);
                     } else {
                         midRes = true;
                     }
-                    if (!inputFilter.isEmpty() && midRes) {
-                        midRes = this.itemStackMatchesSearchTerm(itemStack, inputFilter, false);
+                    if (!inputTokens.isEmpty() && midRes) {
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, inputTokens, false);
                     }
                     if (midRes) {
                         found = true;
@@ -493,11 +509,13 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                 }
             }
 
+            final var nameToken = FCUtil.tokenize(entry.getSearchName());
+            final boolean nameFound = FCUtil.compareTokens(inputTokens, nameToken) && FCUtil.compareTokens(outputTokens, nameToken);
             // if found, filter skipped or machine name matching the search term, add it
-            if (found || (entry.getSearchName().contains(outputFilter) && entry.getSearchName().contains(inputFilter))) {
+            if (found || nameFound) {
                 this.byGroup.put(entry.getGroup(), entry);
                 cachedSearch.add(entry);
-                if (entry.getSearchName().contains(outputFilter) && entry.getSearchName().contains(inputFilter)) {
+                if (nameFound) {
                     this.matchedProvider.add(entry);
                 }
             } else {
@@ -565,7 +583,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         scrollbar.setRange(0, this.rows.size() - this.visibleRows, 2);
     }
 
-    private boolean itemStackMatchesSearchTerm(ItemStack itemStack, String searchTerm, boolean checkOut) {
+    private boolean itemStackMatchesSearchTerm(ItemStack itemStack, List<String> filterTokens, boolean checkOut) {
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -580,11 +598,11 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
         var list = checkOut ?
                 Arrays.asList(result.getOutputs()) :
-                Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).collect(Collectors.toList());
+                Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).toList();
         for (var item : list) {
             if (item != null) {
-                var displayName = item.what().getDisplayName().getString().toLowerCase();
-                if (displayName.contains(searchTerm)) {
+                final var displayToken = FCUtil.tokenize(item.what().getDisplayName().getString());
+                if (FCUtil.compareTokens(filterTokens, displayToken)) {
                     this.matchedStack.add(itemStack);
                     return true;
                 }
