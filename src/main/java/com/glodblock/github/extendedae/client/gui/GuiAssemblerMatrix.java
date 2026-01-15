@@ -22,6 +22,7 @@ import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerM
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import com.glodblock.github.extendedae.util.FCUtil;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import it.unimi.dsi.fastutil.Hash;
@@ -213,19 +214,20 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
 
     private boolean filterRows(PatternRow row) {
         var filter = this.searchField.getValue();
-        if (filter.isEmpty()) {
+        if (filter.isBlank()) {
             return true;
         }
+        final var token = FCUtil.tokenize(filter);
         boolean anyMatch = false;
         for (var stack : row.inventory) {
-            if (itemStackMatchesSearchTerm(stack, filter)) {
+            if (itemStackMatchesSearchTerm(stack, token)) {
                 anyMatch = true;
             }
         }
         return anyMatch;
     }
 
-    private boolean itemStackMatchesSearchTerm(ItemStack itemStack, String searchTerm) {
+    private boolean itemStackMatchesSearchTerm(ItemStack itemStack, List<String> searchTokens) {
         IPatternDetails result = null;
         if (itemStack.getItem() instanceof EncodedPatternItem<?>) {
             result = PatternDetailsHelper.decodePattern(itemStack, this.menu.getPlayer().level());
@@ -235,8 +237,8 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
         }
         for (var item : result.getOutputs()) {
             if (item != null) {
-                var name = item.what().getDisplayName().getString().toLowerCase();
-                if (name.contains(searchTerm)) {
+                final var nameTokens = FCUtil.tokenize(item.what().getDisplayName().getString());
+                if (FCUtil.compareTokens(searchTokens, nameTokens)) {
                     this.matchedStack.add(itemStack);
                     return true;
                 }
@@ -244,8 +246,8 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
         }
         for (var item : result.getInputs()) {
             if (item != null) {
-                var name = item.getPossibleInputs()[0].what().getDisplayName().getString().toLowerCase();
-                if (name.contains(searchTerm)) {
+                final var nameTokens = FCUtil.tokenize(item.getPossibleInputs()[0].what().getDisplayName().getString());
+                if (FCUtil.compareTokens(searchTokens, nameTokens)) {
                     this.matchedStack.add(itemStack);
                     return true;
                 }

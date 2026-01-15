@@ -31,6 +31,7 @@ import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.client.button.HighlightButtonSmall;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
+import com.glodblock.github.extendedae.util.FCUtil;
 import com.glodblock.github.extendedae.util.MessageUtil;
 import com.google.common.collect.HashMultimap;
 import guideme.color.ConstantColor;
@@ -513,9 +514,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.matchedStack.clear();
         this.matchedProvider.clear();
 
-        final String filter = this.searchField.getValue().toLowerCase();
+        final String filter = this.searchField.getValue().trim().toLowerCase();
         final Set<Object> cachedSearch = this.getCacheForSearchTerm(filter + ":_:" + this.searchMode.mode);
         final boolean rebuild = cachedSearch.isEmpty();
+        final List<String> tokens = FCUtil.tokenize(filter);
         boolean searchOutput = this.searchMode.mode.isOut();
         boolean searchInput = this.searchMode.mode.isIn();
 
@@ -526,19 +528,19 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
 
             // Shortcut to skip any filter if search term is ""/empty
-            boolean found = filter.isEmpty();
+            boolean found = tokens.isEmpty();
 
             // Search if the current inventory holds a pattern containing the search term.
             if (!found) {
                 boolean midRes;
                 for (ItemStack itemStack : entry.getInventory()) {
                     if (searchOutput) {
-                        midRes = this.itemStackMatchesSearchTerm(itemStack, filter, true);
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, tokens, true);
                     } else {
                         midRes = false;
                     }
                     if (searchInput && !midRes) {
-                        midRes = this.itemStackMatchesSearchTerm(itemStack, filter, false);
+                        midRes = this.itemStackMatchesSearchTerm(itemStack, tokens, false);
                     }
                     if (midRes) {
                         found = true;
@@ -546,11 +548,13 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                 }
             }
 
+            final var nameToken = FCUtil.tokenize(entry.getSearchName());
+            final boolean nameFound = FCUtil.compareTokens(tokens, nameToken);
             // if found, filter skipped or machine name matching the search term, add it
-            if (found || entry.getSearchName().contains(filter)) {
+            if (found || nameFound) {
                 this.byGroup.put(entry.getGroup(), entry);
                 cachedSearch.add(entry);
-                if (entry.getSearchName().contains(filter)) {
+                if (nameFound) {
                     this.matchedProvider.add(entry);
                 }
             } else {
@@ -620,7 +624,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         scrollbar.setRange(0, this.rows.size() - this.visibleRows, 2);
     }
 
-    private boolean itemStackMatchesSearchTerm(ItemStack itemStack, String searchTerm, boolean checkOut) {
+    private boolean itemStackMatchesSearchTerm(ItemStack itemStack, List<String> filterTokens, boolean checkOut) {
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -636,8 +640,8 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         var list = checkOut ? result.getOutputs() : Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).toList();
         for (var item : list) {
             if (item != null) {
-                var displayName = item.what().getDisplayName().getString().toLowerCase();
-                if (displayName.contains(searchTerm)) {
+                final var displayToken = FCUtil.tokenize(item.what().getDisplayName().getString());
+                if (FCUtil.compareTokens(filterTokens, displayToken)) {
                     this.matchedStack.add(itemStack);
                     return true;
                 }

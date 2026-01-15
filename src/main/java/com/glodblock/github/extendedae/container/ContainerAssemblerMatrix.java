@@ -88,9 +88,14 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
         return 0;
     }
 
+    private long[] getSortedInfo() {
+        return this.trackerMap.keySet().longStream().sorted().toArray();
+    }
+
     @Nullable
     private InternalInventory getAvailableSlot() {
-        for (var tr : this.trackerMap.values()) {
+        for (long id : this.getSortedInfo()) {
+            var tr = this.trackerMap.get(id);
             for (int x = 0; x < tr.server.size(); x ++) {
                 if (tr.server.getStackInSlot(x).isEmpty()) {
                     return new FilteredInternalInventory(tr.server.getSlotInv(x), new TileAssemblerMatrixPattern.Filter(() -> this.getHost().getLevel()));

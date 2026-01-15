@@ -159,13 +159,7 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
 
     }
 
-    public static class PreciseFilter implements IPartitionList {
-
-        private final KeyCounter filter;
-
-        public PreciseFilter(KeyCounter counter) {
-            this.filter = counter;
-        }
+    public record PreciseFilter(KeyCounter filter) implements IPartitionList {
 
         @Override
         public boolean isListed(AEKey input) {
