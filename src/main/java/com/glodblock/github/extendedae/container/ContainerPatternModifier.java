@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -89,7 +90,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
     public void replace() {
         var replace = this.replaceTarget.getItem();
         var with = this.replaceWith.getItem();
-        if (replace.isEmpty() || with.isEmpty()) {
+        if (replace.isEmpty()) {
             return;
         }
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
@@ -126,7 +127,6 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
                         }
                     } catch (Exception e) {
                         // It is an invalid change
-                        return;
                     }
                 }
             }
@@ -215,11 +215,15 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
     }
 
-    private void replace(GenericStack[] stacks, GenericStack[] des, AEKey replace, AEKey with) {
+    private void replace(GenericStack[] stacks, GenericStack[] des, AEKey replace, @Nullable AEKey with) {
         for (int i = 0; i < stacks.length; i ++) {
             if (stacks[i] != null) {
                 if (stacks[i].what().equals(replace)) {
-                    des[i] = new GenericStack(with, stacks[i].amount());
+                    if (with == null) {
+                        des[i] = null;
+                    } else {
+                        des[i] = new GenericStack(with, stacks[i].amount());
+                    }
                 } else {
                     des[i] = new GenericStack(stacks[i].what(), stacks[i].amount());
                 }
