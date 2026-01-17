@@ -171,7 +171,7 @@ public class PartPreciseExportBus extends ExportBusPart {
     static class PreciseInventory extends ConfigInventory {
 
         protected PreciseInventory(PartPreciseExportBus host) {
-            super(StackWorldBehaviors.hasExportStrategyFilter(), Mode.CONFIG_TYPES, 63, () -> Ae2Reflect.updatePartState(host), true);
+            super(StackWorldBehaviors.hasExportStrategyFilter(), Mode.CONFIG_STACKS, 63, () -> Ae2Reflect.updatePartState(host), true);
         }
 
         @Override
