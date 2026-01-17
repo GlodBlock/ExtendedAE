@@ -147,6 +147,23 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
         }
 
         @Override
+        public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
+            if (storageMode == StorageMode.DEFAULT || storageMode == null) {
+                return super.extract(what, amount, mode, source);
+            }
+            var filter = (PreciseFilter) this.getPartitionList();
+            long threshold = filter.getAmount(what);
+            if (threshold <= 0) {
+                return 0;
+            }
+            var stored = super.extract(what, Long.MAX_VALUE, Actionable.SIMULATE, source);
+            if (storageMode.test(stored, threshold)) {
+                return super.extract(what, amount, mode, source);
+            }
+            return 0;
+        }
+
+        @Override
         public void getAvailableStacks(KeyCounter out) {
             if (storageMode == StorageMode.DEFAULT || storageMode == null) {
                 super.getAvailableStacks(out);
