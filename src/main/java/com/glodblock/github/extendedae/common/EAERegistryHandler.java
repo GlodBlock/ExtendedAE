@@ -240,6 +240,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1);
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 4);
         Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_IO_PORT, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.EX_IO_PORT, 1);

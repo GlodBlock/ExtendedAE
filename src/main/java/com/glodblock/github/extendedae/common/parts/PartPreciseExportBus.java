@@ -17,6 +17,7 @@ import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.ConfigInventory;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import net.minecraft.nbt.CompoundTag;
@@ -59,7 +60,7 @@ public class PartPreciseExportBus extends ExportBusPart {
     @Override
     public ConfigInventory getConfig() {
         if (this.config == null) {
-            this.config = ConfigInventory.configStacks(StackWorldBehaviors.hasExportStrategyFilter(), 63, () -> Ae2Reflect.updatePartState(this), true);
+            this.config = new PreciseInventory(this);
         }
         return this.config;
     }
@@ -107,19 +108,17 @@ public class PartPreciseExportBus extends ExportBusPart {
                 continue;
             }
 
-            var before = context.getOperationsRemaining();
+            long before = context.getOperationsRemaining();
             if (before < Math.max(1, amount / transferFactor)) {
                 break;
             }
 
-            var toSend = getExportStrategy().push(what, amount, Actionable.SIMULATE);
-            if (toSend == amount) {
-                var canExt = simulateExtract(context, what, amount);
-                if (canExt == amount) {
-                    var realSend = getExportStrategy().transfer(context, what, amount);
-                    if (realSend > 0) {
-                        context.reduceOperationsRemaining(Math.max(1, amount / transferFactor));
-                    }
+            long ceil = simulateExtract(context, what, before * transferFactor) / amount * amount;
+            long canHold = getExportStrategy().push(what, ceil, Actionable.SIMULATE) / amount * amount;
+            if (canHold > 0) {
+                var realSend = getExportStrategy().transfer(context, what, canHold);
+                if (realSend > 0) {
+                    context.reduceOperationsRemaining(Math.max(1, canHold / transferFactor));
                 }
             }
 
@@ -149,8 +148,7 @@ public class PartPreciseExportBus extends ExportBusPart {
 
     @Override
     protected int getOperationsPerTick() {
-        // 64 is the max stack player theoretically can put in a slot.
-        return 64;
+        return super.getOperationsPerTick() * EPPConfig.busSpeed;
     }
 
     @Override
@@ -168,6 +166,19 @@ public class PartPreciseExportBus extends ExportBusPart {
                 amount,
                 context.getActionSource(),
                 Actionable.SIMULATE);
+    }
+
+    static class PreciseInventory extends ConfigInventory {
+
+        protected PreciseInventory(PartPreciseExportBus host) {
+            super(StackWorldBehaviors.hasExportStrategyFilter(), Mode.CONFIG_TYPES, 63, () -> Ae2Reflect.updatePartState(host), true);
+        }
+
+        @Override
+        public long getMaxAmount(AEKey key) {
+            return 64L * key.getAmountPerUnit();
+        }
+
     }
 
 }
