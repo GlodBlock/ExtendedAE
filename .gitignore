@@ -25,3 +25,10 @@ src/generated
 
 # Files from Forge MDK
 forge*changelog.txt
+
+# AI prompts
+CLAUDE.md
+.cursorrules
+.cursor/
+.claude/
+.github/copilot-instructions.md

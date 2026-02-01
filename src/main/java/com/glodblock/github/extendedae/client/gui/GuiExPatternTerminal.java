@@ -120,6 +120,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     private final ArrayList<Row> rows = new ArrayList<>();
 
     private final Map<String, Set<Object>> cachedSearches = new WeakHashMap<>();
+    // Cache for decoded pattern search data to avoid repeated pattern.decode() calls
+    // Key is computed from ItemStack item + NBT hash
+    private final HashMap<Integer, PatternSearchData> patternSearchCache = new HashMap<>();
+    private boolean needsRefresh = false;
     private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
         @Override
         public int hashCode(ItemStack o) {
@@ -414,14 +418,16 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     public void clear() {
         this.byId.clear();
         this.infoMap.clear();
-        // invalid caches on refresh
+        // Invalidate all caches
         this.cachedSearches.clear();
-        this.refreshList();
+        this.patternSearchCache.clear();
+        this.needsRefresh = true;
     }
 
     public void postTileInfo(long id, BlockPos pos, ResourceKey<Level> dim, Direction face) {
         this.infoMap.put(id, new PatternProviderInfo(pos, face, dim));
-        this.refreshList();
+        this.cachedSearches.clear();
+        this.needsRefresh = true;
     }
 
     public void postFullUpdate(long inventoryId,
@@ -437,9 +443,9 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             inventory.setItemDirect(entry.getIntKey(), entry.getValue());
         }
 
-        // invalid caches on refresh
+        // Invalidate caches and mark for deferred refresh
         this.cachedSearches.clear();
-        this.refreshList();
+        this.needsRefresh = true;
     }
 
     public void postIncrementalUpdate(long inventoryId,
@@ -460,6 +466,11 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     public void updateBeforeRender() {
         super.updateBeforeRender();
         this.showPatternProviders.set(this.menu.getShownProviders());
+        // Perform deferred refresh - batches multiple updates into a single refresh per frame
+        if (this.needsRefresh) {
+            this.needsRefresh = false;
+            this.refreshList();
+        }
     }
 
     /**
@@ -541,18 +552,20 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                 //noinspection SizeReplaceableByIsEmpty
                 if (inventory.size() > 0) {
                     var info = this.infoMap.get(container.getServerId());
-                    var btn = new HighlightButton();
-                    btn.setMultiplier(this.playerToBlockDis(info.pos()));
-                    btn.setTarget(info.pos, info.face, info.world);
-                    btn.setSuccessJob(() -> {
-                        if (this.getPlayer() != null && info.pos != null && info.world != null) {
-                            Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.world, "chat.ex_pattern_access_terminal.pos");
-                            this.getPlayer().displayClientMessage(message, false);
-                        }
-                    });
-                    btn.setTooltip(Tooltip.create(Component.translatable("gui.expatternprovider.ex_pattern_access_terminal.tooltip.03")));
-                    btn.setVisibility(false);
-                    this.highlightBtns.put(this.rows.size(), this.addRenderableWidget(btn));
+                    if (info != null) {
+                        var btn = new HighlightButton();
+                        btn.setMultiplier(this.playerToBlockDis(info.pos()));
+                        btn.setTarget(info.pos, info.face, info.world);
+                        btn.setSuccessJob(() -> {
+                            if (this.getPlayer() != null && info.pos != null && info.world != null) {
+                                Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.world, "chat.ex_pattern_access_terminal.pos");
+                                this.getPlayer().displayClientMessage(message, false);
+                            }
+                        });
+                        btn.setTooltip(Tooltip.create(Component.translatable("gui.expatternprovider.ex_pattern_access_terminal.tooltip.03")));
+                        btn.setVisibility(false);
+                        this.highlightBtns.put(this.rows.size(), this.addRenderableWidget(btn));
+                    }
                 }
                 for (var offset = 0; offset < inventory.size(); offset += COLUMNS) {
                     var slots = Math.min(inventory.size() - offset, COLUMNS);
@@ -588,27 +601,71 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             return false;
         }
 
-        IPatternDetails result = null;
-        if (itemStack.getItem() instanceof EncodedPatternItem pattern) {
-            result = pattern.decode(itemStack, this.menu.getPlayer().level(), false);
-        }
-        if (result == null) {
+        var searchData = getOrComputePatternSearchData(itemStack);
+        if (searchData == null) {
             return false;
         }
 
-        var list = checkOut ?
-                Arrays.asList(result.getOutputs()) :
-                Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).toList();
-        for (var item : list) {
-            if (item != null) {
-                final var displayToken = FCUtil.tokenize(item.what().getDisplayName().getString());
-                if (FCUtil.compareTokens(filterTokens, displayToken)) {
-                    this.matchedStack.add(itemStack);
-                    return true;
-                }
+        var tokensList = checkOut ? searchData.outputTokens() : searchData.inputTokens();
+        for (var displayTokens : tokensList) {
+            if (FCUtil.compareTokens(filterTokens, displayTokens)) {
+                this.matchedStack.add(itemStack);
+                return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Gets cached pattern search data or computes and caches it.
+     * This avoids expensive pattern.decode() calls on every search keystroke.
+     */
+    @Nullable
+    private PatternSearchData getOrComputePatternSearchData(ItemStack itemStack) {
+        // Compute stable cache key from item + NBT
+        int cacheKey = itemStack.getItem().hashCode();
+        if (itemStack.hasTag()) {
+            cacheKey = cacheKey * 31 + itemStack.getTag().hashCode();
+        }
+
+        if (this.patternSearchCache.containsKey(cacheKey)) {
+            return this.patternSearchCache.get(cacheKey);
+        }
+
+        // Decode pattern and cache the tokenized names
+        if (!(itemStack.getItem() instanceof EncodedPatternItem pattern)) {
+            this.patternSearchCache.put(cacheKey, null);
+            return null;
+        }
+
+        IPatternDetails result = pattern.decode(itemStack, this.menu.getPlayer().level(), false);
+        if (result == null) {
+            this.patternSearchCache.put(cacheKey, null);
+            return null;
+        }
+
+        // Pre-tokenize all output names
+        List<List<String>> outputTokens = new ArrayList<>();
+        for (var output : result.getOutputs()) {
+            if (output != null) {
+                outputTokens.add(FCUtil.tokenize(output.what().getDisplayName().getString()));
+            }
+        }
+
+        // Pre-tokenize all input names
+        List<List<String>> inputTokens = new ArrayList<>();
+        for (var input : result.getInputs()) {
+            if (input != null) {
+                var possibleInputs = input.getPossibleInputs();
+                if (possibleInputs.length > 0 && possibleInputs[0] != null) {
+                    inputTokens.add(FCUtil.tokenize(possibleInputs[0].what().getDisplayName().getString()));
+                }
+            }
+        }
+
+        var searchData = new PatternSearchData(outputTokens, inputTokens);
+        this.patternSearchCache.put(cacheKey, searchData);
+        return searchData;
     }
 
     /**
@@ -663,26 +720,26 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
      */
     private void blit(GuiGraphics guiGraphics, int offsetX, int offsetY, Rect2i srcRect) {
         var texture = AppEng.makeId("textures/guis/ex_pattern_access_terminal.png");
-        guiGraphics.blit(texture, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(),
-                srcRect.getHeight());
+        guiGraphics.blit(texture, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight());
     }
 
-    sealed interface Row {
-    }
+    sealed interface Row { }
 
     /**
      * A row containing a header for a group.
      */
-    record GroupHeaderRow(PatternContainerGroup group) implements Row {
-    }
+    record GroupHeaderRow(PatternContainerGroup group) implements Row { }
 
     /**
      * A row containing slots for a subset of a pattern container inventory.
      */
-    record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
-    }
+    record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row { }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) {
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) { }
 
-    }
+    /**
+     * Cached search data for a pattern, storing pre-tokenized output and input names.
+     * This avoids expensive pattern.decode() calls on every search keystroke.
+     */
+    record PatternSearchData(List<List<String>> outputTokens, List<List<String>> inputTokens) { }
 }
