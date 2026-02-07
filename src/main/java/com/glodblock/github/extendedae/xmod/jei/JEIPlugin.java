@@ -11,11 +11,13 @@ import com.glodblock.github.extendedae.client.gui.GuiCircuitCutter;
 import com.glodblock.github.extendedae.client.gui.GuiExInscriber;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
 import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
 import com.glodblock.github.extendedae.util.RecipeManagerAccessor;
 import com.glodblock.github.extendedae.xmod.jei.recipe.CircuitCutterCategory;
+import com.glodblock.github.extendedae.xmod.jei.transfer.ExCraftingTransferHandler;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiClickableArea;
@@ -25,6 +27,7 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IClickableIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -64,6 +67,11 @@ public class JEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         var manager = ((RecipeManagerAccessor) Minecraft.getInstance().level.getRecipeManager());
         registration.addRecipes(CircuitCutterCategory.RECIPE_TYPE, List.copyOf(manager.getByType(CircuitCutterRecipe.TYPE).values()));
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        registration.addUniversalRecipeTransferHandler(new ExCraftingTransferHandler<>(ContainerExCraftingTerminal.TYPE, ContainerExCraftingTerminal.class, registration.getTransferHelper()));
     }
 
     @Override

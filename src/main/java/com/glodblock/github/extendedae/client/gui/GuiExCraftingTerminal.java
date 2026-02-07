@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.client.gui;
 
+import appeng.client.gui.Icon;
 import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.TabButton;
@@ -8,6 +9,7 @@ import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.api.CraftingMode;
+import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.widget.OutputResultSlot;
 import com.glodblock.github.extendedae.client.gui.widget.panel.AnvilPanel;
 import com.glodblock.github.extendedae.client.gui.widget.panel.CraftingPanel;
@@ -16,11 +18,17 @@ import com.glodblock.github.extendedae.client.gui.widget.panel.SmithingPanel;
 import com.glodblock.github.extendedae.client.gui.widget.panel.StonecutterPanel;
 import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
+import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import com.glodblock.github.glodium.network.packet.sync.Paras;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -29,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +48,7 @@ public class GuiExCraftingTerminal extends MEStorageScreen<ContainerExCraftingTe
     private final Map<CraftingMode, ExPanel> modePanels = new EnumMap<>(CraftingMode.class);
     private final Map<CraftingMode, TabButton> modeTabButtons = new EnumMap<>(CraftingMode.class);
     private final Map<String, Consumer<Paras>> actions = createHolder();
+    private final CacheHolder<Boolean> lackXP = CacheHolder.empty();
 
     public GuiExCraftingTerminal(ContainerExCraftingTerminal menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -57,6 +67,11 @@ public class GuiExCraftingTerminal extends MEStorageScreen<ContainerExCraftingTe
             this.modeTabButtons.put(mode, tabButton);
             this.modePanels.put(mode, panel);
         }
+        var clearCraftingGrid = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clearCraftingGrid")), Icon.ARROW_UP);
+        var clearToPlayerInv = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clearToPlayerInv")), Icon.ARROW_DOWN);
+        this.widgets.add("clearCraftingGrid", clearCraftingGrid);
+        this.widgets.add("clearToPlayerInv", clearToPlayerInv);
+        this.actions.put("play_sound", o -> this.playSound(o.get(0)));
     }
 
     @Override
@@ -98,6 +113,44 @@ public class GuiExCraftingTerminal extends MEStorageScreen<ContainerExCraftingTe
             return;
         }
         super.slotClicked(slot, slotIdx, mouseButton, clickType);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+        if (this.menu.getCurrentMode() == CraftingMode.ANVIL) {
+            if (this.hoveredSlot instanceof OutputResultSlot) {
+                var output = this.hoveredSlot.getItem();
+                if (!output.isEmpty() && this.getLackXP()) {
+                    var itemTooltip = new ArrayList<>(this.getTooltipFromContainerItem(output));
+                    itemTooltip.add(Component.translatable("gui.expatternprovider.anvil.not_enough_xp").withStyle(ChatFormatting.RED));
+                    this.drawTooltip(guiGraphics, x, y, itemTooltip);
+                }
+            }
+        }
+        super.renderTooltip(guiGraphics, x, y);
+    }
+
+    private boolean getLackXP() {
+        if (this.lackXP.isEmpty()) {
+            this.lackXP.update(this.menu.getAndPerformAnvilCraft(this.getPlayer(), true).isEmpty());
+        }
+        if (((System.currentTimeMillis() / 20) & 1) != 0) {
+            this.lackXP.update(this.menu.getAndPerformAnvilCraft(this.getPlayer(), true).isEmpty());
+        }
+        return this.lackXP.get();
+    }
+
+    private void playSound(int index) {
+        var mode = CraftingMode.fromOrdinal(index);
+        var sound = switch (mode) {
+            case ANVIL -> SoundEvents.ANVIL_USE;
+            case STONECUTTER -> SoundEvents.UI_STONECUTTER_TAKE_RESULT;
+            case SMITHING -> SoundEvents.SMITHING_TABLE_USE;
+            default -> null;
+        };
+        if (sound != null) {
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
+        }
     }
 
     @Override

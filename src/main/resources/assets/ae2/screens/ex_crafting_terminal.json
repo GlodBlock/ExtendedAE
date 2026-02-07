@@ -97,6 +97,14 @@
     "modePanel5": {
       "left": 9,
       "bottom": 164
+    },
+    "clearCraftingGrid": {
+      "left": 153,
+      "bottom": 156
+    },
+    "clearToPlayerInv": {
+      "left": 153,
+      "bottom": 120
     }
   }
 }

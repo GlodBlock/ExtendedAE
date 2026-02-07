@@ -9,7 +9,6 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.crafting.CraftingEvent;
-import appeng.helpers.IMenuCraftingPacket;
 import appeng.helpers.Inventories;
 import appeng.helpers.InventoryAction;
 import appeng.items.storage.ViewCellItem;
@@ -48,9 +47,9 @@ public class OutputResultSlot extends AppEngSlot {
     private final IActionSource mySrc;
     private final IEnergySource energySrc;
     private final MEStorage storage;
-    private final IMenuCraftingPacket menu;
+    private final ContainerExCraftingTerminal menu;
 
-    public OutputResultSlot(Player player, IActionSource mySrc, IEnergySource energySrc, MEStorage storage, InternalInventory cMatrix, InternalInventory secondMatrix, IMenuCraftingPacket ccp, RecipeType<? extends Recipe<? extends Container>> type) {
+    public OutputResultSlot(Player player, IActionSource mySrc, IEnergySource energySrc, MEStorage storage, InternalInventory cMatrix, InternalInventory secondMatrix, ContainerExCraftingTerminal ccp, RecipeType<? extends Recipe<? extends Container>> type) {
         super(new AppEngInternalInventory(1), 0);
         this.player = player;
         this.craftingGrid = cMatrix;
@@ -117,7 +116,11 @@ public class OutputResultSlot extends AppEngSlot {
             // This is a shortcut to ensure that for mods that create recipes with result counts larger than
             // the max stack size, it remains possible to pick up those items at least _once_.
             if (getMenu().getCarried().isEmpty()) {
-                getMenu().setCarried(craftItem(who, this.storage, this.storage.getAvailableStacks()));
+                var result = this.craftItem(who, this.storage, this.storage.getAvailableStacks());
+                if (!result.isEmpty()) {
+                    this.menu.playSound();
+                }
+                getMenu().setCarried(result);
                 return;
             }
             target = new CarriedItemInventory(getMenu());
@@ -130,6 +133,7 @@ public class OutputResultSlot extends AppEngSlot {
         if (itemAtStart.isEmpty()) {
             return;
         }
+        boolean playSound = false;
         for (var x = 0; x < maxTimesToCraft; x++) {
             // Stop if the recipe output has changed (i.e. due to fully consumed input slots)
             if (!ItemStack.isSameItemSameTags(itemAtStart, getItem())) {
@@ -142,13 +146,23 @@ public class OutputResultSlot extends AppEngSlot {
             }
 
             var all = this.storage.getAvailableStacks();
-            var extra = target.addItems(craftItem(who, this.storage, all));
+            var result = this.craftItem(who, this.storage, all);
+            if (!result.isEmpty()) {
+                playSound = true;
+            }
+            var extra = target.addItems(result);
 
             // If we couldn't actually add what we crafted, we drop it and stop
             if (!extra.isEmpty()) {
                 Platform.spawnDrops(who.level(), who.blockPosition(), List.of(extra));
+                if (playSound) {
+                    this.menu.playSound();
+                }
                 return;
             }
+        }
+        if (playSound) {
+            this.menu.playSound();
         }
     }
 
@@ -320,14 +334,12 @@ public class OutputResultSlot extends AppEngSlot {
         if (this.type == null) {
             return NonNullList.withSize(this.craftingGrid.size(), ItemStack.EMPTY);
         }
-        if (this.menu instanceof ContainerExCraftingTerminal terminal) {
-            Recipe<Container> recipe = terminal.getCurrentRecipe();
-            if (recipe != null && recipe.matches(ic, level)) {
-                return recipe.getRemainingItems(ic);
-            }
+        Recipe<Container> recipe = this.menu.getCurrentRecipe();
+        if (recipe != null && recipe.matches(ic, level)) {
+            return recipe.getRemainingItems(ic);
         }
         return level.getRecipeManager().getRecipeFor((RecipeType<Recipe<Container>>) this.type, ic, level)
-                .map(recipe -> recipe.getRemainingItems(ic))
+                .map(r -> r.getRemainingItems(ic))
                 .orElse(NonNullList.withSize(this.craftingGrid.size(), ItemStack.EMPTY));
     }
 
@@ -336,11 +348,9 @@ public class OutputResultSlot extends AppEngSlot {
         if (this.type == null) {
             return null;
         }
-        if (this.menu instanceof ContainerExCraftingTerminal terminal) {
-            Recipe<Container> recipe = terminal.getCurrentRecipe();
-            if (recipe != null && recipe.matches(ic, level)) {
-                return recipe;
-            }
+        Recipe<Container> recipe = this.menu.getCurrentRecipe();
+        if (recipe != null && recipe.matches(ic, level)) {
+            return recipe;
         }
         return level.getRecipeManager().getRecipeFor((RecipeType<Recipe<Container>>) this.type, ic, level).orElse(null);
     }
