@@ -84,7 +84,8 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
     @GuiSync(0)
     public CraftingMode currentMode;
     @GuiSync(1)
-    public int selectedStonecutterRecipe;
+    @Nullable
+    public ResourceLocation selectedStonecutterRecipe;
     @GuiSync(2)
     public String itemName = "";
     @GuiSync(3)
@@ -96,6 +97,7 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
         super(TYPE, id, playerInventory, host, true);
         this.host = host;
         this.currentMode = host.getCurrentMode();
+        this.selectedStonecutterRecipe = host.getStonecuttingRecipe();
         this.setupCraftingSlots();
         this.setupStonecutterSlots();
         this.setupSmithingSlots();
@@ -103,7 +105,6 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
         this.updateCurrentRecipeAndOutput(true);
         this.actions.put("set_mode", o -> this.setMode(o.get(0)));
         this.actions.put("stonecutter_select", o -> this.selectStonecutterRecipe(o.get(0)));
-        this.actions.put("stonecutter_select_id", o -> this.selectStonecutterRecipeById(o.get(0)));
         this.actions.put("clearCraftingGrid", o -> this.clearCraftingGrid());
         this.actions.put("clearToPlayerInv", o -> this.clearToPlayerInventory());
         this.actions.put("anvil_rename", o -> this.setItemName(o.get(0)));
@@ -157,20 +158,9 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
         }
     }
 
-    private void selectStonecutterRecipeById(String name) {
-        this.selectedStonecutterRecipe = 0;
-        var id = ResourceLocation.tryParse(name);
-        for (int i = 0; i < this.getStonecutterRecipes().size(); i ++) {
-            if (this.getStonecutterRecipes().get(i).equals(id)) {
-                this.selectedStonecutterRecipe = i;
-                break;
-            }
-        }
-        this.updateCurrentRecipeAndOutput(true);
-    }
-
-    private void selectStonecutterRecipe(int index) {
-        this.selectedStonecutterRecipe = index;
+    private void selectStonecutterRecipe(String name) {
+        this.selectedStonecutterRecipe = ResourceLocation.tryParse(name);
+        this.host.setStonecuttingRecipe(this.selectedStonecutterRecipe);
         this.updateCurrentRecipeAndOutput(true);
     }
 
@@ -456,7 +446,7 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
 
         // Convert levels to XP points (rough approximation)
         // Level N requires about N*7 XP points on average
-        long xpNeeded = levelsRequired * 7L;
+        long xpNeeded = getTotalXpForLevel(levelsRequired);
         long mbNeeded = xpNeeded * MB_PER_XP;
 
         for (var fluid : this.getXPFluids()) {
@@ -471,6 +461,16 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
         }
         var fluidXp = xpNeeded * MB_PER_XP - Math.max(mbNeeded, 0);
         return Math.toIntExact(levelsRequired - Math.round((double) fluidXp / MB_PER_XP / 7));
+    }
+
+    public static int getTotalXpForLevel(int level) {
+        if (level <= 16) {
+            return level * level + 6 * level;
+        } else if (level <= 31) {
+            return (int) (2.5 * level * level - 40.5 * level + 360);
+        } else {
+            return (int) (4.5 * level * level - 162.5 * level + 2220);
+        }
     }
 
     @NotNull
@@ -615,8 +615,8 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
                 var recipes = level.getRecipeManager().getRecipesFor((RecipeType<Recipe<Container>>) type, this.recipeTestContainer, level);
                 this.stonecutterRecipes = new StonecutterRecipeList();
                 recipes.forEach(recipe -> this.stonecutterRecipes.recipes.add(recipe.getId()));
-                if (recipes.size() > this.selectedStonecutterRecipe) {
-                    this.currentRecipe = recipes.get(this.selectedStonecutterRecipe);
+                if (this.selectedStonecutterRecipe != null) {
+                    this.currentRecipe = recipes.stream().filter(r -> r.getId().equals(this.selectedStonecutterRecipe)).findAny().orElse(null);
                 } else {
                     this.currentRecipe = null;
                 }

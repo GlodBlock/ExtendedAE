@@ -590,6 +590,16 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.OVERSIZE_INTERFACE_PART))
                 .save(c, ExtendedAE.id("oversize_interface_alt"));
 
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, EPPItemAndBlock.EX_CRAFTING_TERMINAL)
+                .requires(AEParts.CRAFTING_TERMINAL)
+                .requires(Items.ANVIL)
+                .requires(Items.SMITHING_TABLE)
+                .requires(Items.STONECUTTER)
+                .requires(AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy(C, has(AEParts.CRAFTING_TERMINAL))
+                .save(c, ExtendedAE.id("ex_crafting_terminal"));
+
         if (ModList.get().isLoaded("appliede")) {
             var interfaceTag = TagKey.create(Registries.ITEM, new ResourceLocation("appliede", "emc_interface"));
             // Extended EMC Interface

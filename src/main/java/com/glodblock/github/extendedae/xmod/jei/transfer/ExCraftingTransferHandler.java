@@ -95,7 +95,7 @@ public class ExCraftingTransferHandler<T extends ContainerExCraftingTerminal> ex
             this.switchMode(mode);
             ExCraftingHelper.performTransfer(menu, recipe, recipeSize, craftMissing);
             if (mode == CraftingMode.STONECUTTER) {
-                EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("stonecutter_select_id", recipe.getId().toString()));
+                EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("stonecutter_select", recipe.getId().toString()));
             }
         }
         // No error

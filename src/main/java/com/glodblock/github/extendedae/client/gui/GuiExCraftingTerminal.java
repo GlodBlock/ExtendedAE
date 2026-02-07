@@ -1,15 +1,15 @@
 package com.glodblock.github.extendedae.client.gui;
 
-import appeng.client.gui.Icon;
+import appeng.api.config.ActionItems;
 import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.client.gui.style.ScreenStyle;
+import appeng.client.gui.widgets.ActionButton;
 import appeng.client.gui.widgets.TabButton;
 import appeng.core.AEConfig;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import com.glodblock.github.extendedae.api.CraftingMode;
-import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.widget.OutputResultSlot;
 import com.glodblock.github.extendedae.client.gui.widget.panel.AnvilPanel;
 import com.glodblock.github.extendedae.client.gui.widget.panel.CraftingPanel;
@@ -67,8 +67,8 @@ public class GuiExCraftingTerminal extends MEStorageScreen<ContainerExCraftingTe
             this.modeTabButtons.put(mode, tabButton);
             this.modePanels.put(mode, panel);
         }
-        var clearCraftingGrid = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clearCraftingGrid")), Icon.ARROW_UP);
-        var clearToPlayerInv = new ActionEPPButton(b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clearToPlayerInv")), Icon.ARROW_DOWN);
+        var clearCraftingGrid = new ActionButton(ActionItems.STASH, b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clearCraftingGrid")));
+        var clearToPlayerInv = new ActionButton(ActionItems.STASH_TO_PLAYER_INV, b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("clearToPlayerInv")));
         this.widgets.add("clearCraftingGrid", clearCraftingGrid);
         this.widgets.add("clearToPlayerInv", clearToPlayerInv);
         this.actions.put("play_sound", o -> this.playSound(o.get(0)));
@@ -134,7 +134,7 @@ public class GuiExCraftingTerminal extends MEStorageScreen<ContainerExCraftingTe
         if (this.lackXP.isEmpty()) {
             this.lackXP.update(this.menu.getAndPerformAnvilCraft(this.getPlayer(), true).isEmpty());
         }
-        if (((System.currentTimeMillis() / 20) & 1) != 0) {
+        if (((System.currentTimeMillis() / 250) & 1) != 0) {
             this.lackXP.update(this.menu.getAndPerformAnvilCraft(this.getPlayer(), true).isEmpty());
         }
         return this.lackXP.get();

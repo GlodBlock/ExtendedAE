@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +36,8 @@ public class PartExCraftingTerminal extends AbstractTerminalPart {
     public static final ResourceLocation INV_ANVIL = ExtendedAE.id("anvil");
 
     private CraftingMode currentMode = CraftingMode.CRAFTING;
+    @Nullable
+    private ResourceLocation stonecuttingRecipe = null;
     private final AppEngInternalInventory craftingGrid = new AppEngInternalInventory(this, 9);
     private final AppEngInternalInventory stonecuttingGrid = new AppEngInternalInventory(this, 1);
     private final AppEngInternalInventory smithingGrid = new AppEngInternalInventory(this, 3);
@@ -71,8 +74,17 @@ public class PartExCraftingTerminal extends AbstractTerminalPart {
         return this.currentMode;
     }
 
+    public @Nullable ResourceLocation getStonecuttingRecipe() {
+        return this.stonecuttingRecipe;
+    }
+
     public void setCurrentMode(CraftingMode mode) {
         this.currentMode = mode;
+        this.getHost().markForSave();
+    }
+
+    public void setStonecuttingRecipe(ResourceLocation stonecuttingRecipe) {
+        this.stonecuttingRecipe = stonecuttingRecipe;
         this.getHost().markForSave();
     }
 
@@ -84,6 +96,9 @@ public class PartExCraftingTerminal extends AbstractTerminalPart {
         this.stonecuttingGrid.writeToNBT(tag, "stonecuttingGrid");
         this.smithingGrid.writeToNBT(tag, "smithingGrid");
         this.anvilGrid.writeToNBT(tag, "anvilGrid");
+        if (this.stonecuttingRecipe != null) {
+            tag.putString("stonecuttingRecipe", this.stonecuttingRecipe.toString());
+        }
     }
 
     @Override
@@ -94,6 +109,9 @@ public class PartExCraftingTerminal extends AbstractTerminalPart {
         this.stonecuttingGrid.readFromNBT(tag, "stonecuttingGrid");
         this.smithingGrid.readFromNBT(tag, "smithingGrid");
         this.anvilGrid.readFromNBT(tag, "anvilGrid");
+        if (tag.contains("stonecuttingRecipe")) {
+            this.stonecuttingRecipe = ResourceLocation.tryParse(tag.getString("stonecuttingRecipe"));
+        }
     }
 
     @Override

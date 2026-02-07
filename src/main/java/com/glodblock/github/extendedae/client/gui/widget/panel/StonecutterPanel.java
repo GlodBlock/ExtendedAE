@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -70,9 +71,9 @@ public class StonecutterPanel extends ExPanel {
     @Override
     public boolean onMouseDown(Point mousePos, int button) {
         var recipe = this.getRecipeAt(mousePos);
-        if (recipe >= 0) {
+        if (recipe != null) {
             this.menu.selectedStonecutterRecipe = recipe;
-            this.sendPacket("stonecutter_select", recipe);
+            this.sendPacket("stonecutter_select", recipe.toString());
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
             return true;
         }
@@ -83,8 +84,8 @@ public class StonecutterPanel extends ExPanel {
     @Override
     public Tooltip getTooltip(int mouseX, int mouseY) {
         var recipe = this.getRecipeAt(new Point(mouseX, mouseY));
-        if (recipe >= 0) {
-            var recipeOpt = this.getLevel().getRecipeManager().byKey(this.menu.getStonecutterRecipes().get(recipe));
+        if (recipe != null) {
+            var recipeOpt = this.getLevel().getRecipeManager().byKey(recipe);
             if (recipeOpt.isPresent()) {
                 var lines = this.screen.getTooltipFromContainerItem(recipeOpt.get().getResultItem(this.getRegistryAccess()));
                 return new Tooltip(lines);
@@ -93,7 +94,7 @@ public class StonecutterPanel extends ExPanel {
         return null;
     }
 
-    private int getRecipeAt(Point point) {
+    private ResourceLocation getRecipeAt(Point point) {
         var recipes = this.menu.getStonecutterRecipes();
         if (!recipes.isEmpty()) {
             var startIndex = this.scrollbar.getCurrentScroll() * COLS;
@@ -101,11 +102,11 @@ public class StonecutterPanel extends ExPanel {
             for (int i = startIndex; i < endIndex && i < recipes.size(); ++i) {
                 var slotBounds = this.getRecipeBounds(i - startIndex);
                 if (point.isIn(slotBounds)) {
-                    return i;
+                    return recipes.get(i);
                 }
             }
         }
-        return -1;
+        return null;
     }
 
     private RegistryAccess getRegistryAccess() {
@@ -141,7 +142,7 @@ public class StonecutterPanel extends ExPanel {
         for (int i = startIndex; i < endIndex && i < recipes.size(); ++i) {
             var slotBounds = this.getRecipeBounds(i - startIndex);
             var recipe = recipes.get(i);
-            boolean selected = selectedRecipe == i;
+            boolean selected = recipe.getId().equals(selectedRecipe);
             Blitter blitter = BG_SLOT;
             if (selected) {
                 blitter = BG_SLOT_SELECTED;
