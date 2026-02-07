@@ -7,6 +7,7 @@ import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.hooks.CutterHook;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.config.EPPConfig;
+import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.extendedae.xmod.LoadList;
 import com.mojang.logging.LogUtils;
@@ -65,6 +66,7 @@ public class ExtendedAE {
 
     public void onTagUpdate(TagsUpdatedEvent event) {
         TagPriorityList.reset();
+        ContainerExCraftingTerminal.initXPFluid();
     }
 
     public static ResourceLocation id(String id) {

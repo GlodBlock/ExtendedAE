@@ -101,6 +101,9 @@ public class PartPreciseExportBus extends ExportBusPart {
             }
             var what = stack.what();
             var amount = stack.amount();
+            if (amount <= 0) {
+                continue;
+            }
             var transferFactor = what.getAmountPerOperation();
 
             if (this.craftOnly()) {

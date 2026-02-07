@@ -124,4 +124,12 @@ public class FCUtil {
         return false;
     }
 
+    public static void addDrops(InternalInventory inv, List<ItemStack> drops) {
+        for (var drop : inv) {
+            if (!drop.isEmpty()) {
+                drops.add(drop);
+            }
+        }
+    }
+
 }

@@ -1,0 +1,102 @@
+{
+  "$schema": "schema.json",
+  "includes": [
+    "terminals/terminal.json",
+    "crafting/crafting.json",
+    "crafting/anvil.json",
+    "crafting/smithing.json",
+    "crafting/stonecutting.json"
+  ],
+  "terminalStyle": {
+    "header": {
+      "texture": "guis/ex_crafting_terminal.png",
+      "srcRect": [0, 0, 195, 17]
+    },
+    "firstRow": {
+      "texture": "guis/ex_crafting_terminal.png",
+      "srcRect": [0, 17, 195, 18]
+    },
+    "row": {
+      "texture": "guis/ex_crafting_terminal.png",
+      "srcRect": [0, 35, 195, 18]
+    },
+    "lastRow": {
+      "texture": "guis/ex_crafting_terminal.png",
+      "srcRect": [0, 53, 195, 18]
+    },
+    "bottom": {
+      "texture": "guis/ex_crafting_terminal.png",
+      "srcRect": [0, 71, 195, 178]
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.ae2.Terminal"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    },
+    "crafting_grid_title": {
+      "text": {
+        "translate": "gui.expatternprovider.ex_crafting_terminal"
+      },
+      "position": {
+        "left": 8,
+        "bottom": 175
+      }
+    }
+  },
+  "widgets": {
+    "modeTabButton0": {
+      "left": 173,
+      "bottom": 170,
+      "width": 20,
+      "height": 20
+    },
+    "modeTabButton1": {
+      "left": 173,
+      "bottom": 150,
+      "width": 20,
+      "height": 20
+    },
+    "modeTabButton2": {
+      "left": 173,
+      "bottom": 130,
+      "width": 20,
+      "height": 20
+    },
+    "modeTabButton3": {
+      "left": 173,
+      "bottom": 110,
+      "width": 20,
+      "height": 22
+    },
+    "modePanel0": {
+      "left": 9,
+      "bottom": 164
+    },
+    "modePanel1": {
+      "left": 9,
+      "bottom": 164
+    },
+    "modePanel2": {
+      "left": 9,
+      "bottom": 164
+    },
+    "modePanel3": {
+      "left": 9,
+      "bottom": 164
+    },
+    "modePanel4": {
+      "left": 9,
+      "bottom": 164
+    },
+    "modePanel5": {
+      "left": 9,
+      "bottom": 164
+    }
+  }
+}

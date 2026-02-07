@@ -28,6 +28,7 @@ import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
 import com.glodblock.github.extendedae.common.parts.PartModExportBus;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
+import com.glodblock.github.extendedae.common.parts.PartExCraftingTerminal;
 import com.glodblock.github.extendedae.common.parts.PartOversizeInterface;
 import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
@@ -48,6 +49,7 @@ import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
+import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
 import com.glodblock.github.extendedae.container.ContainerIngredientBuffer;
 import com.glodblock.github.extendedae.container.ContainerModExportBus;
 import com.glodblock.github.extendedae.container.ContainerModStorageBus;
@@ -151,6 +153,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("oversize_interface"), ContainerExInterface.TYPE_OVERSIZE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("assembler_matrix"), ContainerAssemblerMatrix.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("circuit_cutter"), ContainerCircuitCutter.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_crafting_terminal"), ContainerExCraftingTerminal.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -273,6 +276,7 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartPreciseStorageBus.MODEL_BASE);
         PartModels.registerModels(PartThresholdExportBus.MODELS);
         PartModels.registerModels(PartOversizeInterface.MODELS);
+        PartModels.registerModels(PartExCraftingTerminal.MODELS);
     }
 
     private void initPackageList() {

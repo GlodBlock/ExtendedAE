@@ -4,6 +4,7 @@ import appeng.api.util.AEColor;
 import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.client.gui.GuiExCraftingTerminal;
 import com.glodblock.github.extendedae.client.gui.*;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiCraftingPattern;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiProcessingPattern;
@@ -30,6 +31,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
+import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
 import com.glodblock.github.extendedae.container.*;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
@@ -89,6 +91,7 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExInterface.TYPE_OVERSIZE, GuiExInterface::new, "/screens/oversize_interface.json");
         InitScreens.register(ContainerAssemblerMatrix.TYPE, GuiAssemblerMatrix::new, "/screens/assembler_matrix.json");
         InitScreens.register(ContainerCircuitCutter.TYPE, GuiCircuitCutter::new, "/screens/circuit_cutter.json");
+        InitScreens.register(ContainerExCraftingTerminal.TYPE, GuiExCraftingTerminal::new, "/screens/ex_crafting_terminal.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -100,6 +103,7 @@ public class ClientRegistryHandler {
     public void registerColorHandler(RegisterColorHandlersEvent.Item event) {
         var color = event.getItemColors();
         color.register(new StaticItemColor(AEColor.TRANSPARENT), EPPItemAndBlock.EX_PATTERN_TERMINAL);
+        color.register(new StaticItemColor(AEColor.TRANSPARENT), EPPItemAndBlock.EX_CRAFTING_TERMINAL);
     }
 
     @SubscribeEvent

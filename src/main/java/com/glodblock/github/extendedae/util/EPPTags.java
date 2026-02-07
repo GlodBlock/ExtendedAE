@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 public class EPPTags {
 
@@ -16,5 +17,7 @@ public class EPPTags {
     public static final TagKey<Item> CERTUS_QUARTZ_STORAGE_BLOCK = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "storage_blocks/certus_quartz"));
     public static final TagKey<Item> SILICON_BLOCK = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "storage_blocks/silicon"));
     public static final TagKey<Block> SILICON_BLOCK_BLOCK = TagKey.create(Registries.BLOCK, new ResourceLocation("forge", "storage_blocks/silicon"));
+    public static final TagKey<Fluid> XP_LIQUID = TagKey.create(Registries.FLUID, new ResourceLocation("forge", "xpjuice"));
+    public static final TagKey<Fluid> EXPERIENCE = TagKey.create(Registries.FLUID, new ResourceLocation("forge", "experience"));
 
 }

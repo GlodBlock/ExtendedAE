@@ -42,6 +42,7 @@ import com.glodblock.github.extendedae.common.parts.PartExImportBus;
 import com.glodblock.github.extendedae.common.parts.PartExInterface;
 import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
+import com.glodblock.github.extendedae.common.parts.PartExCraftingTerminal;
 import com.glodblock.github.extendedae.common.parts.PartModExportBus;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartOversizeInterface;
@@ -135,6 +136,7 @@ public class EPPItemAndBlock {
     public static PartItem<?> EX_EMC_IMPORT_BUS;
     public static PartItem<?> EX_EMC_EXPORT_BUS;
     public static ItemUpgrade EMC_IO_BUS_UPGRADE;
+    public static PartItem<PartExCraftingTerminal> EX_CRAFTING_TERMINAL;
 
     public static void init(EAERegistryHandler regHandler) {
         EX_PATTERN_PROVIDER = new BlockExPatternProvider();
@@ -184,6 +186,7 @@ public class EPPItemAndBlock {
         ASSEMBLER_MATRIX_SPEED = new BlockAssemblerMatrixSpeed();
         CIRCUIT_CUTTER = new BlockCircuitCutter();
         SILICON_BLOCK = new Block(metalProps().requiresCorrectToolForDrops());
+        EX_CRAFTING_TERMINAL = new PartItem<>(new Item.Properties(), PartExCraftingTerminal.class, PartExCraftingTerminal::new);
         if (ModList.get().isLoaded("ae2wtlib")) {
             try {
                 //To prevent classloader issue
@@ -237,6 +240,7 @@ public class EPPItemAndBlock {
         regHandler.item("precise_storage_bus", PRECISE_STORAGE_BUS);
         regHandler.item("threshold_export_bus", THRESHOLD_EXPORT_BUS);
         regHandler.item("oversize_interface_part", OVERSIZE_INTERFACE_PART);
+        regHandler.item("ex_crafting_terminal", EX_CRAFTING_TERMINAL);
         regHandler.block("oversize_interface", OVERSIZE_INTERFACE, TileOversizeInterface.class, TileOversizeInterface::new);
         regHandler.block("assembler_matrix_frame", ASSEMBLER_MATRIX_FRAME, TileAssemblerMatrixFrame.class, TileAssemblerMatrixFrame::new);
         regHandler.block("assembler_matrix_wall", ASSEMBLER_MATRIX_WALL, TileAssemblerMatrixWall.class, TileAssemblerMatrixWall::new);
