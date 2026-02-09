@@ -85,29 +85,18 @@ public final class TagExpParser {
         Holder<?> holder = null;
         if (key instanceof Item item) {
             holder = item.builtInRegistryHolder();
-            if (holder != null) {
-                Set<String> tagStrings = holder.tags()
-                    .map(tagKey -> tagKey.location().toString())
-                    .collect(Collectors.toSet());
-                // Add the item ID (registry name)
-                holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));
-                return predicate.test(tagStrings);
-            }
         } else if (key instanceof Fluid fluid) {
             holder = fluid.builtInRegistryHolder();
-            if (holder != null) {
-                Set<String> tagStrings = holder.tags()
+        }
+        if (holder != null) {
+            Set<String> tagStrings = holder.tags()
                     .map(tagKey -> tagKey.location().toString())
                     .collect(Collectors.toSet());
-                // Add the fluid ID (registry name)
-                holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));
-                return predicate.test(tagStrings);
-            }
+            holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));
+            return predicate.test(tagStrings);
         }
-
         return false; // Cannot evaluate if not an Item or Fluid with tags.
     }
-
 
     // --- Internal Implementation ---
 
