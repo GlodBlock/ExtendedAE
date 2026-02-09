@@ -97,7 +97,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:mega-cells-622112:5320730")
     // for some reason this deobf jar fails to load at file correctly
     compileOnly fg.deobf("curse.maven:jade-324717:4768593")
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     // runtime test
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.2.0.20")
     runtimeOnly fg.deobf("curse.maven:jade-324717:4768593")
