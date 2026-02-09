@@ -2,6 +2,8 @@
 
 [![Downloads](https://cf.way2muchnoise.eu/full_892005_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/ex-pattern-provider) ![MCVsrsion](https://cf.way2muchnoise.eu/versions/892005.svg)
 
+### [Join Discord Server](https://discord.gg/8ppgAfY3yF)
+
 ## Features
 
 - 36 slots pattern provider
