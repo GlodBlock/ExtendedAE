@@ -6,15 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 
-public class TileCache {
-
-    private final ServerLevel level;
-    private final BlockPos fromPos;
-
-    private TileCache(ServerLevel level, BlockPos fromPos) {
-        this.level = level;
-        this.fromPos = fromPos;
-    }
+public record TileCache(ServerLevel level, BlockPos fromPos) {
 
     public static TileCache create(ServerLevel level, BlockPos fromPos) {
         return new TileCache(level, fromPos);
