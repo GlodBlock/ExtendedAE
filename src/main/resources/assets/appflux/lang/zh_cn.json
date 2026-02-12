@@ -25,7 +25,7 @@
   "block.appflux.flux_accessor.tooltip.1": "从网络中抽取能量",
   "block.appflux.flux_accessor.tooltip.2": "需要外部电缆来输入能量",
   "appflux.key.flux": "能源",
-  "appfkux.type.fe.name": "FE",
-  "appfkux.type.gteu.name": "EU(GT)",
+  "appflux.type.fe.name": "FE",
+  "appflux.type.gteu.name": "EU(GT)",
   "appflux.cell.storage": "存储: %s %s"
 }

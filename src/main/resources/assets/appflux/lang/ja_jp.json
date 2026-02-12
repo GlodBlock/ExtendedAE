@@ -25,8 +25,8 @@
   "block.appflux.flux_accessor.tooltip.1": "ネットワーク内から貯蓄されたエネルギーを引き出します。",
   "block.appflux.flux_accessor.tooltip.2": "エネルギーを伝達するための外部ケーブルが必要です。",
   "appflux.key.flux": "エネルギー",
-  "appfkux.type.fe.name": "FE",
-  "appfkux.type.gteu.name": "EU(GT)",
+  "appflux.type.fe.name": "FE",
+  "appflux.type.gteu.name": "EU(GT)",
   "appflux.cell.storage": "貯蓄: %s %s",
   "group.pattern_provider.name": "MEパターンプロバイダー"
 }

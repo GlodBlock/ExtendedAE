@@ -48,8 +48,8 @@
   "block.appflux.flux_accessor.tooltip.1": "Extraer Energia De La Red.",
   "block.appflux.flux_accessor.tooltip.2": "Necesita Cable Externo Para Enviar Energia.",
   "appflux.key.flux": "Energia",
-  "appfkux.type.fe.name": "FE",
-  "appfkux.type.gteu.name": "EU(GT)",
+  "appflux.type.fe.name": "FE",
+  "appflux.type.gteu.name": "EU(GT)",
   "appflux.cell.storage": "Contiene: %s %s",
   "group.pattern_provider.name": "Proveedor De Patrones",
   "group.fe_portable_cells.name": "Celda De Enrgia Portable"

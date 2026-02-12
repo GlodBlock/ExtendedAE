@@ -23,7 +23,7 @@ public enum EnergyType {
     }
 
     public Component translate() {
-        return Component.translatable("appfkux.type." + this.name().toLowerCase() + ".name");
+        return Component.translatable("appflux.type." + this.name().toLowerCase() + ".name");
     }
 
     public ResourceLocation getIcon() {

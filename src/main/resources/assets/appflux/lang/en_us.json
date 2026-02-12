@@ -49,8 +49,8 @@
   "block.appflux.flux_accessor.tooltip.1": "Pull energy from network.",
   "block.appflux.flux_accessor.tooltip.2": "Need external cable to push energy",
   "appflux.key.flux": "Energy",
-  "appfkux.type.fe.name": "FE",
-  "appfkux.type.gteu.name": "EU(GT)",
+  "appflux.type.fe.name": "FE",
+  "appflux.type.gteu.name": "EU(GT)",
   "appflux.cell.storage": "Contains: %s %s",
   "group.pattern_provider.name": "ME Pattern Provider",
   "group.fe_portable_cells.name": "Portable FE Cells"

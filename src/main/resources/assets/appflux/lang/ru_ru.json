@@ -48,8 +48,8 @@
   "block.appflux.flux_accessor.tooltip.1": "Получает энергию из сети.",
   "block.appflux.flux_accessor.tooltip.2": "Нужен внешний кабель для передачи энергии",
   "appflux.key.flux": "Энергия",
-  "appfkux.type.fe.name": "FE",
-  "appfkux.type.gteu.name": "EU(GT)",
+  "appflux.type.fe.name": "FE",
+  "appflux.type.gteu.name": "EU(GT)",
   "appflux.cell.storage": "Содержит: %s %s",
   "group.pattern_provider.name": "ME Pattern Provider",
   "group.fe_portable_cells.name": "Portable FE Cells"
