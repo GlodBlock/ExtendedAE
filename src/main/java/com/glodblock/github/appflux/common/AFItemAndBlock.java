@@ -83,7 +83,7 @@ public class AFItemAndBlock {
         REDSTONE_CRYSTAL = new MaterialItem(new Item.Properties());
         INSULATING_RESIN = new MaterialItem(new Item.Properties());
         HARDEN_INSULATING_RESIN = new MaterialItem(new Item.Properties());
-        SKY_HARDEN_INSULATING_RESIN = new MaterialItem(new Item.Properties());
+        SKY_HARDEN_INSULATING_RESIN = new MaterialItem(new Item.Properties().fireResistant());
         ENERGY_PROCESSOR = new MaterialItem(new Item.Properties());
         ENERGY_PROCESSOR_PRINT = new MaterialItem(new Item.Properties());
         ENERGY_PROCESSOR_PRESS = new MaterialItem(new Item.Properties());
