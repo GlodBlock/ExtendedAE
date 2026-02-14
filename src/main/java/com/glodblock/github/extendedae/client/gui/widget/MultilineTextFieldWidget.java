@@ -83,7 +83,9 @@ public class MultilineTextFieldWidget extends AbstractWidget {
 
     @Override
     public boolean keyPressed(int key, int sc, int mod) {
-        if (!isFocused()) return false;
+        if (!isFocused() || key == GLFW.GLFW_KEY_TAB || key == GLFW.GLFW_KEY_ESCAPE) {
+            return false;
+        }
 
         if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
             this.textField.insertText("\n");
@@ -93,25 +95,26 @@ public class MultilineTextFieldWidget extends AbstractWidget {
             return true;
         }
 
-        boolean handled = textField.keyPressed(key)
-                || Minecraft.getInstance().options.keyInventory.matches(key, sc);
-
-        if (handled) {
-            clampScroll();
-            ensureCursorVisible();
-            sanitizeAndNotify();
-            return true;
-        }
-        return false;
+        this.textField.keyPressed(key);
+        this.clampScroll();
+        this.ensureCursorVisible();
+        this.sanitizeAndNotify();
+        return true;
     }
 
     @Override
     public boolean charTyped(char chr, int mods) {
-        if (!isFocused()) return false;
+        if (!isFocused()) {
+            return false;
+        }
 
-        if (chr == '\n' || chr == '\r') return true;
+        if (chr == '\n' || chr == '\r') {
+            return true;
+        }
 
-        if (filter != null && !filter.matcher(String.valueOf(chr)).matches()) return true;
+        if (filter != null && !filter.matcher(String.valueOf(chr)).matches()) {
+            return true;
+        }
 
         this.textField.insertText(String.valueOf(chr));
         clampScroll();
@@ -123,14 +126,10 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mx, double my, int btn) {
         if (!isActive() || !isValidClickButton(btn) || !clicked(mx, my)) return false;
-
-        Minecraft.getInstance().screen.setFocused(this);
         setFocused(true);
-
         if (!hasShiftDown()) {
             this.textField.setSelecting(false);
         }
-
         moveCursorToMouse(mx, my);
         this.textField.setSelecting(true);
         dragging = true;
@@ -191,9 +190,8 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         for (int idx = firstLine; idx < textField.lineCount() && y <= clipB; idx++) {
             Line ln = textField.line(idx);
             String str = textField.value().substring(ln.begin(), ln.end());
-            int xOff = clipL;
 
-            g.drawString(font, str, xOff, y, 0xFFE0E0E0);
+            g.drawString(font, str, clipL, y, 0xFFE0E0E0);
             if (textField.hasSelection()) {
                 int lineStartChar = ln.begin();
                 int lineEndChar   = ln.end();
@@ -206,7 +204,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
                         String preSel = str.substring(0, selStartInLine);
                         String selectionText = str.substring(selStartInLine, selEndInLine);
 
-                        int selX = xOff + font.width(preSel);
+                        int selX = clipL + font.width(preSel);
                         int selW = font.width(selectionText);
 
                         g.fill(RenderType.guiTextHighlight(), selX, y, selX + selW, y + font.lineHeight, selectionColor);
