@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PartTagStorageBus extends PartSpecialStorageBus {
@@ -30,7 +31,9 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
+    @NotNull
     private String oreExpWhite = "";
+    @NotNull
     private String oreExpBlack = "";
 
     public PartTagStorageBus(IPartItem<?> partItem) {

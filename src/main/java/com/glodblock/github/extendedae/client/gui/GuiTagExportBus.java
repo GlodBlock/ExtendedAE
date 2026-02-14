@@ -11,26 +11,19 @@ import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidge
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import com.glodblock.github.glodium.network.packet.sync.Paras;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> implements IActionHolder {
+public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> {
 
-    private final Map<String, Consumer<Paras>> actions = createHolder();
     private final SettingToggleButton<RedstoneMode> redstoneMode;
 
     private final MultilineTextFieldWidget filterInputs;
     private final MultilineTextFieldWidget filterInputs2;
 
-    private static final Pattern ORE_DICTIONARY_FILTER =
-            Pattern.compile("[0-9a-zA-Z* &|^!():/_\\n]*");
+    private static final Pattern ORE_DICTIONARY_FILTER = Pattern.compile("[0-9a-zA-Z* &|^!():/_\\n]*");
 
     public GuiTagExportBus(ContainerTagExportBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -42,31 +35,19 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> im
         this.filterInputs = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, placeholder);
         this.filterInputs.setFilter(ORE_DICTIONARY_FILTER);
         this.filterInputs.setMaxLength(1024);
-        this.filterInputs.setResponder(s ->
-                EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, true)));
+        this.filterInputs.setValue(menu.exp);
+        this.filterInputs.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, true)));
 
         this.filterInputs2 = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, placeholder);
         this.filterInputs2.setFilter(ORE_DICTIONARY_FILTER);
         this.filterInputs2.setMaxLength(1024);
-        this.filterInputs2.setResponder(s ->
-                EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, false)));
+        this.filterInputs2.setValue(menu.exp2);
+        this.filterInputs2.setResponder(s -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", s, false)));
 
-        widgets.add("filter_input", this.filterInputs);
-        widgets.add("filter_input_2", this.filterInputs2);
+        this.widgets.add("filter_input", this.filterInputs);
+        this.widgets.add("filter_input_2", this.filterInputs2);
 
-        setInitialFocus(this.filterInputs);
-
-        EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("update"));
-        this.actions.put("init", o -> {
-            this.filterInputs.setValue(o.get(0));
-            this.filterInputs2.setValue(o.get(1));
-        });
-    }
-
-    @NotNull
-    @Override
-    public Map<String, Consumer<Paras>> getActionMap() {
-        return this.actions;
+        this.setInitialFocus(this.filterInputs);
     }
 
     @Override

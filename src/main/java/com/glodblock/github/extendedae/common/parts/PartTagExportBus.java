@@ -39,7 +39,9 @@ public class PartTagExportBus extends PartSpecialExportBus {
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
             new ResourceLocation(AppEng.MOD_ID, "part/export_bus_has_channel"));
 
+    @NotNull
     private String oreExpWhite = "";
+    @NotNull
     private String oreExpBlack = "";
 
     public PartTagExportBus(IPartItem<?> partItem) {
