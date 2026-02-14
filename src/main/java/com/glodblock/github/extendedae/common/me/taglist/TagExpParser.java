@@ -84,6 +84,7 @@ public final class TagExpParser {
             Set<String> tagStrings = holder.tags()
                     .map(tagKey -> tagKey.location().toString())
                     .collect(Collectors.toSet());
+            holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));
             return predicate.test(tagStrings);
         }
 
@@ -104,7 +105,7 @@ public final class TagExpParser {
                 } catch (IllegalArgumentException e) {
                     // Log error or handle gracefully? For now, return a predicate that always fails.
                     if (EPPConfig.debugMode) {
-                        ExtendedAE.LOGGER.error("Failed to evaluate RPN in expression: '" + expression + "' - " + e.getMessage());
+                        ExtendedAE.LOGGER.error("Failed to evaluate RPN in expression: '{}' - {}", expression, e.getMessage());
                     }
                     return false; // RPN is invalid.
                 }
@@ -112,7 +113,7 @@ public final class TagExpParser {
         } catch (IllegalArgumentException e) {
             // Log error or handle gracefully? For now, return a predicate that always fails.
             if (EPPConfig.debugMode) {
-                ExtendedAE.LOGGER.error("Failed to parse tag expression: '" + expression + "' - " + e.getMessage());
+                ExtendedAE.LOGGER.error("Failed to parse tag expression: '{}' - {}", expression, e.getMessage());
             }
             return tags -> false; // Expression is invalid, so it matches nothing.
         }
