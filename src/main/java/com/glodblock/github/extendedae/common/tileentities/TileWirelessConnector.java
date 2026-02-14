@@ -15,6 +15,7 @@ import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -77,8 +78,9 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
         if (this.connect.isConnected()) {
             var dis = Math.max(this.connect.getDistance(), Math.E);
             this.powerUse = Math.max(1.0, dis * Math.log(dis) * disc);
+            this.powerUse *= EPPConfig.wirelessPowerMultiplier;
         } else {
-            this.powerUse = 1.0;
+            this.powerUse = EPPConfig.wirelessPowerMultiplier;
         }
         this.getMainNode().setIdlePowerUsage(this.powerUse);
     }

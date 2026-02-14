@@ -15,6 +15,7 @@ import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -102,11 +103,16 @@ public class TileWirelessHub extends AENetworkBlockEntity implements ServerTicki
     public void updatePowerUsage() {
         var disc = 1 - this.calculateDisc();
         this.powerUse = 0;
+        boolean anyRunning = false;
         for (int i = 0; i < MAX_PORT; i ++) {
             if (this.connect[i].isConnected()) {
                 var dis = Math.max(this.connect[i].getDistance(), Math.E);
-                this.powerUse += Math.max(1.0, dis * Math.log(dis) * disc);
+                this.powerUse += Math.max(1.0, dis * Math.log(dis) * disc) * EPPConfig.wirelessPowerMultiplier;
+                anyRunning = true;
             }
+        }
+        if (!anyRunning) {
+            this.powerUse = EPPConfig.wirelessPowerMultiplier;
         }
         this.getMainNode().setIdlePowerUsage(this.powerUse);
     }
