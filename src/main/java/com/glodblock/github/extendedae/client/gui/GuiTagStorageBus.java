@@ -16,18 +16,14 @@ import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidge
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
-public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> implements IActionHolder {
+public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> {
 
-    private final ActionMap actions = ActionMap.create();
     private final SettingToggleButton<AccessRestriction> rwMode;
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
@@ -49,29 +45,22 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         this.addToLeftToolbar(this.filterOnExtract);
         this.addToLeftToolbar(this.rwMode);
 
-        var placeholder = Component.translatable("gui.extendedae.tag_storage_bus.tooltip");
-
-        this.filterInputs = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, placeholder);
+        this.filterInputs = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, Component.translatable("gui.extendedae.tag_storage_bus.whitelist.tooltip"));
         this.filterInputs.setFilter(ORE_DICTIONARY_FILTER);
         this.filterInputs.setMaxLength(1024);
-        this.filterInputs.setResponder(s -> EAENetworkHandler.INSTANCE
-                .sendToServer(new CEAEGenericPacket("set", s, true)));
+        this.filterInputs.setValue(menu.exp);
+        this.filterInputs.setResponder(s -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s, true)));
 
-        this.filterInputs2 = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, placeholder);
+        this.filterInputs2 = new MultilineTextFieldWidget(this.font, 0, 0, 160, 26, Component.translatable("gui.extendedae.tag_storage_bus.blacklist.tooltip"));
         this.filterInputs2.setFilter(ORE_DICTIONARY_FILTER);
         this.filterInputs2.setMaxLength(1024);
-        this.filterInputs2.setResponder(s -> EAENetworkHandler.INSTANCE
-                .sendToServer(new CEAEGenericPacket("set", s, false)));
+        this.filterInputs2.setValue(menu.exp2);
+        this.filterInputs2.setResponder(s -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s, false)));
 
-        widgets.add("filter_input", this.filterInputs);
-        widgets.add("filter_input_2", this.filterInputs2);
+        this.widgets.add("filter_input", this.filterInputs);
+        this.widgets.add("filter_input_2", this.filterInputs2);
 
         setInitialFocus(this.filterInputs);
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
-        this.actions.put("init", o -> {
-            this.filterInputs.setValue(o.get(0));
-            this.filterInputs2.setValue(o.get(1));
-        });
     }
 
     @Override
@@ -109,9 +98,4 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         poseStack.popPose();
     }
 
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
-    }
 }

@@ -10,13 +10,11 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +26,13 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
 
     public static final MenuType<ContainerTagStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerTagStorageBus::new, PartTagStorageBus.class)
+            .withInitialData((host, buf) -> {
+                buf.writeUtf(host.getTagFilter(true));
+                buf.writeUtf(host.getTagFilter(false));
+            }, (host, container, buf) -> {
+                container.exp = buf.readUtf();
+                container.exp2 = buf.readUtf();
+            })
             .buildUnregistered(ExtendedAE.id("tag_storage_bus"));
 
     @GuiSync(3)
@@ -43,22 +48,15 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
     @Nullable
     public Component connectedTo;
 
-    @GuiSync(9)
-    public String exp = "";
-
-    @GuiSync(10)
-    public String exp2 = "";
+    public String exp;
+    public String exp2;
 
     public ContainerTagStorageBus(int id, Inventory ip, PartTagStorageBus te) {
         super(TYPE, id, ip, te);
-
+        this.exp = te.getTagFilter(true);
+        this.exp2 = te.getTagFilter(false);
         registerClientAction(ACTION_PARTITION, this::partition);
         this.actions.put("set", o -> this.setExp(o.get(0), o.get(1)));
-        this.actions.put("update", o -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.exp, this.exp2), sp);
-            }
-        });
         this.connectedTo = te.getConnectedToDescription();
     }
 
@@ -71,12 +69,6 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
     public void broadcastChanges() {
         super.broadcastChanges();
         this.connectedTo = getHost().getConnectedToDescription();
-        if (!this.exp.equals(getHost().getTagFilter(true))) {
-            this.exp = getHost().getTagFilter(true);
-        }
-        if (!this.exp2.equals(getHost().getTagFilter(false))) {
-            this.exp2 = getHost().getTagFilter(false);
-        }
     }
 
     @Override
@@ -100,8 +92,18 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
     }
 
     public void setExp(String exp, boolean isWhite) {
-        getHost().setTagFilter(exp, isWhite);
-        this.broadcastChanges();
+        if (isWhite) {
+            this.exp = exp;
+        } else {
+            this.exp2 = exp;
+        }
+    }
+
+    @Override
+    public void removed(@NotNull Player player) {
+        this.getHost().setTagFilter(this.exp, true);
+        this.getHost().setTagFilter(this.exp2, false);
+        super.removed(player);
     }
 
     public AccessRestriction getReadWriteMode() {

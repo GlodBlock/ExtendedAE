@@ -11,7 +11,6 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.taglist.TagPriorityList;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
-import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.HolderLookup;
@@ -20,6 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PartTagStorageBus extends PartSpecialStorageBus {
@@ -35,7 +35,9 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
+    @NotNull
     private String oreExpWhite = "";
+    @NotNull
     private String oreExpBlack = "";
 
     public PartTagStorageBus(IPartItem<?> partItem) {
@@ -47,10 +49,6 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         super.readFromNBT(data, registries);
         this.oreExpWhite = data.getString("oreExp");
         this.oreExpBlack = data.getString("oreExp2");
-        
-        if (EAEConfig.debugMode) {
-            ExtendedAE.LOGGER.debug("TagStorageBus loaded from NBT with whitelist: '{}', blacklist: '{}'", this.oreExpWhite, this.oreExpBlack);
-        }
     }
 
     @Override
@@ -72,21 +70,17 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     public void setTagFilter(String exp, boolean isWhite) {
         if (isWhite) {
             if (!exp.equals(this.oreExpWhite)) {
-                if (EAEConfig.debugMode) {
-                    ExtendedAE.LOGGER.debug("TagStorageBus whitelist changed from '{}' to '{}'", this.oreExpWhite, exp);
-                }
                 this.oreExpWhite = exp;
                 this.filter = null;
                 this.forceUpdate();
+                this.getHost().markForSave();
             }
         } else {
             if (!exp.equals(this.oreExpBlack)) {
-                if (EAEConfig.debugMode) {
-                    ExtendedAE.LOGGER.debug("TagStorageBus blacklist changed from '{}' to '{}'", this.oreExpBlack, exp);
-                }
                 this.oreExpBlack = exp;
                 this.filter = null;
                 this.forceUpdate();
+                this.getHost().markForSave();
             }
         }
     }
@@ -96,10 +90,6 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
     }
 
     protected IPartitionList createFilter() {
-        if (EAEConfig.debugMode) {
-            ExtendedAE.LOGGER.debug("Creating filter for TagStorageBus");
-        }
-        
         if (this.filter == null) {
             this.filter = new TagPriorityList(this.oreExpWhite, this.oreExpBlack);
         }
@@ -113,11 +103,6 @@ public class PartTagStorageBus extends PartSpecialStorageBus {
         if (oreExps != null) {
             this.oreExpWhite = oreExps.left();
             this.oreExpBlack = oreExps.right();
-            
-            if (EAEConfig.debugMode) {
-                ExtendedAE.LOGGER.debug("TagStorageBus imported settings with whitelist: '{}', blacklist: '{}'",
-                    this.oreExpWhite, this.oreExpBlack);
-            }
         }
     }
 
