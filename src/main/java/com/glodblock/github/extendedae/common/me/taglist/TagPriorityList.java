@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 public class TagPriorityList implements IPartitionList {
@@ -17,10 +16,11 @@ public class TagPriorityList implements IPartitionList {
     private final String rawBlackListExpression;
 
     // Compiled predicates for efficient evaluation.
-    private final Predicate<Set<String>> whiteListPredicate;
-    private final Predicate<Set<String>> blackListPredicate;
+    private final Predicate<List<String>> whiteListPredicate;
+    private final Predicate<List<String>> blackListPredicate;
 
     private final boolean isWhitelistActive;
+    private final boolean isBlacklistActive;
 
     // Cache results per AEKey instance for performance.
     // Using AEKey directly handles potential variations within the same item/fluid primary key.
@@ -38,12 +38,13 @@ public class TagPriorityList implements IPartitionList {
         this.rawBlackListExpression = this.removeBlank(blackListExpression != null ? blackListExpression : "");
 
         // Compile the expressions using the new parser.
-        this.whiteListPredicate = TagExpParser.compile(this.rawWhiteListExpression);
-        this.blackListPredicate = TagExpParser.compile(this.rawBlackListExpression);
+        this.whiteListPredicate = TagExpParserV2.compile(this.rawWhiteListExpression, true);
+        this.blackListPredicate = TagExpParserV2.compile(this.rawBlackListExpression, false);
 
         // Determine if the whitelist should be actively checked.
         // An empty/whitespace-only expression means the whitelist doesn't restrict anything.
         this.isWhitelistActive = !this.rawWhiteListExpression.isBlank();
+        this.isBlacklistActive = !this.rawBlackListExpression.isBlank();
     }
 
     private String removeBlank(String raw) {
@@ -80,18 +81,14 @@ public class TagPriorityList implements IPartitionList {
      * @return True if the key passes the filter rules, false otherwise.
      */
     private boolean eval(@NotNull Object input) {
-        // Evaluate both predicates against the key's tags.
-        // TagExpParser.evaluate handles getting the tags from the key.
-        final boolean whiteMatches = TagExpParser.evaluate(this.whiteListPredicate, input);
-        final boolean blackMatches = TagExpParser.evaluate(this.blackListPredicate, input);
-
-        // Apply standard filter logic:
-        // - If whitelist is active, must match whitelist AND NOT match blacklist.
-        // - If whitelist is inactive, must NOT match blacklist.
-        if (this.isWhitelistActive) {
-            return whiteMatches && !blackMatches;
+        if (this.isWhitelistActive && this.isBlacklistActive) {
+            return TagExpParserV2.evaluate(this.whiteListPredicate, input) && TagExpParserV2.evaluate(this.blackListPredicate, input);
+        } else if (this.isWhitelistActive) {
+            return TagExpParserV2.evaluate(this.whiteListPredicate, input);
+        } else if (this.isBlacklistActive) {
+            return TagExpParserV2.evaluate(this.blackListPredicate, input);
         } else {
-            return !blackMatches;
+            return true;
         }
     }
 

@@ -35,8 +35,7 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
     private final MultilineTextFieldWidget filterInputs;
     private final MultilineTextFieldWidget filterInputs2;
 
-    private static final Pattern ORE_DICTIONARY_FILTER =
-            Pattern.compile("[0-9a-zA-Z* &|^!():/_\\n]*");
+    private static final Pattern ORE_DICTIONARY_FILTER = Pattern.compile("[0-9a-z* &|^!():/_.\\n]*");
 
     public GuiTagStorageBus(ContainerTagStorageBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
