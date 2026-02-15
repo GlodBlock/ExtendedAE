@@ -64,7 +64,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -142,6 +141,8 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     private final ArrayList<Row> rows = new ArrayList<>();
 
     private final Map<String, Set<Object>> cachedSearches = new WeakHashMap<>();
+    private final HashMap<Integer, PatternSearchData> patternSearchCache = new HashMap<>();
+    private boolean needsRefresh = false;
     private final Set<ItemStack> matchedStack = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
         @Override
         public int hashCode(ItemStack o) {
@@ -457,12 +458,14 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.infoMap.clear();
         // invalid caches on refresh
         this.cachedSearches.clear();
-        this.refreshList();
+        this.patternSearchCache.clear();
+        this.needsRefresh = true;
     }
 
     public void postTileInfo(long id, BlockPos pos, ResourceKey<Level> dim, Direction face) {
         this.infoMap.put(id, new PatternProviderInfo(pos, face, dim));
-        this.refreshList();
+        this.cachedSearches.clear();
+        this.needsRefresh = true;
     }
 
     public void postFullUpdate(long inventoryId,
@@ -480,7 +483,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
         // invalid caches on refresh
         this.cachedSearches.clear();
-        this.refreshList();
+        this.needsRefresh = true;
     }
 
     public void postIncrementalUpdate(long inventoryId, Int2ObjectMap<ItemStack> slots) {
@@ -500,6 +503,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     public void updateBeforeRender() {
         super.updateBeforeRender();
         this.showPatternProviders.set(this.menu.getShownProviders());
+        if (this.needsRefresh) {
+            this.needsRefresh = false;
+            this.refreshList();
+        }
     }
 
     /**
@@ -629,25 +636,64 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             return false;
         }
 
-        IPatternDetails result = null;
-        if (itemStack.getItem() instanceof EncodedPatternItem<?>) {
-            result = PatternDetailsHelper.decodePattern(itemStack, this.menu.getPlayer().level());
-        }
-        if (result == null) {
+        var searchData = this.getOrComputePatternSearchData(itemStack);
+        if (searchData == null) {
             return false;
         }
 
-        var list = checkOut ? result.getOutputs() : Arrays.stream(result.getInputs()).map(i -> i.getPossibleInputs()[0]).toList();
-        for (var item : list) {
-            if (item != null) {
-                final var displayToken = FCUtil.tokenize(item.what().getDisplayName().getString());
-                if (FCUtil.compareTokens(filterTokens, displayToken)) {
-                    this.matchedStack.add(itemStack);
-                    return true;
-                }
+        var tokensList = checkOut ? searchData.outputTokens() : searchData.inputTokens();
+        for (var displayTokens : tokensList) {
+            if (FCUtil.compareTokens(filterTokens, displayTokens)) {
+                this.matchedStack.add(itemStack);
+                return true;
             }
         }
         return false;
+    }
+
+    @Nullable
+    private PatternSearchData getOrComputePatternSearchData(ItemStack itemStack) {
+        // Compute stable cache key from item + NBT
+        int cacheKey = ItemStack.hashItemAndComponents(itemStack);
+
+        if (this.patternSearchCache.containsKey(cacheKey)) {
+            return this.patternSearchCache.get(cacheKey);
+        }
+
+        // Decode pattern and cache the tokenized names
+        if (!(itemStack.getItem() instanceof EncodedPatternItem<?>)) {
+            this.patternSearchCache.put(cacheKey, null);
+            return null;
+        }
+
+        IPatternDetails result = PatternDetailsHelper.decodePattern(itemStack, this.menu.getPlayer().level());
+        if (result == null) {
+            this.patternSearchCache.put(cacheKey, null);
+            return null;
+        }
+
+        // Pre-tokenize all output names
+        List<List<String>> outputTokens = new ArrayList<>();
+        for (var output : result.getOutputs()) {
+            if (output != null) {
+                outputTokens.add(FCUtil.tokenize(output.what().getDisplayName().getString()));
+            }
+        }
+
+        // Pre-tokenize all input names
+        List<List<String>> inputTokens = new ArrayList<>();
+        for (var input : result.getInputs()) {
+            if (input != null) {
+                var possibleInputs = input.getPossibleInputs();
+                if (possibleInputs.length > 0 && possibleInputs[0] != null) {
+                    inputTokens.add(FCUtil.tokenize(possibleInputs[0].what().getDisplayName().getString()));
+                }
+            }
+        }
+
+        var searchData = new PatternSearchData(outputTokens, inputTokens);
+        this.patternSearchCache.put(cacheKey, searchData);
+        return searchData;
     }
 
     /**
@@ -711,18 +757,16 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     /**
      * A row containing a header for a group.
      */
-    record GroupHeaderRow(PatternContainerGroup group) implements Row {
-    }
+    record GroupHeaderRow(PatternContainerGroup group) implements Row { }
 
     /**
      * A row containing slots for a subset of a pattern container inventory.
      */
-    record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row {
-    }
+    record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row { }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) {
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) { }
 
-    }
+    record PatternSearchData(List<List<String>> outputTokens, List<List<String>> inputTokens) { }
 
     public static class SearchButton extends IconButton {
 
