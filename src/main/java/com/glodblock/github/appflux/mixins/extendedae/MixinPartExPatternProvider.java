@@ -9,12 +9,19 @@ import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PartExPatternProvider.class)
 public abstract class MixinPartExPatternProvider extends AEBasePart implements PatternProviderLogicHost {
 
-    @Override
-    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+    @Inject(
+            method = "onNeighborChanged",
+            at = @At("HEAD"),
+            remap = false
+    )
+    private void injectChange(BlockGetter level, BlockPos pos, BlockPos neighbor, CallbackInfo ci) {
         var d = AFUtil.getBlockDirection(pos, neighbor);
         if (d == this.getSide() && d != null) {
             var listener = (INeighborListener) this.getLogic();

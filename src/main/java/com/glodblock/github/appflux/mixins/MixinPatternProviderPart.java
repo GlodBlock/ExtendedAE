@@ -11,6 +11,9 @@ import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PatternProviderPart.class)
 public abstract class MixinPatternProviderPart extends AEBasePart {
@@ -19,8 +22,12 @@ public abstract class MixinPatternProviderPart extends AEBasePart {
     @Shadow(remap = false)
     protected PatternProviderLogic logic;
 
-    @Override
-    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+    @Inject(
+            method = "onNeighborChanged",
+            at = @At("HEAD"),
+            remap = false
+    )
+    private void injectChange(BlockGetter level, BlockPos pos, BlockPos neighbor, CallbackInfo ci) {
         var d = AFUtil.getBlockDirection(pos, neighbor);
         if (d == this.getSide() && d != null) {
             var listener = (INeighborListener) this.logic;
