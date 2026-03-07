@@ -68,8 +68,8 @@ public class PartTagExportBus extends PartSpecialExportBus {
         super.importSettings(mode, input, player);
         var oreExps = input.get(EAESingletons.TAG_EXPRESS);
         if (oreExps != null) {
-            this.oreExpWhite = oreExps.left();
-            this.oreExpBlack = oreExps.right();
+            this.setTagFilter(oreExps.left(), true);
+            this.setTagFilter(oreExps.right(), false);
         }
     }
 
