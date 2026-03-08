@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.client.render.tesr;
 
 import appeng.api.implementations.blockentities.IChestOrDrive;
 import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.RelativeSide;
 import appeng.api.storage.cells.CellState;
 import com.glodblock.github.extendedae.client.model.ExDriveBakedModel;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
@@ -32,25 +33,40 @@ public class ExDriveTESR implements BlockEntityRenderer<TileExDrive> {
             throw new IllegalStateException("Expected extended drive to have 20 slots");
         }
 
+        var buffer = buffers.getBuffer(CellLedRenderer.RENDER_LAYER);
+        var slotTranslation = new Vector3f();
+
         ms.pushPose();
         ms.translate(0.5, 0.5, 0.5);
         var blockOrientation = BlockOrientation.get(drive);
         ms.mulPose(blockOrientation.getQuaternion());
         ms.translate(-0.5, -0.5, -0.5);
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 2; col++) {
+                ms.pushPose();
+                ExDriveBakedModel.getSlotOrigin(row, col, slotTranslation);
+                ms.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
+                int slot = row * 2 + col;
+                CellLedRenderer.renderLed(drive, slot, buffer, ms);
+                ms.popPose();
+            }
+        }
+        ms.popPose();
 
-        var buffer = buffers.getBuffer(CellLedRenderer.RENDER_LAYER);
-
-        Vector3f slotTranslation = new Vector3f();
-        for (int disk = 0; disk < 2; disk ++) {
-            for (int row = 0; row < 5; row++) {
-                for (int col = 0; col < 2; col++) {
-                    ms.pushPose();
-                    ExDriveBakedModel.getSlotOrigin(row, col, disk, slotTranslation);
-                    ms.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
-                    int slot = row * 2 + col + disk * 10;
-                    CellLedRenderer.renderLed(drive, slot, buffer, ms);
-                    ms.popPose();
-                }
+        ms.pushPose();
+        ms.translate(0.5, 0.5, 0.5);
+        var back = blockOrientation.getSide(RelativeSide.BACK);
+        var oppoOrientation = BlockOrientation.get(back, blockOrientation.getSpin());
+        ms.mulPose(oppoOrientation.getQuaternion());
+        ms.translate(-0.5, -0.5, -0.5);
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 2; col++) {
+                ms.pushPose();
+                ExDriveBakedModel.getSlotOrigin(row, col, slotTranslation);
+                ms.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
+                int slot = row * 2 + col + 10;
+                CellLedRenderer.renderLed(drive, slot, buffer, ms);
+                ms.popPose();
             }
         }
         ms.popPose();
