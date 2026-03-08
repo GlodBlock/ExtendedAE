@@ -6,6 +6,7 @@
 		"6": "extendedae:block/generics/front",
 		"9": "extendedae:block/extended_drive/ex_drive_bottom",
 		"10": "extendedae:block/extended_drive/ex_drive_side",
+		"11": "extendedae:block/extended_drive/ex_drive_top",
 		"inside": "extendedae:block/extended_drive/drive_inside",
 		"side": "extendedae:block/generics/side",
 		"bottom": "ae2:block/generics/bottom",
@@ -70,7 +71,7 @@
 				"south": {"uv": [0, 0, 16, 1], "texture": "#side", "cullface": "south"},
 				"west": {"uv": [0, 0, 16, 1], "texture": "#side", "cullface": "west"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "up"},
-				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#inside_top"}
+				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#11"}
 			}
 		},
 		{
