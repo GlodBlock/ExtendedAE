@@ -47,7 +47,9 @@ public abstract class PartSpecialExportBus extends IOBusPart {
             var transferFactory = what.getAmountPerOperation();
             long amount = (long) context.getOperationsRemaining() * transferFactory;
             amount = getExportStrategy().transfer(context, what, amount);
-            context.reduceOperationsRemaining(Math.max(1, amount / transferFactory));
+            if (amount > 0) {
+                context.reduceOperationsRemaining(Math.max(1, amount / transferFactory));
+            }
             if (!context.hasOperationsLeft()) {
                 break;
             }
