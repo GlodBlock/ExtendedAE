@@ -41,6 +41,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -289,7 +290,13 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
                         int rightLevel = entry.getValue();
                         int leftLevel = leftEnchants.getOrDefault(enchant, 0);
                         if (enchant.canEnchant(left)) {
-                            int newLevel = leftLevel == rightLevel ? leftLevel + 1 : Math.max(leftLevel, rightLevel);
+                            int newLevel = Math.max(leftLevel, rightLevel);
+                            if (leftLevel == rightLevel) {
+                                newLevel += 1;
+                                if (newLevel > enchant.getMaxLevel()) {
+                                    continue;
+                                }
+                            }
                             // Check compatibility
                             boolean compatible = true;
                             for (Enchantment existing : leftEnchants.keySet()) {
@@ -301,12 +308,7 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
                             }
                             if (compatible) {
                                 leftEnchants.put(enchant, newLevel);
-                                int rarityCost = switch (enchant.getRarity()) {
-                                    case COMMON -> 1;
-                                    case UNCOMMON -> 2;
-                                    case RARE -> 4;
-                                    case VERY_RARE -> 8;
-                                };
+                                int rarityCost = this.getEnchantCost(enchant);
                                 baseCost += newLevel * rarityCost;
                                 increaseCost = true;
                                 hasOperation = true;
@@ -323,7 +325,13 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
                     int bookLevel = entry.getValue();
                     int leftLevel = leftEnchants.getOrDefault(enchant, 0);
                     if (enchant.canEnchant(left) || left.getItem() == Items.ENCHANTED_BOOK) {
-                        int newLevel = leftLevel == bookLevel ? leftLevel + 1 : Math.max(leftLevel, bookLevel);
+                        int newLevel = Math.max(leftLevel, bookLevel);
+                        if (leftLevel == bookLevel) {
+                            newLevel += 1;
+                            if (newLevel > enchant.getMaxLevel()) {
+                                continue;
+                            }
+                        }
                         // Check compatibility
                         boolean compatible = true;
                         for (Enchantment existing : leftEnchants.keySet()) {
@@ -335,12 +343,7 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
                         }
                         if (compatible) {
                             leftEnchants.put(enchant, newLevel);
-                            int rarityCost = switch (enchant.getRarity()) {
-                                case COMMON -> 1;
-                                case UNCOMMON -> 2;
-                                case RARE -> 4;
-                                case VERY_RARE -> 8;
-                            };
+                            int rarityCost = this.getEnchantCost(enchant);
                             // See Anvil Menu's code
                             rarityCost = Math.max(rarityCost / 2, 1);
                             baseCost += newLevel * rarityCost;
@@ -386,6 +389,15 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
             result.setRepairCost(repairCost * 2 + 1);
         }
         this.anvilOutputSlot.set(result);
+    }
+
+    private int getEnchantCost(Enchantment enchantment) {
+        return switch (enchantment.getRarity()) {
+            case COMMON -> 1;
+            case UNCOMMON -> 2;
+            case RARE -> 4;
+            case VERY_RARE -> 8;
+        };
     }
 
     @NotNull
