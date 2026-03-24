@@ -15,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -24,29 +25,32 @@ import java.util.Map;
 
 public class ExDriveBakedModel extends DelegateBakedModel {
     private final Map<Item, BakedModel> cellModels;
+    private final Map<Item, BakedModel> invertCellModels;
     private final BakedModel defaultCellModel;
+    private final BakedModel invertDefaultCellModel;
+    private final RenderContext.QuadTransform[] cellTransforms;
 
-    private final RenderContext.QuadTransform[] slotTransforms;
-
-    public ExDriveBakedModel(Transformation rotation, BakedModel bakedBase, Map<Item, BakedModel> cellModels,
-                           BakedModel defaultCell) {
+    public ExDriveBakedModel(Transformation rotation, Transformation invertRotation, BakedModel bakedBase,
+                             Map<Item, BakedModel> cellModels, Map<Item, BakedModel> invertCellModels,
+                             BakedModel defaultCell, BakedModel invertDefaultCell) {
         super(bakedBase);
         this.defaultCellModel = defaultCell;
-        this.slotTransforms = buildSlotTransforms(rotation);
+        this.invertDefaultCellModel = invertDefaultCell;
+        this.invertCellModels = invertCellModels;
         this.cellModels = cellModels;
+        this.cellTransforms = this.buildSlotTransforms(rotation.getLeftRotation(), invertRotation.getLeftRotation());
     }
 
     /**
      * Calculates the origin of a drive slot for positioning a cell model into it.
      */
-    public static void getSlotOrigin(int row, int col, int disk, Vector3f translation) {
+    public static void getSlotOrigin(int row, int col, Vector3f translation) {
         // Position this drive model copy at the correct slot. The transform is based on
         // the cell-model being in slot 0,0,0 while the upper left slot's origin is at
         // 9,13,1
         float xOffset = (9 - col * 8) / 16.0f;
         float yOffset = (13 - row * 3) / 16.0f;
-        float zOffset = disk == 0 ? (1 / 16.0f) : (10 / 16.0f);
-        translation.set(xOffset, yOffset, zOffset);
+        translation.set(xOffset, yOffset, 1 / 16.0f);
     }
 
     @Override
@@ -64,12 +68,12 @@ public class ExDriveBakedModel extends DelegateBakedModel {
 
                         // Add the cell chassis
                         Item cell = slot < cells.length ? cells[slot] : null;
-                        BakedModel cellChassisModel = getCellChassisModel(cell);
+                        BakedModel cellChassisModel = getCellChassisModel(cell, disk != 0);
 
                         var quadView = MutableQuadView.getInstance();
                         for (BakedQuad quad : cellChassisModel.getQuads(state, side, rand, ModelData.EMPTY, renderType)) {
                             quadView.fromVanilla(quad, side);
-                            slotTransforms[slot].transform(quadView);
+                            this.cellTransforms[getSlotIndex(row, col, disk)].transform(quadView);
                             result.add(quadView.toBlockBakedQuad());
                         }
                     }
@@ -89,32 +93,36 @@ public class ExDriveBakedModel extends DelegateBakedModel {
     }
 
     // Determine which drive chassis to show based on the used cell
-    public BakedModel getCellChassisModel(Item cell) {
+    public BakedModel getCellChassisModel(Item cell, boolean invert) {
         if (cell == null) {
             return cellModels.get(Items.AIR);
         }
-        final BakedModel model = cellModels.get(cell);
-
-        return model != null ? model : defaultCellModel;
+        final BakedModel model = invert ? invertCellModels.get(cell) : cellModels.get(cell);
+        if (model != null) {
+            return model;
+        }
+        return invert ? invertDefaultCellModel : defaultCellModel;
     }
 
-    private RenderContext.QuadTransform[] buildSlotTransforms(Transformation rotation) {
-        RenderContext.QuadTransform[] result = new RenderContext.QuadTransform[5 * 2 * 2];
-        for (int disk = 0; disk < 2; disk++) {
-            for (int row = 0; row < 5; row++) {
-                for (int col = 0; col < 2; col++) {
-
-                    Vector3f translation = new Vector3f();
-                    getSlotOrigin(row, col, disk, translation);
-                    rotation.getLeftRotation().transform(translation);
-
-                    result[getSlotIndex(row, col, disk)] = new ExDriveBakedModel.QuadTranslator(translation.x(), translation.y(),
-                            translation.z());
-                }
+    private RenderContext.QuadTransform[] buildSlotTransforms(Quaternionf rotation, Quaternionf invertRotation) {
+        RenderContext.QuadTransform[] transforms = new RenderContext.QuadTransform[20];
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 2; col++) {
+                Vector3f translation = new Vector3f();
+                getSlotOrigin(row, col, translation);
+                rotation.transform(translation);
+                transforms[getSlotIndex(row, col, 0)] = new ExDriveBakedModel.QuadTranslator(translation.x(), translation.y(), translation.z());
             }
         }
-
-        return result;
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 2; col++) {
+                Vector3f translation = new Vector3f();
+                getSlotOrigin(row, col, translation);
+                invertRotation.transform(translation);
+                transforms[getSlotIndex(row, col, 1)] = new ExDriveBakedModel.QuadTranslator(translation.x(), translation.y(), translation.z());
+            }
+        }
+        return transforms;
     }
 
     private static int getSlotIndex(int row, int col, int disk) {
