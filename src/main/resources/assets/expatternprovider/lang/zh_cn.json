@@ -55,7 +55,7 @@
   "item.expatternprovider.ex_emc_export_bus_part": "ME扩展嬗变输出总线",
   "item.expatternprovider.ex_emc_import_bus_part": "ME扩展嬗变输入总线",
   "item.expatternprovider.emc_io_bus_upgrade": "嬗变输入/输出总线升级",
-  "item.expatternprovider.ex_crafting_terminal": "ME Extended Crafting Terminal",
+  "item.expatternprovider.ex_crafting_terminal": "ME扩展合成终端",
   "infinity.tooltip": "它是一个无限的来源。",
   "packaged_device.error.tooltip": "无效",
   "packaged_device.tooltip": "设备：%s",
