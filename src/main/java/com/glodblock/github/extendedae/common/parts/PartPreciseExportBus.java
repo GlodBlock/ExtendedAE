@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.common.parts;
 
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
+import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.networking.IGrid;
@@ -116,7 +117,7 @@ public class PartPreciseExportBus extends ExportBusPart {
                 break;
             }
 
-            long ceil = simulateExtract(context, what, before * transferFactor) / amount * amount;
+            long ceil = this.checkPulseRS() ? simulateExtract(context, what, amount) : (simulateExtract(context, what, before * transferFactor) / amount * amount);
             long canHold = getExportStrategy().push(what, ceil, Actionable.SIMULATE) / amount * amount;
             if (canHold > 0) {
                 var realSend = getExportStrategy().transfer(context, what, canHold);
@@ -136,6 +137,13 @@ public class PartPreciseExportBus extends ExportBusPart {
         }
 
         return context.hasDoneWork();
+    }
+
+    private boolean checkPulseRS() {
+        if (this.getUpgrades().isInstalled(AEItems.REDSTONE_CARD)) {
+            return this.getRSMode() == RedstoneMode.SIGNAL_PULSE;
+        }
+        return false;
     }
 
     @Override
