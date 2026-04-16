@@ -80,9 +80,7 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
             var item = stack.getItem();
 
             if (item == EPPItemAndBlock.WIRELESS_TOOL) {
-                var nbt = stack.hasTag() ? stack.getTag() : new CompoundTag();
-
-                assert nbt != null;
+                var nbt = stack.getOrCreateTag();
 
                 if (nbt.getLong("freq") != 0) {
                     if (WirelessChecks.hasNoNBT(nbt, p)) return InteractionResult.FAIL;
@@ -122,7 +120,7 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
                         return InteractionResult.FAIL;
                     }
                 } else {
-                    stack.getOrCreateTag().putLong("freq", tile.getNewFreq());
+                    nbt.putLong("freq", tile.getNewFreq());
 
                     GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, GlobalPos.of(world.dimension(), thisPos))
                         .result()
