@@ -38,9 +38,11 @@ public class ItemWirelessAdvancedConnectTool extends Item {
         var connections = nbt.getList("connections", CompoundTag.TAG_COMPOUND);
         var connectionsSize = connections.size();
 
-        lines.add(Component.translatable("wireless_advanced.mode", Component.translatable(addMode ? "wireless_advanced.mode.add" : "wireless_advanced.mode.use")));
+        lines.add(Component.translatable("wireless_advanced.mode", Component.translatable(addMode ? "wireless_advanced.mode.add" : "wireless_advanced.mode.use")).withStyle(ChatFormatting.GRAY));
+        lines.add(Component.translatable("wireless.use.tooltip.%s".formatted(addMode ? "01" : "02")).withStyle(ChatFormatting.GRAY));
 
         if (connectionsSize > 0) {
+            lines.add(Component.empty());
             lines.add(Component.translatable("wireless_advanced.port_list"));
 
             for (int i = 0; i < Math.min(connectionsSize, 10); i++) {

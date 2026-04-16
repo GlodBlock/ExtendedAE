@@ -63,7 +63,7 @@
   "wireless.use.tooltip.01": "Click to bind",
   "wireless.use.tooltip.02": "Click on another one to connect",
   "wireless.tooltip": "Bound to Connector at X: %s, Y: %s, Z: %s",
-  "wireless_advanced.mode": "§8Current Mode: %s",
+  "wireless_advanced.mode": "Current Mode: %s",
   "wireless_advanced.port_list": "Stored Connections:",
   "wireless_advanced.mode.add": "§bAdd",
   "wireless_advanced.mode.use": "§dUse",
