@@ -8,7 +8,7 @@ import com.glodblock.github.extendedae.common.me.wireless.WirelessFail;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
-import com.glodblock.github.extendedae.util.WirelessChecks;
+import com.glodblock.github.extendedae.util.WirelessHelpers;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -76,56 +76,16 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
 
     @Override
     public InteractionResult check(TileWirelessConnector tile, ItemStack stack, Level world, BlockPos thisPos, BlockHitResult hit, Player p) {
-        if (world instanceof ServerLevel server) {
+        if (world instanceof ServerLevel) {
             var item = stack.getItem();
 
             if (item == EPPItemAndBlock.WIRELESS_TOOL) {
                 var nbt = stack.getOrCreateTag();
 
                 if (nbt.getLong("freq") != 0) {
-                    if (WirelessChecks.hasNoNBT(nbt, p)) return InteractionResult.FAIL;
-
-                    var globalPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, nbt.get("bind"))
-                        .resultOrPartial(Util.prefix("Connector position", ExtendedAE.LOGGER::error))
-                        .map(Pair::getFirst)
-                        .orElse(null);
-
-                    if (WirelessChecks.hasNoGlobalPos(globalPos, p)) return InteractionResult.FAIL;
-                    if (WirelessChecks.positionChecks(globalPos, thisPos, world, server, p)) return InteractionResult.FAIL;
-
-                    var otherWorldInstance = server.getServer().getLevel(globalPos.dimension());
-                    var otherTile = otherWorldInstance.getBlockEntity(globalPos.pos());
-                    var freq = nbt.getLong("freq");
-
-                    if (otherTile instanceof TileWirelessConnector otherConnector) {
-                        otherConnector.setFrequency(freq);
-                        tile.setFrequency(freq);
-                        stack.setTag(null);
-                        p.displayClientMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-
-                        return InteractionResult.sidedSuccess(world.isClientSide);
-                    } else if (otherTile instanceof TileWirelessHub otherHub) {
-                        int otherPort = otherHub.allocatePort();
-
-                        if (WirelessChecks.hasNoPorts(otherHub, p)) return InteractionResult.FAIL;
-
-                        otherHub.setFrequency(freq, otherPort);
-                        tile.setFrequency(freq);
-                        stack.setTag(null);
-                        p.displayClientMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-                        return InteractionResult.sidedSuccess(world.isClientSide);
-                    } else {
-                        p.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
-
-                        return InteractionResult.FAIL;
-                    }
+                    return WirelessHelpers.connectWireless(tile::setFrequency, nbt, world, thisPos, p, () -> stack.setTag(null));
                 } else {
-                    nbt.putLong("freq", tile.getNewFreq());
-
-                    GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, GlobalPos.of(world.dimension(), thisPos))
-                        .result()
-                        .ifPresent(tag -> stack.getOrCreateTag().put("bind", tag));
-
+                    WirelessHelpers.bindWireless(nbt, tile.getNewFreq(), GlobalPos.of(world.dimension(), thisPos));
                     p.displayClientMessage(Component.translatable("chat.wireless_bind", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
 
                     return InteractionResult.sidedSuccess(world.isClientSide);
@@ -159,11 +119,7 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
                     } else {
                         CompoundTag newConnection = new CompoundTag();
 
-                        newConnection.putLong("freq", tile.getNewFreq());
-
-                        GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, GlobalPos.of(world.dimension(), thisPos))
-                            .result()
-                            .ifPresent(tag -> newConnection.put("bind", tag));
+                        WirelessHelpers.bindWireless(newConnection, tile.getNewFreq(), GlobalPos.of(world.dimension(), thisPos));
 
                         connections.add(newConnection);
 
@@ -177,42 +133,7 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
                     var connections = nbt.getList("connections", CompoundTag.TAG_COMPOUND);
                     var firstConnection = connections.getCompound(0);
 
-                    if (WirelessChecks.hasNoNBT(firstConnection, p)) return InteractionResult.FAIL;
-
-                    var globalPos = GlobalPos.CODEC.decode(NbtOps.INSTANCE, firstConnection.get("bind"))
-                        .resultOrPartial(Util.prefix("Connector position", ExtendedAE.LOGGER::error))
-                        .map(Pair::getFirst)
-                        .orElse(null);
-
-                    if (WirelessChecks.hasNoGlobalPos(globalPos, p)) return InteractionResult.FAIL;
-                    if (WirelessChecks.positionChecks(globalPos, thisPos, world, server, p)) return InteractionResult.FAIL;
-
-                    var otherWorldInstance = server.getServer().getLevel(globalPos.dimension());
-                    var otherTile = otherWorldInstance.getBlockEntity(globalPos.pos());
-                    var freq = firstConnection.getLong("freq");
-
-                    if (otherTile instanceof TileWirelessConnector otherConnector) {
-                        otherConnector.setFrequency(freq);
-                        tile.setFrequency(freq);
-                        connections.remove(0);
-                        p.displayClientMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-
-                        return InteractionResult.sidedSuccess(world.isClientSide);
-                    } else if (otherTile instanceof TileWirelessHub otherHub) {
-                        int otherPort = otherHub.allocatePort();
-
-                        if (WirelessChecks.hasNoPorts(otherHub, p)) return InteractionResult.FAIL;
-
-                        otherHub.setFrequency(freq, otherPort);
-                        tile.setFrequency(freq);
-                        connections.remove(0);
-                        p.displayClientMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-                        return InteractionResult.sidedSuccess(world.isClientSide);
-                    } else {
-                        p.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
-
-                        return InteractionResult.FAIL;
-                    }
+                    return WirelessHelpers.connectWireless(tile::setFrequency, firstConnection, world, thisPos, p, () -> connections.remove(0));
                 }
             }
         }
