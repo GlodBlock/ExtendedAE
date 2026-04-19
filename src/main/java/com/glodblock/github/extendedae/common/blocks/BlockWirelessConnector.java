@@ -7,6 +7,7 @@ import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessFail;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
 import com.glodblock.github.extendedae.util.WirelessHelpers;
 import com.mojang.datafixers.util.Pair;
@@ -97,6 +98,13 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
                     if (!nbt.contains("connections")) nbt.put("connections", new ListTag());
 
                     var connections = nbt.getList("connections", CompoundTag.TAG_COMPOUND);
+
+                    if (connections.size() >= EPPConfig.wirelessMaxQueueSize) {
+                        p.displayClientMessage(Component.translatable("chat.wireless_advanced_queue_limit", EPPConfig.wirelessMaxQueueSize), true);
+
+                        return InteractionResult.sidedSuccess(world.isClientSide);
+                    }
+
                     var duplicate = false;
 
                     for (int i = 0; i < connections.size(); i++) {

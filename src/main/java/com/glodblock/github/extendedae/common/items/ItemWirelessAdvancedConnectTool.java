@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.common.items;
 import appeng.util.InteractionUtil;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -43,7 +44,7 @@ public class ItemWirelessAdvancedConnectTool extends Item {
 
         if (connectionsSize > 0) {
             lines.add(Component.empty());
-            lines.add(Component.translatable("wireless_advanced.port_list"));
+            lines.add(Component.translatable("wireless_advanced.port_list", connectionsSize, EPPConfig.wirelessMaxQueueSize));
 
             for (int i = 0; i < Math.min(connectionsSize, 10); i++) {
                 var connection = connections.getCompound(i);
@@ -60,7 +61,9 @@ public class ItemWirelessAdvancedConnectTool extends Item {
                 }
             }
 
-            if (connectionsSize > 10) lines.add(Component.nullToEmpty("§7... (%s)".formatted(connectionsSize - 10)));
+            if (connectionsSize > 10) {
+                lines.add(Component.nullToEmpty("§7... (%s)".formatted(connectionsSize - 10)));
+            }
         }
     }
 

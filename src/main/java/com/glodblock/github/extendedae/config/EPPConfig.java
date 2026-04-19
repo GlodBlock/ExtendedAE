@@ -83,6 +83,10 @@ public class EPPConfig {
             .comment("Enable debug logging.")
             .define("misc.debug_mode", false);
 
+    private static final ForgeConfigSpec.IntValue MAX_WIRELESS_QUENE = BUILDER
+            .comment("The max queue size for the ME Wireless Advanced Setup Kit")
+            .defineInRange("device.max_queue_size", 10, 10, 100);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     private static boolean checkRL(Object o) {
@@ -101,6 +105,7 @@ public class EPPConfig {
     private static Map<ResourceLocation, Integer> customOversizeMultiplier;
     public static int assemblerMatrixSize;
     public static boolean debugMode;
+    public static int wirelessMaxQueueSize;
 
     public static int getOversizeMultiplier(AEKey key) {
         return customOversizeMultiplier.getOrDefault(key.getType().getId(), oversizeMultiplier);
@@ -133,6 +138,7 @@ public class EPPConfig {
                 .forEach(p -> customOversizeMultiplier.put(p.getKey(), p.getValue()));
         assemblerMatrixSize = ASSEMBLER_MATRIX_SIZE.get();
         debugMode = DEBUG_MODE.get();
+        wirelessMaxQueueSize = MAX_WIRELESS_QUENE.get();
     }
 
     private static Pair<ResourceLocation, Integer> parseOversizeMultiplier(String s) {

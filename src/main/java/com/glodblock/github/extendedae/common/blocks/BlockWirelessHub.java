@@ -4,6 +4,7 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerWirelessHub;
 import com.glodblock.github.extendedae.util.WirelessHelpers;
 import net.minecraft.core.BlockPos;
@@ -98,13 +99,21 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
                 var nbt = stack.getOrCreateTag();
 
                 if (nbt.getBoolean("addMode")) {
+                    if (!nbt.contains("connections")) nbt.put("connections", new ListTag());
+
+                    var connections = nbt.getList("connections", CompoundTag.TAG_COMPOUND);
+
+                    if (connections.size() >= EPPConfig.wirelessMaxQueueSize) {
+                        p.displayClientMessage(Component.translatable("chat.wireless_advanced_queue_limit", EPPConfig.wirelessMaxQueueSize), true);
+
+                        return InteractionResult.sidedSuccess(world.isClientSide);
+                    }
+
                     CompoundTag newConnection = new CompoundTag();
 
                     WirelessHelpers.bindWireless(newConnection, tile.getNewFreq(), GlobalPos.of(world.dimension(), thisPos));
 
-                    if (!nbt.contains("connections")) nbt.put("connections", new ListTag());
-
-                    nbt.getList("connections", CompoundTag.TAG_COMPOUND).add(newConnection);
+                    connections.add(newConnection);
 
                     p.displayClientMessage(Component.translatable("chat.wireless_added", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
 
