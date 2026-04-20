@@ -24,17 +24,7 @@ import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrix
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixPattern;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixSpeed;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixWall;
-import com.glodblock.github.extendedae.common.items.InfinityCell;
-import com.glodblock.github.extendedae.common.items.ItemDriveUpgrade;
-import com.glodblock.github.extendedae.common.items.ItemIOBusUpgrade;
-import com.glodblock.github.extendedae.common.items.ItemInterfaceUpgrade;
-import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
-import com.glodblock.github.extendedae.common.items.ItemPackedDevice;
-import com.glodblock.github.extendedae.common.items.ItemPatternAccessTerminalUpgrade;
-import com.glodblock.github.extendedae.common.items.ItemPatternModifier;
-import com.glodblock.github.extendedae.common.items.ItemPatternProviderUpgrade;
-import com.glodblock.github.extendedae.common.items.ItemUpgrade;
-import com.glodblock.github.extendedae.common.items.ItemWirelessConnectTool;
+import com.glodblock.github.extendedae.common.items.*;
 import com.glodblock.github.extendedae.common.items.tools.ItemWirelessExPAT;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
@@ -98,6 +88,7 @@ public class EPPItemAndBlock {
     public static BlockWirelessConnector WIRELESS_CONNECTOR;
     public static BlockWirelessHub WIRELESS_HUB;
     public static ItemWirelessConnectTool WIRELESS_TOOL;
+    public static ItemWirelessAdvancedConnectTool WIRELESS_ADVANCED_TOOL;
     public static BlockIngredientBuffer INGREDIENT_BUFFER;
     public static BlockExDrive EX_DRIVE;
     public static ItemDriveUpgrade DRIVE_UPGRADE;
@@ -156,6 +147,7 @@ public class EPPItemAndBlock {
         WIRELESS_CONNECTOR = new BlockWirelessConnector();
         WIRELESS_HUB = new BlockWirelessHub();
         WIRELESS_TOOL = new ItemWirelessConnectTool();
+        WIRELESS_ADVANCED_TOOL = new ItemWirelessAdvancedConnectTool();
         INGREDIENT_BUFFER = new BlockIngredientBuffer();
         EX_DRIVE = new BlockExDrive();
         DRIVE_UPGRADE = new ItemDriveUpgrade();
@@ -227,6 +219,7 @@ public class EPPItemAndBlock {
         regHandler.item("me_packing_tape", PACKING_TAPE);
         regHandler.item("package", PACKAGE);
         regHandler.item("wireless_tool", WIRELESS_TOOL);
+        regHandler.item("wireless_advanced_tool", WIRELESS_ADVANCED_TOOL);
         regHandler.item("drive_upgrade", DRIVE_UPGRADE);
         regHandler.item("pattern_modifier", PATTERN_MODIFIER);
         regHandler.item("tag_storage_bus", TAG_STORAGE_BUS);

@@ -221,6 +221,16 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EPPItemAndBlock.WIRELESS_TOOL))
                 .save(c, ExtendedAE.id("wireless_tool"));
 
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.WIRELESS_ADVANCED_TOOL)
+                .pattern(" N ")
+                .pattern("NWN")
+                .pattern(" N ")
+                .define('N', Items.NETHER_STAR)
+                .define('W', EPPItemAndBlock.WIRELESS_TOOL)
+                .unlockedBy(C, has(EPPItemAndBlock.WIRELESS_ADVANCED_TOOL))
+                .save(c, ExtendedAE.id("wireless_advanced_tool"));
+
         // Ingredient Buffer
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, EPPItemAndBlock.INGREDIENT_BUFFER)
