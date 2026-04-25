@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.common.parts;
 import appeng.api.behaviors.PlacementStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
+import appeng.api.config.IncludeExclude;
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
@@ -37,6 +38,7 @@ import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.automation.UpgradeablePart;
 import appeng.util.ConfigInventory;
 import appeng.util.Platform;
+import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.google.common.collect.ImmutableList;
@@ -78,11 +80,12 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     private final ConfigInventory config;
     @Nullable
     private PlacementStrategy placementStrategies;
+    private IPartitionList filter;
 
     public PartActiveFormationPlane(IPartItem<?> partItem) {
         super(partItem);
         this.getMainNode().addService(IGridTickable.class, this);
-        this.config = ConfigInventory.configTypes(StackWorldBehaviors.hasPlacementStrategy(), 63, null);
+        this.config = ConfigInventory.configTypes(StackWorldBehaviors.hasPlacementStrategy(), 63, this::updateFilter);
         this.getConfigManager().registerSetting(Settings.PLACE_BLOCK, YesNo.YES);
         this.getConfigManager().registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
     }
@@ -98,10 +101,37 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
             var pos = self.getBlockPos().relative(this.getSide());
             var side = getSide().getOpposite();
             var owningPlayerId = getMainNode().getNode().getOwningPlayerProfileId();
-            placementStrategies = StackWorldBehaviors.createPlacementStrategies(
-                    (ServerLevel) self.getLevel(), pos, side, self, owningPlayerId);
+            placementStrategies = StackWorldBehaviors.createPlacementStrategies((ServerLevel) self.getLevel(), pos, side, self, owningPlayerId);
         }
         return placementStrategies;
+    }
+
+    protected final void updateFilter() {
+        this.filter = createFilter();
+    }
+
+    @Override
+    public void upgradesChanged() {
+        this.updateFilter();
+    }
+
+    private IPartitionList createFilter() {
+        var builder = IPartitionList.builder();
+        if (this.isUpgradedWith(AEItems.FUZZY_CARD)) {
+            builder.fuzzyMode(getConfigManager().getSetting(Settings.FUZZY_MODE));
+        }
+        var slotsToUse = 18 + this.getInstalledUpgrades(AEItems.CAPACITY_CARD) * 9;
+        for (var x = 0; x < this.config.size() && x < slotsToUse; x++) {
+            builder.add(this.config.getKey(x));
+        }
+        return builder.build();
+    }
+
+    private IPartitionList getFilter() {
+        if (this.filter == null) {
+            this.updateFilter();
+        }
+        return this.filter;
     }
 
     @Override
@@ -240,22 +270,33 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     protected boolean doWork(IGrid grid) {
         var storageService = grid.getStorageService();
         var fzMode = this.getConfigManager().getSetting(Settings.FUZZY_MODE);
+        var filterMode = isUpgradedWith(AEItems.INVERTER_CARD) ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST;
 
-        int x;
-        for (x = 0; x < availableSlots(); x ++) {
-            var what = getConfig().getKey(x);
-            if (what == null) {
-                continue;
-            }
-            if (isUpgradedWith(AEItems.FUZZY_CARD)) {
-                for (var fuzzyWhat : ImmutableList.copyOf(storageService.getCachedInventory().findFuzzy(what, fzMode))) {
-                    if (isSuccess(storageService, fuzzyWhat.getKey())) {
+        if (filterMode == IncludeExclude.WHITELIST) {
+            int x;
+            for (x = 0; x < availableSlots(); x ++) {
+                var what = getConfig().getKey(x);
+                if (what == null) {
+                    continue;
+                }
+                if (isUpgradedWith(AEItems.FUZZY_CARD)) {
+                    for (var fuzzyWhat : ImmutableList.copyOf(storageService.getCachedInventory().findFuzzy(what, fzMode))) {
+                        if (isSuccess(storageService, fuzzyWhat.getKey())) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isSuccess(storageService, what)) {
                         return true;
                     }
                 }
-            } else {
-                if (isSuccess(storageService, what)) {
-                    return true;
+            }
+        } else {
+            for (var what : storageService.getCachedInventory()) {
+                if (this.getFilter().matchesFilter(what.getKey(), IncludeExclude.BLACKLIST)) {
+                    if (isSuccess(storageService, what.getKey())) {
+                        return true;
+                    }
                 }
             }
         }
