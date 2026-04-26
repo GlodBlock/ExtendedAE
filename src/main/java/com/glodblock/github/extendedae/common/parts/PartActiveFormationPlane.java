@@ -303,8 +303,25 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
         return false;
     }
 
+    protected long getDropMultiplier() {
+        return switch (getInstalledUpgrades(AEItems.SPEED_CARD)) {
+            case 1 -> 8;
+            case 2 -> 32;
+            case 3 -> 64;
+            case 4 -> 96;
+            default -> 1;
+        };
+    }
+
+    protected long getExtractAmount(AEKey what) {
+        if (this.getConfigManager().getSetting(Settings.PLACE_BLOCK) == YesNo.NO) {
+            return this.getDropMultiplier() * what.getAmountPerOperation();
+        }
+        return what.getAmountPerUnit();
+    }
+
     private boolean isSuccess(IStorageService storageService, AEKey what) {
-        var toExt = storageService.getInventory().extract(what, what.getAmountPerUnit(), Actionable.MODULATE, IActionSource.ofMachine(this));
+        var toExt = storageService.getInventory().extract(what, this.getExtractAmount(what), Actionable.MODULATE, IActionSource.ofMachine(this));
         if (toExt > 0) {
             var res = placeInWorld(what, toExt);
             var differ = toExt - res;

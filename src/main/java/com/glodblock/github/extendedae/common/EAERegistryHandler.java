@@ -240,6 +240,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.MOD_EXPORT_BUS, 4);
         Upgrades.add(AEItems.FUZZY_CARD, EPPItemAndBlock.ACTIVE_FORMATION_PLANE, 1);
         Upgrades.add(AEItems.INVERTER_CARD, EPPItemAndBlock.ACTIVE_FORMATION_PLANE, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.ACTIVE_FORMATION_PLANE, 4);
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.ACTIVE_FORMATION_PLANE, 5);
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1);
