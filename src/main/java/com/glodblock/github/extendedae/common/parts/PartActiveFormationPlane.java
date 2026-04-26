@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.common.parts;
 import appeng.api.behaviors.PlacementStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
+import appeng.api.config.IncludeExclude;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
@@ -44,6 +45,7 @@ import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.automation.UpgradeablePart;
 import appeng.util.ConfigInventory;
 import appeng.util.Platform;
+import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.google.common.collect.ImmutableList;
@@ -91,6 +93,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     protected final IActionSource source;
     private boolean lastRedstone = false;
     private boolean pendingPulse = false;
+    private IPartitionList filter;
 
     public PartActiveFormationPlane(IPartItem<?> partItem) {
         super(partItem);
@@ -99,6 +102,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
                 .addService(ICraftingRequester.class, this);
         this.config = ConfigInventory.configTypes(63)
                 .supportedTypes(StackWorldBehaviors.withPlacementStrategy())
+                .changeListener(this::updateFilter)
                 .build();
         this.source = new MachineSource(this);
         this.craftingTracker = new MultiCraftingTracker(this, this.config.size());
@@ -136,6 +140,34 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
             placementStrategies = StackWorldBehaviors.createPlacementStrategies((ServerLevel) self.getLevel(), pos, side, self, owningPlayerId);
         }
         return placementStrategies;
+    }
+
+    protected final void updateFilter() {
+        this.filter = createFilter();
+    }
+
+    @Override
+    public void upgradesChanged() {
+        this.updateFilter();
+    }
+
+    private IPartitionList createFilter() {
+        var builder = IPartitionList.builder();
+        if (this.isUpgradedWith(AEItems.FUZZY_CARD)) {
+            builder.fuzzyMode(getConfigManager().getSetting(Settings.FUZZY_MODE));
+        }
+        var slotsToUse = 18 + this.getInstalledUpgrades(AEItems.CAPACITY_CARD) * 9;
+        for (var x = 0; x < this.config.size() && x < slotsToUse; x++) {
+            builder.add(this.config.getKey(x));
+        }
+        return builder.build();
+    }
+
+    private IPartitionList getFilter() {
+        if (this.filter == null) {
+            this.updateFilter();
+        }
+        return this.filter;
     }
 
     @Override
@@ -349,40 +381,66 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     protected boolean doWork(IGrid grid) {
         var storageService = grid.getStorageService();
         var fzMode = this.getConfigManager().getSetting(Settings.FUZZY_MODE);
+        var filterMode = isUpgradedWith(AEItems.INVERTER_CARD) ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST;
         var cg = grid.getCraftingService();
 
         int x;
-        for (x = 0; x < availableSlots(); x ++) {
-            var what = getConfig().getKey(x);
-            if (what == null) {
-                continue;
-            }
-            if (this.craftOnly()) {
-                attemptCrafting(cg, x, what);
-                continue;
-            }
-            if (isUpgradedWith(AEItems.FUZZY_CARD)) {
-                for (var fuzzyWhat : ImmutableList.copyOf(storageService.getCachedInventory().findFuzzy(what, fzMode))) {
-                    if (isSuccess(storageService, fuzzyWhat.getKey())) {
+        if (filterMode == IncludeExclude.WHITELIST) {
+            for (x = 0; x < availableSlots(); x ++) {
+                var what = getConfig().getKey(x);
+                if (what == null) {
+                    continue;
+                }
+                if (this.craftOnly()) {
+                    attemptCrafting(cg, x, what);
+                    continue;
+                }
+                if (isUpgradedWith(AEItems.FUZZY_CARD)) {
+                    for (var fuzzyWhat : ImmutableList.copyOf(storageService.getCachedInventory().findFuzzy(what, fzMode))) {
+                        if (isSuccess(storageService, fuzzyWhat.getKey())) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isSuccess(storageService, what)) {
                         return true;
                     }
                 }
-            } else {
-                if (isSuccess(storageService, what)) {
-                    return true;
+                if (this.isCraftingEnabled()) {
+                    attemptCrafting(cg, x, what);
                 }
             }
-
-            if (this.isCraftingEnabled()) {
-                attemptCrafting(cg, x, what);
+        } else {
+            for (var what : storageService.getCachedInventory().keySet()) {
+                if (this.getFilter().matchesFilter(what, IncludeExclude.BLACKLIST)) {
+                    if (isSuccess(storageService, what)) {
+                        return true;
+                    }
+                }
             }
-
         }
         return false;
     }
 
+    protected long getDropMultiplier() {
+        return switch (getInstalledUpgrades(AEItems.SPEED_CARD)) {
+            case 1 -> 8;
+            case 2 -> 32;
+            case 3 -> 64;
+            case 4 -> 96;
+            default -> 1;
+        };
+    }
+
+    protected long getExtractAmount(AEKey what) {
+        if (this.getConfigManager().getSetting(Settings.PLACE_BLOCK) == YesNo.NO) {
+            return this.getDropMultiplier() * what.getAmountPerOperation();
+        }
+        return what.getAmountPerUnit();
+    }
+
     private boolean isSuccess(IStorageService storageService, AEKey what) {
-        var toExt = storageService.getInventory().extract(what, what.getAmountPerUnit(), Actionable.MODULATE, IActionSource.ofMachine(this));
+        var toExt = storageService.getInventory().extract(what, this.getExtractAmount(what), Actionable.MODULATE, IActionSource.ofMachine(this));
         if (toExt > 0) {
             var res = placeInWorld(what, toExt);
             var differ = toExt - res;

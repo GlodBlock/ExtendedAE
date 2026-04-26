@@ -294,6 +294,8 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 1);
         Upgrades.add(AEItems.CRAFTING_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 1);
         Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 1);
+        Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 4);
         Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.ACTIVE_FORMATION_PLANE, 5);
         Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.PRECISE_EXPORT_BUS, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.PRECISE_EXPORT_BUS, 1);
