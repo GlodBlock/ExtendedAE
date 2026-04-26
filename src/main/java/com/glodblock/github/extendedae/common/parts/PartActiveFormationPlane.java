@@ -292,9 +292,9 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
                 }
             }
         } else {
-            for (var what : storageService.getCachedInventory()) {
-                if (this.getFilter().matchesFilter(what.getKey(), IncludeExclude.BLACKLIST)) {
-                    if (isSuccess(storageService, what.getKey())) {
+            for (var what : storageService.getCachedInventory().keySet()) {
+                if (this.getFilter().matchesFilter(what, IncludeExclude.BLACKLIST)) {
+                    if (isSuccess(storageService, what)) {
                         return true;
                     }
                 }

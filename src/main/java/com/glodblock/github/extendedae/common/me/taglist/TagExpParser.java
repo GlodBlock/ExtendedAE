@@ -6,6 +6,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import net.minecraft.core.Holder;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class TagExpParser {
 
@@ -73,15 +75,19 @@ public final class TagExpParser {
     @SuppressWarnings("deprecation") // Holder::tags is deprecated but necessary here.
     public static boolean evaluate(Predicate<Set<String>> predicate, Object key) {
         Holder<?> holder = null;
+        Holder<?> assocateHolder = null;
         if (key instanceof Item item) {
             holder = item.builtInRegistryHolder();
+            if (item instanceof BlockItem block) {
+                assocateHolder = block.getBlock().builtInRegistryHolder();
+            }
         } else if (key instanceof Fluid fluid) {
             holder = fluid.builtInRegistryHolder();
         }
 
         if (holder != null) {
             // Convert TagKey objects to their string representation for matching.
-            Set<String> tagStrings = holder.tags()
+            Set<String> tagStrings = Stream.concat(holder.tags(), assocateHolder == null ? Stream.empty() : assocateHolder.tags())
                     .map(tagKey -> tagKey.location().toString())
                     .collect(Collectors.toSet());
             holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));
