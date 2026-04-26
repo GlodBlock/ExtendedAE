@@ -7,6 +7,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ import java.util.Stack;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TagExpParserV2 {
 
@@ -37,13 +39,17 @@ public class TagExpParserV2 {
     @SuppressWarnings("deprecation")
     public static boolean evaluate(Predicate<List<String>> expression, Object key) {
         Holder<?> holder = null;
+        Holder<?> assocateHolder = null;
         if (key instanceof Item item) {
             holder = item.builtInRegistryHolder();
+            if (item instanceof BlockItem block) {
+                assocateHolder = block.getBlock().builtInRegistryHolder();
+            }
         } else if (key instanceof Fluid fluid) {
             holder = fluid.builtInRegistryHolder();
         }
         if (holder != null) {
-            List<String> tagStrings = holder.tags()
+            List<String> tagStrings = Stream.concat(holder.tags(), assocateHolder == null ? Stream.empty() : assocateHolder.tags())
                     .map(tagKey -> tagKey.location().toString())
                     .collect(Collectors.toList());
             holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));

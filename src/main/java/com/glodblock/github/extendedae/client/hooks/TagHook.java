@@ -7,9 +7,12 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -17,6 +20,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class TagHook {
 
@@ -24,18 +28,24 @@ public class TagHook {
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, (ItemTooltipEvent evt) -> hookTooltip(evt.getItemStack(), evt.getToolTip()));
     }
 
+    @SuppressWarnings("deprecation")
     private static void hookTooltip(ItemStack stack, List<Component> tooltip) {
         if (Minecraft.getInstance().screen instanceof GuiTagExportBus || Minecraft.getInstance().screen instanceof GuiTagStorageBus) {
             if (Screen.hasShiftDown()) {
                 var holder = stack.getItemHolder();
+                Holder<Block> blockHolder = null;
                 boolean anyTag = false;
-                if (holder.tags().findAny().isPresent()) {
+                if (stack.getItem() instanceof BlockItem block) {
+                    blockHolder = block.getBlock().builtInRegistryHolder();
+                }
+                if (Stream.concat(holder.tags(), blockHolder == null ? Stream.empty() : blockHolder.tags()).findAny().isPresent()) {
                     tooltip.add(Component.translatable("tag_display.tooltip.items").withStyle(ChatFormatting.YELLOW));
-                    holder.tags().limit(128).forEach(
+                    Stream.concat(holder.tags(), blockHolder == null ? Stream.empty() : blockHolder.tags()).limit(128).forEach(
                             key -> tooltip.add(Component.literal(key.location().toString()).withStyle(ChatFormatting.GREEN))
                     );
                     anyTag = true;
                 }
+
                 var fluidCap = stack.getCapability(Capabilities.FluidHandler.ITEM);
                 if (fluidCap != null) {
                     ReferenceSet<TagKey<Fluid>> fluidSet = new ReferenceOpenHashSet<>();
