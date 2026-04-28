@@ -19,6 +19,7 @@ public final class ModConstants {
     public static final String APPMEK = "appmek";
     public static final String MEK = "mekanism";
     public static final String FRAMED_BLOCKS = "framedblocks";
+    public static final String APPPNEU = "appliedpneumatics";
     public static final String ADV_AE = "advanced_ae";
     public static final String APPLIED_E = "appliede";
 

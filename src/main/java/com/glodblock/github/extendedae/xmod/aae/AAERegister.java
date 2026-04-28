@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.xmod.aae;
 
-import com.glodblock.github.extendedae.container.pattern.ContainerAdvProcessingPattern;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 

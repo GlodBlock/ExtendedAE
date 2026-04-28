@@ -1,7 +1,9 @@
-package com.glodblock.github.extendedae.container.pattern;
+package com.glodblock.github.extendedae.xmod.framedblocks;
 
 import appeng.api.stacks.GenericStack;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
+import com.glodblock.github.extendedae.container.pattern.PatternGuiHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;

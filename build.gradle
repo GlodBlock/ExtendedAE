@@ -96,7 +96,6 @@ dependencies {
     compileOnly "curse.maven:applied-mekanistics-574300:5978711"
     compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.1-build.188"
     compileOnly "dev.latvian.mods:rhino:2101.2.5-build.54"
-    compileOnly "curse.maven:framedblocks-441647:6127891"
     compileOnly "curse.maven:advancedae-1084104:6225993"
     compileOnly "curse.maven:functional-storage-556861:6467726"
     compileOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"

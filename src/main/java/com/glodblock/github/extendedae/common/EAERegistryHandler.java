@@ -99,6 +99,8 @@ import com.glodblock.github.extendedae.xmod.appliede.APECommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBCommonLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBRegister;
 import com.glodblock.github.extendedae.xmod.megacells.MEGACommonLoad;
+import com.glodblock.github.extendedae.xmod.pneumatics.APCommonLoad;
+import com.glodblock.github.extendedae.xmod.pneumatics.APRegister;
 import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -216,6 +218,9 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
         if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
             FBRegister.register();
+        }
+        if (GlodUtil.checkMod(ModConstants.APPPNEU)) {
+            APRegister.register();
         }
         if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
             AAERegister.register();
@@ -356,6 +361,9 @@ public class EAERegistryHandler extends RegistryHandler {
         PatternGuiHandler.addPatternHandler(AESmithingTablePattern.class, ContainerSmithingTablePattern.ID);
         if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
             FBCommonLoad.init();
+        }
+        if (GlodUtil.checkMod(ModConstants.APPPNEU)) {
+            APCommonLoad.init();
         }
         if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
             AAECommonLoad.init();

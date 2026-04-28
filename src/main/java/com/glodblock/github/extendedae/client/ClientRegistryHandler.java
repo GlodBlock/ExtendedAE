@@ -96,6 +96,7 @@ import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.aae.AAEClientLoad;
 import com.glodblock.github.extendedae.xmod.appliede.APEClientLoad;
 import com.glodblock.github.extendedae.xmod.framedblocks.FBClientLoad;
+import com.glodblock.github.extendedae.xmod.pneumatics.APClientLoad;
 import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.extendedae.xmod.wt.GuiWirelessExPAT;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -152,6 +153,9 @@ public class ClientRegistryHandler {
         event.register(ContainerSmithingTablePattern.TYPE, GuiSmithingTablePattern::new);
         if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
             FBClientLoad.init(event);
+        }
+        if (GlodUtil.checkMod(ModConstants.APPPNEU)) {
+            APClientLoad.init(event);
         }
         if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
             AAEClientLoad.init(event);

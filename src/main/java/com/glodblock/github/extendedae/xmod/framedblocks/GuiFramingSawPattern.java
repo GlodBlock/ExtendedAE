@@ -1,7 +1,7 @@
-package com.glodblock.github.extendedae.client.gui.pattern;
+package com.glodblock.github.extendedae.xmod.framedblocks;
 
 import appeng.core.AppEng;
-import com.glodblock.github.extendedae.container.pattern.ContainerFramingSawPattern;
+import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

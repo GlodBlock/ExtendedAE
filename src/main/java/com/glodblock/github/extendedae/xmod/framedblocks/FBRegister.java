@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.xmod.framedblocks;
 
-import com.glodblock.github.extendedae.container.pattern.ContainerFramingSawPattern;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 
