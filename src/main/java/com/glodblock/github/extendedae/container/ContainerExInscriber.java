@@ -20,6 +20,7 @@ import appeng.menu.slot.OutputSlot;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
+import com.glodblock.github.extendedae.client.gui.widget.InscriberSlot;
 import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
@@ -87,19 +88,19 @@ public class ContainerExInscriber extends UpgradeableMenu<TileExInscriber> imple
         for (int x = 0; x < TileExInscriber.MAX_THREAD; x ++) {
             var inv = host.getIndexInventory(x);
 
-            var top = new AppEngSlot(inv, 0);
+            var top = new InscriberSlot(inv, 0);
             top.setIcon(Icon.BACKGROUND_PLATE);
             top.setEmptyTooltip(
                     () -> separateSides == YesNo.YES ? Tooltips.inputSlot(Side.TOP) : Tooltips.inputSlot(Side.ANY));
             this.tops[x] = this.addSlot(top, TOP[x]);
 
-            var bottom = new AppEngSlot(inv, 1);
+            var bottom = new InscriberSlot(inv, 1);
             bottom.setIcon(Icon.BACKGROUND_PLATE);
             bottom.setEmptyTooltip(
                     () -> separateSides == YesNo.YES ? Tooltips.inputSlot(Side.BOTTOM) : Tooltips.inputSlot(Side.ANY));
             this.bottoms[x] = this.addSlot(bottom, BOTTOM[x]);
 
-            var middle = new AppEngSlot(inv, 2);
+            var middle = new InscriberSlot(inv, 2);
             middle.setIcon(Icon.BACKGROUND_INGOT);
             middle.setEmptyTooltip(
                     () -> separateSides == YesNo.YES ? Tooltips.inputSlot(Side.LEFT, Side.RIGHT, Side.BACK, Side.FRONT)
