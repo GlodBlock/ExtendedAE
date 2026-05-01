@@ -179,7 +179,7 @@
   "gui.wireless_connect.remote": "Position X: %s, Y: %s, Z: %s",
   "gui.wireless_connect.remote_channel": "Position X: %s, Y: %s, Z: %s\nUsed Channel: %s",
   "gui.wireless_connect.highlight.tooltip": "Highlight the remote Wireless Connector in world.",
-  "gui.extendedae.caner": "ME Caner",
+  "gui.extendedae.caner": "ME Canner",
   "gui.extendedae.caner.fill": "Fill Mode",
   "gui.extendedae.caner.empty": "Empty Mode",
   "gui.extendedae.precise_export_bus": "ME Precise Export Bus",
