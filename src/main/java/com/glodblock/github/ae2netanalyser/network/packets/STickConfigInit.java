@@ -6,10 +6,8 @@ import com.glodblock.github.ae2netanalyser.common.items.ItemTickAnalyzer;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class STickConfigInit implements IMessage {
@@ -35,7 +33,6 @@ public class STickConfigInit implements IMessage {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         if (Minecraft.getInstance().screen instanceof GuiProfiler gui) {
             gui.loadConfig(this.config);
@@ -48,7 +45,7 @@ public class STickConfigInit implements IMessage {
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return AEAnalyser.id("tick_config_init");
     }
 

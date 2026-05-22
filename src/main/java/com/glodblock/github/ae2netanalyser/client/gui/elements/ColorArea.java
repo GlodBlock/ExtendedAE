@@ -1,7 +1,7 @@
 package com.glodblock.github.ae2netanalyser.client.gui.elements;
 
 import com.glodblock.github.glodium.client.render.ColorData;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 public class ColorArea extends DrawableArea {
@@ -21,9 +21,9 @@ public class ColorArea extends DrawableArea {
     }
 
     @Override
-    public void draw(GuiGraphics guiGraphics) {
-        int x = this.x + this.screen.getGuiLeft();
-        int y = this.y + this.screen.getGuiTop();
+    public void draw(GuiGraphicsExtractor guiGraphics) {
+        int x = this.x + this.screen.getLeftPos();
+        int y = this.y + this.screen.getTopPos();
         guiGraphics.fill(x, y, x + this.w, y + this.h, this.color.toARGB());
     }
 }

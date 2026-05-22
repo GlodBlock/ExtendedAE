@@ -2,7 +2,7 @@ package com.glodblock.github.ae2netanalyser.client.gui.elements;
 
 import com.glodblock.github.ae2netanalyser.client.gui.textures.Blitters;
 import com.glodblock.github.glodium.util.GlodUtil;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 public class DraggableArea extends DrawableArea {
@@ -47,16 +47,16 @@ public class DraggableArea extends DrawableArea {
     }
 
     @Override
-    public void draw(GuiGraphics guiGraphics) {
-        int x = this.x + this.screen.getGuiLeft();
-        int y = this.y + this.screen.getGuiTop();
+    public void draw(GuiGraphicsExtractor guiGraphics) {
+        int x = this.x + this.screen.getLeftPos();
+        int y = this.y + this.screen.getTopPos();
         Blitters.SLIDER.dest((int) (x + this.value * this.w), y).blit(guiGraphics);
     }
 
     public boolean isMouseOver(double x, double y) {
         int offsetX = (int) (this.value * this.w);
-        return x >= this.x + this.screen.getGuiLeft() + offsetX && x < this.x + this.screen.getGuiLeft() + this.w + offsetX &&
-                y >= this.y + this.screen.getGuiTop() && y < this.y + this.screen.getGuiTop() + this.h;
+        return x >= this.x + this.screen.getLeftPos() + offsetX && x < this.x + this.screen.getLeftPos() + this.w + offsetX &&
+                y >= this.y + this.screen.getTopPos() && y < this.y + this.screen.getTopPos() + this.h;
     }
 
 }

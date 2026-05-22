@@ -1,5 +1,7 @@
 package com.glodblock.github.ae2netanalyser.client.render;
 
+import com.glodblock.github.ae2netanalyser.client.render.buffer.CachedRender;
+import com.glodblock.github.ae2netanalyser.client.render.pipeline.NetworkPipelines;
 import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
@@ -8,90 +10,45 @@ import com.glodblock.github.ae2netanalyser.common.me.netdata.LinkFlag;
 import com.glodblock.github.ae2netanalyser.util.ClientUtil;
 import com.glodblock.github.ae2netanalyser.util.Util;
 import com.glodblock.github.glodium.client.render.ColorData;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.util.EnumSet;
 import java.util.Set;
 
 @SuppressWarnings("DuplicatedCode")
-@OnlyIn(Dist.CLIENT)
-public class NetworkRender extends RenderType {
+public class NetworkRender {
 
     public static final NetworkRender INSTANCE = new NetworkRender();
     private static final Set<AnalyserMode> renderNodeModes = EnumSet.of(AnalyserMode.NODES, AnalyserMode.FULL, AnalyserMode.NONUM);
     private static final Set<AnalyserMode> renderLinkModes = EnumSet.of(AnalyserMode.CHANNELS, AnalyserMode.FULL, AnalyserMode.NONUM, AnalyserMode.P2P);
     private static ItemStack currentAnalyser;
     private static final ColorData WHITE = new ColorData(1f, 1f, 1f);
-    private static VertexBuffer VBO = null;
+    private static final CachedRender CR = new CachedRender(NetworkPipelines.CUBE_PIPELINE, "ME Network Analyser");
 
-    public final TransparencyStateShard STO = new RenderStateShard.TransparencyStateShard(
-            "sto",
-            () -> {
-                RenderSystem.enableBlend();
-                RenderSystem.blendFunc(
-                        GlStateManager.SourceFactor.SRC_ALPHA,
-                        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-                );
-            },
-            () -> {
-                RenderSystem.disableBlend();
-                RenderSystem.defaultBlendFunc();
+    public static void hook(RenderLevelStageEvent.AfterTranslucentParticles event) {
+        var player = Minecraft.getInstance().player;
+        if (player != null && player.getMainHandItem().getItem() == AEASingletons.ANALYSER.get()) {
+            if (currentAnalyser != player.getMainHandItem()) {
+                currentAnalyser = player.getMainHandItem();
+                NetworkDataHandler.updateConfig(currentAnalyser.getOrDefault(AEASingletons.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig));
             }
-    );
-    public final RenderType CUBE_RENDER = create(
-            "aea_cube",
-            DefaultVertexFormat.POSITION_COLOR,
-            VertexFormat.Mode.QUADS,
-            256,
-            false, false,
-            CompositeState.builder()
-                    .setTransparencyState(STO)
-                    .setDepthTestState(NO_DEPTH_TEST)
-                    .setCullState(NO_CULL)
-                    .setShaderState(POSITION_COLOR_SHADER)
-                    .setLightmapState(NO_LIGHTMAP)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setTextureState(NO_TEXTURE)
-                    .createCompositeState(true)
-    );
-
-    public static void hook(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
-            var player = Minecraft.getInstance().player;
-            if (player != null && player.getMainHandItem().getItem() == AEASingletons.ANALYSER) {
-                if (currentAnalyser != player.getMainHandItem()) {
-                    currentAnalyser = player.getMainHandItem();
-                    NetworkDataHandler.updateConfig(currentAnalyser.getOrDefault(AEASingletons.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig));
-                }
-                var pos = currentAnalyser.get(AEASingletons.GLOBAL_POS);
-                if (pos != null && pos.dimension().equals(player.level().dimension())) {
-                    INSTANCE.tick(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource(), event.getProjectionMatrix(), event.getCamera());
-                }
+            var pos = currentAnalyser.get(AEASingletons.GLOBAL_POS);
+            if (pos != null && pos.dimension().equals(player.level().dimension())) {
+                INSTANCE.tick(event.getPoseStack(), Minecraft.getInstance().renderBuffers().bufferSource(), Minecraft.getInstance().gameRenderer.getMainCamera());
             }
         }
     }
@@ -179,10 +136,7 @@ public class NetworkRender extends RenderType {
     }
 
     public void createVBO(AnalyserMode mode, NetworkData data) {
-        if (VBO != null) {
-            VBO.close();
-        }
-        var buf = new BufferBuilder(new ByteBufferBuilder(CUBE_RENDER.bufferSize() * 8), CUBE_RENDER.mode(), CUBE_RENDER.format());
+        var buf = new BufferBuilder(new ByteBufferBuilder(NetworkPipelines.CUBE_RENDER.bufferSize() * 8), NetworkPipelines.CUBE_RENDER.mode(), NetworkPipelines.CUBE_RENDER.format());
         var stack = new PoseStack();
         if (renderNodeModes.contains(mode)) {
             renderNodes(data, stack, buf);
@@ -190,50 +144,28 @@ public class NetworkRender extends RenderType {
         if (renderLinkModes.contains(mode)) {
             renderLinks(data, stack, buf, mode == AnalyserMode.P2P);
         }
-        var rendered = buf.build();
-        if (rendered != null) {
-            VBO = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
-            VBO.bind();
-            VBO.upload(rendered);
-            VertexBuffer.unbind();
-        }
+        CR.upload(buf);
     }
 
-    public void tick(PoseStack stack, MultiBufferSource.BufferSource multiBuf, Matrix4f pro, Camera camera) {
-        if (NetworkDataHandler.pullData() == null || GameRenderer.getPositionColorShader() == null) {
+    public void tick(PoseStack stack, MultiBufferSource.BufferSource multiBuf, Camera camera) {
+        if (NetworkDataHandler.pullData() == null) {
             return;
         }
         if (camera.isInitialized()) {
-            var offset = camera.getPosition().reverse();
+            var offset = camera.position().reverse();
             var mode = NetworkDataHandler.getMode();
-            RenderSystem.disableDepthTest();
-            RenderSystem.enableBlend();
             if (NetworkDataHandler.update()) {
                 createVBO(mode, NetworkDataHandler.pullData());
             }
-            if (VBO != null) {
-                RenderSystem.setShader(GameRenderer::getPositionColorShader);
-                RenderSystem.blendFunc(
-                        GlStateManager.SourceFactor.SRC_ALPHA,
-                        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-                );
-                RenderSystem.disableCull();
+            if (CR.ready()) {
                 stack.pushPose();
                 var rotation = new Quaternionf(camera.rotation());
                 rotation.invert();
                 stack.mulPose(rotation);
                 stack.translate(offset.x, offset.y, offset.z);
-                VBO.bind();
-                VBO.drawWithShader(
-                        stack.last().pose(),
-                        pro,
-                        GameRenderer.getPositionColorShader()
-                );
-                VertexBuffer.unbind();
+                CR.render(stack.last().pose());
                 stack.popPose();
-                RenderSystem.enableCull();
             }
-            RenderSystem.disableBlend();
             if (mode == AnalyserMode.FULL && !Util.isInfChannel()) {
                 for (var link : NetworkDataHandler.pullData().links) {
                     if (link.channel() > 0) {
@@ -242,13 +174,7 @@ public class NetworkRender extends RenderType {
                 }
             }
             multiBuf.endBatch();
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
         }
     }
 
-    public NetworkRender() {
-        super("", DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES, 0, false, false, () -> {}, () -> {});
-    }
 }

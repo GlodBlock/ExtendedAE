@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "ae2netanalyser:item/tick_analyser"
+  }
+}

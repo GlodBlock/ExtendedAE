@@ -37,11 +37,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -72,23 +73,23 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
         defaultConfig = new AnalyserConfig(AnalyserMode.FULL, 0.4f, defaultColors);
     }
 
-    public ItemNetworkAnalyzer() {
-        super(new Properties().stacksTo(1));
+    public ItemNetworkAnalyzer(Item.Properties properties) {
+        super(properties);
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player p, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player p, @NotNull InteractionHand hand) {
         if (!level.isClientSide() && !p.isShiftKeyDown()) {
             MenuOpener.open(ContainerAnalyser.TYPE, p, MenuLocators.forHand(p, hand));
         }
-        return new InteractionResultHolder<>(InteractionResult.sidedSuccess(level.isClientSide()), p.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     public @NotNull InteractionResult useOn(@Nonnull UseOnContext context) {
-        if (!context.getLevel().isClientSide && context.getPlayer() instanceof ServerPlayer player) {
+        if (!context.getLevel().isClientSide() && context.getPlayer() instanceof ServerPlayer player) {
             var tool = player.getMainHandItem();
-            if (tool.getItem() == AEASingletons.ANALYSER) {
+            if (tool.getItem() == AEASingletons.ANALYSER.get()) {
                 tool.set(AEASingletons.GLOBAL_POS, GlobalPos.of(context.getLevel().dimension(), context.getClickedPos()));
                 return InteractionResult.SUCCESS;
             }
@@ -97,9 +98,9 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
-        if (!world.isClientSide && entity instanceof ServerPlayer player) {
-            if (stack == player.getMainHandItem() && player.getMainHandItem().getItem() == AEASingletons.ANALYSER) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull ServerLevel world, @NotNull Entity entity, @Nullable EquipmentSlot slot) {
+        if (!world.isClientSide() && entity instanceof ServerPlayer player) {
+            if (stack == player.getMainHandItem() && player.getMainHandItem().getItem() == AEASingletons.ANALYSER.get()) {
                 var pos = stack.get(AEASingletons.GLOBAL_POS);
                 if (pos != null && pos.dimension().equals(world.dimension()) && PlayerTracker.needUpdate(player, pos)) {
                     var host = GridHelper.getNodeHost(world, pos.pos());
@@ -202,7 +203,7 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
                         ).apply(builder, AnalyserConfig::new)
         );
 
-        public static final StreamCodec<FriendlyByteBuf, AnalyserConfig> STREAM_CODEC = StreamCodec.of(
+        public static final StreamCodec<@NotNull FriendlyByteBuf, @NotNull AnalyserConfig> STREAM_CODEC = StreamCodec.of(
                 (buf, config) -> config.writeToBytes(buf),
                 AnalyserConfig::readFromBytes
         );

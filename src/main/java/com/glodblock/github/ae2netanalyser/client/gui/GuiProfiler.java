@@ -13,9 +13,9 @@ import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserGeneric;
 import com.glodblock.github.ae2netanalyser.network.packets.CTickConfigSave;
 import com.glodblock.github.ae2netanalyser.network.packets.CTickProfilerRequest;
 import com.glodblock.github.glodium.client.render.ColorData;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -38,7 +38,7 @@ public class GuiProfiler extends AEBaseScreen<ContainerProfiler> {
         this.durationInput.setFilter(this::isNumber);
         this.durationInput.setResponder(this::setDuration);
         this.durationInput.setBordered(false);
-        this.durationInput.setTextColor(0xFFFFFF);
+        this.durationInput.setTextColor(0xFFFFFFFF);
         this.clickables.add(new ClickableArea(15, 98, 56, 19, this, () -> AEANetworkHandler.INSTANCE.sendToServer(new CTickProfilerRequest(this.duration))));
         this.clickables.add(new ClickableArea(136, 98, 56, 19, this, () -> AEANetworkHandler.INSTANCE.sendToServer(new CTickProfilerRequest(-1))));
         this.clickables.add(this.dots[0] = new ColorArea(83, 47, 4, 4, this, () -> this.cycleEnable(0)));
@@ -56,29 +56,27 @@ public class GuiProfiler extends AEBaseScreen<ContainerProfiler> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        RenderSystem.disableDepthTest();
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         for (var c : this.clickables) {
             if (c instanceof DrawableArea d) {
                 d.draw(guiGraphics);
             }
         }
-        RenderSystem.enableDepthTest();
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         for (var c : this.clickables) {
-            if (c.click(xCoord, yCoord)) {
+            if (c.click(event.x(), event.y())) {
                 return true;
             }
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         var textColor = this.style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
         drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.tick_analyser.set_duration"), 103, 11, textColor);
         drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.tick_analyser.begin"), 42, 107, 0xFFFFFFFF);
@@ -89,16 +87,16 @@ public class GuiProfiler extends AEBaseScreen<ContainerProfiler> {
         drawRightText(guiGraphics, Component.translatable("gui.ae2netanalyser.tick_analyser.range4"), 177, 78, textColor);
     }
 
-    private void drawCenteredText(GuiGraphics guiGraphics, Component text, int centerX, int centerY, int color) {
+    private void drawCenteredText(GuiGraphicsExtractor guiGraphics, Component text, int centerX, int centerY, int color) {
         int width = this.font.width(text);
         int height = this.font.lineHeight;
-        guiGraphics.drawString(this.font, text, centerX - width / 2, centerY - height / 2, color, false);
+        guiGraphics.text(this.font, text, centerX - width / 2, centerY - height / 2, color, false);
     }
 
-    private void drawRightText(GuiGraphics guiGraphics, Component text, int rightX, int rightY, int color) {
+    private void drawRightText(GuiGraphicsExtractor guiGraphics, Component text, int rightX, int rightY, int color) {
         int width = this.font.width(text);
         int height = this.font.lineHeight;
-        guiGraphics.drawString(this.font, text, rightX - width, rightY - height / 2, color, false);
+        guiGraphics.text(this.font, text, rightX - width, rightY - height / 2, color, false);
     }
 
     private void cycleEnable(int index) {

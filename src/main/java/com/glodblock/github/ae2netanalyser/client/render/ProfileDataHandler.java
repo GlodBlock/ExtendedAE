@@ -2,13 +2,10 @@ package com.glodblock.github.ae2netanalyser.client.render;
 
 import com.glodblock.github.ae2netanalyser.common.items.ItemTickAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.me.ticker.ProfileData;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.DoublePredicate;
 
-@OnlyIn(Dist.CLIENT)
 public class ProfileDataHandler {
 
     private static ProfileData DATA = null;

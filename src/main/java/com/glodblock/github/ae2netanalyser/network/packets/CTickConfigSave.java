@@ -5,7 +5,7 @@ import com.glodblock.github.ae2netanalyser.common.items.ItemTickAnalyzer;
 import com.glodblock.github.ae2netanalyser.container.ContainerProfiler;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +44,7 @@ public class CTickConfigSave implements IMessage {
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return AEAnalyser.id("tick_config_save");
     }
 

@@ -19,13 +19,13 @@ public class ContainerProfiler extends AEBaseMenu implements IActionHolder {
 
     private final ActionMap actions = ActionMap.create();
 
-    public static final MenuType<ContainerProfiler> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerProfiler> TYPE = MenuTypeBuilder
             .create(ContainerProfiler::new, DummyItemInventory.class)
             .buildUnregistered(AEAnalyser.id("tick_analyser"));
 
     public ContainerProfiler(int id, Inventory playerInventory, DummyItemInventory host) {
         super(TYPE, id, playerInventory, host);
-        this.actions.put("update", o -> {
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 AEANetworkHandler.INSTANCE.sendTo(new STickConfigInit(host.getItemStack().getOrDefault(AEASingletons.TICK_CONFIG, ItemTickAnalyzer.defaultConfig)), sp);
             }
@@ -34,7 +34,7 @@ public class ContainerProfiler extends AEBaseMenu implements IActionHolder {
 
     public void saveConfig(ItemTickAnalyzer.TickConfig config) {
         @SuppressWarnings("DataFlowIssue") var stack = this.itemMenuHost.getItemStack();
-        if (stack.getItem() == AEASingletons.TICK_ANALYSER) {
+        if (stack.getItem() == AEASingletons.TICK_ANALYSER.get()) {
             stack.set(AEASingletons.TICK_CONFIG, config);
         }
     }

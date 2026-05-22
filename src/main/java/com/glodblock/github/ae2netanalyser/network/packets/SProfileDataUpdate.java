@@ -5,10 +5,8 @@ import com.glodblock.github.ae2netanalyser.client.render.ProfileDataHandler;
 import com.glodblock.github.ae2netanalyser.common.me.ticker.ProfileData;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class SProfileDataUpdate implements IMessage {
@@ -34,7 +32,6 @@ public class SProfileDataUpdate implements IMessage {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         ProfileDataHandler.receiveData(this.data);
     }
@@ -45,7 +42,7 @@ public class SProfileDataUpdate implements IMessage {
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return AEAnalyser.id("profile_update");
     }
 }

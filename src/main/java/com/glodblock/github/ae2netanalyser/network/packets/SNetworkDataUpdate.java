@@ -5,10 +5,8 @@ import com.glodblock.github.ae2netanalyser.client.render.NetworkDataHandler;
 import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
 import com.glodblock.github.glodium.network.packet.IMessage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class SNetworkDataUpdate implements IMessage {
@@ -34,7 +32,6 @@ public class SNetworkDataUpdate implements IMessage {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         NetworkDataHandler.receiveData(this.data);
     }
@@ -45,7 +42,7 @@ public class SNetworkDataUpdate implements IMessage {
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return AEAnalyser.id("data_update");
     }
 }

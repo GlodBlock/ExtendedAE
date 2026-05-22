@@ -6,67 +6,48 @@ import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.container.ContainerProfiler;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 
 public class AEARegistryHandler extends RegistryHandler {
 
-    public static final AEARegistryHandler INSTANCE = new AEARegistryHandler();
+    public static AEARegistryHandler INSTANCE;
 
-    private final List<Pair<String, DataComponentType<?>>> components = new ArrayList<>();
+    private final DeferredRegister<@NotNull MenuType<?>> containers;
 
-    public AEARegistryHandler() {
-        super(AEAnalyser.MODID);
+    public AEARegistryHandler(IEventBus modBus) {
+        super(AEAnalyser.MODID, modBus);
+        this.containers = DeferredRegister.create(BuiltInRegistries.MENU, AEAnalyser.MODID);
+        this.containers.register(modBus);
+        this.loadContainers();
     }
 
-    @Override
-    public void runRegister() {
-        super.runRegister();
-        this.registerComponents();
-        this.onRegisterContainer();
-    }
-
-    private void registerComponents() {
-        this.components.forEach(e -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, AEAnalyser.id(e.getLeft()), e.getRight()));
-    }
-
-    @Override
-    public void comp(String name, DataComponentType<?> component) {
-        this.components.add(Pair.of(name, component));
-    }
-
-    private void onRegisterContainer() {
-        Registry.register(BuiltInRegistries.MENU, AEAnalyser.id("network_analyser"), ContainerAnalyser.TYPE);
-        Registry.register(BuiltInRegistries.MENU, AEAnalyser.id("tick_analyser"), ContainerProfiler.TYPE);
+    private void loadContainers() {
+        this.containers.register("network_analyser", () -> ContainerAnalyser.TYPE);
+        this.containers.register("tick_analyser", () -> ContainerProfiler.TYPE);
     }
 
     public void init() {
 
     }
 
-    public void registerTab(Registry<CreativeModeTab> registry) {
+    public void registerTab(Registry<@NotNull CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
-                .icon(() -> new ItemStack(AEASingletons.ANALYSER))
+                .icon(() -> new ItemStack(AEASingletons.ANALYSER.get()))
                 .title(Component.translatable("itemGroup.ae2netanalyser"))
                 .displayItems((p, o) -> {
-                    for (Pair<String, Item> entry : items) {
-                        if (entry.getRight() instanceof AEBaseItem aeItem) {
+                    for (var entry : this.items.getEntries()) {
+                        if (entry.get() instanceof AEBaseItem aeItem) {
                             aeItem.addToMainCreativeTab(p, o);
                         } else {
-                            o.accept(entry.getRight());
+                            o.accept(entry.get());
                         }
-                    }
-                    for (Pair<String, Block> entry : blocks) {
-                        o.accept(entry.getRight());
                     }
                 })
                 .build();

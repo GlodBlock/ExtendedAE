@@ -1,6 +1,6 @@
 package com.glodblock.github.ae2netanalyser.client.gui.elements;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 public abstract class DrawableArea extends ClickableArea {
@@ -9,6 +9,6 @@ public abstract class DrawableArea extends ClickableArea {
         super(x, y, width, height, parent, job);
     }
 
-    public abstract void draw(GuiGraphics guiGraphics);
+    public abstract void draw(GuiGraphicsExtractor guiGraphics);
 
 }

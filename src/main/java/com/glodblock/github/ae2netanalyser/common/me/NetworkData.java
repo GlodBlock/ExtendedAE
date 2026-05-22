@@ -16,6 +16,7 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -100,6 +101,11 @@ public class NetworkData {
             AEAnalyser.LOGGER.error("Fail to analyse the network. The packet is corrupted!", e);
             this.isCorrupt = true;
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("NetworkData{nodes=%s, links=%s}", Arrays.toString(nodes), Arrays.toString(links));
     }
 
     public record ANode(BlockPos pos, State<NodeFlag> state) {

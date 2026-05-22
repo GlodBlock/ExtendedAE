@@ -62,7 +62,7 @@ public class RequestBox {
             if (server.isSingleplayer()) {
                 return true;
             } else {
-                return server.getPlayerList().isOp(player.getGameProfile());
+                return server.getPlayerList().isOp(player.nameAndId());
             }
         }
         return false;
@@ -118,7 +118,7 @@ public class RequestBox {
     private static void sendData(Player player, ProfileData data) {
         if (player instanceof ServerPlayer server) {
             AEANetworkHandler.INSTANCE.sendTo(new SProfileDataUpdate(data), server);
-            player.displayClientMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.finish"), false);
+            player.sendSystemMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.finish"));
         }
     }
 

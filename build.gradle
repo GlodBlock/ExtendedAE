@@ -2,8 +2,7 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.13'
+    id 'net.neoforged.moddev' version '2.0.134'
 }
 
 version = mod_version
@@ -17,7 +16,7 @@ base {
     archivesName = mod_name
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     version = project.neoforge_version
@@ -39,11 +38,16 @@ neoForge {
 
         gametestWorld {
             client()
-            programArguments.addAll("--username", "TestDev", "--quickPlaySingleplayer", "GametestWorld")
+            programArguments.addAll("--username", "GlodiumDev", "--quickPlaySingleplayer", "GametestWorld")
         }
 
-        data {
-            data()
+        clientData {
+            clientData()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        serverData {
+            serverData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
@@ -61,6 +65,7 @@ sourceSets.main.resources {
 }
 
 repositories {
+    mavenCentral()
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
@@ -76,20 +81,20 @@ repositories {
         }
     }
     maven {
-        name = "Modmaven"
-        url = uri("https://modmaven.dev/")
+        url = 'https://maven.blamejared.com/'
         content {
-            includeGroup("appeng")
+            includeGroup 'mezz.jei'
         }
     }
 }
 
 dependencies {
-    implementation "io.github.glodblock:Glodium:1.21-2.2-neoforge"
-    implementation "appeng:appliedenergistics2:19.1.2-beta"
-    compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
+    implementation "io.github.glodblock:Glodium:26.1-1.0-neoforge-SNAPSHOT"
+    implementation "org.appliedenergistics:appliedenergistics2:26.1.8-alpha"
+    implementation "org.appliedenergistics:guideme:26.1.10-alpha"
+    compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
     // runtime test
-    runtimeOnly "dev.emi:emi-neoforge:1.1.10+1.21"
+    runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
 }
 
 tasks.withType(ProcessResources).configureEach {

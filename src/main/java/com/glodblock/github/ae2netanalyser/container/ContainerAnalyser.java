@@ -19,13 +19,13 @@ public class ContainerAnalyser extends AEBaseMenu implements IActionHolder {
 
     private final ActionMap actions = ActionMap.create();
 
-    public static final MenuType<ContainerAnalyser> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerAnalyser> TYPE = MenuTypeBuilder
             .create(ContainerAnalyser::new, DummyItemInventory.class)
             .buildUnregistered(AEAnalyser.id("network_analyser"));
 
     public ContainerAnalyser(int id, Inventory playerInventory, DummyItemInventory host) {
         super(TYPE, id, playerInventory, host);
-        this.actions.put("update", o -> {
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 AEANetworkHandler.INSTANCE.sendTo(new SAnalyserConfigInit(host.getItemStack().getOrDefault(AEASingletons.ANALYZER_CONFIG, ItemNetworkAnalyzer.defaultConfig)), sp);
             }
@@ -34,7 +34,7 @@ public class ContainerAnalyser extends AEBaseMenu implements IActionHolder {
 
     public void saveConfig(ItemNetworkAnalyzer.AnalyserConfig config) {
         @SuppressWarnings("DataFlowIssue") var stack = this.itemMenuHost.getItemStack();
-        if (stack.getItem() == AEASingletons.ANALYSER) {
+        if (stack.getItem() == AEASingletons.ANALYSER.get()) {
             stack.set(AEASingletons.ANALYZER_CONFIG, config);
         }
     }

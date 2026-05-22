@@ -20,11 +20,11 @@ import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserGeneric;
 import com.glodblock.github.ae2netanalyser.util.Util;
 import com.glodblock.github.glodium.client.render.ColorData;
 import com.glodblock.github.glodium.util.GlodUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -116,9 +116,8 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        RenderSystem.disableDepthTest();
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         for (var c : this.clickables) {
             if (c instanceof DrawableArea d) {
                 d.draw(guiGraphics);
@@ -128,43 +127,42 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
             this.colorShow.setColor(new ColorData(this.colorAlpha.getValue(), this.colorRed.getValue(), this.colorGreen.getValue(), this.colorBlue.getValue()));
             this.colorWindow.draw(guiGraphics);
         }
-        RenderSystem.enableDepthTest();
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (this.colorWindow.isOn) {
-            return this.colorWindow.click(xCoord, yCoord);
+            return this.colorWindow.click(event.x(), event.y());
         }
         for (var c : this.clickables) {
-            if (c.click(xCoord, yCoord)) {
+            if (c.click(event.x(), event.y())) {
                 return true;
             }
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (this.colorWindow.isOn) {
-            this.colorWindow.release(mouseX, mouseY);
+            this.colorWindow.release(event.x(), event.y());
             return true;
         }
-        this.clickables.forEach(c -> c.release(mouseX, mouseY));
-        return super.mouseReleased(mouseX, mouseY, button);
+        this.clickables.forEach(c -> c.release(event.x(), event.y()));
+        return super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (this.colorWindow.isOn) {
-            this.colorWindow.drag(mouseX, mouseY);
+            this.colorWindow.drag(event.x(), event.y());
             return true;
         }
-        return super.mouseDragged(mouseX, mouseY, mouseButton, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         var textColor = this.style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
         drawCenteredText(guiGraphics, this.mode.getTranslatedName(), 76, 27, 0xFFFFFFFF);
         drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.mode"), 24, 26, textColor);
@@ -174,7 +172,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
         for (int i = 0; i < COLOR_ORDER.size(); i ++) {
             var m = COLOR_ORDER.get(i);
             if (m.getClass() == NodeFlag.class) {
-                guiGraphics.drawString(
+                guiGraphics.text(
                         this.font,
                         Component.translatable("gui.ae2netanalyser.network_analyser.NODE." + m.name()),
                         134, 23 + 21 * i,
@@ -183,7 +181,7 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
                         );
             }
             if (m.getClass() == LinkFlag.class) {
-                guiGraphics.drawString(
+                guiGraphics.text(
                         this.font,
                         Component.translatable("gui.ae2netanalyser.network_analyser.LINK." + m.name()),
                         134, 23 + 21 * i,
@@ -192,28 +190,28 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
                 );
             }
         }
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.channel." + Util.getChannelMode().name()),
                 16, 72,
                 textColor,
                 false
         );
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.state.normal_nodes", this.countNode(NodeFlag.NORMAL)),
                 16, 86,
                 0xFF32A843,
                 false
         );
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.state.dense_nodes", this.countNode(NodeFlag.DENSE)),
                 16, 100,
                 0xFF19B3A3,
                 false
         );
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.ae2netanalyser.network_analyser.state.missing_nodes", this.countNode(NodeFlag.MISSING)),
                 16, 114,
@@ -230,14 +228,14 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
         return 0;
     }
 
-    private void drawCenteredText(GuiGraphics guiGraphics, String text, int centerX, int centerY, int color) {
+    private void drawCenteredText(GuiGraphicsExtractor guiGraphics, String text, int centerX, int centerY, int color) {
         this.drawCenteredText(guiGraphics, Component.literal(text), centerX, centerY, color);
     }
 
-    private void drawCenteredText(GuiGraphics guiGraphics, Component text, int centerX, int centerY, int color) {
+    private void drawCenteredText(GuiGraphicsExtractor guiGraphics, Component text, int centerX, int centerY, int color) {
         int width = this.font.width(text);
         int height = this.font.lineHeight;
-        guiGraphics.drawString(this.font, text, centerX - width / 2, centerY - height / 2, color, false);
+        guiGraphics.text(this.font, text, centerX - width / 2, centerY - height / 2, color, false);
     }
 
     private void changeMode(int offset) {
@@ -265,9 +263,9 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
             super(x, y, width, height, parent, () -> {});
         }
 
-        public void draw(GuiGraphics guiGraphics) {
+        public void draw(GuiGraphicsExtractor guiGraphics) {
             if (this.isOn) {
-                Blitters.COLOR_SUB_MENU.dest(this.x + this.screen.getGuiLeft(), this.y + this.screen.getGuiTop()).blit(guiGraphics);
+                Blitters.COLOR_SUB_MENU.dest(this.x + this.screen.getLeftPos(), this.y + this.screen.getTopPos()).blit(guiGraphics);
                 for (var c : this.elements) {
                     if (c instanceof DrawableArea d) {
                         d.draw(guiGraphics);

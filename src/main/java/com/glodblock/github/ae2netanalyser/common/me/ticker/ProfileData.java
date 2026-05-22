@@ -10,7 +10,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -43,7 +43,7 @@ public class ProfileData {
             int len = stream.readInt();
             data.ticks = new ATick[len];
             for (int i = 0; i < len; i ++) {
-                var dim = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(stream.readUTF()));
+                var dim = ResourceKey.create(Registries.DIMENSION, Identifier.parse(stream.readUTF()));
                 var pos = BlockPos.of(stream.readLong());
                 var rate = stream.readDouble();
                 data.ticks[i] = new ATick(new GlobalPos(dim, pos), rate, getColor(rate));
@@ -66,7 +66,7 @@ public class ProfileData {
         try (var stream = new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(new ByteBufOutputStream(buf))))) {
             stream.writeInt(this.ticks.length);
             for (var t : this.ticks) {
-                var dim = t.pos.dimension().location();
+                var dim = t.pos.dimension().identifier();
                 var pos = t.pos.pos();
                 var rate = t.rate();
                 stream.writeUTF(dim.toString());

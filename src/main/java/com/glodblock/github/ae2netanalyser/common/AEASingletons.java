@@ -2,30 +2,27 @@ package com.glodblock.github.ae2netanalyser.common;
 
 import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.items.ItemTickAnalyzer;
-import com.glodblock.github.glodium.util.GlodUtil;
+import com.glodblock.github.glodium.registry.defer.DeferredDataComponentType;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.DeferredItem;
+import org.jetbrains.annotations.NotNull;
 
 public class AEASingletons {
 
-    public static DataComponentType<ItemNetworkAnalyzer.AnalyserConfig> ANALYZER_CONFIG;
-    public static DataComponentType<ItemTickAnalyzer.TickConfig> TICK_CONFIG;
-    public static DataComponentType<GlobalPos> GLOBAL_POS;
+    public static DeferredDataComponentType<ItemNetworkAnalyzer.@NotNull AnalyserConfig> ANALYZER_CONFIG;
+    public static DeferredDataComponentType<ItemTickAnalyzer.@NotNull TickConfig> TICK_CONFIG;
+    public static DeferredDataComponentType<@NotNull GlobalPos> GLOBAL_POS;
 
-    public static ItemNetworkAnalyzer ANALYSER;
-    public static ItemTickAnalyzer TICK_ANALYSER;
+    public static DeferredItem<@NotNull ItemNetworkAnalyzer> ANALYSER;
+    public static DeferredItem<@NotNull ItemTickAnalyzer> TICK_ANALYSER;
 
     public static void init(AEARegistryHandler regHandler) {
-        ANALYZER_CONFIG = GlodUtil.getComponentType(ItemNetworkAnalyzer.AnalyserConfig.CODEC, ItemNetworkAnalyzer.AnalyserConfig.STREAM_CODEC);
-        TICK_CONFIG = GlodUtil.getComponentType(ItemTickAnalyzer.TickConfig.CODEC, ItemTickAnalyzer.TickConfig.STREAM_CODEC);
-        GLOBAL_POS = GlodUtil.getComponentType(GlobalPos.CODEC, GlobalPos.STREAM_CODEC);
-        ANALYSER = new ItemNetworkAnalyzer();
-        TICK_ANALYSER = new ItemTickAnalyzer();
-        regHandler.comp("analyzer_config", ANALYZER_CONFIG);
-        regHandler.comp("tick_config", TICK_CONFIG);
-        regHandler.comp("global_pos", GLOBAL_POS);
-        regHandler.item("network_analyser", ANALYSER);
-        regHandler.item("tick_analyser", TICK_ANALYSER);
+        ANALYZER_CONFIG = regHandler.comp("analyzer_config", ItemNetworkAnalyzer.AnalyserConfig.CODEC, ItemNetworkAnalyzer.AnalyserConfig.STREAM_CODEC);
+        TICK_CONFIG = regHandler.comp("tick_config", ItemTickAnalyzer.TickConfig.CODEC, ItemTickAnalyzer.TickConfig.STREAM_CODEC);
+        GLOBAL_POS = regHandler.comp("global_pos", GlobalPos.CODEC, GlobalPos.STREAM_CODEC);
+        ANALYSER = regHandler.item("network_analyser", ItemNetworkAnalyzer::new, new Item.Properties().stacksTo(1));
+        TICK_ANALYSER = regHandler.item("tick_analyser", ItemTickAnalyzer::new, new Item.Properties().stacksTo(1));
     }
 
 }

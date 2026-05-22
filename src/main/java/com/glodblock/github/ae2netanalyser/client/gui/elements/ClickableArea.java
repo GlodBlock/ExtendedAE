@@ -21,8 +21,8 @@ public class ClickableArea {
     }
 
     public boolean isMouseOver(double x, double y) {
-        return x >= this.x + this.screen.getGuiLeft() && x < this.x + this.screen.getGuiLeft() + this.w &&
-                y >= this.y + this.screen.getGuiTop() && y < this.y + this.screen.getGuiTop() + this.h;
+        return x >= this.x + this.screen.getLeftPos() && x < this.x + this.screen.getLeftPos() + this.w &&
+                y >= this.y + this.screen.getTopPos() && y < this.y + this.screen.getTopPos() + this.h;
     }
 
     public boolean click(double x, double y) {
@@ -35,11 +35,6 @@ public class ClickableArea {
 
     public void release(double x, double y) {
 
-    }
-
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
 }

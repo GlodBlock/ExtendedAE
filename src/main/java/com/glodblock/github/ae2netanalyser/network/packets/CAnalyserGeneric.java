@@ -2,7 +2,7 @@ package com.glodblock.github.ae2netanalyser.network.packets;
 
 import com.glodblock.github.ae2netanalyser.AEAnalyser;
 import com.glodblock.github.glodium.network.packet.CGenericPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class CAnalyserGeneric extends CGenericPacket {
@@ -17,7 +17,7 @@ public class CAnalyserGeneric extends CGenericPacket {
 
 
     @Override
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return AEAnalyser.id("client_generic");
     }
 

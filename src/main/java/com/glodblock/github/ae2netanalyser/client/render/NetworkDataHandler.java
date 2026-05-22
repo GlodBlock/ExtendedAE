@@ -4,11 +4,8 @@ import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.me.AnalyserMode;
 import com.glodblock.github.ae2netanalyser.common.me.NetworkData;
 import com.glodblock.github.glodium.client.render.ColorData;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class NetworkDataHandler {
 
     private static NetworkData DATA = null;

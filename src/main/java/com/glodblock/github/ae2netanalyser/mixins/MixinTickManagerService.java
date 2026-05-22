@@ -27,7 +27,8 @@ public abstract class MixinTickManagerService {
             at = @At(
                     value = "FIELD",
                     target = "Lappeng/me/service/TickManagerService;MONITORING_ENABLED:Z"
-            )
+            ),
+            remap = false
     )
     private boolean needProfiler() {
         return TickManagerService.MONITORING_ENABLED || RequestBox.hasJob();
@@ -38,7 +39,8 @@ public abstract class MixinTickManagerService {
             at = @At(
                     value = "INVOKE",
                     target = "Lappeng/me/service/helpers/TickTracker;getStatistics()Ljava/util/LongSummaryStatistics;"
-            )
+            ),
+            remap = false
     )
     private void captureTick(TickTracker tt, int diff, CallbackInfoReturnable<TickRateModulation> cir) {
         RequestBox.acceptTick(this.stopWatch.elapsed(TimeUnit.NANOSECONDS), diff, tt.getNode());
