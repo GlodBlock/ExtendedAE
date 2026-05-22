@@ -89,7 +89,7 @@ repositories {
 }
 
 dependencies {
-    implementation "io.github.glodblock:Glodium:26.1-1.0-neoforge-SNAPSHOT"
+    implementation "io.github.glodblock:Glodium:26.1-1.0-neoforge"
     implementation "org.appliedenergistics:appliedenergistics2:26.1.8-alpha"
     implementation "org.appliedenergistics:guideme:26.1.10-alpha"
     compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
