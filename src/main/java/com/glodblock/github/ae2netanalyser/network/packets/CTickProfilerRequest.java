@@ -35,15 +35,15 @@ public class CTickProfilerRequest implements IMessage {
     public void onMessage(Player player) {
         if (this.duration <= 0) {
             if (RequestBox.cancelProfile(player)) {
-                player.sendOverlayMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.cannel"));
+                player.sendSystemMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.cannel"));
             } else {
-                player.sendOverlayMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.no_cannel"));
+                player.sendSystemMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.no_cannel"));
             }
         } else {
             switch (RequestBox.requestProfile(player, this.duration)) {
-                case OK -> player.sendOverlayMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.begin", this.duration));
-                case WAIT -> player.sendOverlayMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.waiting", this.duration));
-                case DENY -> player.sendOverlayMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.user_control", this.duration));
+                case OK -> player.sendSystemMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.begin", this.duration));
+                case WAIT -> player.sendSystemMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.waiting", this.duration));
+                case DENY -> player.sendSystemMessage(Component.translatable("chat.ae2netanalyser.tick_analyser.user_control", this.duration));
             }
         }
     }
