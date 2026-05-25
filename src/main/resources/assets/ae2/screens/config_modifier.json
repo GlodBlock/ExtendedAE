@@ -1,0 +1,27 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json"],
+  "background": {
+    "texture": "guis/config_modifier.png",
+    "srcRect": [0, 0, 191, 60]
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.extendedae.config_modifier"
+      },
+      "position": {
+        "left": 5,
+        "top": 6
+      }
+    }
+  },
+  "widgets": {
+    "data_input": {
+      "left": 72,
+      "top": 26,
+      "width": 100,
+      "height": 12
+    }
+  }
+}

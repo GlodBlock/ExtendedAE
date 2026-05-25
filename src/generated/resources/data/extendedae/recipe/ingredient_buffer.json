@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "ae2:quartz_glass"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "K": {
+      "item": "ae2:cell_component_1k"
+    }
+  },
+  "pattern": [
+    "IKI",
+    "G G",
+    "IKI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:ingredient_buffer"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_fluid": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "minecraft:water"
+    }
+  },
+  "input_items": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "c:dusts/entro"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "c:ingots/gold"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "minecraft:lapis_lazuli"
+      }
+    }
+  ],
+  "output": {
+    "count": 4,
+    "id": "extendedae:entro_ingot"
+  }
+}

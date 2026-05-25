@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "E": {
+      "tag": "c:ingots/infused_entro"
+    },
+    "G": {
+      "item": "ae2:quartz_glass"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "pattern": [
+    "ECE",
+    "IGI",
+    "ECE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:machine_frame"
+  }
+}

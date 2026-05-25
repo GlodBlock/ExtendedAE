@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "appflux"
+    }
+  ],
+  "type": "extendedae:circuit_cutter",
+  "input": {
+    "ingredient": {
+      "item": "appflux:charged_redstone_block"
+    }
+  },
+  "output": {
+    "count": 9,
+    "id": "appflux:printed_energy_processor"
+  }
+}

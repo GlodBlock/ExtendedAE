@@ -1,0 +1,6 @@
+{
+	"parent": "extendedae:block/circuit_cutter_off",
+	"textures": {
+		"saw": "extendedae:block/circuit_cutter/saw_on"
+	}
+}

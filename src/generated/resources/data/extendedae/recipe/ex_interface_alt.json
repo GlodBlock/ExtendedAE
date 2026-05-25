@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "extendedae:ex_interface_part"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:ex_interface"
+  }
+}

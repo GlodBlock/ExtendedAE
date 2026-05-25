@@ -1,0 +1,32 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "ae2:io_port"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:speed_card"
+      }
+    },
+    {
+      "amount": 3,
+      "ingredient": {
+        "item": "ae2:logic_processor"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "extendedae:concurrent_processor"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:ex_io_port"
+  }
+}

@@ -1,0 +1,137 @@
+package com.glodblock.github.extendedae.common.blocks;
+
+import appeng.block.AEBaseBlock;
+import com.glodblock.github.extendedae.api.ISpecialDrop;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedBlock, ISpecialDrop {
+
+    private static final SoundType[] SOUND_MAP = new SoundType[] {SoundType.SMALL_AMETHYST_BUD, SoundType.MEDIUM_AMETHYST_BUD, SoundType.LARGE_AMETHYST_BUD, SoundType.AMETHYST_CLUSTER};
+
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final EnumProperty<@NotNull Direction> FACING = BlockStateProperties.FACING;
+    protected final VoxelShape northAabb;
+    protected final VoxelShape southAabb;
+    protected final VoxelShape eastAabb;
+    protected final VoxelShape westAabb;
+    protected final VoxelShape upAabb;
+    protected final VoxelShape downAabb;
+
+    public BlockEntroCluster(Properties properties, int tier, int height, int wide) {
+        super(defaultProps(properties, MapColor.COLOR_PURPLE, SOUND_MAP[tier])
+                .forceSolidOn()
+                .strength(2.5f)
+                .lightLevel(_ -> tier + 5)
+                .requiresCorrectToolForDrops()
+        );
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(FACING, Direction.UP));
+        this.upAabb = Block.box(wide, 0.0, wide, (16 - wide), height, (16 - wide));
+        this.downAabb = Block.box(wide, (16 - height), wide, (16 - wide), 16.0, (16 - wide));
+        this.northAabb = Block.box(wide, wide, (16 - height), (16 - wide), (16 - wide), 16.0);
+        this.southAabb = Block.box(wide, wide, 0.0, (16 - wide), (16 - wide), height);
+        this.eastAabb = Block.box(0.0, wide, wide, height, (16 - wide), (16 - wide));
+        this.westAabb = Block.box((16 - height), wide, wide, 16.0, (16 - wide), (16 - wide));
+    }
+
+    @Override
+    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            case NORTH -> this.northAabb;
+            case SOUTH -> this.southAabb;
+            case EAST -> this.eastAabb;
+            case WEST -> this.westAabb;
+            case DOWN -> this.downAabb;
+            case UP -> this.upAabb;
+        };
+    }
+
+    @Override
+    public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.Builder builder) {
+        if (builder.getOptionalParameter(LootContextParams.THIS_ENTITY) == null) {
+            return List.of();
+        }
+        return super.getDrops(state, builder);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockPos = pos.relative(direction.getOpposite());
+        return level.getBlockState(blockPos).isFaceSturdy(level, blockPos, direction);
+    }
+
+    @Override
+    public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull LevelReader level, @NotNull ScheduledTickAccess scheduledTickAccess, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull BlockPos neighborPos, @NotNull BlockState neighborState, @NotNull RandomSource random) {
+        if (state.getValue(WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
+        return direction == state.getValue(FACING).getOpposite() && !state.canSurvive(level, pos)
+                ? Blocks.AIR.defaultBlockState()
+                : super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return super.getStateForPlacement(context)
+                .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER)
+                .setValue(FACING, context.getClickedFace());
+    }
+
+    @Override
+    public @NotNull BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public @NotNull BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
+    @Override
+    public @NotNull FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<@NotNull Block, @NotNull BlockState> builder) {
+        builder.add(WATERLOGGED, FACING);
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(@NotNull BlockState state) {
+        return PushReaction.DESTROY;
+    }
+
+}

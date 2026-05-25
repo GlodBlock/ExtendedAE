@@ -1,0 +1,30 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "ae2:drive"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "tag": "ae2:glass_cable"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:capacity_card"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "extendedae:concurrent_processor"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:ex_drive"
+  }
+}

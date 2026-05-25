@@ -1,0 +1,6 @@
+{
+  "parent": "appliede:part/emc_import_bus",
+  "textures": {
+    "front": "extendedae:part/ex_emc_import_bus"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "extendedae:wireless_connect"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "tag": "ae2:smart_cable"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "extendedae:concurrent_processor"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:quantum_link"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:wireless_hub"
+  }
+}

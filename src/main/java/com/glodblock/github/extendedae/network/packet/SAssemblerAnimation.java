@@ -1,0 +1,68 @@
+package com.glodblock.github.extendedae.network.packet;
+
+import appeng.api.stacks.AEKey;
+import appeng.blockentity.crafting.MolecularAssemblerAnimationStatus;
+import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
+import com.glodblock.github.glodium.network.packet.IMessage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+
+public class SAssemblerAnimation implements IMessage {
+
+    private BlockPos pos;
+    private byte rate;
+    private AEKey what;
+
+    public SAssemblerAnimation() {
+        // NO-OP
+    }
+
+    public SAssemblerAnimation(BlockPos pos, byte rate, AEKey what) {
+        this.rate = rate;
+        this.pos = pos;
+        this.what = what;
+    }
+
+    @Override
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeByte(this.rate);
+        buf.writeVarLong(this.pos.asLong());
+        AEKey.writeKey(buf, this.what);
+    }
+
+    @Override
+    public void fromBytes(RegistryFriendlyByteBuf buf) {
+        this.rate = buf.readByte();
+        this.pos = BlockPos.of(buf.readVarLong());
+        this.what = AEKey.readKey(buf);
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void onMessage(Player player) {
+        try (var level = player.level()) {
+            BlockEntity te = level.getBlockEntity(this.pos);
+            if (te instanceof TileExMolecularAssembler ma) {
+                ma.setAnimationStatus(new MolecularAssemblerAnimationStatus(this.rate, this.what.wrapForDisplayOrFilter()));
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    @Override
+    public boolean isClient() {
+        return true;
+    }
+
+    @Override
+    public @NotNull Identifier id() {
+        return ExtendedAE.id("s_assembler_animation");
+    }
+}

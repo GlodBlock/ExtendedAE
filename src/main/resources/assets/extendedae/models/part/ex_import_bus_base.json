@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:part/import_bus_base",
+  "textures": {
+    "front": "extendedae:part/ex_import_bus"
+  }
+}

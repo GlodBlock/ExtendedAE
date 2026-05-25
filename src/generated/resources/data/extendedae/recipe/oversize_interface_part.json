@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "extendedae:oversize_interface"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae:oversize_interface_part"
+  }
+}

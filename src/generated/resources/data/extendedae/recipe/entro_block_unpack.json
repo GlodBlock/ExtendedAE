@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:storage_blocks/entro"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "extendedae:entro_crystal"
+  }
+}

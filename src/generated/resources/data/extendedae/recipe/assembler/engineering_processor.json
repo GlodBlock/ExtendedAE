@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "extendedae:config",
+      "config_id": "assembler_circuit"
+    }
+  ],
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:printed_engineering_processor"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:printed_silicon"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "tag": "c:dusts/redstone"
+      }
+    }
+  ],
+  "output": {
+    "count": 4,
+    "id": "ae2:engineering_processor"
+  }
+}
