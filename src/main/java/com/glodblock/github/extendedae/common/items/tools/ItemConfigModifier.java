@@ -23,7 +23,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,16 +38,16 @@ import java.util.Locale;
 
 public class ItemConfigModifier extends AEBaseItem implements IMenuItem {
 
-    public ItemConfigModifier() {
-        super(new Properties().stacksTo(1));
+    public ItemConfigModifier(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player p, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player p, @NotNull InteractionHand hand) {
         if (!level.isClientSide()) {
             MenuOpener.open(ContainerConfigModifier.TYPE, p, MenuLocators.forHand(p, hand));
         }
-        return new InteractionResultHolder<>(InteractionResult.sidedSuccess(level.isClientSide()), p.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 
     @Nonnull
@@ -73,7 +72,7 @@ public class ItemConfigModifier extends AEBaseItem implements IMenuItem {
                 }
             }
             if (player != null) {
-                player.displayClientMessage(Component.translatable("chat.config_modifier.success", this.findName(device)), true);
+                player.sendOverlayMessage(Component.translatable("chat.config_modifier.success", this.findName(device)));
             }
             return InteractionResult.SUCCESS;
         }
@@ -106,7 +105,7 @@ public class ItemConfigModifier extends AEBaseItem implements IMenuItem {
                                 Codec.LONG.fieldOf("data").forGetter(o -> o.data)
                         ).apply(builder, ConfigSettings::new)
         );
-        public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSettings> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<@NotNull RegistryFriendlyByteBuf, @NotNull ConfigSettings> STREAM_CODEC = StreamCodec.composite(
                 Mode.STREAM_CODEC,
                 o -> o.mode,
                 ByteBufCodecs.VAR_LONG,
@@ -118,7 +117,7 @@ public class ItemConfigModifier extends AEBaseItem implements IMenuItem {
             ADD, SUB, MUL, DIV, MAX, MIN, SET, RMV;
 
             static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
-            static final StreamCodec<RegistryFriendlyByteBuf, Mode> STREAM_CODEC = GlodCodecs.enumerate(Mode.class);
+            static final StreamCodec<@NotNull RegistryFriendlyByteBuf, @NotNull Mode> STREAM_CODEC = GlodCodecs.enumerate(Mode.class);
 
             @Override
             public @NotNull String getSerializedName() {

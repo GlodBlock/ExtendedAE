@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": "#c:dusts/fluix",
+    "G": "minecraft:slime_ball",
+    "I": "#c:ingots/iron",
+    "P": "minecraft:paper"
+  },
+  "pattern": [
+    "FG ",
+    "PIP",
+    " GF"
+  ],
+  "result": {
+    "id": "extendedae:me_packing_tape"
+  }
+}

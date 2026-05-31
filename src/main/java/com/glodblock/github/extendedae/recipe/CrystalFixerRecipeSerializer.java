@@ -8,7 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,8 +16,8 @@ public final class CrystalFixerRecipeSerializer {
 
     public final static MapCodec<CrystalFixerRecipe> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder.group(
-                    ItemStack.CODEC.fieldOf("input").forGetter(ir -> new ItemStack(ir.input)),
-                    ItemStack.CODEC.fieldOf("output").forGetter(ir -> new ItemStack(ir.output)),
+                    ItemStackTemplate.CODEC.fieldOf("input").forGetter(ir -> new ItemStackTemplate(ir.input.asItem())),
+                    ItemStackTemplate.CODEC.fieldOf("output").forGetter(ir -> new ItemStackTemplate(ir.output.asItem())),
                     IngredientStack.ITEM_CODEC.fieldOf("fuel").forGetter(ir -> ir.fuel),
                     Codec.intRange(1, CrystalFixerRecipe.FULL_CHANCE).fieldOf("chance").forGetter(ir -> ir.chance)
             ).apply(builder, CrystalFixerRecipe::new)

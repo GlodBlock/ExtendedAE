@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
@@ -17,37 +17,37 @@ public class CircuitCutterRecipeBuilder {
 
     private final HolderGetter<@NotNull Item> getter;
     protected IngredientStack.Item input;
-    public ItemStack output;
+    public ItemStackTemplate output;
 
-    public CircuitCutterRecipeBuilder(ItemStack output, HolderGetter<@NotNull Item> getter) {
-        this.output = output.copy();
+    public CircuitCutterRecipeBuilder(ItemStackTemplate output, HolderGetter<@NotNull Item> getter) {
+        this.output = output;
         this.getter = getter;
     }
 
-    public static CircuitCutterRecipeBuilder cut(ItemStack stack, HolderGetter<@NotNull Item> getter) {
+    public static CircuitCutterRecipeBuilder cut(ItemStackTemplate stack, HolderGetter<@NotNull Item> getter) {
         return new CircuitCutterRecipeBuilder(stack, getter);
     }
 
     public static CircuitCutterRecipeBuilder cut(ItemLike stack, HolderGetter<@NotNull Item> getter) {
-        return new CircuitCutterRecipeBuilder(new ItemStack(stack), getter);
+        return new CircuitCutterRecipeBuilder(new ItemStackTemplate(stack.asItem()), getter);
     }
 
     public static CircuitCutterRecipeBuilder cut(ItemLike stack, int count, HolderGetter<@NotNull Item> getter) {
-        return new CircuitCutterRecipeBuilder(new ItemStack(stack, count), getter);
+        return new CircuitCutterRecipeBuilder(new ItemStackTemplate(stack.asItem(), count), getter);
     }
 
-    public CircuitCutterRecipeBuilder input(ItemStack item) {
+    public CircuitCutterRecipeBuilder input(ItemStackTemplate item) {
         this.input = IngredientStack.of(item);
         return this;
     }
 
     public CircuitCutterRecipeBuilder input(ItemLike item) {
-        this.input = IngredientStack.of(new ItemStack(item));
+        this.input = IngredientStack.of(item, 1);
         return this;
     }
 
     public CircuitCutterRecipeBuilder input(ItemLike item, int count) {
-        this.input = IngredientStack.of(new ItemStack(item, count));
+        this.input = IngredientStack.of(item, count);
         return this;
     }
 

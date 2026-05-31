@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
 
-    public static final MenuType<ContainerRenamer> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerRenamer> TYPE = MenuTypeBuilder
             .create(ContainerRenamer::new, Object.class)
             .buildUnregistered(ExtendedAE.id("renamer"));
     private final ActionMap actions = ActionMap.create();
@@ -39,8 +39,8 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
         if (this.setter == null || this.getter == null) {
             this.setValidMenu(false);
         }
-        this.actions.put("set", o -> this.setName(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set", o -> this.setName(o.getString()));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.name), sp);
             }

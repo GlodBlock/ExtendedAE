@@ -21,12 +21,12 @@ import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
 import com.glodblock.github.extendedae.client.hotkey.EAEHotKey;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
 
         widgets.addOpenPriorityButton();
 
-        addToLeftToolbar(new ActionButton(ActionItems.CLOSE, btn -> menu.clear()));
-        addToLeftToolbar(new ActionButton(ActionItems.COG, btn -> menu.partition()));
+        addToLeftToolbar(new ActionButton(ActionItems.CLOSE, _ -> menu.clear()));
+        addToLeftToolbar(new ActionButton(ActionItems.COG, _ -> menu.partition()));
         this.rwMode = new ServerSettingToggleButton<>(Settings.ACCESS, AccessRestriction.READ_WRITE);
         this.storageFilter = new ServerSettingToggleButton<>(Settings.STORAGE_FILTER, StorageFilter.EXTRACTABLE_ONLY);
         this.filterOnExtract = new ServerSettingToggleButton<>(Settings.FILTER_ON_EXTRACT, YesNo.YES);
@@ -62,24 +62,24 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         super.drawFG(guiGraphics, offsetX, offsetY, mouseX, mouseY);
         var poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(10, 17, 0);
-        poseStack.scale(0.6f, 0.6f, 1);
+        poseStack.pushMatrix();
+        poseStack.translate(10, 17);
+        poseStack.scale(0.6f, 0.6f);
         var color = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR);
         if (menu.getConnectedTo() != null) {
-            guiGraphics.drawString(font, GuiText.AttachedTo.text(menu.getConnectedTo()), 0, 0, color.toARGB(), false);
+            guiGraphics.text(font, GuiText.AttachedTo.text(menu.getConnectedTo()), 0, 0, color.toARGB(), false);
         } else {
-            guiGraphics.drawString(font, GuiText.Unattached.text(), 0, 0, color.toARGB(), false);
+            guiGraphics.text(font, GuiText.Unattached.text(), 0, 0, color.toARGB(), false);
         }
-        guiGraphics.drawString(font, Component.translatable("gui.extendedae.precise_export_bus.set_amount"), 0, 13, color.toARGB(), false);
-        poseStack.popPose();
+        guiGraphics.text(font, Component.translatable("gui.extendedae.precise_export_bus.set_amount"), 0, 13, color.toARGB(), false);
+        poseStack.popMatrix();
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.isValidSlot(this.hoveredSlot)) {
             var itemTooltip = new ArrayList<>(getTooltipFromContainerItem(this.hoveredSlot.getItem()));
             var unwrapped = GenericStack.fromItemStack(this.hoveredSlot.getItem());
@@ -89,23 +89,22 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
             itemTooltip.add(Tooltips.getSetAmountTooltip());
             drawTooltip(guiGraphics, x, y, itemTooltip);
         } else {
-            super.renderTooltip(guiGraphics, x, y);
+            super.extractTooltip(guiGraphics, x, y);
         }
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        assert this.minecraft != null;
-        if (EAEHotKey.SET_AMOUNT.matchesMouse(btn)) {
-            var slot = findSlot(xCoord, yCoord);
+    public boolean mouseClicked(MouseButtonEvent event, boolean btn) {
+        if (EAEHotKey.SET_AMOUNT.matchesMouse(event)) {
+            var slot = this.getHoveredSlot(event.x(), event.y());
             if (isValidSlot(slot)) {
                 var currentStack = GenericStack.fromItemStack(slot.getItem());
                 if (currentStack != null) {
                     var screen = new SetAmount<>(
                             this,
-                            new ItemStack(EAESingletons.PRECISE_STORAGE_BUS),
+                            EAESingletons.PRECISE_STORAGE_BUS.toStack(),
                             currentStack,
-                            newStack -> PacketDistributor.sendToServer(new InventoryActionPacket(
+                            newStack -> ClientPacketDistributor.sendToServer(new InventoryActionPacket(
                                     InventoryAction.SET_FILTER, slot.index,
                                     GenericStack.wrapInItemStack(newStack))),
                             false);
@@ -114,7 +113,7 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
                 }
             }
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, btn);
     }
 
     private boolean isValidSlot(Slot slot) {

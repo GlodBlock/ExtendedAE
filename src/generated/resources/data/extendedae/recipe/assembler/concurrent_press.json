@@ -3,24 +3,17 @@
   "input_items": [
     {
       "amount": 3,
-      "ingredient": {
-        "item": "minecraft:ender_eye"
-      }
+      "ingredient": "minecraft:ender_eye"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "tag": "c:gems/entro"
-      }
+      "ingredient": "#c:gems/entro"
     },
     {
-      "ingredient": {
-        "item": "ae2:silicon_press"
-      }
+      "ingredient": "ae2:silicon_press"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:concurrent_processor_press"
   }
 }

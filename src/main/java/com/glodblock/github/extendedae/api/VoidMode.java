@@ -24,7 +24,7 @@ public enum VoidMode implements StringRepresentable {
     }
 
     public static final Codec<VoidMode> CODEC = StringRepresentable.fromEnum(VoidMode::values);
-    public static final StreamCodec<RegistryFriendlyByteBuf, VoidMode> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(VoidMode.class);
+    public static final StreamCodec<@NotNull RegistryFriendlyByteBuf, @NotNull VoidMode> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(VoidMode.class);
 
     public int getPower() {
         return switch (this) {

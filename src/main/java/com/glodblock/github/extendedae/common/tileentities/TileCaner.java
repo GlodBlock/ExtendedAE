@@ -30,10 +30,8 @@ import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.api.CanerMode;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.common.EAESingletons;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -42,7 +40,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -61,8 +62,8 @@ public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTic
     private CanerMode mode = CanerMode.FILL;
     private AEKey emptyKey = null;
 
-    public TileCaner(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCaner.class, TileCaner::new, EAESingletons.CANER), pos, blockState);
+    public TileCaner(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.stuff.useRegisteredCapacities();
         // don't let container item go into it
         this.stuff.setCapacity(AEKeyType.items(), 0);
@@ -186,35 +187,27 @@ public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTic
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
-        this.stuff.writeToChildTag(data, "stuff", registries);
-        data.put("target", this.target.saveOptional(registries));
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
+        this.stuff.writeToChildTag(data, "stuff");
+        data.store("target", ItemStack.OPTIONAL_CODEC, this.target);
         if (this.ejectSide != null) {
             data.putString("ejectSide", this.ejectSide.name());
         }
         data.putByte("mode", (byte) this.mode.ordinal());
         if (this.emptyKey != null) {
-            data.put("emptyKey", this.emptyKey.toTag(registries));
+            this.emptyKey.toTag(data.child("emptyKey"));
         }
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.stuff.readFromChildTag(data, "stuff", registries);
-        if (data.contains("target")) {
-            this.target = ItemStack.parseOptional(registries, data.getCompound("target"));
-        }
-        if (data.contains("ejectSide")) {
-            this.ejectSide = Direction.valueOf(data.getString("ejectSide"));
-        }
-        if (data.contains("mode")) {
-            this.mode = CanerMode.values()[data.getByte("mode")];
-        }
-        if (data.contains("emptyKey")) {
-            this.emptyKey = AEKey.fromTagGeneric(registries, data.getCompound("emptyKey"));
-        }
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.stuff.readFromChildTag(data, "stuff");
+        data.read("target", ItemStack.OPTIONAL_CODEC).ifPresent(stack -> this.target = stack);
+        data.getString("ejectSide").ifPresentOrElse(face -> this.ejectSide = Direction.valueOf(face), () -> this.ejectSide = null);
+        this.mode = CanerMode.values()[data.getByteOr("mode", (byte) 0)];
+        data.child("emptyKey").ifPresent(key -> this.emptyKey = AEKey.fromTagGeneric(key));
     }
 
     @Override
@@ -222,7 +215,7 @@ public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTic
         super.importSettings(mode, input, player);
         var tag = input.get(EAESingletons.EXTRA_SETTING);
         if (tag != null && tag.contains("caner_mode")) {
-            this.mode = CanerMode.values()[tag.getByte("caner_mode")];
+            this.mode = CanerMode.values()[tag.getByteOr("caner_mode", (byte) 0)];
         }
     }
 
@@ -352,7 +345,7 @@ public class TileCaner extends AENetworkedPoweredBlockEntity implements IGridTic
 
     @Override
     public PatternContainerGroup getCraftingMachineInfo() {
-        Component name = this.hasCustomName() ? this.getCustomName() : EAESingletons.CANER.asItem().getDescription();
+        Component name = this.hasCustomName() ? this.getCustomName() : EAESingletons.CANER.toStack().getItemName();
         return new PatternContainerGroup(AEItemKey.of(EAESingletons.CANER), name, List.of());
     }
 

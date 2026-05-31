@@ -1,18 +1,18 @@
 package com.glodblock.github.extendedae.client.gui;
 
 import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.Icon;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.AE2Button;
 import appeng.core.AppEng;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.extendedae.network.packet.CUpdatePage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
@@ -30,15 +30,15 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
 
     public GuiPatternModifier(ContainerPatternModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        ActionEPPButton changeMode = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 4)), Icon.SCHEDULING_DEFAULT);
-        this.clone = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clone")), Icon.ARROW_RIGHT);
+        ActionEPPButton changeMode = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % 4)), Icon.SCHEDULING_DEFAULT);
+        this.clone = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clone")), Icon.ARROW_RIGHT);
         changeMode.setMessage(Component.translatable("gui.extendedae.pattern_modifier.change"));
         this.clone.setMessage(Component.translatable("gui.extendedae.pattern_modifier.clone.desc"));
         addToLeftToolbar(changeMode);
         this.replace = new AE2Button(
                 0, 0, 46, 20,
                 Component.translatable("gui.extendedae.pattern_modifier.replace_button"),
-                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace"))
+                _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("replace"))
         );
         this.propertyBtns.add(getPropertyButton(0, true));
         this.propertyBtns.add(getPropertyButton(0, false));
@@ -55,7 +55,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
         var clearBtn = new AE2Button(
                 0, 0, 36, 20,
                 Component.translatable("gui.extendedae.pattern_modifier.clear"),
-                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clear"))
+                _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("clear"))
         );
         clearBtn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.clear.desc")));
         this.multiBtns.add(clearBtn);
@@ -64,13 +64,13 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
 
     private Button getPropertyButton(int mode, boolean value) {
         var display = value ? Component.translatable("gui.extendedae.pattern_modifier.enable") : Component.translatable("gui.extendedae.pattern_modifier.disable");
-        var btn = new AE2Button(display, b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", mode, value)));
+        var btn = new AE2Button(display, _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", mode, value)));
         btn.setSize(23, 20);
         return btn;
     }
 
     private Button getMultiplyButton(int index, boolean isDiv) {
-        var btn = new AE2Button(getDisplayNumber(EAEConfig.getPatternModifierNumber(index), isDiv), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(index), isDiv)));
+        var btn = new AE2Button(getDisplayNumber(EAEConfig.getPatternModifierNumber(index), isDiv), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("modify", EAEConfig.getPatternModifierNumber(index), isDiv)));
         btn.setSize(23, 20);
         if (!isDiv) {
             btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.pattern_modifier.multi.desc", EAEConfig.getPatternModifierNumber(index))));
@@ -85,8 +85,8 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
-        guiGraphics.drawString(
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.extendedae.pattern_modifier", this.getModeName()),
                 8,
@@ -95,7 +95,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                 false
         );
         if (this.menu.page == 2) {
-            guiGraphics.drawString(
+            guiGraphics.text(
                     this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.pattern_mode.substitute"),
                     8,
@@ -103,7 +103,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                     style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
                     false
             );
-            guiGraphics.drawString(
+            guiGraphics.text(
                     this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.pattern_mode.fluid_substitute"),
                     8,
@@ -112,7 +112,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                     false
             );
         } else if (this.menu.page == 3) {
-            guiGraphics.drawString(
+            guiGraphics.text(
                     this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.blank"),
                     52,
@@ -120,7 +120,7 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
                     style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB(),
                     false
             );
-            guiGraphics.drawString(
+            guiGraphics.text(
                     this.font,
                     Component.translatable("gui.extendedae.pattern_modifier.target"),
                     51,
@@ -184,13 +184,13 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     }
 
     @Override
-    public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
+    public void drawBG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         if (this.menu.page == 0 || this.menu.page == 2) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 212);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
         } else if (this.menu.page == 1) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 212);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
         } else if (this.menu.page == 3) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 212);
+            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
         }
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
     }

@@ -9,21 +9,15 @@
   "input_items": [
     {
       "amount": 4,
-      "ingredient": {
-        "item": "extendedae:concurrent_processor_print"
-      }
+      "ingredient": "extendedae:concurrent_processor_print"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "item": "ae2:printed_silicon"
-      }
+      "ingredient": "ae2:printed_silicon"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "tag": "c:dusts/redstone"
-      }
+      "ingredient": "#c:dusts/redstone"
     }
   ],
   "output": {

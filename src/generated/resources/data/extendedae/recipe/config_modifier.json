@@ -2,22 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:dyes/blue"
-    },
-    "E": {
-      "item": "ae2:engineering_processor"
-    },
-    "P": {
-      "item": "ae2:blank_pattern"
-    }
+    "B": "#c:dyes/blue",
+    "E": "ae2:engineering_processor",
+    "P": "ae2:blank_pattern"
   },
   "pattern": [
     "BPB",
     " E "
   ],
   "result": {
-    "count": 1,
     "id": "extendedae:config_modifier"
   }
 }

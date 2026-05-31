@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolder {
 
-    public static final MenuType<ContainerAssemblerMatrix> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerAssemblerMatrix> TYPE = MenuTypeBuilder
             .create(ContainerAssemblerMatrix::new, TileAssemblerMatrixBase.class)
             .buildUnregistered(ExtendedAE.id("assembler_matrix"));
 
@@ -46,16 +46,16 @@ public class ContainerAssemblerMatrix extends AEBaseMenu implements IActionHolde
 
     public ContainerAssemblerMatrix(int id, Inventory playerInventory, TileAssemblerMatrixBase host) {
         super(TYPE, id, playerInventory, host);
-        this.actions.put("cancel", o -> cancel());
-        this.actions.put("pattern_mode", o -> setPatternShowMode(o.get(0)));
+        this.actions.put("cancel", _ -> cancel());
+        this.actions.put("pattern_mode", o -> setPatternShowMode(o.get(YesNo.class)));
         this.host = host;
         this.setupPatternInventory();
         this.createPlayerInventorySlots(playerInventory);
     }
 
-    private void setPatternShowMode(String mode) {
+    private void setPatternShowMode(YesNo mode) {
         try {
-            this.host.getCluster().broadcastConfig(Settings.PATTERN_ACCESS_TERMINAL, YesNo.valueOf(mode), null);
+            this.host.getCluster().broadcastConfig(Settings.PATTERN_ACCESS_TERMINAL, mode, null);
         } catch (Throwable ignored) {
         }
     }

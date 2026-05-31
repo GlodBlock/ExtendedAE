@@ -4,7 +4,6 @@ import appeng.api.config.YesNo;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.Icon;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.AETextField;
@@ -14,6 +13,7 @@ import appeng.core.localization.GuiText;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
+import appeng.util.Icon;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.CycleEPPButton;
@@ -30,15 +30,16 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ReferenceMap;
 import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -77,15 +78,15 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
         super(menu, playerInventory, title, style);
         this.scrollbar = widgets.addScrollBar("scrollbar", Scrollbar.BIG);
         this.searchField = widgets.addTextField("search");
-        this.searchField.setResponder(str -> this.refreshList());
+        this.searchField.setResponder(_ -> this.refreshList());
         this.searchField.setPlaceholder(GuiText.SearchPlaceholder.text());
         this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.assembler_matrix.tooltip")));
-        this.actions.put("running_update", o -> this.runningThreads = o.get(0));
-        this.actions.put("pattern_mode_update", o -> this.patternShowBtn.setState(o.get(0)));
-        var cancel = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("cancel")), Icon.CLEAR);
+        this.actions.put("running_update", o -> this.runningThreads = o.getInt());
+        this.actions.put("pattern_mode_update", o -> this.patternShowBtn.setState(o.getInt()));
+        var cancel = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("cancel")), Icon.CLEAR);
         cancel.setMessage(Component.translatable("gui.extendedae.assembler_matrix.cancel"));
-        this.patternShowBtn.addActionPair(Icon.PATTERN_ACCESS_SHOW, GuiText.PatternAccessTerminalHint.text(), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", YesNo.NO.name())));
-        this.patternShowBtn.addActionPair(Icon.PATTERN_ACCESS_HIDE, GuiText.PatternAccessTerminalHint.text(), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", YesNo.YES.name())));
+        this.patternShowBtn.addActionPair(Icon.PATTERN_ACCESS_SHOW, GuiText.PatternAccessTerminalHint.text(), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", YesNo.NO)));
+        this.patternShowBtn.addActionPair(Icon.PATTERN_ACCESS_HIDE, GuiText.PatternAccessTerminalHint.text(), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("pattern_mode", YesNo.YES)));
         addToLeftToolbar(cancel);
         addToLeftToolbar(patternShowBtn);
     }
@@ -98,15 +99,15 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.searchField.isMouseOver(xCoord, yCoord)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean btn) {
+        if (this.searchField.isMouseOver(event.x(), event.y()) && event.button() == 1) {
             this.searchField.setValue("");
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, btn);
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         this.menu.slots.removeIf(slot -> slot instanceof AssemblerMatrixSlot);
         int textColor = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
         final int scrollLevel = scrollbar.getCurrentScroll();
@@ -126,7 +127,7 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
                 }
             }
         }
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.extendedae.assembler_matrix.threads", this.runningThreads),
                 80, 19,
@@ -135,7 +136,7 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
     }
 
     @Override
-    public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
+    public void drawBG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
         int size = this.rows.size();
         if (size < 4) {
@@ -153,7 +154,7 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
+    protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ContainerInput clickType) {
         if (slot instanceof AssemblerMatrixSlot machineSlot) {
             InventoryAction action = null;
             switch (clickType) {
@@ -173,15 +174,15 @@ public class GuiAssemblerMatrix extends AEBaseScreen<ContainerAssemblerMatrix> i
             }
             if (action != null) {
                 final InventoryActionPacket p = new InventoryActionPacket(action, machineSlot.getActuallySlot(), machineSlot.getID());
-                PacketDistributor.sendToServer(p);
+                ClientPacketDistributor.sendToServer(p);
             }
             return;
         }
         super.slotClicked(slot, slotIdx, mouseButton, clickType);
     }
 
-    private void blit(GuiGraphics guiGraphics, int offsetX, int offsetY, Rect2i srcRect) {
-        guiGraphics.blit(BG, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight());
+    private void blit(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, Rect2i srcRect) {
+        guiGraphics.blit(BG, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight(), 256, 256);
     }
 
     private void resetScrollbar() {

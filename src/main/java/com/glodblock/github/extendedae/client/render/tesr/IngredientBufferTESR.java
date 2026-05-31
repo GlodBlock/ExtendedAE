@@ -1,45 +1,51 @@
 package com.glodblock.github.extendedae.client.render.tesr;
 
 import appeng.api.stacks.AEItemKey;
+import com.glodblock.github.extendedae.client.render.tesr.state.SingleItemState;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.mojang.math.Transformation;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
-public class IngredientBufferTESR implements BlockEntityRenderer<TileIngredientBuffer> {
+public class IngredientBufferTESR extends ExBaseTESR<TileIngredientBuffer, SingleItemState> {
+
+    private static final Transformation T = new Transformation(new Vector3f(0.5f, 0.25f, 0.5f), null, null, null);
 
     public IngredientBufferTESR(BlockEntityRendererProvider.Context context) {
-
+        super(context);
     }
 
     @Override
-    public void render(@NotNull TileIngredientBuffer tile, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource buffers, int combinedLight, int combinedOverlay) {
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(
-                GlStateManager.SourceFactor.SRC_ALPHA,
-                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-        );
-        var itemRenderer = Minecraft.getInstance().getItemRenderer();
-        var inv = tile.getGenericInv();
+    public @NotNull SingleItemState createRenderState() {
+        return new SingleItemState();
+    }
+
+    @Override
+    public void extractRenderState(TileIngredientBuffer be, SingleItemState state, float partialTicks, @NotNull Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        super.extractRenderState(be, state, partialTicks, cameraPos, crumblingOverlay);
+        var inv = be.getGenericInv();
         for (int i = 0; i < inv.size(); i++) {
             var stack = inv.getStack(i);
             if (stack != null && stack.what() instanceof AEItemKey itemKey && !itemKey.toStack().isEmpty()) {
-                matrixStackIn.pushPose();
-                matrixStackIn.translate(0.5D, 0.25D, 0.5D);
+                state.item.clear();
+                state.transform = T;
                 var itemStack = itemKey.toStack();
-                itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, combinedLight, OverlayTexture.NO_OVERLAY, matrixStackIn, buffers, tile.getLevel(), 0);
-                matrixStackIn.popPose();
+                this.setupItemModel(state.item, itemStack, be);
                 break;
             }
         }
-        RenderSystem.disableBlend();
+    }
+
+    @Override
+    public void submit(@NotNull SingleItemState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodes, @NotNull CameraRenderState camera) {
+        this.renderSingleItem(state, poseStack, nodes);
     }
 
 }

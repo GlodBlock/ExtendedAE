@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdExportBus> implements IActionHolder {
 
-    public static final MenuType<ContainerThresholdExportBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerThresholdExportBus> TYPE = MenuTypeBuilder
             .create(ContainerThresholdExportBus::new, PartThresholdExportBus.class)
             .buildUnregistered(ExtendedAE.id("threshold_export_bus"));
 
@@ -30,8 +30,8 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
 
     public ContainerThresholdExportBus(int id, Inventory ip, PartThresholdExportBus host) {
         super(TYPE, id, ip, host);
-        this.actions.put("set", o -> this.setMode(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set", o -> this.setMode(o.get(ThresholdMode.class)));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode.ordinal()), sp);
             }
@@ -61,8 +61,8 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
         }
     }
 
-    public void setMode(int mode) {
-        this.getHost().setMode(ThresholdMode.values()[mode]);
+    public void setMode(ThresholdMode mode) {
+        this.getHost().setMode(mode);
         this.broadcastChanges();
     }
 

@@ -8,7 +8,6 @@ import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.storage.ILinkStatus;
 import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.Icon;
 import appeng.client.gui.me.patternaccess.PatternContainerRecord;
 import appeng.client.gui.me.patternaccess.PatternSlot;
 import appeng.client.gui.style.Blitter;
@@ -26,6 +25,7 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.core.network.serverbound.QuickMovePatternPacket;
 import appeng.crafting.pattern.EncodedPatternItem;
 import appeng.helpers.InventoryAction;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.api.PatternSearchMode;
 import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
@@ -41,9 +41,11 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,13 +53,12 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -178,7 +179,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.addToLeftToolbar(showPatternProviders);
 
         this.searchField = widgets.addTextField("search");
-        this.searchField.setResponder(str -> this.refreshList());
+        this.searchField.setResponder(_ -> this.refreshList());
         this.searchField.setPlaceholder(GuiText.SearchPlaceholder.text());
         this.searchField.setTooltipMessage(Collections.singletonList(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.04")));
 
@@ -208,7 +209,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
         super.init();
         this.setInitialFocus(this.searchField);
-        this.highlightBtns.forEach((k, v) -> {v.setVisibility(false); addRenderableWidget(v);});
+        this.highlightBtns.forEach((_, v) -> {v.setVisibility(false); addRenderableWidget(v);});
         this.searchMode.setPosition(this.leftPos + 73, this.topPos + 17);
         addRenderableWidget(this.searchMode);
 
@@ -217,9 +218,9 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         this.menu.slots.removeIf(slot -> slot instanceof PatternSlot);
-        this.highlightBtns.forEach((key, value) -> value.setVisibility(false));
+        this.highlightBtns.forEach((_, value) -> value.setVisibility(false));
 
         int textColor = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
 
@@ -275,7 +276,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                     var text = Language.getInstance().getVisualOrder(
                             this.font.substrByWidth(displayName, TEXT_MAX_WIDTH - 10));
 
-                    guiGraphics.drawString(font, text, GUI_PADDING_X + PATTERN_PROVIDER_NAME_MARGIN_X + 10,
+                    guiGraphics.text(font, text, GUI_PADDING_X + PATTERN_PROVIDER_NAME_MARGIN_X + 10,
                             GUI_PADDING_Y + GUI_HEADER_HEIGHT + i * ROW_HEIGHT, textColor, false);
                 }
             }
@@ -283,7 +284,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         renderLinkStatus(guiGraphics, getMenu().getLinkStatus());
     }
 
-    private void renderLinkStatus(GuiGraphics guiGraphics, ILinkStatus linkStatus) {
+    private void renderLinkStatus(GuiGraphicsExtractor guiGraphics, ILinkStatus linkStatus) {
         // Draw an overlay indicating the grid is disconnected
         if (!linkStatus.connected()) {
             var renderContext = new SimpleRenderContext(LytRect.empty(), guiGraphics);
@@ -305,19 +306,19 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y) {
         // Draw line tooltip
         if (hoveredSlot == null) {
             var hoveredLineIndex = getHoveredLineIndex(x, y);
             if (hoveredLineIndex != -1) {
                 var row = rows.get(hoveredLineIndex);
                 if (row instanceof GroupHeaderRow(PatternContainerGroup group) && !group.tooltip().isEmpty()) {
-                    guiGraphics.renderTooltip(font, group.tooltip(), Optional.empty(), x, y);
+                    guiGraphics.setTooltipForNextFrame(font, group.tooltip(), Optional.empty(), x, y);
                     return;
                 }
             }
         }
-        super.renderTooltip(guiGraphics, x, y);
+        super.extractTooltip(guiGraphics, x, y);
     }
 
     private int getHoveredLineIndex(int x, int y) {
@@ -338,16 +339,15 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.searchField.isMouseOver(xCoord, yCoord)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean btn) {
+        if (this.searchField.isMouseOver(event.x(), event.y()) && event.button() == 1) {
             this.searchField.setValue("");
         }
-
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, btn);
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ClickType clickType) {
+    protected void slotClicked(Slot slot, int slotIdx, int mouseButton, ContainerInput clickType) {
         if (slot instanceof PatternSlot machineSlot) {
             InventoryAction action = null;
             switch (clickType) {
@@ -372,12 +372,12 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
             if (action != null) {
                 final InventoryActionPacket p = new InventoryActionPacket(action, machineSlot.getSlotIndex(), machineSlot.getMachineInv().getServerId());
-                PacketDistributor.sendToServer(p);
+                ClientPacketDistributor.sendToServer(p);
             }
 
             return;
         }
-        if (clickType == ClickType.QUICK_MOVE && this.menu.isPlayerSideSlot(slot)) {
+        if (clickType == ContainerInput.QUICK_MOVE && this.menu.isPlayerSideSlot(slot)) {
             Set<Long> visiblePatternContainers = new LinkedHashSet<>();
             for (var row : this.rows) {
                 if (row instanceof SlotsRow slotsRow) {
@@ -386,14 +386,14 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             }
             int clickedSlot = slot.getContainerSlot();
             var packet = new QuickMovePatternPacket(this.menu.containerId, clickedSlot, List.copyOf(visiblePatternContainers));
-            PacketDistributor.sendToServer(packet);
+            ClientPacketDistributor.sendToServer(packet);
             return;
         }
         super.slotClicked(slot, slotIdx, mouseButton, clickType);
     }
 
     @Override
-    public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
+    public void drawBG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         // Draw the top of the dialog
         blit(guiGraphics, offsetX, offsetY, HEADER_BBOX);
 
@@ -446,11 +446,11 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
     }
 
     @Override
-    public boolean charTyped(char character, int key) {
-        if (character == ' ' && (this.searchField.getValue().isEmpty() && this.searchField.isFocused())) {
+    public boolean charTyped(@NotNull CharacterEvent event) {
+        if (event.codepoint() == ' ' && (this.searchField.getValue().isEmpty() && this.searchField.isFocused())) {
             return true;
         }
-        return super.charTyped(character, key);
+        return super.charTyped(event);
     }
 
     public void clear() {
@@ -516,7 +516,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
      */
     private void refreshList() {
         this.byGroup.clear();
-        this.highlightBtns.forEach((k, v) -> this.removeWidget(v));
+        this.highlightBtns.forEach((_, v) -> this.removeWidget(v));
         this.highlightBtns.clear();
         this.matchedStack.clear();
         this.matchedProvider.clear();
@@ -583,6 +583,9 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
             var containers = new ArrayList<>(this.byGroup.get(group));
             Collections.sort(containers);
             for (var container : containers) {
+                if (container == null) {
+                    continue;
+                }
                 var inventory = container.getInventory();
                 //noinspection SizeReplaceableByIsEmpty
                 if (inventory.size() > 0) {
@@ -594,7 +597,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                         btn.setSuccessJob(() -> {
                             if (this.getPlayer() != null && info.pos != null && info.world != null) {
                                 Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.world, "chat.ex_pattern_access_terminal.pos");
-                                this.getPlayer().displayClientMessage(message, false);
+                                this.getPlayer().sendOverlayMessage(message);
                             }
                         });
                         btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.03")));
@@ -719,6 +722,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         return cache;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     private void reinitialize() {
         this.children().removeAll(this.renderables);
         this.renderables.clear();
@@ -743,12 +747,10 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
 
     /**
      * A version of blit that lets us pass a source rectangle
-     *
-     * @see GuiGraphics#blit(Identifier, int, int, int, int, int, int)
      */
-    private void blit(GuiGraphics guiGraphics, int offsetX, int offsetY, Rect2i srcRect) {
+    private void blit(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, Rect2i srcRect) {
         var texture = AppEng.makeId("textures/guis/ex_pattern_access_terminal.png");
-        guiGraphics.blit(texture, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight());
+        guiGraphics.blit(texture, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight(), 256, 256);
     }
 
     sealed interface Row {
@@ -764,7 +766,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
      */
     record SlotsRow(PatternContainerRecord container, int offset, int slots) implements Row { }
 
-    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<Level> world) { }
+    public record PatternProviderInfo(@Nullable BlockPos pos, @Nullable Direction face, @Nullable ResourceKey<@NotNull Level> world) { }
 
     record PatternSearchData(List<List<String>> outputTokens, List<List<String>> inputTokens) { }
 
@@ -804,14 +806,14 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partial) {
+        public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partial) {
             if (this.visible) {
                 Blitter blitter = this.getBlitter();
                 var yOffset = isHovered() ? 1 : 0;
                 Blitter bgIcon = isHovered() ? EPPIcon.TERMINAL_BUTTON_HOVER
                         : isFocused() ? EPPIcon.TERMINAL_BUTTON_FOCUS : EPPIcon.TERMINAL_BUTTON;
-                bgIcon.dest(getX(), getY() + yOffset, 12, 12).zOffset(2).blit(guiGraphics);
-                blitter.dest(getX(), getY() + yOffset).zOffset(3).blit(guiGraphics);
+                bgIcon.dest(getX(), getY() + yOffset, 12, 12).blit(guiGraphics);
+                blitter.dest(getX(), getY() + yOffset).blit(guiGraphics);
             }
         }
 

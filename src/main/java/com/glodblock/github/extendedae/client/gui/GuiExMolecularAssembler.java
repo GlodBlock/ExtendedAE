@@ -1,17 +1,17 @@
 package com.glodblock.github.extendedae.client.gui;
 
-import appeng.client.gui.Icon;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ProgressBar;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
 import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.extendedae.network.packet.CUpdatePage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -25,8 +25,8 @@ public class GuiExMolecularAssembler extends UpgradeableScreen<ContainerExMolecu
         super(menu, playerInventory, title, style);
         this.pb = new ProgressBar(this.menu, style.getImage("progressBar"), ProgressBar.Direction.VERTICAL);
         this.widgets.add("progressBar", this.pb);
-        this.next = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExMolecularAssembler.MAX_THREAD)), Icon.ARROW_RIGHT);
-        this.pre = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExMolecularAssembler.MAX_THREAD)), Icon.ARROW_LEFT);
+        this.next = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page + 1) % TileExMolecularAssembler.MAX_THREAD)), Icon.ARROW_RIGHT);
+        this.pre = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(() -> (this.menu.page - 1) % TileExMolecularAssembler.MAX_THREAD)), Icon.ARROW_LEFT);
         this.next.setMessage(Component.translatable("gui.extendedae.ex_molecular_assembler.next"));
         this.pre.setMessage(Component.translatable("gui.extendedae.ex_molecular_assembler.pre"));
         addToLeftToolbar(this.next);
@@ -50,8 +50,8 @@ public class GuiExMolecularAssembler extends UpgradeableScreen<ContainerExMolecu
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
-        guiGraphics.drawString(
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.extendedae.ex_molecular_assembler.number", this.menu.page + 1),
                 8,

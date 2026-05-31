@@ -19,8 +19,8 @@ public class HostConfigModifier extends ItemMenuHost<ItemConfigModifier> {
         return this.settings;
     }
 
-    public void setMode(int mode) {
-        this.settings = new ItemConfigModifier.ConfigSettings(ItemConfigModifier.ConfigSettings.Mode.values()[mode], this.settings.data());
+    public void setMode(ItemConfigModifier.ConfigSettings.Mode mode) {
+        this.settings = new ItemConfigModifier.ConfigSettings(mode, this.settings.data());
         this.persist();
     }
 

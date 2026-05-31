@@ -9,10 +9,11 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerIngredientBuffer extends AEBaseMenu {
 
-    public static final MenuType<ContainerIngredientBuffer> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerIngredientBuffer> TYPE = MenuTypeBuilder
             .create(ContainerIngredientBuffer::new, TileIngredientBuffer.class)
             .buildUnregistered(ExtendedAE.id("ingredient_buffer"));
 

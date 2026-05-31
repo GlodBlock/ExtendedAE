@@ -19,12 +19,12 @@ import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
 import com.glodblock.github.extendedae.client.hotkey.EAEHotKey;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -71,18 +71,17 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        assert this.minecraft != null;
-        if (EAEHotKey.SET_AMOUNT.matchesMouse(btn)) {
-            var slot = findSlot(xCoord, yCoord);
+    public boolean mouseClicked(MouseButtonEvent event, boolean btn) {
+        if (EAEHotKey.SET_AMOUNT.matchesMouse(event)) {
+            var slot = this.getHoveredSlot(event.x(), event.y());
             if (isValidSlot(slot)) {
                 var currentStack = GenericStack.fromItemStack(slot.getItem());
                 if (currentStack != null) {
                     var screen = new SetAmount<>(
                             this,
-                            new ItemStack(EAESingletons.PRECISE_EXPORT_BUS),
+                            EAESingletons.PRECISE_EXPORT_BUS.toStack(),
                             currentStack,
-                            newStack -> PacketDistributor.sendToServer(new InventoryActionPacket(
+                            newStack -> ClientPacketDistributor.sendToServer(new InventoryActionPacket(
                                     InventoryAction.SET_FILTER, slot.index,
                                     GenericStack.wrapInItemStack(newStack))));
                     switchToScreen(screen);
@@ -90,11 +89,11 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
                 }
             }
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, btn);
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.isValidSlot(this.hoveredSlot)) {
             var itemTooltip = new ArrayList<>(getTooltipFromContainerItem(this.hoveredSlot.getItem()));
             var unwrapped = GenericStack.fromItemStack(this.hoveredSlot.getItem());
@@ -104,20 +103,20 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
             itemTooltip.add(Tooltips.getSetAmountTooltip());
             drawTooltip(guiGraphics, x, y, itemTooltip);
         } else {
-            super.renderTooltip(guiGraphics, x, y);
+            super.extractTooltip(guiGraphics, x, y);
         }
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         super.drawFG(guiGraphics, offsetX, offsetY, mouseX, mouseY);
         var poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(10, 17, 0);
-        poseStack.scale(0.6f, 0.6f, 1);
+        poseStack.pushMatrix();
+        poseStack.translate(10, 17);
+        poseStack.scale(0.6f, 0.6f);
         var color = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR);
-        guiGraphics.drawString(font, Component.translatable("gui.extendedae.precise_export_bus.set_amount"), 0, 0, color.toARGB(), false);
-        poseStack.popPose();
+        guiGraphics.text(font, Component.translatable("gui.extendedae.precise_export_bus.set_amount"), 0, 0, color.toARGB(), false);
+        poseStack.popMatrix();
     }
 
     private boolean isValidSlot(Slot slot) {

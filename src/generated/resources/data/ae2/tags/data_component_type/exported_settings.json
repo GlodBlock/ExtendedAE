@@ -3,6 +3,7 @@
     "extendedae:mod_express",
     "extendedae:tag_express",
     "extendedae:extra_setting",
-    "extendedae:threshold_data"
+    "extendedae:threshold_data",
+    "extendedae:direction_set"
   ]
 }

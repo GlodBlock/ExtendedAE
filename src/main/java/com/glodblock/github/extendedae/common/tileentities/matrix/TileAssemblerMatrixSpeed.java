@@ -1,15 +1,14 @@
 package com.glodblock.github.extendedae.common.tileentities.matrix;
 
-import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAssemblerMatrixSpeed extends TileAssemblerMatrixFunction {
 
-    public TileAssemblerMatrixSpeed(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileAssemblerMatrixSpeed.class, TileAssemblerMatrixSpeed::new, EAESingletons.ASSEMBLER_MATRIX_SPEED), pos, blockState);
+    public TileAssemblerMatrixSpeed(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override

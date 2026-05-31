@@ -11,6 +11,7 @@ import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
 
     public GuiConfigModifier(ContainerConfigModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.changeMode = new AE2Button(Component.empty(), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_mode", this.mode.getNext().ordinal())));
+        this.changeMode = new AE2Button(Component.empty(), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_mode", this.mode.getNext())));
         this.changeMode.setSize(50, 20);
         this.changeMode.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.config_modifier.change_mode")));
         this.dataInput = widgets.addTextField("data_input");
@@ -35,12 +36,12 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
         this.dataInput.setFilter(NUMBER.asMatchPredicate());
         this.dataInput.setPlaceholder(Component.translatable("gui.extendedae.config_modifier.data_input"));
         this.dataInput.setResponder(this::syncData);
-        this.actions.put("init", o -> setMode(o.get(0), o.get(1)));
+        this.actions.put("init", o -> setMode(o.get(ItemConfigModifier.ConfigSettings.Mode.class), o.getLong()));
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
-    private void setMode(int mode, long data) {
-        this.mode = ItemConfigModifier.ConfigSettings.Mode.values()[mode];
+    private void setMode(ItemConfigModifier.ConfigSettings.Mode mode, long data) {
+        this.mode = mode;
         this.dataInput.setValue(String.valueOf(data));
     }
 
@@ -68,11 +69,11 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.dataInput.isMouseOver(xCoord, yCoord)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (this.dataInput.isMouseOver(event.x(), event.y()) && event.button() == 1) {
             this.dataInput.setValue("");
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.glodblock.github.extendedae.client.button;
 
-import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
-import net.minecraft.client.gui.GuiGraphics;
+import appeng.util.Icon;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,17 +42,13 @@ public class OutputButton extends EPPButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partial) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partial) {
         if (this.visible) {
             var yOffset = isHovered() ? 1 : 0;
-            Icon bgIcon = isHovered() ? Icon.TOOLBAR_BUTTON_BACKGROUND_HOVER
-                    : isOn() ? Icon.TOOLBAR_BUTTON_BACKGROUND_FOCUS : Icon.TOOLBAR_BUTTON_BACKGROUND;
-            bgIcon.getBlitter()
-                    .dest(getX() - 1, getY() + yOffset, 18, 20)
-                    .zOffset(2)
-                    .blit(guiGraphics);
+            Icon bgIcon = isHovered() ? Icon.TOOLBAR_BUTTON_BACKGROUND_HOVER : isOn() ? Icon.TOOLBAR_BUTTON_BACKGROUND_FOCUS : Icon.TOOLBAR_BUTTON_BACKGROUND;
+            Blitter.icon(bgIcon).dest(getX() - 1, getY() + yOffset, 18, 20).blit(guiGraphics);
             if (!this.display.isEmpty()) {
-                guiGraphics.renderItem(this.display, getX(), getY() + 1 + yOffset, 0, 3);
+                guiGraphics.item(this.display, getX(), getY() + 1 + yOffset);
             }
         }
     }

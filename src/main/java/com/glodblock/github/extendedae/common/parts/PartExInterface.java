@@ -8,11 +8,9 @@ import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
-import appeng.core.AppEngBase;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.InterfaceLogicHost;
 import appeng.menu.ISubMenu;
@@ -20,33 +18,20 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
-import appeng.parts.PartModel;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 
 public class PartExInterface extends AEBasePart implements InterfaceLogicHost, IPage {
-
-    public static List<Identifier> MODELS = Arrays.asList(
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_interface"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_on"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_off"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_has_channel")
-    );
-
-    public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
-    public static final PartModel MODELS_ON = new PartModel(MODELS.get(0), MODELS.get(1));
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(0), MODELS.get(3));
 
     private static final IGridNodeListener<PartExInterface> NODE_LISTENER = new AEBasePart.NodeListener<>() {
         @Override
@@ -99,15 +84,15 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.logic.readFromNBT(data, registries);
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.logic.readFromNBT(data);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
-        this.logic.writeToNBT(data, registries);
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
+        this.logic.writeToNBT(data);
     }
 
     @Override
@@ -134,10 +119,14 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
 
     @Override
     public boolean onUseWithoutItem(Player p, Vec3 pos) {
-        if (!p.getCommandSenderWorld().isClientSide()) {
-            openMenu(p, MenuLocators.forPart(this));
+        try (var world = p.level()) {
+            if (!world.isClientSide()) {
+                openMenu(p, MenuLocators.forPart(this));
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
         }
-        return true;
     }
 
     @Override
@@ -153,17 +142,6 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
     @Override
     public void setPriority(int newValue) {
         this.logic.setPriority(newValue);
-    }
-
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
-        }
     }
 
     @Nullable
@@ -184,12 +162,12 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
     public static void registerCapability(RegisterPartCapabilitiesEvent event) {
         event.register(
                 AECapabilities.GENERIC_INTERNAL_INV,
-                (part, context) -> part.logic.getStorage(),
+                (part, _) -> part.logic.getStorage(),
                 PartExInterface.class
         );
         event.register(
                 AECapabilities.ME_STORAGE,
-                (part, context) -> part.logic.getInventory(),
+                (part, _) -> part.logic.getInventory(),
                 PartExInterface.class
         );
     }

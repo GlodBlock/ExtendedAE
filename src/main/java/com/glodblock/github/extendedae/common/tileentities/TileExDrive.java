@@ -1,5 +1,7 @@
 package com.glodblock.github.extendedae.common.tileentities;
 
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.RelativeSide;
 import appeng.api.storage.cells.CellState;
 import appeng.blockentity.storage.DriveBlockEntity;
 import appeng.core.AELog;
@@ -9,25 +11,34 @@ import appeng.menu.locator.MenuLocators;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class TileExDrive extends DriveBlockEntity {
 
-    public TileExDrive(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExDrive.class, TileExDrive::new, EAESingletons.EX_DRIVE), pos, blockState);
+    public TileExDrive(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override
     public int getCellCount() {
         return 20;
+    }
+
+    @Override
+    public Set<Direction> getGridConnectableSides(BlockOrientation orientation) {
+        return EnumSet.complementOf(EnumSet.of(orientation.getSide(RelativeSide.FRONT), orientation.getSide(RelativeSide.BACK)));
     }
 
     @Override

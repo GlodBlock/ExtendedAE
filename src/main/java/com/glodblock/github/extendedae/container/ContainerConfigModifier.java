@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class ContainerConfigModifier extends AEBaseMenu implements IActionHolder {
 
     private final ActionMap actions = ActionMap.create();
-    public static final MenuType<ContainerConfigModifier> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerConfigModifier> TYPE = MenuTypeBuilder
             .create(ContainerConfigModifier::new, HostConfigModifier.class)
             .buildUnregistered(ExtendedAE.id("config_modifier"));
 
@@ -31,11 +31,11 @@ public class ContainerConfigModifier extends AEBaseMenu implements IActionHolder
     public ContainerConfigModifier(int id, Inventory playerInventory, HostConfigModifier host) {
         super(TYPE, id, playerInventory, host);
         this.host = host;
-        this.actions.put("set_mode", o -> host.setMode(o.get(0)));
-        this.actions.put("set_data", o -> host.setData(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set_mode", o -> host.setMode(o.get(ItemConfigModifier.ConfigSettings.Mode.class)));
+        this.actions.put("set_data", o -> host.setData(o.getLong()));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode.ordinal(), this.data), sp);
+                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode, this.data), sp);
             }
         });
     }

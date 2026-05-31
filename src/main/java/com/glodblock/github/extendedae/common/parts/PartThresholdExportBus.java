@@ -4,43 +4,26 @@ import appeng.api.config.Settings;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.stacks.GenericStack;
-import appeng.core.AppEngBase;
-import appeng.parts.PartModel;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.ThresholdMode;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class PartThresholdExportBus extends ExportBusPart {
 
-    public static List<Identifier> MODELS = Arrays.asList(
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/threshold_export_bus_base"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_on"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_off"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_has_channel")
-    );
-
-    public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
-    public static final PartModel MODELS_ON = new PartModel(MODELS.get(0), MODELS.get(1));
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(0), MODELS.get(3));
     private ConfigInventory config;
     private ThresholdMode mode = ThresholdMode.GREATER;
 
@@ -57,16 +40,16 @@ public class PartThresholdExportBus extends ExportBusPart {
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
-        super.readFromNBT(extra, registries);
-        this.config.readFromChildTag(extra, "config2", registries);
-        this.mode = ThresholdMode.values()[extra.getByte("cmod")];
+    public void readFromNBT(ValueInput extra) {
+        super.readFromNBT(extra);
+        this.config.readFromChildTag(extra, "config2");
+        this.mode = ThresholdMode.values()[extra.getByteOr("cmod", (byte) 0)];
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
-        super.writeToNBT(extra, registries);
-        this.config.writeToChildTag(extra, "config2", registries);
+    public void writeToNBT(ValueOutput extra) {
+        super.writeToNBT(extra);
+        this.config.writeToChildTag(extra, "config2");
         extra.putByte("cmod", (byte) this.mode.ordinal());
     }
 
@@ -87,7 +70,7 @@ public class PartThresholdExportBus extends ExportBusPart {
         super.importSettings(mode, input, player);
         var tag = input.get(EAESingletons.EXTRA_SETTING);
         if (tag != null && tag.contains("threshold_mode")) {
-            this.mode = ThresholdMode.values()[tag.getByte("threshold_mode")];
+            this.mode = ThresholdMode.values()[tag.getByteOr("threshold_mode", (byte) 0)];
         }
     }
 
@@ -151,17 +134,6 @@ public class PartThresholdExportBus extends ExportBusPart {
             return service.getCachedInventory().get(stack.what()) - stack.amount();
         } else {
             return Long.MAX_VALUE;
-        }
-    }
-
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
         }
     }
 

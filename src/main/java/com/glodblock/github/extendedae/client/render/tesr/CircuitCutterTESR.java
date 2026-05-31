@@ -1,31 +1,49 @@
 package com.glodblock.github.extendedae.client.render.tesr;
 
-import appeng.client.render.renderable.ItemRenderable;
-import appeng.client.render.tesr.ModularTESR;
+import appeng.api.orientation.BlockOrientation;
+import com.glodblock.github.extendedae.client.render.tesr.state.SingleItemState;
 import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
-import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
 import com.glodblock.github.glodium.util.GlodUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Transformation;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class CircuitCutterTESR extends ModularTESR<TileCircuitCutter> {
+public class CircuitCutterTESR extends ExBaseTESR<TileCircuitCutter, SingleItemState> {
 
     private static final float HALF_PI = (float) (Math.PI / 2f);
 
     public CircuitCutterTESR(BlockEntityRendererProvider.Context context) {
-        super(new ItemRenderable<>(CircuitCutterTESR::renderItem));
+        super(context);
     }
 
-    private static Pair<ItemStack, Transformation> renderItem(TileCircuitCutter te) {
-        float progress = (float) GlodUtil.clamp((double) te.getProgress() / TileCircuitCutter.MAX_PROGRESS, 0, 1);
-        var stack = progress > 0.5 ? te.getRenderOutput() : te.getInput().getStackInSlot(0);
-        return new ImmutablePair<>(stack, getTransformer(progress * 0.5f + 0.25f, stack.getItem() instanceof BlockItem));
+    @Override
+    public void extractRenderState(TileCircuitCutter be, SingleItemState state, float partialTicks, @NotNull Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        super.extractRenderState(be, state, partialTicks, cameraPos, crumblingOverlay);
+        state.blockOrientation = BlockOrientation.get(be);
+        float progress = (float) GlodUtil.clamp((double) be.getProgress() / TileCircuitCutter.MAX_PROGRESS, 0, 1);
+        var stack = progress > 0.5 ? be.getRenderOutput() : be.getInput().getStackInSlot(0);
+        state.transform = getTransformer(progress * 0.5f + 0.25f, stack.getItem() instanceof BlockItem);
+        state.item.clear();
+        this.setupItemModel(state.item, stack, be);
+    }
+
+    @Override
+    public SingleItemState createRenderState() {
+        return new SingleItemState();
+    }
+
+    @Override
+    public void submit(SingleItemState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodes, @NotNull CameraRenderState camera) {
+        this.renderSingleItem(state, poseStack, nodes);
     }
 
     private static Transformation getTransformer(float offset, boolean isBlock) {

@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:dusts/ender_pearl"
-    },
-    {
-      "tag": "c:dusts/ender_pearl"
-    },
-    {
-      "tag": "c:dusts/ender_pearl"
-    },
-    {
-      "tag": "c:dusts/redstone"
-    },
-    {
-      "tag": "c:dusts/redstone"
-    },
-    {
-      "tag": "c:dusts/glowstone"
-    },
-    {
-      "tag": "c:dusts/glowstone"
-    },
-    {
-      "item": "ae2:sky_dust"
-    }
+    "#c:sands",
+    "#c:dusts/ender_pearl",
+    "#c:dusts/ender_pearl",
+    "#c:dusts/ender_pearl",
+    "#c:dusts/redstone",
+    "#c:dusts/redstone",
+    "#c:dusts/glowstone",
+    "#c:dusts/glowstone",
+    "ae2:sky_dust"
   ],
   "result": {
     "count": 2,

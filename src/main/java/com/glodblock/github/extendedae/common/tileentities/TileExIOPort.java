@@ -9,8 +9,8 @@ import appeng.core.definitions.AEItems;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileExIOPort extends IOPortBlockEntity {
@@ -18,8 +18,8 @@ public class TileExIOPort extends IOPortBlockEntity {
     private final AppEngInternalInventory inputCells;
     private static final int NUMBER_OF_CELL_SLOTS = 6;
 
-    public TileExIOPort(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExIOPort.class, TileExIOPort::new, EAESingletons.EX_IO_PORT), pos, blockState);
+    public TileExIOPort(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.inputCells = Ae2Reflect.getInputCellInv(this);
         Ae2Reflect.setIOPortUpgrade(this, UpgradeInventories.forMachine(EAESingletons.EX_IO_PORT, 5, this::saveChanges));
     }

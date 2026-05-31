@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecularAssembler> implements IProgressProvider, IPage, IActionHolder {
 
-    public static final MenuType<ContainerExMolecularAssembler> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExMolecularAssembler> TYPE = MenuTypeBuilder
             .create(ContainerExMolecularAssembler::new, TileExMolecularAssembler.class)
             .buildUnregistered(ExtendedAE.id("ex_molecular_assembler"));
 
@@ -53,7 +53,7 @@ public class ContainerExMolecularAssembler extends UpgradeableMenu<TileExMolecul
 
     public ContainerExMolecularAssembler(int id, Inventory ip, TileExMolecularAssembler host) {
         super(TYPE, id, ip, host);
-        this.actions.put("show", o -> showPage());
+        this.actions.put("show", _ -> showPage());
         this.molecularAssembler = host;
         for (int i = 0; i < TileExMolecularAssembler.MAX_THREAD; i++) {
             var inv = this.molecularAssembler.getCraftInventory(i);

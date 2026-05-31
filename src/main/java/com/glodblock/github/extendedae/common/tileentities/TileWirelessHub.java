@@ -17,19 +17,18 @@ import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.util.CacheHolder;
-import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
-import com.glodblock.github.glodium.util.GlodUtil;
-import gripe._90.megacells.definition.MEGAItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,8 +49,8 @@ public class TileWirelessHub extends AENetworkedBlockEntity implements ServerTic
     @NotNull
     private AEColor color = AEColor.TRANSPARENT;
 
-    public TileWirelessHub(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileWirelessHub.class, TileWirelessHub::new, EAESingletons.WIRELESS_HUB), pos, blockState);
+    public TileWirelessHub(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
         this.getMainNode().setFlags(GridFlags.DENSE_CAPACITY);
         this.powerUse = 1.0;
@@ -121,11 +120,7 @@ public class TileWirelessHub extends AENetworkedBlockEntity implements ServerTic
     }
 
     private double calculateDisc() {
-        double disc = 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
-        if (GlodUtil.checkMod(ModConstants.MEGA)) {
-            disc += 0.2 * this.upgrades.getInstalledUpgrades(MEGAItems.GREATER_ENERGY_CARD);
-        }
-        return disc;
+        return 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
     }
 
     public double getPowerUse() {
@@ -171,32 +166,30 @@ public class TileWirelessHub extends AENetworkedBlockEntity implements ServerTic
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.upgrades.readFromNBT(data, "upgrades", registries);
-        if (data.contains("freq")) {
-            this.freq[0] = data.getLong("freq");
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.upgrades.readFromNBT(data, "upgrades");
+        data.getLong("freq").ifPresent(f -> {
+            this.freq[0] = f;
             WirelessConnect.G.markUsed(this.freq[0]);
-        } else {
-            for (int i = 0; i < MAX_PORT; i ++) {
-                this.freq[i] = data.getLong("freq" + i);
-                WirelessConnect.G.markUsed(this.freq[i]);
-            }
+        });
+        for (int i = 0; i < MAX_PORT; i ++) {
+            final int slot = i;
+            data.getLong("freq" + i).ifPresent(f -> {
+                this.freq[slot] = f;
+                WirelessConnect.G.markUsed(f);
+            });
         }
-        if (data.contains("color")) {
-            this.color = AEColor.valueOf(data.getString("color"));
-        } else {
-            this.color = AEColor.TRANSPARENT;
-        }
+        data.getString("color").ifPresentOrElse(s -> this.color = AEColor.valueOf(s), () -> this.color = AEColor.TRANSPARENT);
         this.getMainNode().setGridColor(this.color);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
-        this.upgrades.writeToNBT(data, "upgrades", registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
+        this.upgrades.writeToNBT(data, "upgrades");
         for (int i = 0; i < MAX_PORT; i ++) {
-            data.putLong("freq" + i, freq[i]);
+            data.putLong("freq" + i, this.freq[i]);
             WirelessConnect.G.markUsed(this.freq[i]);
         }
         data.putString("color", this.color.name());
@@ -282,7 +275,13 @@ public class TileWirelessHub extends AENetworkedBlockEntity implements ServerTic
     @Override
     public void collectJadeInfo(CompoundTag tag) {
         tag.putString("color", this.color.name());
-        this.getMainNode().ifPresent((gird, node) -> tag.putInt("used", node.getUsedChannels()));
+        this.getMainNode().ifPresent((_, node) -> tag.putInt("used", node.getUsedChannels()));
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos blockPos, BlockState blockState) {
+        super.preRemoveSideEffects(blockPos, blockState);
+        this.breakOnRemove();
     }
 
     private record Stock(TileWirelessHub hub, int port) implements WirelessNode {

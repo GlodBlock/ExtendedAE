@@ -12,18 +12,17 @@ import appeng.api.stacks.KeyCounter;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
-import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.List;
 
@@ -34,8 +33,8 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     private final InternalInventory internalInv;
     private short states = 0b000000;
 
-    public TileAssemblerMatrixCrafter(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new, EAESingletons.ASSEMBLER_MATRIX_CRAFTER), pos, blockState);
+    public TileAssemblerMatrixCrafter(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().addService(IGridTickable.class, this);
         var invs = new InternalInventory[MAX_THREAD];
         for (int x = 0; x < MAX_THREAD; x ++) {
@@ -97,33 +96,30 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
         for (int x = 0; x < MAX_THREAD; x ++) {
-            var tag = this.threads[x].writeNBT(registries);
-            data.put("#ct" + x, tag);
+            this.threads[x].writeNBT(data.child("#ct" + x));
         }
-        final CompoundTag opt = new CompoundTag();
+        final ValueOutput opt = data.child("inv");
         for (int x = 0; x < this.internalInv.size(); x++) {
             var is = this.internalInv.getStackInSlot(x);
-            opt.put("item" + x, is.saveOptional(registries));
+            opt.store("item" + x, ItemStack.OPTIONAL_CODEC, is);
         }
-        data.put("inv", opt);
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
         for (int x = 0; x < MAX_THREAD; x ++) {
-            if (data.contains("#ct" + x)) {
-                this.threads[x].readNBT(data.getCompound("#ct" + x), registries);
+            data.child("#ct" + x).ifPresent(this.threads[x]::readNBT);
+        }
+        data.child("inv").ifPresent(input -> {
+            for (int x = 0; x < this.internalInv.size(); x++) {
+                var item = input.read("item" + x, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+                this.internalInv.setItemDirect(x, item);
             }
-        }
-        var opt = data.getCompound("inv");
-        for (int x = 0; x < this.internalInv.size(); x++) {
-            var item = opt.getCompound("item" + x);
-            this.internalInv.setItemDirect(x, ItemStack.parseOptional(registries, item));
-        }
+        });
     }
 
     @Override

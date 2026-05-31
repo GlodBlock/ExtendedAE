@@ -4,10 +4,14 @@ import appeng.api.implementations.menuobjects.ItemMenuHost;
 import appeng.menu.locator.ItemMenuHostLocator;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.items.tools.ItemPatternModifier;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 
 public class HostPatternModifier extends ItemMenuHost<ItemPatternModifier> implements InternalInventoryHost {
 
@@ -22,27 +26,33 @@ public class HostPatternModifier extends ItemMenuHost<ItemPatternModifier> imple
         var itemTag = this.getItemStack().get(EAESingletons.STACK_TAG);
         var registry = player.registryAccess();
         if (itemTag != null) {
-            this.patternInv.readFromNBT(itemTag, "patternInv", registry);
-            this.targetInv.readFromNBT(itemTag, "targetInv", registry);
-            this.blankPatternInv.readFromNBT(itemTag, "blankPatternInv", registry);
-            this.clonePatternInv.readFromNBT(itemTag, "clonePatternInv", registry);
-            this.replaceInv.readFromNBT(itemTag, "replaceInv", registry);
+            try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(ExtendedAE.LOGGER)) {
+                var input = TagValueInput.create(reporter, registry, itemTag);
+                this.patternInv.readFromNBT(input, "patternInv");
+                this.targetInv.readFromNBT(input, "targetInv");
+                this.blankPatternInv.readFromNBT(input, "blankPatternInv");
+                this.clonePatternInv.readFromNBT(input, "clonePatternInv");
+                this.replaceInv.readFromNBT(input, "replaceInv");
+            }
         }
     }
 
     @Override
     public void saveChangedInventory(AppEngInternalInventory inv) {
-        var itemTag = new CompoundTag();
         var registry = this.getPlayer().registryAccess();
-        this.patternInv.writeToNBT(itemTag, "patternInv", registry);
-        this.targetInv.writeToNBT(itemTag, "targetInv", registry);
-        this.blankPatternInv.writeToNBT(itemTag, "blankPatternInv", registry);
-        this.clonePatternInv.writeToNBT(itemTag, "clonePatternInv", registry);
-        this.replaceInv.writeToNBT(itemTag, "replaceInv", registry);
-        if (!itemTag.isEmpty()) {
-            this.getItemStack().set(EAESingletons.STACK_TAG, itemTag);
-        } else {
-            this.getItemStack().remove(EAESingletons.STACK_TAG);
+        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(ExtendedAE.LOGGER)) {
+            var output = TagValueOutput.createWithContext(reporter, registry);
+            this.patternInv.writeToNBT(output, "patternInv");
+            this.targetInv.writeToNBT(output, "targetInv");
+            this.blankPatternInv.writeToNBT(output, "blankPatternInv");
+            this.clonePatternInv.writeToNBT(output, "clonePatternInv");
+            this.replaceInv.writeToNBT(output, "replaceInv");
+            var itemTag = output.buildResult();
+            if (!itemTag.isEmpty()) {
+                this.getItemStack().set(EAESingletons.STACK_TAG, itemTag);
+            } else {
+                this.getItemStack().remove(EAESingletons.STACK_TAG);
+            }
         }
     }
 
@@ -50,25 +60,29 @@ public class HostPatternModifier extends ItemMenuHost<ItemPatternModifier> imple
     public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         var itemTag = this.getItemStack().getOrDefault(EAESingletons.STACK_TAG, new CompoundTag());
         var registry = this.getPlayer().registryAccess();
-        if (this.patternInv == inv) {
-            this.patternInv.writeToNBT(itemTag, "patternInv", registry);
-        }
-        if (this.targetInv == inv) {
-            this.targetInv.writeToNBT(itemTag, "targetInv", registry);
-        }
-        if (this.blankPatternInv == inv) {
-            this.blankPatternInv.writeToNBT(itemTag, "blankPatternInv", registry);
-        }
-        if (this.clonePatternInv == inv) {
-            this.clonePatternInv.writeToNBT(itemTag, "clonePatternInv", registry);
-        }
-        if (this.replaceInv == inv) {
-            this.replaceInv.writeToNBT(itemTag, "replaceInv", registry);
-        }
-        if (!itemTag.isEmpty()) {
-            this.getItemStack().set(EAESingletons.STACK_TAG, itemTag);
-        } else {
-            this.getItemStack().remove(EAESingletons.STACK_TAG);
+        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(ExtendedAE.LOGGER)) {
+            var output = TagValueOutput.createWithContext(reporter, registry);
+            if (this.patternInv == inv) {
+                this.patternInv.writeToNBT(output, "patternInv");
+            }
+            if (this.targetInv == inv) {
+                this.targetInv.writeToNBT(output, "targetInv");
+            }
+            if (this.blankPatternInv == inv) {
+                this.blankPatternInv.writeToNBT(output, "blankPatternInv");
+            }
+            if (this.clonePatternInv == inv) {
+                this.clonePatternInv.writeToNBT(output, "clonePatternInv");
+            }
+            if (this.replaceInv == inv) {
+                this.replaceInv.writeToNBT(output, "replaceInv");
+            }
+            itemTag.merge(output.buildResult());
+            if (!itemTag.isEmpty()) {
+                this.getItemStack().set(EAESingletons.STACK_TAG, itemTag);
+            } else {
+                this.getItemStack().remove(EAESingletons.STACK_TAG);
+            }
         }
     }
 

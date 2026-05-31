@@ -2,7 +2,6 @@ package com.glodblock.github.extendedae.config;
 
 import appeng.api.stacks.AEKey;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -12,6 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -41,14 +41,14 @@ public class EAEConfig {
             .defineInRange("device.wireless_connector_power_multiplier", 1.0, 0.0, 100.0);
 
     @SuppressWarnings("deprecation")
-    private static final ModConfigSpec.ConfigValue<List<? extends Integer>> PATTERN_MODIFIER_NUMBER = BUILDER
+    private static final ModConfigSpec.ConfigValue<@NotNull List<? extends Integer>> PATTERN_MODIFIER_NUMBER = BUILDER
             .comment("Pattern modifier multipliers")
             .defineList("item.pattern_modifier_multipliers", defaultModifierMultiplier, EAEConfig::checkPositive);
 
     @SuppressWarnings("deprecation")
-    private static final ModConfigSpec.ConfigValue<List<? extends String>> PACKABLE_AE_DEVICE = BUILDER
+    private static final ModConfigSpec.ConfigValue<@NotNull List<? extends String>> PACKABLE_AE_DEVICE = BUILDER
             .comment("The AE device/part that can be packed by ME Packing Tape")
-            .defineList("item.me_packing_tape_whitelist", Lists.newArrayList(
+            .defineList("item.me_packing_tape_whitelist", List.of(
                     "extendedae:ex_interface_part",
                     "extendedae:ex_pattern_provider_part",
                     "extendedae:ex_interface",
@@ -61,7 +61,7 @@ public class EAEConfig {
                     "ae2:interface",
                     "ae2:pattern_provider",
                     "ae2:drive"
-            ), o -> true);
+            ), _ -> true);
 
     private static final ModConfigSpec.BooleanValue INSCRIBER_RENDER = BUILDER
             .comment("Disable Extended Inscriber's item render, it only works in client side")
@@ -72,12 +72,12 @@ public class EAEConfig {
             .defineInRange("device.oversize_interface_multiplier", 16, 2, 4096);
 
     @SuppressWarnings("deprecation")
-    private static final ModConfigSpec.ConfigValue<List<? extends String>> CUSTOM_OVERSIZE_MULTIPLIER = BUILDER
+    private static final ModConfigSpec.ConfigValue<@NotNull List<? extends String>> CUSTOM_OVERSIZE_MULTIPLIER = BUILDER
             .comment("Set multiplier for specific AEKeyType in oversize interface")
-            .defineList("device.custom_oversize_interface_multiplier", Lists.newArrayList(
+            .defineList("device.custom_oversize_interface_multiplier", List.of(
                     "appbot:mana 2",
                     "appflux:flux 4"
-            ), o -> true);
+            ), _ -> true);
 
     private static final ModConfigSpec.BooleanValue CRYSTAL_INSCRIBER = BUILDER
             .comment("Allow Crystal Assembler to do processor inscriber recipes")

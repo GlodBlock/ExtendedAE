@@ -1,19 +1,12 @@
 {
   "type": "ae2:inscriber",
   "ingredients": {
-    "bottom": {
-      "item": "ae2:printed_silicon"
-    },
-    "middle": {
-      "tag": "c:dusts/redstone"
-    },
-    "top": {
-      "item": "extendedae:concurrent_processor_print"
-    }
+    "bottom": "ae2:printed_silicon",
+    "middle": "#c:dusts/redstone",
+    "top": "extendedae:concurrent_processor_print"
   },
   "mode": "press",
   "result": {
-    "count": 1,
     "id": "extendedae:concurrent_processor"
   }
 }

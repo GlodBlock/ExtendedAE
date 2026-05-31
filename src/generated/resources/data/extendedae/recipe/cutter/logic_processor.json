@@ -1,9 +1,7 @@
 {
   "type": "extendedae:circuit_cutter",
   "input": {
-    "ingredient": {
-      "tag": "c:storage_blocks/gold"
-    }
+    "ingredient": "#c:storage_blocks/gold"
   },
   "output": {
     "count": 9,

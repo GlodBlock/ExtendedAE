@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerCaner extends AEBaseMenu implements IActionHolder {
 
-    public static final MenuType<ContainerCaner> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerCaner> TYPE = MenuTypeBuilder
             .create(ContainerCaner::new, TileCaner.class)
             .buildUnregistered(ExtendedAE.id("caner"));
 
@@ -32,8 +32,8 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
     public ContainerCaner(int id, Inventory playerInventory, TileCaner host) {
         super(TYPE, id, playerInventory, host);
         this.host = host;
-        this.actions.put("set", o -> this.setMode(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set", o -> this.setMode(o.get(CanerMode.class)));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode.ordinal()), sp);
             }
@@ -51,8 +51,9 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
         }
     }
 
-    public void setMode(int mode) {
-        this.host.setMode(CanerMode.values()[mode]);
+    public void setMode(CanerMode mode) {
+        this.host.setMode(mode);
+        this.host.saveChanges();
         this.broadcastChanges();
     }
 

@@ -8,6 +8,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.util.IConfigManager;
 import appeng.core.definitions.AEItems;
 import appeng.menu.SlotSemantics;
+import appeng.menu.guisync.ClientActionKey;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
@@ -18,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -25,10 +27,10 @@ import java.util.Iterator;
 
 public class ContainerPreciseStorageBus extends UpgradeableMenu<PartPreciseStorageBus> {
 
-    private static final String ACTION_CLEAR = "clear";
-    private static final String ACTION_PARTITION = "partition";
+    private static final ClientActionKey<Void> ACTION_CLEAR = new ClientActionKey<>("clear");
+    private static final ClientActionKey<Void> ACTION_PARTITION = new ClientActionKey<>("partition");
 
-    public static final MenuType<ContainerPreciseStorageBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerPreciseStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerPreciseStorageBus::new, PartPreciseStorageBus.class)
             .buildUnregistered(ExtendedAE.id("precise_storage_bus"));
 

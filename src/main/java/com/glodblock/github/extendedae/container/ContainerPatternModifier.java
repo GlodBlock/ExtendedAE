@@ -26,6 +26,8 @@ import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +36,7 @@ import java.util.Arrays;
 public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActionHolder {
 
     private final ActionMap actions = ActionMap.create();
-    public static final MenuType<ContainerPatternModifier> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerPatternModifier> TYPE = MenuTypeBuilder
             .create(ContainerPatternModifier::new, HostPatternModifier.class)
             .buildUnregistered(ExtendedAE.id("pattern_modifier"));
 
@@ -64,12 +66,12 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         for (int x = 0; x < blankPatternInv.size(); x ++) {
             this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.BLANK_PATTERN, blankPatternInv, x), ExSemantics.EX_3);
         }
-        this.actions.put("clear", o -> clear());
-        this.actions.put("clone", o -> clonePattern());
-        this.actions.put("modify", o -> modify(o.get(0), o.get(1)));
-        this.actions.put("replace", o -> replace());
-        this.actions.put("pattern_mode", o -> changePatternMode(o.get(0), o.get(1)));
-        this.actions.put("show", o -> showPage());
+        this.actions.put("clear", _ -> clear());
+        this.actions.put("clone", _ -> clonePattern());
+        this.actions.put("modify", o -> modify(o.getInt(), o.getBoolean()));
+        this.actions.put("replace", _ -> replace());
+        this.actions.put("pattern_mode", o -> changePatternMode(o.getInt(), o.getBoolean()));
+        this.actions.put("show", _ -> showPage());
     }
 
     public void showPage() {
@@ -89,6 +91,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void replace() {
         var replace = this.replaceTarget.getItem();
         var with = this.replaceWith.getItem();
@@ -117,7 +120,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
                 this.replace(input, replaceInput, AEItemKey.of(replace), AEItemKey.of(with));
                 try {
                     var newPattern = PatternDetailsHelper.encodeCraftingPattern(
-                            Ae2Reflect.getCraftRecipe(craft),
+                            (RecipeHolder<@NotNull CraftingRecipe>) Ae2Reflect.getCraftRecipe(craft),
                             itemize(replaceInput),
                             itemize(output),
                             craft.canSubstitute,
@@ -266,6 +269,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private void changePatternMode(int mode, boolean value) {
         for (var slot : this.getSlots(SlotSemantics.ENCODED_PATTERN)) {
             var stack = slot.getItem();
@@ -274,7 +278,7 @@ public class ContainerPatternModifier extends AEBaseMenu implements IPage, IActi
                 var input = craft.getSparseInputs().toArray(new GenericStack[0]);
                 var output = craft.getPrimaryOutput();
                 var newPattern = PatternDetailsHelper.encodeCraftingPattern(
-                        Ae2Reflect.getCraftRecipe(craft),
+                        (RecipeHolder<@NotNull CraftingRecipe>) Ae2Reflect.getCraftRecipe(craft),
                         itemize(input),
                         itemize(output),
                         mode == 0 ? value : craft.canSubstitute,

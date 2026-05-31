@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "ae2:storage_bus"
-    },
-    "C": {
-      "item": "ae2:calculation_processor"
-    },
-    "K": {
-      "item": "minecraft:book"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "B": "ae2:storage_bus",
+    "C": "ae2:calculation_processor",
+    "K": "minecraft:book",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     " C ",
@@ -21,7 +13,6 @@
     " K "
   ],
   "result": {
-    "count": 1,
     "id": "extendedae:mod_storage_bus"
   }
 }

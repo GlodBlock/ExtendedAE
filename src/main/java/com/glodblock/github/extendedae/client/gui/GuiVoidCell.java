@@ -1,9 +1,9 @@
 package com.glodblock.github.extendedae.client.gui;
 
 import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.Icon;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.api.VoidMode;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.container.ContainerVoidCell;
@@ -11,7 +11,7 @@ import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -26,15 +26,15 @@ public class GuiVoidCell extends AEBaseScreen<ContainerVoidCell> implements IAct
 
     public GuiVoidCell(ContainerVoidCell menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.trash = new ActionEPPButton(b -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.TRASH.ordinal())); this.mode = VoidMode.TRASH;}, Icon.CONDENSER_OUTPUT_TRASH);
-        this.matterBall = new ActionEPPButton(b -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.MATTER_BALLS.ordinal())); this.mode = VoidMode.MATTER_BALLS;}, Icon.CONDENSER_OUTPUT_MATTER_BALL);
-        this.singularity = new ActionEPPButton(b -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.SINGULARITY.ordinal())); this.mode = VoidMode.SINGULARITY;}, Icon.CONDENSER_OUTPUT_SINGULARITY);
-        this.actions.put("init", o -> setMode(o.get(0)));
+        this.trash = new ActionEPPButton(_ -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.TRASH)); this.mode = VoidMode.TRASH;}, Icon.CONDENSER_OUTPUT_TRASH);
+        this.matterBall = new ActionEPPButton(_ -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.MATTER_BALLS)); this.mode = VoidMode.MATTER_BALLS;}, Icon.CONDENSER_OUTPUT_MATTER_BALL);
+        this.singularity = new ActionEPPButton(_ -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.SINGULARITY)); this.mode = VoidMode.SINGULARITY;}, Icon.CONDENSER_OUTPUT_SINGULARITY);
+        this.actions.put("init", o -> setMode(o.get(VoidMode.class)));
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
-    private void setMode(int modeId) {
-        this.mode = VoidMode.values()[modeId];
+    private void setMode(VoidMode mode) {
+        this.mode = mode;
     }
 
     @Override
@@ -49,9 +49,9 @@ public class GuiVoidCell extends AEBaseScreen<ContainerVoidCell> implements IAct
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         int textColor = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.extendedae.void_cell.mode." + this.mode.ordinal()),
                 5,

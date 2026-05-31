@@ -1,9 +1,7 @@
 {
   "type": "extendedae:circuit_cutter",
   "input": {
-    "ingredient": {
-      "item": "extendedae:mddyue"
-    }
+    "ingredient": "extendedae:mddyue"
   },
   "output": {
     "count": 8,

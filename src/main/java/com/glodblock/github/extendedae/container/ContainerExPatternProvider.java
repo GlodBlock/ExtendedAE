@@ -6,10 +6,11 @@ import appeng.menu.implementations.PatternProviderMenu;
 import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerExPatternProvider extends PatternProviderMenu {
 
-    public static final MenuType<ContainerExPatternProvider> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExPatternProvider> TYPE = MenuTypeBuilder
             .create(ContainerExPatternProvider::new, PatternProviderLogicHost.class)
             .buildUnregistered(ExtendedAE.id("ex_pattern_provider"));
 

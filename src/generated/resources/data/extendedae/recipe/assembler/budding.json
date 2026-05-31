@@ -2,24 +2,17 @@
   "type": "extendedae:crystal_assembler",
   "input_fluid": {
     "amount": 200,
-    "ingredient": {
-      "fluid": "minecraft:water"
-    }
+    "ingredient": "minecraft:water"
   },
   "input_items": [
     {
-      "ingredient": {
-        "item": "extendedae:entro_seed"
-      }
+      "ingredient": "extendedae:entro_seed"
     },
     {
-      "ingredient": {
-        "item": "ae2:fluix_block"
-      }
+      "ingredient": "ae2:fluix_block"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:entro_budding_mostly"
   }
 }

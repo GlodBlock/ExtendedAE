@@ -3,17 +3,21 @@ package com.glodblock.github.extendedae.client.gui.widget;
 import appeng.client.gui.AEBaseScreen;
 import com.glodblock.github.extendedae.util.DisplayServerLevel;
 import com.glodblock.github.glodium.util.GlodUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import guideme.color.LightDarkMode;
 import guideme.document.LytRect;
+import guideme.extensions.ExtensionCollection;
+import guideme.internal.scene.ScenePictureInPictureRenderer;
 import guideme.scene.CameraSettings;
 import guideme.scene.GuidebookLevelRenderer;
 import guideme.scene.GuidebookScene;
+import guideme.scene.LytGuidebookScene;
 import guideme.scene.level.GuidebookLevel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -23,8 +27,9 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3x2f;
 
-import java.util.Collections;
+import java.util.List;
 
 // Reuse AE guide's fake world stuff
 public class WorldDisplay extends AbstractWidget {
@@ -33,7 +38,8 @@ public class WorldDisplay extends AbstractWidget {
     private float zoom = 2.0f;
     private GuidebookScene scene;
     private boolean ready;
-    private final static GuidebookLevelRenderer worldRender = GuidebookLevelRenderer.getInstance();
+    private final static GuidebookLevelRenderer LEVEL_RENDERER = GuidebookLevelRenderer.getInstance();
+    private final static LytGuidebookScene DUMMY_SCENE = new LytGuidebookScene(ExtensionCollection.empty());
     private LytRect bounds;
 
     public WorldDisplay(AEBaseScreen<?> addedOn, int x, int y, int width, int height) {
@@ -73,13 +79,13 @@ public class WorldDisplay extends AbstractWidget {
         var random = new SingleThreadedRandomSource(0L);
         settings.setIgnoreEntities(true);
         try {
-            tmp.fillFromWorld(clientWorld, blockPos.offset(-1, 0, 0), sizeX, false, Blocks.AIR);
+            tmp.fillFromWorld(clientWorld, blockPos.offset(-1, 0, 0), sizeX, false, List.of(Blocks.AIR));
             tmp.placeInWorld(wrap, startX, BlockPos.ZERO, settings, random, 0);
             tmp = new StructureTemplate();
-            tmp.fillFromWorld(clientWorld, blockPos.offset(0, -1, 0), sizeY, false, Blocks.AIR);
+            tmp.fillFromWorld(clientWorld, blockPos.offset(0, -1, 0), sizeY, false, List.of(Blocks.AIR));
             tmp.placeInWorld(wrap, startY, BlockPos.ZERO, settings, random, 0);
             tmp = new StructureTemplate();
-            tmp.fillFromWorld(clientWorld, blockPos.offset(0, 0, -1), sizeZ, false, Blocks.AIR);
+            tmp.fillFromWorld(clientWorld, blockPos.offset(0, 0, -1), sizeZ, false, List.of(Blocks.AIR));
             tmp.placeInWorld(wrap, startZ, BlockPos.ZERO, settings, random, 0);
         } catch (Throwable ignored) {
             this.scene = new GuidebookScene(new GuidebookLevel(), new CameraSettings());
@@ -102,25 +108,33 @@ public class WorldDisplay extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.ready) {
             if (isMouseOver(mouseX, mouseY)) {
                 this.addedOn.setFocused(this);
             }
-            var window = Minecraft.getInstance().getWindow();
-            // transform the viewport into physical screen coordinates
-            var viewport = this.bounds.transform(guiGraphics.pose().last().pose());
-            RenderSystem.viewport(
-                    (int) (viewport.x() * window.getGuiScale()),
-                    (int) (window.getHeight() - viewport.bottom() * window.getGuiScale()),
-                    (int) (viewport.width() * window.getGuiScale()),
-                    (int) (viewport.height() * window.getGuiScale())
-            );
-            guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
-            worldRender.render(this.scene.getLevel(), this.scene.getCameraSettings(), Collections.emptyList(), LightDarkMode.LIGHT_MODE);
-            guiGraphics.disableScissor();
-            RenderSystem.viewport(0, 0, window.getWidth(), window.getHeight());
+            var screenBounds = this.bounds.toScreenRectangle().transformMaxBounds(guiGraphics.pose());
+            var scissorArea = guiGraphics.peekScissorStack();
+            // Pre-apply scissor area
+            screenBounds = scissorArea != null ? scissorArea.intersection(screenBounds) : screenBounds;
+            if (screenBounds != null) {
+                guiGraphics.submitPictureInPictureRenderState(new ScenePictureInPictureRenderer.State(
+                        LightDarkMode.LIGHT_MODE,
+                        new Matrix3x2f(guiGraphics.pose()),
+                        bounds.x(),
+                        bounds.y(),
+                        bounds.right(),
+                        bounds.bottom(),
+                        DUMMY_SCENE,
+                        screenBounds,
+                        scissorArea,
+                        (lightDarkMode, _, buffers) -> renderViewport(lightDarkMode, buffers)));
+            }
         }
+    }
+
+    private void renderViewport(LightDarkMode lightDarkMode, MultiBufferSource.BufferSource buffers) {
+        LEVEL_RENDERER.render(this.scene.getLevel(), this.scene.getCameraSettings(), buffers, List.of(), lightDarkMode);
     }
 
     @Override
@@ -129,15 +143,15 @@ public class WorldDisplay extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (this.visible && this.ready && this.isMouseOver(pMouseX, pMouseY)) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double pDragX, double pDragY) {
+        if (this.visible && this.ready && this.isMouseOver(event.x(), event.y())) {
             float dx = (float) pDragX;
             float dy = (float) pDragY;
             var camera = this.scene.getCameraSettings();
-            if (pButton == 0) {
+            if (event.button() == 0) {
                 camera.setRotationY(camera.getRotationY() + dx);
                 camera.setRotationX(camera.getRotationX() + dy);
-            } else if (pButton == 1) {
+            } else if (event.button() == 1) {
                 camera.setOffsetX(camera.getOffsetX() + dx);
                 camera.setOffsetY(camera.getOffsetY() - dy);
             }

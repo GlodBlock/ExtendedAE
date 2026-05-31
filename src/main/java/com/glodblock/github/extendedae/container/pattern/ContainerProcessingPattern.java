@@ -7,6 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ContainerProcessingPattern extends ContainerPattern {
 
     public static final Identifier ID = ExtendedAE.id("proc_pattern");
-    public static final MenuType<ContainerProcessingPattern> TYPE = PatternGuiHandler.register(ID, ContainerProcessingPattern::new);
+    public static final MenuType<@NotNull ContainerProcessingPattern> TYPE = PatternGuiHandler.register(ID, ContainerProcessingPattern::new);
 
     public ContainerProcessingPattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
         super(menuType, world, id, stack);

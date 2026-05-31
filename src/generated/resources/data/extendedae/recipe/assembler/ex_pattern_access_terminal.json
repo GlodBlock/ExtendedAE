@@ -2,30 +2,21 @@
   "type": "extendedae:crystal_assembler",
   "input_items": [
     {
-      "ingredient": {
-        "item": "ae2:pattern_access_terminal"
-      }
+      "ingredient": "ae2:pattern_access_terminal"
     },
     {
-      "ingredient": {
-        "item": "minecraft:redstone_lamp"
-      }
+      "ingredient": "minecraft:redstone_lamp"
     },
     {
       "amount": 2,
-      "ingredient": {
-        "item": "ae2:logic_processor"
-      }
+      "ingredient": "ae2:logic_processor"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "item": "ae2:quartz_fixture"
-      }
+      "ingredient": "ae2:quartz_fixture"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:ex_pattern_access_part"
   }
 }

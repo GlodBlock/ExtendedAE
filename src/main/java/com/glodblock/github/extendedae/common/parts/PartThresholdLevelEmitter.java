@@ -10,51 +10,28 @@ import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingWatcherNode;
 import appeng.api.networking.storage.IStorageWatcherNode;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
 import appeng.api.util.IConfigManagerBuilder;
-import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.helpers.IConfigInvHost;
 import appeng.hooks.ticking.TickHandler;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
-import appeng.parts.PartModel;
 import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implements IConfigInvHost {
-
-    public static List<Identifier> MODELS = Arrays.asList(
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/threshold_level_emitter_base_off"),
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/threshold_level_emitter_base_on"),
-            Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/level_emitter_status_off"),
-            Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/level_emitter_status_on"),
-            Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/level_emitter_status_has_channel")
-    );
-
-    public static final PartModel MODEL_OFF_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
-    public static final PartModel MODEL_OFF_ON = new PartModel(MODELS.get(0), MODELS.get(3));
-    public static final PartModel MODEL_OFF_HAS_CHANNEL = new PartModel(MODELS.get(0), MODELS.get(4));
-    public static final PartModel MODEL_ON_OFF = new PartModel(MODELS.get(1), MODELS.get(2));
-    public static final PartModel MODEL_ON_ON = new PartModel(MODELS.get(1), MODELS.get(3));
-    public static final PartModel MODEL_ON_HAS_CHANNEL = new PartModel(MODELS.get(1), MODELS.get(4));
 
     private final ConfigInventory config = ConfigInventory.configTypes(1)
             .changeListener(this::configureWatchers)
@@ -250,30 +227,19 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
     }
 
     @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return this.isLevelEmitterOn() ? MODEL_ON_HAS_CHANNEL : MODEL_OFF_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return this.isLevelEmitterOn() ? MODEL_ON_ON : MODEL_OFF_ON;
-        } else {
-            return this.isLevelEmitterOn() ? MODEL_ON_OFF : MODEL_OFF_OFF;
-        }
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.upperValue = data.getLongOr("upperValue", 0);
+        this.lowerValue = data.getLongOr("lowerValue", 0);
+        this.config.readFromChildTag(data, "config");
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.upperValue = data.getLong("upperValue");
-        this.lowerValue = data.getLong("lowerValue");
-        this.config.readFromChildTag(data, "config", registries);
-    }
-
-    @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
         data.putLong("upperValue", this.upperValue);
         data.putLong("lowerValue", this.lowerValue);
-        this.config.writeToChildTag(data, "config", registries);
+        this.config.writeToChildTag(data, "config");
     }
 
     public void setUpperValue(long value) {

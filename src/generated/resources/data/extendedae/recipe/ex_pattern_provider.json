@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "extendedae:ex_pattern_provider_part"
+  ],
+  "result": {
+    "id": "extendedae:ex_pattern_provider"
+  }
+}

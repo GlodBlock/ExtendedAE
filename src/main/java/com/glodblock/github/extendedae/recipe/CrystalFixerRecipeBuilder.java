@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -32,13 +32,13 @@ public class CrystalFixerRecipeBuilder {
         return new CrystalFixerRecipeBuilder(input, output, getter);
     }
 
-    public CrystalFixerRecipeBuilder fuel(ItemStack item) {
-        this.fuel = IngredientStack.of(item.copyWithCount(1));
+    public CrystalFixerRecipeBuilder fuel(ItemStackTemplate item) {
+        this.fuel = IngredientStack.of(item.withCount(1));
         return this;
     }
 
     public CrystalFixerRecipeBuilder fuel(ItemLike item) {
-        this.fuel = IngredientStack.of(new ItemStack(item));
+        this.fuel = IngredientStack.of(item, 1);
         return this;
     }
 

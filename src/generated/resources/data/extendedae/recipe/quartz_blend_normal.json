@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#ae2:all_quartz_dust",
+    [
+      "minecraft:coal",
+      "minecraft:charcoal"
+    ],
+    [
+      "minecraft:coal",
+      "minecraft:charcoal"
+    ],
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands"
+  ],
+  "result": {
+    "count": 6,
+    "id": "extendedae:quartz_blend"
+  }
+}

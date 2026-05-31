@@ -18,14 +18,14 @@ import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -38,23 +38,23 @@ public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction impl
     private final AppEngInternalInventory patternInventory;
     private final List<IPatternDetails> patterns = new ArrayList<>();
 
-    public TileAssemblerMatrixPattern(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileAssemblerMatrixPattern.class, TileAssemblerMatrixPattern::new, EAESingletons.ASSEMBLER_MATRIX_PATTERN), pos, blockState);
+    public TileAssemblerMatrixPattern(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.patternInventory = new AppEngInternalInventory(this, INV_SIZE, 1);
         this.patternInventory.setFilter(new Filter(this::getLevel));
         this.getMainNode().addService(ICraftingProvider.class, this);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
-        this.patternInventory.writeToNBT(data, "pattern", registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
+        this.patternInventory.writeToNBT(data, "pattern");
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.patternInventory.readFromNBT(data, "pattern", registries);
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.patternInventory.readFromNBT(data, "pattern");
     }
 
     @Override

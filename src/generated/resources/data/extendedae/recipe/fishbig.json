@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": {
-      "item": "minecraft:pufferfish"
-    }
+    "F": "minecraft:pufferfish"
   },
   "pattern": [
     "FFF",
@@ -12,7 +10,6 @@
     "FFF"
   ],
   "result": {
-    "count": 1,
     "id": "extendedae:fishbig"
   }
 }

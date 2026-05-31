@@ -30,7 +30,7 @@ public class GuiCircuitCutter extends UpgradeableScreen<ContainerCircuitCutter> 
         widgets.add("progressBar", this.pb);
         this.autoExportBtn = new ServerSettingToggleButton<>(Settings.AUTO_EXPORT, YesNo.NO);
         this.addToLeftToolbar(autoExportBtn);
-        this.outputSideBtn = new ActionEPPButton(b -> this.openOutputConfig(), EPPIcon.OUTPUT_SIDES);
+        this.outputSideBtn = new ActionEPPButton(_ -> this.openOutputConfig(), EPPIcon.OUTPUT_SIDES);
         this.outputSideBtn.setMessage(Component.translatable("gui.extendedae.set_output_sides.open"));
         this.addToLeftToolbar(this.outputSideBtn);
     }
@@ -42,7 +42,7 @@ public class GuiCircuitCutter extends UpgradeableScreen<ContainerCircuitCutter> 
                     new ItemStack(EAESingletons.CIRCUIT_CUTTER),
                     this.getMenu().getHost(),
                     this.getMenu().getOutputSides(),
-                    (side, value) -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_side", side.getName(), value)))
+                    (side, value) -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_side", side, value)))
             );
         }
     }

@@ -1,7 +1,7 @@
 package com.glodblock.github.extendedae.client.button;
 
-import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
+import appeng.util.Icon;
 
 public class ActionEPPButton extends EPPButton {
 
@@ -14,7 +14,7 @@ public class ActionEPPButton extends EPPButton {
 
     public ActionEPPButton(OnPress onPress, Icon icon) {
         super(onPress);
-        this.icon = icon.getBlitter();
+        this.icon = Blitter.icon(icon);
     }
 
     @Override

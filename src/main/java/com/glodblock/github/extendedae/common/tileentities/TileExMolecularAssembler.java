@@ -22,7 +22,6 @@ import appeng.api.util.AECableType;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.blockentity.crafting.MolecularAssemblerAnimationStatus;
 import appeng.blockentity.grid.AENetworkedInvBlockEntity;
-import appeng.client.render.crafting.AssemblerAnimationStatus;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
@@ -32,18 +31,18 @@ import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.SAssemblerAnimation;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
@@ -65,8 +64,8 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
     @OnlyIn(Dist.CLIENT)
     private MolecularAssemblerAnimationStatus animationStatus;
 
-    public TileExMolecularAssembler(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExMolecularAssembler.class, TileExMolecularAssembler::new, EAESingletons.EX_ASSEMBLER), pos, blockState);
+    public TileExMolecularAssembler(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().setIdlePowerUsage(0.0).addService(IGridTickable.class, this);
         this.upgrades = UpgradeInventories.forMachine(EAESingletons.EX_ASSEMBLER, this.getUpgradeSlots(), this::saveChanges);
         var invs = new ArrayList<InternalInventory>();
@@ -119,7 +118,7 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
         if (this.hasCustomName()) {
             name = this.getCustomName();
         } else {
-            name = EAESingletons.EX_ASSEMBLER.asItem().getDescription();
+            name = EAESingletons.EX_ASSEMBLER.toStack().getItemName();
         }
         var icon = AEItemKey.of(EAESingletons.EX_ASSEMBLER);
 
@@ -130,7 +129,7 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
         } else {
             tooltip = List.of(
                     GuiText.CompatibleUpgrade.text(
-                            Tooltips.of(AEItems.SPEED_CARD.asItem().getDescription()),
+                            Tooltips.of(AEItems.SPEED_CARD.stack().getItemName()),
                             Tooltips.ofUnformattedNumber(accelerationCards)));
         }
         return new PatternContainerGroup(icon, name, tooltip);
@@ -166,23 +165,20 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
         for (int x = 0; x < MAX_THREAD; x ++) {
-            var tag = this.threads[x].writeNBT(registries);
-            data.put("#ct" + x, tag);
+            this.threads[x].writeNBT(data.child("#ct" + x));
         }
-        this.upgrades.writeToNBT(data, "upgrades", registries);
+        this.upgrades.writeToNBT(data, "upgrades");
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.upgrades.readFromNBT(data, "upgrades", registries);
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.upgrades.readFromNBT(data, "upgrades");
         for (int x = 0; x < MAX_THREAD; x ++) {
-            if (data.contains("#ct" + x)) {
-                this.threads[x].readNBT(data.getCompound("#ct" + x), registries);
-            }
+            data.child("#ct" + x).ifPresent(this.threads[x]::readNBT);
         }
     }
 

@@ -5,35 +5,26 @@ import appeng.api.config.Setting;
 import appeng.api.ids.AEComponents;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.api.util.IConfigManager;
-import appeng.core.AppEng;
 import appeng.helpers.IConfigInvHost;
 import appeng.me.storage.NullInventory;
-import appeng.parts.PartModel;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class PartPreciseStorageBus extends PartSpecialStorageBus implements IConfigInvHost {
 
-    public static final Identifier MODEL_BASE = Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/precise_storage_bus_base");
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_off"));
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_on"));
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_has_channel"));
     private final ConfigInventory config = ConfigInventory.configStacks(63)
             .changeListener(this::onConfigurationChanged)
             .allowOverstacking(true)
@@ -67,15 +58,15 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.config.readFromChildTag(data, "config", registries);
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.config.readFromChildTag(data, "config");
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
-        this.config.writeToChildTag(data, "config", registries);
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
+        this.config.writeToChildTag(data, "config");
     }
 
     @Override
@@ -113,17 +104,6 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     @Override
     protected StorageBusInventory createHandler() {
         return new PreciseInventory(NullInventory.of());
-    }
-
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
-        }
     }
 
     public MEStorage getInternalHandler() {

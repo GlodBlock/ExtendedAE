@@ -10,16 +10,16 @@ import appeng.menu.locator.MenuHostLocator;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileExPatternProvider extends PatternProviderBlockEntity implements IGenericInvHost {
 
-    public TileExPatternProvider(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExPatternProvider.class, TileExPatternProvider::new, EAESingletons.EX_PATTERN_PROVIDER), pos, blockState);
+    public TileExPatternProvider(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override

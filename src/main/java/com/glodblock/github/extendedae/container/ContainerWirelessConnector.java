@@ -8,10 +8,11 @@ import com.glodblock.github.extendedae.common.me.wireless.WirelessStatus;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerWirelessConnector extends UpgradeableMenu<TileWirelessConnector> {
 
-    public static final MenuType<ContainerWirelessConnector> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerWirelessConnector> TYPE = MenuTypeBuilder
             .create(ContainerWirelessConnector::new, TileWirelessConnector.class)
             .buildUnregistered(ExtendedAE.id("wireless_connector"));
 

@@ -17,7 +17,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssembler> {
 
@@ -38,7 +39,7 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
         widgets.add("progressBar", this.pb);
         this.autoExportBtn = new ServerSettingToggleButton<>(Settings.AUTO_EXPORT, YesNo.NO);
         this.addToLeftToolbar(autoExportBtn);
-        this.outputSideBtn = new ActionEPPButton(b -> this.openOutputConfig(), EPPIcon.OUTPUT_SIDES);
+        this.outputSideBtn = new ActionEPPButton(_ -> this.openOutputConfig(), EPPIcon.OUTPUT_SIDES);
         this.outputSideBtn.setMessage(Component.translatable("gui.extendedae.set_output_sides.open"));
         this.addToLeftToolbar(this.outputSideBtn);
     }
@@ -50,7 +51,7 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
                     new ItemStack(EAESingletons.CIRCUIT_CUTTER),
                     this.getMenu().getHost(),
                     this.getMenu().getOutputSides(),
-                    (side, value) -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_side", side.getName(), value)))
+                    (side, value) -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_side", side, value)))
             );
         }
     }
@@ -65,15 +66,16 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.isValidSlot(this.hoveredSlot)) {
-            var itemTooltip = new ArrayList<>(getTooltipFromContainerItem(this.hoveredSlot.getItem()));
+            ItemStack item = this.hoveredSlot.getItem();
             var unwrapped = GenericStack.fromItemStack(this.hoveredSlot.getItem());
             long amt = unwrapped != null ? unwrapped.amount() : 0;
+            List<Component> itemTooltip = new ArrayList<>(this.getTooltipFromContainerItem(item));
             itemTooltip.add(Component.translatable("gui.extendedae.crystal_assembler.amount", amt, TileCrystalAssembler.TANK_CAP).withStyle(Tooltips.NORMAL_TOOLTIP_TEXT));
             drawTooltip(guiGraphics, x, y, itemTooltip);
         } else {
-            super.renderTooltip(guiGraphics, x, y);
+            super.extractTooltip(guiGraphics, x, y);
         }
     }
 

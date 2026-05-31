@@ -5,6 +5,7 @@ import appeng.api.config.Settings;
 import appeng.api.config.StorageFilter;
 import appeng.api.config.YesNo;
 import appeng.api.util.IConfigManager;
+import appeng.menu.guisync.ClientActionKey;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
@@ -22,14 +23,14 @@ import org.jetbrains.annotations.Nullable;
 public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> implements IActionHolder {
 
     private final ActionMap actions = ActionMap.create();
-    private static final String ACTION_PARTITION = "partition";
+    private static final ClientActionKey<Void> ACTION_PARTITION = new ClientActionKey<>("partition");
 
-    public static final MenuType<ContainerTagStorageBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerTagStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerTagStorageBus::new, PartTagStorageBus.class)
             .withInitialData((host, buf) -> {
                 buf.writeUtf(host.getTagFilter(true));
                 buf.writeUtf(host.getTagFilter(false));
-            }, (host, container, buf) -> {
+            }, (_, container, buf) -> {
                 container.exp = buf.readUtf();
                 container.exp2 = buf.readUtf();
             })
@@ -56,7 +57,7 @@ public class ContainerTagStorageBus extends UpgradeableMenu<PartTagStorageBus> i
         this.exp = te.getTagFilter(true);
         this.exp2 = te.getTagFilter(false);
         registerClientAction(ACTION_PARTITION, this::partition);
-        this.actions.put("set", o -> this.setExp(o.get(0), o.get(1)));
+        this.actions.put("set", o -> this.setExp(o.getString(), o.getBoolean()));
         this.connectedTo = te.getConnectedToDescription();
     }
 

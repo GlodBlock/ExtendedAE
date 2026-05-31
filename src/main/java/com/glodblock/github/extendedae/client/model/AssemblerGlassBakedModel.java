@@ -4,61 +4,54 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixGlass;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.resources.model.ModelDebugName;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.QuadCollection;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.MaterialBaker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.IDynamicBakedModel;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.function.Function;
 
-public class AssemblerGlassBakedModel implements IDynamicBakedModel {
+public class AssemblerGlassBakedModel implements DynamicBlockStateModel {
 
     private static final Object2ReferenceMap<FaceCorner, List<Vector3f>> V_MAP = createVertexMap();
     private static final EnumMap<Direction, List<Vector3f>> F_MAP = createFaceMap();
-    public static final ModelProperty<Connect> CONNECT_STATE = new ModelProperty<>();
     private static final int LU = 0;
     private static final int RU = 1;
     private static final int LD = 2;
     private static final int RD = 4;
-    private static final Material SIDE = new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/assembler_matrix/glass/sides"));
+    private static final Material SIDE = new Material(ExtendedAE.id("block/assembler_matrix/glass/sides"));
     private static final Material[] FACES = new Material[] {
-            new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/assembler_matrix/glass/face_a")),
-            new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/assembler_matrix/glass/face_b")),
-            new Material(InventoryMenu.BLOCK_ATLAS, ExtendedAE.id("block/assembler_matrix/glass/face_c"))
+            new Material(ExtendedAE.id("block/assembler_matrix/glass/face_a")),
+            new Material(ExtendedAE.id("block/assembler_matrix/glass/face_b")),
+            new Material(ExtendedAE.id("block/assembler_matrix/glass/face_c"))
     };
 
-    private final TextureAtlasSprite glassSide;
-    private final TextureAtlasSprite[] glassFaces;
+    private final Material.Baked glassSide;
+    private final Material.Baked[] glassFaces;
 
-    public AssemblerGlassBakedModel(Function<Material, TextureAtlasSprite> getter) {
-        this.glassSide = getter.apply(SIDE);
-        this.glassFaces = Arrays.stream(FACES).map(getter).toArray(TextureAtlasSprite[]::new);
+    public AssemblerGlassBakedModel(MaterialBaker bakedTextureGetter) {
+        ModelDebugName debugName = getClass()::toString;
+        this.glassSide = bakedTextureGetter.get(SIDE, debugName);
+        this.glassFaces = Arrays.stream(FACES).map(face -> bakedTextureGetter.get(face, debugName)).toArray(Material.Baked[]::new);
     }
 
     @Override
-    @NotNull
-    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData modelData) {
+    public void collectParts(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull RandomSource random, @NotNull List<BlockStateModelPart> parts) {
         var connect = new Connect();
         connect.init(pos);
         for (int x = -1; x <= 1; x ++) {
@@ -71,34 +64,22 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
                 }
             }
         }
-        return modelData.derive().with(CONNECT_STATE, connect).build();
-    }
-
-    @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction side, @NotNull RandomSource randomSource, @NotNull ModelData modelData, @Nullable RenderType renderType) {
-        if (side == null) {
-            return Collections.emptyList();
-        }
-        var connect = modelData.get(CONNECT_STATE);
-        if (connect == null) {
-            return Collections.emptyList();
-        }
-        List<BakedQuad> quads = new ArrayList<>();
-        if (renderType == null || renderType == RenderType.CUTOUT) {
+        var quads = new QuadCollection.Builder();
+        for (var side : Direction.values()) {
             this.addQuad(quads, side, connect.getIndex(side, LU), LU);
             this.addQuad(quads, side, connect.getIndex(side, RU), RU);
             this.addQuad(quads, side, connect.getIndex(side, LD), LD);
             this.addQuad(quads, side, connect.getIndex(side, RD), RD);
             this.addQuad(quads, side, connect.getFace(side));
         }
-        return quads;
+        parts.add(new SimpleModelWrapper(quads.build(), false, glassSide));
     }
 
     private List<Vector3f> calculateCorners(Direction face, int corner) {
         return V_MAP.get(new FaceCorner(face, corner));
     }
 
-    private void addQuad(List<BakedQuad> quads, Direction side, int index) {
+    private void addQuad(QuadCollection.Builder quads, Direction side, int index) {
         if (index < 0) {
             return;
         }
@@ -108,7 +89,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         builder.setSprite(sprite);
         builder.setDirection(side);
         builder.setShade(true);
-        var normal = side.getNormal();
+        var normal = side.getUnitVec3i();
         var c1 = cons.get(0);
         var c2 = cons.get(1);
         var c3 = cons.get(2);
@@ -117,10 +98,10 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         this.putVertex(builder, sprite, normal, c2.x(), c2.y(), c2.z(), 0, 1);
         this.putVertex(builder, sprite, normal, c3.x(), c3.y(), c3.z(), 1, 1);
         this.putVertex(builder, sprite, normal, c4.x(), c4.y(), c4.z(), 1, 0);
-        quads.add(builder.bakeQuad());
+        quads.addCulledFace(side, builder.bakeQuad());
     }
 
-    private void addQuad(List<BakedQuad> quads, Direction side, int index, int corner) {
+    private void addQuad(QuadCollection.Builder quads, Direction side, int index, int corner) {
         if (index < 0) {
             return;
         }
@@ -129,7 +110,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         builder.setSprite(this.glassSide);
         builder.setDirection(side);
         builder.setShade(true);
-        var normal = side.getNormal();
+        var normal = side.getUnitVec3i();
         var c1 = cons.get(0);
         var c2 = cons.get(1);
         var c3 = cons.get(2);
@@ -164,7 +145,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
                 this.putVertex(builder, this.glassSide, normal, c4.x(), c4.y(), c4.z(), u0, v1);
             }
         }
-        quads.add(builder.bakeQuad());
+        quads.addCulledFace(side, builder.bakeQuad());
     }
 
     private static EnumMap<Direction, List<Vector3f>> createFaceMap() {
@@ -207,13 +188,15 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         return map;
     }
 
-    private void putVertex(QuadBakingVertexConsumer builder, TextureAtlasSprite sprite, Vec3i normal, float x, float y, float z, float u, float v) {
-        builder.addVertex(x, y, z);
-        builder.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        builder.setNormal((float) normal.getX(), (float) normal.getY(), (float) normal.getZ());
-        u = sprite.getU(u);
-        v = sprite.getV(v);
-        builder.setUv(u, v);
+    private void putVertex(QuadBakingVertexConsumer builder, Material.Baked backed, Vec3i normal, float x, float y, float z, float u, float v) {
+        try (var sprite = backed.sprite()) {
+            builder.addVertex(x, y, z);
+            builder.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            builder.setNormal((float) normal.getX(), (float) normal.getY(), (float) normal.getZ());
+            u = sprite.getU(u);
+            v = sprite.getV(v);
+            builder.setUv(u, v);
+        }
     }
 
     private float getU0(int index) {
@@ -245,38 +228,13 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean useAmbientOcclusion() {
-        return false;
+    public @BakedQuad.MaterialFlags int materialFlags() {
+        return BakedQuad.FLAG_TRANSLUCENT;
     }
 
     @Override
-    public boolean isGui3d() {
-        return false;
-    }
-
-    @Override
-    public boolean usesBlockLight() {
-        return false;
-    }
-
-    @Override
-    public boolean isCustomRenderer() {
-        return false;
-    }
-
-    @Override
-    public @NotNull TextureAtlasSprite getParticleIcon() {
+    public @NotNull Material.Baked particleMaterial() {
         return this.glassSide;
-    }
-
-    @Override
-    public @NotNull ItemOverrides getOverrides() {
-        return ItemOverrides.EMPTY;
-    }
-
-    @Override
-    public @NotNull ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
-        return ChunkRenderTypeSet.all();
     }
 
     public static class Connect {
@@ -317,7 +275,7 @@ public class AssemblerGlassBakedModel implements IDynamicBakedModel {
         }
 
         boolean blocked(Direction face) {
-            var pos = face.getNormal().offset(1, 1, 1);
+            var pos = face.getUnitVec3i().offset(1, 1, 1);
             return this.connects[pos.getX()][pos.getY()][pos.getZ()];
         }
 

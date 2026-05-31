@@ -9,21 +9,15 @@
   "input_items": [
     {
       "amount": 4,
-      "ingredient": {
-        "item": "ae2:printed_logic_processor"
-      }
+      "ingredient": "ae2:printed_logic_processor"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "item": "ae2:printed_silicon"
-      }
+      "ingredient": "ae2:printed_silicon"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "tag": "c:dusts/redstone"
-      }
+      "ingredient": "#c:dusts/redstone"
     }
   ],
   "output": {

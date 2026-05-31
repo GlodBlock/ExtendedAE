@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "extendedae:silicon_block"
-    }
+    "extendedae:silicon_block"
   ],
   "result": {
     "count": 9,

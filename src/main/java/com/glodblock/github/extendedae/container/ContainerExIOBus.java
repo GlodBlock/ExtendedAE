@@ -9,14 +9,15 @@ import com.glodblock.github.extendedae.common.parts.PartExExportBus;
 import com.glodblock.github.extendedae.common.parts.PartExImportBus;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerExIOBus extends UpgradeableMenu<IOBusPart> {
 
-    public static final MenuType<ContainerExIOBus> EXPORT_TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExIOBus> EXPORT_TYPE = MenuTypeBuilder
             .create(ContainerExIOBus::new, PartExExportBus.class)
             .buildUnregistered(ExtendedAE.id("ex_export_bus"));
 
-    public static final MenuType<ContainerExIOBus> IMPORT_TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExIOBus> IMPORT_TYPE = MenuTypeBuilder
             .create(ContainerExIOBus::new, PartExImportBus.class)
             .buildUnregistered(ExtendedAE.id("ex_import_bus"));
 

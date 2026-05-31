@@ -2,49 +2,32 @@
   "type": "extendedae:crystal_assembler",
   "input_items": [
     {
-      "ingredient": {
-        "item": "extendedae:machine_frame"
-      }
+      "ingredient": "extendedae:machine_frame"
     },
     {
       "amount": 8,
-      "ingredient": {
-        "item": "ae2:engineering_processor"
-      }
+      "ingredient": "ae2:engineering_processor"
     },
     {
-      "ingredient": {
-        "item": "ae2:calculation_processor_press"
-      }
+      "ingredient": "ae2:calculation_processor_press"
     },
     {
-      "ingredient": {
-        "item": "ae2:engineering_processor_press"
-      }
+      "ingredient": "ae2:engineering_processor_press"
     },
     {
-      "ingredient": {
-        "item": "ae2:logic_processor_press"
-      }
+      "ingredient": "ae2:logic_processor_press"
     },
     {
-      "ingredient": {
-        "item": "ae2:silicon_press"
-      }
+      "ingredient": "ae2:silicon_press"
     },
     {
-      "ingredient": {
-        "item": "extendedae:concurrent_processor_press"
-      }
+      "ingredient": "extendedae:concurrent_processor_press"
     },
     {
-      "ingredient": {
-        "item": "minecraft:stonecutter"
-      }
+      "ingredient": "minecraft:stonecutter"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:circuit_cutter"
   }
 }

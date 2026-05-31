@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BooleanSupplier;
 
-public class ConfigCondition implements ICondition {
+public record ConfigCondition(String id) implements ICondition {
 
     private final static Object2ReferenceMap<String, BooleanSupplier> CONFIG_MAP = new Object2ReferenceOpenHashMap<>();
     public final static MapCodec<ConfigCondition> CODEC = RecordCodecBuilder.mapCodec(
@@ -19,17 +19,14 @@ public class ConfigCondition implements ICondition {
             ).apply(builder, ConfigCondition::new)
     );
 
-    private final String id;
-
     static {
         CONFIG_MAP.put(IDs.ASSEMBLER_CIRCUIT, () -> EAEConfig.allowAssemblerCircuits);
     }
 
-    public ConfigCondition(String configID) {
-        if (!CONFIG_MAP.containsKey(configID)) {
-            throw new IllegalArgumentException("Unregistered ID: " + configID);
+    public ConfigCondition {
+        if (!CONFIG_MAP.containsKey(id)) {
+            throw new IllegalArgumentException("Unregistered ID: " + id);
         }
-        this.id = configID;
     }
 
     @Override
@@ -43,7 +40,7 @@ public class ConfigCondition implements ICondition {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "extendedae_config(\"" + this.id + "\")";
     }
 

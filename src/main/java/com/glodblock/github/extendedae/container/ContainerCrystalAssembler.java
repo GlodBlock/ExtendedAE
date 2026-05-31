@@ -13,8 +13,8 @@ import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.OutputSlot;
 import appeng.util.ConfigMenuInventory;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.me.DirectionSet;
 import com.glodblock.github.extendedae.common.tileentities.TileCrystalAssembler;
-import com.glodblock.github.extendedae.container.helper.DirectionSet;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.core.Direction;
@@ -42,7 +42,7 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
 
     private final AppEngSlot tank;
 
-    public static final MenuType<ContainerCrystalAssembler> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerCrystalAssembler> TYPE = MenuTypeBuilder
             .create(ContainerCrystalAssembler::new, TileCrystalAssembler.class)
             .buildUnregistered(ExtendedAE.id("crystal_assembler"));
 
@@ -57,16 +57,16 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
                 Component.translatable("gui.extendedae.crystal_assembler.tank_empty"),
                 Component.translatable("gui.extendedae.crystal_assembler.amount", 0, TileCrystalAssembler.TANK_CAP).withStyle(Tooltips.NORMAL_TOOLTIP_TEXT)
         ));
-        this.actions.put("set_side", o -> this.setOutputSide(o.get(0), o.get(1)));
+        this.actions.put("set_side", o -> this.setOutputSide(o.get(Direction.class), o.getBoolean()));
     }
 
-    private void setOutputSide(String name, boolean value) {
-        var side = Direction.byName(name);
+    private void setOutputSide(Direction side, boolean value) {
         if (value) {
             this.getHost().getOutputSides().add(side);
         } else {
             this.getHost().getOutputSides().remove(side);
         }
+        this.getHost().saveChanges();
     }
 
     public boolean isTank(Slot slot) {
@@ -76,8 +76,7 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
     @Override
     protected void loadSettingsFromHost(IConfigManager cm) {
         this.autoExport = cm.getSetting(Settings.AUTO_EXPORT);
-        this.outputSides.clear();
-        this.outputSides.addAll(this.getHost().getOutputSides());
+        this.outputSides.reload(this.getHost().getOutputSides());
     }
 
     @Override
@@ -103,7 +102,7 @@ public class ContainerCrystalAssembler extends UpgradeableMenu<TileCrystalAssemb
     }
 
     public List<Direction> getOutputSides() {
-        return outputSides.sides();
+        return outputSides.asList();
     }
 
     @NotNull

@@ -11,6 +11,7 @@ import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidge
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -50,14 +51,14 @@ public class GuiTagExportBus extends UpgradeableScreen<ContainerTagExportBus> {
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.filterInputs.isMouseOver(xCoord, yCoord)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (event.button() == 1 && this.filterInputs.isMouseOver(event.x(), event.y())) {
             this.filterInputs.setValue("");
         }
-        if (btn == 1 && this.filterInputs2.isMouseOver(xCoord, yCoord)) {
+        if (event.button() == 1 && this.filterInputs2.isMouseOver(event.x(), event.y())) {
             this.filterInputs2.setValue("");
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override

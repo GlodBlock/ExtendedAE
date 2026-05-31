@@ -15,12 +15,12 @@ public class ContainerTagExportBus extends UpgradeableMenu<PartTagExportBus> imp
 
     private final ActionMap actions = ActionMap.create();
 
-    public static final MenuType<ContainerTagExportBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerTagExportBus> TYPE = MenuTypeBuilder
             .create(ContainerTagExportBus::new, PartTagExportBus.class)
             .withInitialData((host, buf) -> {
                 buf.writeUtf(host.getTagFilter(true));
                 buf.writeUtf(host.getTagFilter(false));
-            }, (host, container, buf) -> {
+            }, (_, container, buf) -> {
                 container.exp = buf.readUtf();
                 container.exp2 = buf.readUtf();
             })
@@ -33,7 +33,7 @@ public class ContainerTagExportBus extends UpgradeableMenu<PartTagExportBus> imp
         super(TYPE, id, ip, host);
         this.exp = host.getTagFilter(true);
         this.exp2 = host.getTagFilter(false);
-        this.actions.put("set", o -> this.setExp(o.get(0), o.get(1)));
+        this.actions.put("set", o -> this.setExp(o.getString(), o.getBoolean()));
     }
 
     @Override

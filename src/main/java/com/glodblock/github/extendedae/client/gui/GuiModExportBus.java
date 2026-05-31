@@ -14,6 +14,8 @@ import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.extendedae.util.FCClientUtil;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +38,7 @@ public class GuiModExportBus extends UpgradeableScreen<ContainerModExportBus> im
             this.filterInputs.setSuggestion(FCClientUtil.getModName(s));
             EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s));
         });
-        this.actions.put("init", o -> this.filterInputs.setValue(o.get(0)));
+        this.actions.put("init", o -> this.filterInputs.setValue(o.getString()));
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
@@ -47,23 +49,23 @@ public class GuiModExportBus extends UpgradeableScreen<ContainerModExportBus> im
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int keyPressed) {
-        if (keyCode == GLFW.GLFW_KEY_TAB && this.filterInputs.isFocused()) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_TAB && this.filterInputs.isFocused()) {
             var suggest = FCClientUtil.getModName(this.filterInputs.getValue());
             if (!suggest.isEmpty()) {
                 this.filterInputs.setValue(this.filterInputs.getValue() + suggest);
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, keyPressed);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.filterInputs.isMouseOver(xCoord, yCoord)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean btn) {
+        if (this.filterInputs.isMouseOver(event.x(), event.y()) && event.button() == 1) {
             this.filterInputs.setValue("");
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, btn);
     }
 
     @Override

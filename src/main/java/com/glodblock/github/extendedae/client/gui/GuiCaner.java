@@ -22,9 +22,9 @@ public class GuiCaner extends AEBaseScreen<ContainerCaner> implements IActionHol
     public GuiCaner(ContainerCaner menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.modeBtn = new CycleEPPButton();
-        this.modeBtn.addActionPair(EPPIcon.FILLED, Component.translatable("gui.extendedae.caner.fill"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", CanerMode.EMPTY.ordinal())));
-        this.modeBtn.addActionPair(EPPIcon.BUCKET, Component.translatable("gui.extendedae.caner.empty"), b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", CanerMode.FILL.ordinal())));
-        this.actions.put("init", o -> this.modeBtn.setState(o.get(0)));
+        this.modeBtn.addActionPair(EPPIcon.FILLED, Component.translatable("gui.extendedae.caner.fill"), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", CanerMode.EMPTY)));
+        this.modeBtn.addActionPair(EPPIcon.BUCKET, Component.translatable("gui.extendedae.caner.empty"), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", CanerMode.FILL)));
+        this.actions.put("init", o -> this.modeBtn.setState(o.getInt()));
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
         addToLeftToolbar(this.modeBtn);
     }

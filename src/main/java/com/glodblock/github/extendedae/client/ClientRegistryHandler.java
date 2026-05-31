@@ -1,9 +1,6 @@
 package com.glodblock.github.extendedae.client;
 
-import appeng.api.util.AEColor;
-import appeng.client.render.StaticItemColor;
-import appeng.init.client.InitScreens;
-import appeng.items.storage.BasicStorageCell;
+import appeng.client.InitScreens;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.GuiActiveFormationPlane;
 import com.glodblock.github.extendedae.client.gui.GuiAssemblerMatrix;
@@ -14,7 +11,6 @@ import com.glodblock.github.extendedae.client.gui.GuiCrystalAssembler;
 import com.glodblock.github.extendedae.client.gui.GuiExDrive;
 import com.glodblock.github.extendedae.client.gui.GuiExIOBus;
 import com.glodblock.github.extendedae.client.gui.GuiExIOPort;
-import com.glodblock.github.extendedae.client.gui.GuiExInscriber;
 import com.glodblock.github.extendedae.client.gui.GuiExInterface;
 import com.glodblock.github.extendedae.client.gui.GuiExMolecularAssembler;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
@@ -41,24 +37,14 @@ import com.glodblock.github.extendedae.client.gui.pattern.GuiStonecuttingPattern
 import com.glodblock.github.extendedae.client.hotkey.EAEHotKey;
 import com.glodblock.github.extendedae.client.model.AssemblerGlassModel;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
-import com.glodblock.github.extendedae.client.model.ExPlaneModel;
 import com.glodblock.github.extendedae.client.render.tesr.CanerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.CircuitCutterTESR;
 import com.glodblock.github.extendedae.client.render.tesr.CrystalFixerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExChargerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExDriveTESR;
-import com.glodblock.github.extendedae.client.render.tesr.ExInscriberTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExMolecularAssemblerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.IngredientBufferTESR;
 import com.glodblock.github.extendedae.common.EAESingletons;
-import com.glodblock.github.extendedae.common.tileentities.TileCaner;
-import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
-import com.glodblock.github.extendedae.common.tileentities.TileCrystalFixer;
-import com.glodblock.github.extendedae.common.tileentities.TileExCharger;
-import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
-import com.glodblock.github.extendedae.common.tileentities.TileExInscriber;
-import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
-import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
 import com.glodblock.github.extendedae.container.ContainerCaner;
@@ -68,7 +54,6 @@ import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
 import com.glodblock.github.extendedae.container.ContainerExIOPort;
-import com.glodblock.github.extendedae.container.ContainerExInscriber;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
@@ -92,20 +77,9 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
-import com.glodblock.github.extendedae.xmod.ModConstants;
-import com.glodblock.github.extendedae.xmod.aae.AAEClientLoad;
-import com.glodblock.github.extendedae.xmod.appliede.APEClientLoad;
-import com.glodblock.github.extendedae.xmod.framedblocks.FBClientLoad;
-import com.glodblock.github.extendedae.xmod.pneumatics.APClientLoad;
-import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
-import com.glodblock.github.extendedae.xmod.wt.GuiWirelessExPAT;
-import com.glodblock.github.glodium.util.GlodUtil;
-import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.util.FastColor;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
@@ -125,7 +99,6 @@ public class ClientRegistryHandler {
         InitScreens.register(event, ContainerExDrive.TYPE, GuiExDrive::new, "/screens/ex_drive.json");
         InitScreens.register(event, ContainerPatternModifier.TYPE, GuiPatternModifier::new, "/screens/pattern_modifier.json");
         InitScreens.register(event, ContainerExMolecularAssembler.TYPE, GuiExMolecularAssembler::new, "/screens/ex_molecular_assembler.json");
-        InitScreens.register(event, ContainerExInscriber.TYPE, GuiExInscriber::new, "/screens/ex_inscriber.json");
         InitScreens.register(event, ContainerTagStorageBus.TYPE, GuiTagStorageBus::new, "/screens/tag_storage_bus.json");
         InitScreens.register(event, ContainerTagExportBus.TYPE, GuiTagExportBus::new, "/screens/tag_export_bus.json");
         InitScreens.register(event, ContainerThresholdLevelEmitter.TYPE, GuiThresholdLevelEmitter::new, "/screens/threshold_level_emitter.json");
@@ -135,7 +108,6 @@ public class ClientRegistryHandler {
         InitScreens.register(event, ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
         InitScreens.register(event, ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
         InitScreens.register(event, ContainerPreciseExportBus.TYPE, GuiPreciseExportBus::new, "/screens/precise_export_bus.json");
-        InitScreens.register(event, ContainerWirelessExPAT.TYPE, GuiWirelessExPAT::new, "/screens/wireless_ex_pat.json");
         InitScreens.register(event, ContainerExIOPort.TYPE, GuiExIOPort::new, "/screens/ex_io_port.json");
         InitScreens.register(event, ContainerPreciseStorageBus.TYPE, GuiPreciseStorageBus::new, "/screens/precise_storage_bus.json");
         InitScreens.register(event, ContainerThresholdExportBus.TYPE, GuiThresholdExportBus::new, "/screens/threshold_export_bus.json");
@@ -151,54 +123,29 @@ public class ClientRegistryHandler {
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
         event.register(ContainerSmithingTablePattern.TYPE, GuiSmithingTablePattern::new);
-        if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
-            FBClientLoad.init(event);
-        }
-        if (GlodUtil.checkMod(ModConstants.APPPNEU)) {
-            APClientLoad.init(event);
-        }
-        if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
-            AAEClientLoad.init(event);
-        }
-        if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
-            APEClientLoad.init(event);
-        }
     }
 
     @SubscribeEvent
-    public void registerColorHandler(RegisterColorHandlersEvent.Item event) {
-        event.register(makeOpaque(new StaticItemColor(AEColor.TRANSPARENT)), EAESingletons.EX_PATTERN_TERMINAL);
-        event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.INFINITY_WATER_CELL);
-        event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.INFINITY_COBBLESTONE_CELL);
-        event.register(makeOpaque(BasicStorageCell::getColor), EAESingletons.VOID_CELL);
+    public void registerModels(RegisterBlockStateModels event) {
+        event.registerModel(ExtendedAE.id("ex_drive"), ExDriveModel.CODEC);
+        event.registerModel(ExtendedAE.id("assembler_matrix_glass"), AssemblerGlassModel.MAP_CODEC);
     }
 
     @SubscribeEvent
-    public void registerModels(ModelEvent.RegisterGeometryLoaders event) {
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileIngredientBuffer.class), IngredientBufferTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileExDrive.class), ExDriveTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileExMolecularAssembler.class), ExMolecularAssemblerTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileExInscriber.class), ExInscriberTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileExCharger.class), ExChargerTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileCaner.class), CanerTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileCrystalFixer.class), CrystalFixerTESR::new);
-        BlockEntityRenderers.register(GlodUtil.getTileType(TileCircuitCutter.class), CircuitCutterTESR::new);
-        event.register(ExtendedAE.id("ex_drive"), new ExDriveModel.Loader());
-        event.register(ExtendedAE.id("active_formation_plane"), new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane")));
-        event.register(ExtendedAE.id("active_formation_plane_on"), new ExPlaneModel.Loader(ExtendedAE.id("part/active_formation_plane_on")));
-        event.register(ExtendedAE.id("smart_annihilation_plane"), new ExPlaneModel.Loader(ExtendedAE.id("part/smart_annihilation_plane")));
-        event.register(ExtendedAE.id("smart_annihilation_plane_on"), new ExPlaneModel.Loader(ExtendedAE.id("part/smart_annihilation_plane_on")));
-        event.register(ExtendedAE.id("assembler_matrix_glass"), new AssemblerGlassModel.Loader());
+    public void registerTESR(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(EAESingletons.INGREDIENT_BUFFER.get().getBlockEntityType(), IngredientBufferTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.EX_DRIVE.get().getBlockEntityType(), ExDriveTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.EX_ASSEMBLER.get().getBlockEntityType(), ExMolecularAssemblerTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.EX_CHARGER.get().getBlockEntityType(), ExChargerTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.CANER.get().getBlockEntityType(), CanerTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.CRYSTAL_FIXER.get().getBlockEntityType(), CrystalFixerTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.CIRCUIT_CUTTER.get().getBlockEntityType(), CircuitCutterTESR::new);
     }
 
     @SubscribeEvent
     public void registerHotKey(RegisterKeyMappingsEvent e) {
         e.register(EAEHotKey.VIEW_PATTERN);
         e.register(EAEHotKey.SET_AMOUNT);
-    }
-
-    private static ItemColor makeOpaque(ItemColor itemColor) {
-        return (stack, tintIndex) -> FastColor.ARGB32.opaque(itemColor.getColor(stack, tintIndex));
     }
 
 }

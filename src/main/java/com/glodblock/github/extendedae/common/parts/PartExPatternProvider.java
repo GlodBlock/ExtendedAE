@@ -5,11 +5,9 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.util.AECableType;
-import appeng.core.AppEngBase;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.menu.ISubMenu;
@@ -17,39 +15,25 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
-import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
 public class PartExPatternProvider extends AEBasePart implements PatternProviderLogicHost {
-
-    public static List<Identifier> MODELS = Arrays.asList(
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_pattern_provider_base"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_on"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_off"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/interface_has_channel")
-    );
-
-    public static final PartModel MODELS_OFF = new PartModel(MODELS.get(0), MODELS.get(2));
-    public static final PartModel MODELS_ON = new PartModel(MODELS.get(0), MODELS.get(1));
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(0), MODELS.get(3));
 
     protected final PatternProviderLogic logic = this.createLogic();
 
@@ -71,15 +55,15 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.logic.readFromNBT(data, registries);
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.logic.readFromNBT(data);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
-        this.logic.writeToNBT(data, registries);
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
+        this.logic.writeToNBT(data);
     }
 
     @Override
@@ -128,10 +112,14 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
 
     @Override
     public boolean onUseWithoutItem(Player p, Vec3 pos) {
-        if (!p.getCommandSenderWorld().isClientSide()) {
-            this.openMenu(p, MenuLocators.forPart(this));
+        try (var world = p.level()) {
+            if (!world.isClientSide()) {
+                openMenu(p, MenuLocators.forPart(this));
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
         }
-        return true;
     }
 
     @Override
@@ -168,26 +156,17 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
         return AEItemKey.of(this.getPartItem());
     }
 
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else {
-            return this.isPowered() ? MODELS_ON : MODELS_OFF;
-        }
-    }
-
     @SuppressWarnings("UnstableApiUsage")
     public static void registerCapability(RegisterPartCapabilitiesEvent event) {
         event.register(
                 AECapabilities.GENERIC_INTERNAL_INV,
-                (part, context) -> part.logic.getReturnInv(),
+                (part, _) -> part.logic.getReturnInv(),
                 PartExPatternProvider.class
         );
     }
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(EAESingletons.EX_PATTERN_PROVIDER_PART);
+        return EAESingletons.EX_PATTERN_PROVIDER_PART.toStack();
     }
 }

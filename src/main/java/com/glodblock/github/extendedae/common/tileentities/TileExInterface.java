@@ -12,7 +12,6 @@ import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.api.caps.IMEStorageAccess;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileExInterface extends InterfaceBlockEntity implements IPage, IGenericInvHost, IMEStorageAccess {
 
     private int page = 0;
-
-    public TileExInterface(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExInterface.class, TileExInterface::new, EAESingletons.EX_INTERFACE), pos, blockState);
-    }
 
     public TileExInterface(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);

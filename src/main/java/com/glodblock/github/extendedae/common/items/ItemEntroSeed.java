@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 
 public class ItemEntroSeed extends AEBaseItem {
 
-    public ItemEntroSeed() {
-        super(new Properties());
+    public ItemEntroSeed(Properties props) {
+        super(props);
     }
 
     @Nonnull
@@ -23,8 +23,8 @@ public class ItemEntroSeed extends AEBaseItem {
         var block = world.getBlockState(pos);
         if (block.getBlock() == AEBlocks.FLUIX_BLOCK.block()) {
             context.getItemInHand().shrink(1);
-            world.setBlockAndUpdate(pos, EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING.defaultBlockState());
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            world.setBlockAndUpdate(pos, EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING.get().defaultBlockState());
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }

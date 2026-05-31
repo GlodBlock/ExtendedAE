@@ -4,6 +4,7 @@ import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
 import appeng.helpers.InterfaceLogicHost;
 import appeng.menu.SlotSemantic;
+import appeng.menu.guisync.ClientActionKey;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.SetStockAmountMenu;
@@ -13,22 +14,24 @@ import appeng.menu.slot.FakeSlot;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.IPage;
 import com.glodblock.github.extendedae.client.ExSemantics;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> implements IPage {
 
-    public static final String ACTION_OPEN_SET_AMOUNT = "setAmount";
+    private static final ClientActionKey<Integer> ACTION_OPEN_SET_AMOUNT = new ClientActionKey<>("setAmount");
 
-    public static final MenuType<ContainerExInterface> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExInterface> TYPE = MenuTypeBuilder
             .create(ContainerExInterface::new, InterfaceLogicHost.class)
             .buildUnregistered(ExtendedAE.id("ex_interface"));
-    public static final MenuType<ContainerExInterface> TYPE_OVERSIZE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExInterface> TYPE_OVERSIZE = MenuTypeBuilder
             .create(ContainerExInterface::new, InterfaceLogicHost.class)
             .buildUnregistered(ExtendedAE.id("oversize_interface"));
 
@@ -46,7 +49,7 @@ public class ContainerExInterface extends UpgradeableMenu<InterfaceLogicHost> im
 
     public ContainerExInterface(MenuType<?> menuType, int id, Inventory ip, InterfaceLogicHost host) {
         super(menuType, id, ip, host);
-        registerClientAction(ACTION_OPEN_SET_AMOUNT, Integer.class, this::openSetAmountMenu);
+        registerClientAction(ACTION_OPEN_SET_AMOUNT, ByteBufCodecs.INT, this::openSetAmountMenu);
         var logic = host.getInterfaceLogic();
         var config = logic.getConfig().createMenuWrapper();
         for (int x = 0; x < config.size(); x++) {

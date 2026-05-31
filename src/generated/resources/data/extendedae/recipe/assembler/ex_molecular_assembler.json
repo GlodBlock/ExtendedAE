@@ -3,36 +3,25 @@
   "input_items": [
     {
       "amount": 4,
-      "ingredient": {
-        "item": "ae2:molecular_assembler"
-      }
+      "ingredient": "ae2:molecular_assembler"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "item": "extendedae:concurrent_processor"
-      }
+      "ingredient": "extendedae:concurrent_processor"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "tag": "c:dusts/fluix"
-      }
+      "ingredient": "#c:dusts/fluix"
     },
     {
       "amount": 3,
-      "ingredient": {
-        "item": "ae2:engineering_processor"
-      }
+      "ingredient": "ae2:engineering_processor"
     },
     {
-      "ingredient": {
-        "item": "ae2:speed_card"
-      }
+      "ingredient": "ae2:speed_card"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:ex_molecular_assembler"
   }
 }

@@ -17,7 +17,6 @@
     "extendedae:ingredient_buffer",
     "extendedae:ex_drive",
     "extendedae:ex_molecular_assembler",
-    "extendedae:ex_inscriber",
     "extendedae:ex_charger",
     "extendedae:crystal_fixer",
     "extendedae:caner",
@@ -33,10 +32,6 @@
     "extendedae:wireless_hub",
     "extendedae:silicon_block",
     "extendedae:fishbig",
-    "extendedae:mddyue",
-    {
-      "id": "extendedae:ex_emc_interface",
-      "required": false
-    }
+    "extendedae:mddyue"
   ]
 }

@@ -15,24 +15,29 @@ import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
-import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.util.RecipeExecutor;
 import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
 import com.glodblock.github.glodium.recipe.CommonRecipeContext;
 import com.glodblock.github.glodium.recipe.RecipeSearchContext;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.VoidingResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -47,8 +52,8 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     private final RecipeExecutor<CrystalFixerRecipe> exec;
     private int progress = 0;
 
-    public TileCrystalFixer(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCrystalFixer.class, TileCrystalFixer::new, EAESingletons.CRYSTAL_FIXER), pos, blockState);
+    public TileCrystalFixer(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.exec = new RecipeExecutor<>(this, r -> new ItemStack(r.getOutput()), MAX_PROGRESS, 50);
@@ -76,12 +81,12 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
         if (this.getLevel() == null) {
             return Blocks.AIR.defaultBlockState();
         }
-        return this.getLevel().getBlockState(this.getBlockPos().offset(this.getFront().getNormal()));
+        return this.getLevel().getBlockState(this.getBlockPos().relative(this.getFront()));
     }
 
     protected void setNewBlock(BlockState block) {
         if (this.getLevel() != null) {
-            this.getLevel().setBlockAndUpdate(this.getBlockPos().offset(this.getFront().getNormal()), block);
+            this.getLevel().setBlockAndUpdate(this.getBlockPos().relative(this.getFront()), block);
         }
     }
 
@@ -149,16 +154,16 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
         data.putInt("progress", this.progress);
         this.ctx.save(data);
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.progress = data.getInt("progress");
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.progress = data.getIntOr("progress", 0);
         this.ctx.load(data);
     }
 
@@ -195,7 +200,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
             return;
         }
         var playerInv = player.getInventory();
-        ItemStack held = playerInv.getSelected();
+        ItemStack held = playerInv.getSelectedItem();
         if (held.isEmpty()) {
             var stuff = this.inv.extractItem(0, Integer.MAX_VALUE, false);
             if (!stuff.isEmpty()) {
@@ -203,7 +208,16 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
             }
         } else {
             var notAdded = this.inv.insertItem(0, held, false);
-            playerInv.setItem(playerInv.selected, notAdded);
+            playerInv.setItem(playerInv.getSelectedSlot(), notAdded);
+        }
+    }
+
+    @Nullable
+    private ServerLevel getServerLevel() {
+        if (this.level instanceof ServerLevel) {
+            return (ServerLevel) this.level;
+        } else {
+            return null;
         }
     }
 
@@ -222,7 +236,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
         private final TileCrystalFixer host;
 
         protected FixerRecipeContext(TileCrystalFixer host) {
-            super(() -> host.level, CrystalFixerRecipe.TYPE);
+            super(host::getServerLevel, CrystalFixerRecipe.TYPE);
             this.host = host;
         }
 
@@ -233,13 +247,13 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
         }
 
         @Override
-        public void onFind(@Nullable RecipeHolder<CrystalFixerRecipe> recipe) {
+        public void onFind(@Nullable RecipeHolder<@NotNull CrystalFixerRecipe> recipe) {
             super.onFind(recipe);
             this.host.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
         }
 
         @Override
-        public boolean testRecipe(RecipeHolder<CrystalFixerRecipe> recipeHolder) {
+        public boolean testRecipe(RecipeHolder<@NotNull CrystalFixerRecipe> recipeHolder) {
             var recipe = recipeHolder.value();
             var block = this.host.getFacingBlock().getBlock();
             if (block == recipe.getInput()) {
@@ -254,7 +268,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
         }
 
         @Override
-        public void runRecipe(RecipeHolder<CrystalFixerRecipe> recipeHolder) {
+        public void runRecipe(RecipeHolder<@NotNull CrystalFixerRecipe> recipeHolder) {
             var recipe = recipeHolder.value();
             var fuel = recipe.getFuel();
             var storedFuel = this.host.inv.getStackInSlot(0);
@@ -271,6 +285,12 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     private static class VoidInventory implements InternalInventory {
 
         public static final VoidInventory INSTANCE = new VoidInventory();
+        public static final ResourceHandler<@NotNull ItemResource> VOID = new VoidingResourceHandler<>(ItemResource.EMPTY);
+
+        @Override
+        public ResourceHandler<@NotNull ItemResource> toResourceHandler() {
+            return VOID;
+        }
 
         @Override
         public int size() {

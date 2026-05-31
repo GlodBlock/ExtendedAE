@@ -17,18 +17,17 @@ import com.glodblock.github.extendedae.common.me.wireless.WirelessConnect;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessNode;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.util.CacheHolder;
-import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.jade.JadeDataProvider;
-import com.glodblock.github.glodium.util.GlodUtil;
-import gripe._90.megacells.definition.MEGAItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,8 +46,8 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
     @NotNull
     private AEColor color = AEColor.TRANSPARENT;
 
-    public TileWirelessConnector(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileWirelessConnector.class, TileWirelessConnector::new, EAESingletons.WIRELESS_CONNECTOR), pos, blockState);
+    public TileWirelessConnector(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
         this.getMainNode().setFlags(GridFlags.DENSE_CAPACITY);
         this.powerUse = 1.0;
@@ -87,11 +86,7 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
     }
 
     private double calculateDisc() {
-        double disc = 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
-        if (GlodUtil.checkMod(ModConstants.MEGA)) {
-            disc += 0.2 * this.upgrades.getInstalledUpgrades(MEGAItems.GREATER_ENERGY_CARD);
-        }
-        return disc;
+        return 0.1 * this.upgrades.getInstalledUpgrades(AEItems.ENERGY_CARD);
     }
 
     public double getPowerUse() {
@@ -137,24 +132,20 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.freq = data.getLong("freq");
-        this.upgrades.readFromNBT(data, "upgrades", registries);
-        if (data.contains("color")) {
-            this.color = AEColor.valueOf(data.getString("color"));
-        } else {
-            this.color = AEColor.TRANSPARENT;
-        }
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.freq = data.getLongOr("freq", 0);
+        this.upgrades.readFromNBT(data, "upgrades");
+        data.getString("color").ifPresentOrElse(s -> this.color = AEColor.valueOf(s), () -> this.color = AEColor.TRANSPARENT);
         this.getMainNode().setGridColor(this.color);
         WirelessConnect.G.markUsed(this.freq);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
         data.putLong("freq", this.freq);
-        this.upgrades.writeToNBT(data, "upgrades", registries);
+        this.upgrades.writeToNBT(data, "upgrades");
         data.putString("color", this.color.name());
         WirelessConnect.G.markUsed(this.freq);
     }
@@ -235,7 +226,13 @@ public class TileWirelessConnector extends AENetworkedBlockEntity implements Ser
     @Override
     public void collectJadeInfo(CompoundTag tag) {
         tag.putString("color", this.color.name());
-        this.getMainNode().ifPresent((gird, node) -> tag.putInt("used", node.getUsedChannels()));
+        this.getMainNode().ifPresent((_, node) -> tag.putInt("used", node.getUsedChannels()));
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos blockPos, BlockState blockState) {
+        super.preRemoveSideEffects(blockPos, blockState);
+        this.breakOnRemove();
     }
 
 }

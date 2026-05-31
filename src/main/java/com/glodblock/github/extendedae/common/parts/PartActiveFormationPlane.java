@@ -21,7 +21,6 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
@@ -31,57 +30,36 @@ import appeng.core.settings.TickRates;
 import appeng.helpers.IConfigInvHost;
 import appeng.helpers.IPriorityHost;
 import appeng.helpers.MultiCraftingTracker;
-import appeng.items.parts.PartModels;
 import appeng.me.helpers.MachineSource;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
-import appeng.parts.PartModel;
+import appeng.parts.automation.PartModelData;
 import appeng.parts.automation.PlaneConnectionHelper;
 import appeng.parts.automation.PlaneConnections;
-import appeng.parts.automation.PlaneModelData;
-import appeng.parts.automation.PlaneModels;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.automation.UpgradeablePart;
 import appeng.util.ConfigInventory;
 import appeng.util.Platform;
 import appeng.util.prioritylist.IPartitionList;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-@SuppressWarnings({"UnstableApiUsage", "SequencedCollectionMethodCanBeUsed"})
+@SuppressWarnings("UnstableApiUsage")
 public class PartActiveFormationPlane extends UpgradeablePart implements IGridTickable, IPriorityHost, IConfigInvHost, ICraftingRequester {
-
-    public static final List<Identifier> MODELS = List.of(
-            ExtendedAE.id("part/active_formation_plane"),
-            ExtendedAE.id("part/active_formation_plane_on")
-    );
-
-    @PartModels
-    public static final IPartModel MODELS_OFF = new PartModel(MODELS.get(0), PlaneModels.MODEL_CHASSIS_OFF);
-
-    @PartModels
-    public static final IPartModel MODELS_ON = new PartModel(MODELS.get(0), PlaneModels.MODEL_CHASSIS_ON);
-
-    @PartModels
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(1), PlaneModels.MODEL_CHASSIS_HAS_CHANNEL);
 
     private boolean wasOnline = false;
     private int priority = 0;
@@ -281,19 +259,19 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.priority = data.getInt("priority");
-        this.config.readFromChildTag(data, "config", registries);
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.priority = data.getIntOr("priority", 0);
+        this.config.readFromChildTag(data, "config");
         this.craftingTracker.readFromNBT(data);
-        this.pendingPulse = isInPulseMode() && data.getBoolean("pendingPulse");
+        this.pendingPulse = isInPulseMode() && data.getBooleanOr("pendingPulse", false);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
         data.putInt("priority", this.getPriority());
-        this.config.writeToChildTag(data, "config", registries);
+        this.config.writeToChildTag(data, "config");
         this.craftingTracker.writeToNBT(data);
         if (isInPulseMode() && this.pendingPulse) {
             data.putBoolean("pendingPulse", true);
@@ -466,25 +444,13 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     }
 
     @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
-        }
+    public void collectModelData(net.neoforged.neoforge.model.data.ModelData.Builder builder) {
+        super.collectModelData(builder);
+        builder.with(PartModelData.CONNECTIONS, getConnections());
     }
 
     @Override
-    public ModelData getModelData() {
-        return ModelData.builder()
-                .with(PlaneModelData.CONNECTIONS, getConnections())
-                .build();
-    }
-
-    @Override
-    public ImmutableSet<ICraftingLink> getRequestedJobs() {
+    public ImmutableSet<@NotNull ICraftingLink> getRequestedJobs() {
         return this.craftingTracker.getRequestedJobs();
     }
 

@@ -1,9 +1,7 @@
 {
   "type": "extendedae:circuit_cutter",
   "input": {
-    "ingredient": {
-      "item": "extendedae:fishbig"
-    }
+    "ingredient": "extendedae:fishbig"
   },
   "output": {
     "count": 8,

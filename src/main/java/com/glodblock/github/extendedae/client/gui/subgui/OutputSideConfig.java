@@ -6,11 +6,11 @@ import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.AESubScreen;
-import appeng.client.gui.Icon;
 import appeng.client.gui.widgets.ActionButton;
 import appeng.client.gui.widgets.TabButton;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.button.OutputButton;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -29,9 +29,9 @@ public class OutputSideConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> e
 
     public OutputSideConfig(P parent, ItemStack icon, AEBaseBlockEntity host, List<Direction> selectedSides, BiConsumer<Direction, Boolean> setter) {
         super(parent, "/screens/set_output_sides.json");
-        var button = new TabButton(Icon.BACK, icon.getHoverName(), btn -> returnToParent());
+        var button = new TabButton(Icon.BACK, icon.getHoverName(), _ -> returnToParent());
         this.widgets.add("return", button);
-        var clear = new ActionButton(ActionItems.S_CLOSE, b -> {
+        var clear = new ActionButton(ActionItems.S_CLOSE, _ -> {
             for (var btn : this.btns.values()) {
                 btn.setOn(false);
             }

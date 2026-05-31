@@ -6,27 +6,30 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.util.IConfigManager;
 import appeng.core.definitions.AEItems;
 import appeng.menu.SlotSemantics;
+import appeng.menu.guisync.ClientActionKey;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.slot.FakeSlot;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ContainerThresholdLevelEmitter extends UpgradeableMenu<PartThresholdLevelEmitter>  {
 
-    private static final String ACTION_SET_UPPER_VALUE = "setUpperValue";
-    private static final String ACTION_SET_LOWER_VALUE = "setLowerValue";
-    public static final MenuType<ContainerThresholdLevelEmitter> TYPE = MenuTypeBuilder
+    private static final ClientActionKey<Long> ACTION_SET_UPPER_VALUE = new ClientActionKey<>("setUpperValue");
+    private static final ClientActionKey<Long> ACTION_SET_LOWER_VALUE = new ClientActionKey<>("setLowerValue");
+    public static final MenuType<@NotNull ContainerThresholdLevelEmitter> TYPE = MenuTypeBuilder
             .create(ContainerThresholdLevelEmitter::new, PartThresholdLevelEmitter.class)
             .withInitialData((host, buffer) -> {
                 GenericStack.writeBuffer(host.getConfig().getStack(0), buffer);
                 buffer.writeVarLong(host.getUpperValue());
                 buffer.writeVarLong(host.getLowerValue());
-            }, (host, menu, buffer) -> {
+            }, (_, menu, buffer) -> {
                 menu.getHost().getConfig().setStack(0, GenericStack.readBuffer(buffer));
                 menu.upperValue = buffer.readVarLong();
                 menu.lowerValue = buffer.readVarLong();
@@ -40,8 +43,8 @@ public class ContainerThresholdLevelEmitter extends UpgradeableMenu<PartThreshol
 
     public ContainerThresholdLevelEmitter(int id, Inventory ip, PartThresholdLevelEmitter host) {
         super(TYPE, id, ip, host);
-        registerClientAction(ACTION_SET_UPPER_VALUE, Long.class, this::setUpperValue);
-        registerClientAction(ACTION_SET_LOWER_VALUE, Long.class, this::setLowerValue);
+        registerClientAction(ACTION_SET_UPPER_VALUE, ByteBufCodecs.LONG, this::setUpperValue);
+        registerClientAction(ACTION_SET_LOWER_VALUE, ByteBufCodecs.LONG, this::setLowerValue);
     }
 
     @Override

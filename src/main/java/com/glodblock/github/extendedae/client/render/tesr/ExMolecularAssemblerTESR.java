@@ -1,94 +1,82 @@
 package com.glodblock.github.extendedae.client.render.tesr;
 
-import appeng.client.render.crafting.AssemblerAnimationStatus;
-import appeng.client.render.effects.ParticleTypes;
-import appeng.core.AppEng;
-import appeng.core.AppEngClient;
+import appeng.core.AEConfig;
+import appeng.core.particles.ParticleTypes;
+import com.glodblock.github.extendedae.client.render.tesr.state.BlockItemState;
 import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssembler;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelIdentifier;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ExMolecularAssemblerTESR implements BlockEntityRenderer<TileExMolecularAssembler> {
-
-    public static final ModelIdentifier LIGHTS_MODEL = ModelIdentifier.standalone(AppEng.makeId("block/molecular_assembler_lights"));
-
-    private final RandomSource particleRandom = RandomSource.create();
+public class ExMolecularAssemblerTESR extends ExBaseTESR<TileExMolecularAssembler, BlockItemState> {
 
     public ExMolecularAssemblerTESR(BlockEntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override
-    public void render(TileExMolecularAssembler molecularAssembler, float partialTicks, @NotNull PoseStack ms, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public @NotNull BlockItemState createRenderState() {
+        return new BlockItemState();
+    }
 
-        AssemblerAnimationStatus status = molecularAssembler.getAnimationStatus();
+    @Override
+    public void extractRenderState(TileExMolecularAssembler be, BlockItemState state, float partialTicks, @NotNull Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        super.extractRenderState(be, state, partialTicks, cameraPos, crumblingOverlay);
+        state.item.clear();
+        var status = be.getAnimationStatus();
         if (status != null) {
             if (!Minecraft.getInstance().isPaused()) {
                 if (status.isExpired()) {
-                    molecularAssembler.setAnimationStatus(null);
+                    be.setAnimationStatus(null);
                 }
                 status.setAccumulatedTicks(status.getAccumulatedTicks() + partialTicks);
                 status.setTicksUntilParticles(status.getTicksUntilParticles() - partialTicks);
             }
-
-            renderStatus(molecularAssembler, ms, bufferIn, combinedLightIn, status);
-        }
-
-        if (molecularAssembler.isPowered()) {
-            renderPowerLight(ms, bufferIn, combinedLightIn, combinedOverlayIn);
-        }
-    }
-
-    private void renderPowerLight(PoseStack ms, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        Minecraft minecraft = Minecraft.getInstance();
-        BakedModel lightsModel = minecraft.getModelManager().getModel(LIGHTS_MODEL);
-        VertexConsumer buffer = bufferIn.getBuffer(RenderType.tripwire());
-        minecraft.getBlockRenderer().getModelRenderer().renderModel(ms.last(), buffer, null, lightsModel, 1, 1, 1, combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
-    }
-
-    private void renderStatus(TileExMolecularAssembler molecularAssembler, PoseStack ms, MultiBufferSource bufferIn, int combinedLightIn, AssemblerAnimationStatus status) {
-        double centerX = molecularAssembler.getBlockPos().getX() + 0.5f;
-        double centerY = molecularAssembler.getBlockPos().getY() + 0.5f;
-        double centerZ = molecularAssembler.getBlockPos().getZ() + 0.5f;
-        Minecraft minecraft = Minecraft.getInstance();
-        if (status.getTicksUntilParticles() <= 0) {
-            status.setTicksUntilParticles(4);
-            if (AppEngClient.instance().shouldAddParticles(particleRandom)) {
-                for (int x = 0; x < (int) Math.ceil(status.getSpeed() / 5.0); x++) {
-                    minecraft.particleEngine.createParticle(ParticleTypes.CRAFTING, centerX, centerY, centerZ, 0, 0, 0);
+            double centerX = be.getBlockPos().getX() + 0.5f;
+            double centerY = be.getBlockPos().getY() + 0.5f;
+            double centerZ = be.getBlockPos().getZ() + 0.5f;
+            var is = status.getIs();
+            // Spawn crafting FX that fly towards the block's center
+            var level = be.getLevel();
+            if (AEConfig.instance().isEnableEffects() && level != null) {
+                if (status.getTicksUntilParticles() <= 0) {
+                    status.setTicksUntilParticles(4);
+                    for (int x = 0; x < (int) Math.ceil(status.getSpeed() / 5.0); x++) {
+                        level.addParticle(
+                                new ItemParticleOption(ParticleTypes.CRAFTING, ItemStackTemplate.fromNonEmptyStack(is)),
+                                centerX,
+                                centerY, centerZ,
+                                0,
+                                0, 0);
+                    }
                 }
             }
+            this.setupItemModel(state.item, is, be);
+            state.isBlock = (is.getItem() instanceof BlockItem);
         }
+    }
 
-        ItemStack is = status.getIs();
-
-        ItemRenderer itemRenderer = minecraft.getItemRenderer();
-        ms.pushPose();
-        ms.translate(0.5, 0.5, 0.5);
-
-        if (!(is.getItem() instanceof BlockItem)) {
-            ms.translate(0, -0.3f, 0);
+    @Override
+    public void submit(BlockItemState state, PoseStack poseStack, @NotNull SubmitNodeCollector nodes, @NotNull CameraRenderState cameraRenderState) {
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5); // Translate to center of block
+        if (!state.isBlock) {
+            poseStack.translate(0, -0.3f, 0);
         } else {
-            ms.translate(0, -0.2f, 0);
+            poseStack.translate(0, -0.2f, 0);
         }
-
-        itemRenderer.renderStatic(is, ItemDisplayContext.GROUND, combinedLightIn,
-                OverlayTexture.NO_OVERLAY, ms, bufferIn, molecularAssembler.getLevel(), 0);
-        ms.popPose();
+        state.item.submit(poseStack, nodes, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
     }
 
 }

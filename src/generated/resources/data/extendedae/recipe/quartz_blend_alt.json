@@ -11,43 +11,21 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dusts/quartz"
-    },
+    "#c:dusts/quartz",
     [
-      {
-        "item": "minecraft:coal"
-      },
-      {
-        "item": "minecraft:charcoal"
-      }
+      "minecraft:coal",
+      "minecraft:charcoal"
     ],
     [
-      {
-        "item": "minecraft:coal"
-      },
-      {
-        "item": "minecraft:charcoal"
-      }
+      "minecraft:coal",
+      "minecraft:charcoal"
     ],
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    }
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands"
   ],
   "result": {
     "count": 6,

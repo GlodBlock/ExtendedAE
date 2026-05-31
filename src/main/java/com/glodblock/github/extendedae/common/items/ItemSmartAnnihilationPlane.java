@@ -10,44 +10,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.enchantment.Enchantable;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemSmartAnnihilationPlane extends PartItem<PartSmartAnnihilationPlane> {
 
-    public static final ThreadLocal<Object> CALLING_DAMAGEABLE_FROM_ANVIL = ThreadLocal.withInitial(() -> null);
-
-    public ItemSmartAnnihilationPlane() {
-        super(new Properties(), PartSmartAnnihilationPlane.class, PartSmartAnnihilationPlane::new);
-    }
-
-    @Override
-    public boolean isEnchantable(@NotNull ItemStack stack) {
-        return true;
+    public ItemSmartAnnihilationPlane(Properties properties) {
+        super(properties.component(DataComponents.ENCHANTABLE, new Enchantable(10)).component(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY), PartSmartAnnihilationPlane.class, PartSmartAnnihilationPlane::new);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public int getEnchantmentValue() {
-        return 10;
-    }
-
-    @Override
-    public int getMaxDamage(@NotNull ItemStack stack) {
-        return CALLING_DAMAGEABLE_FROM_ANVIL.get() != null ? 1 : super.getMaxDamage(stack);
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> lines, @NotNull TooltipFlag isAdvanced) {
-        super.appendHoverText(stack, context, lines, isAdvanced);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> lines, @NotNull TooltipFlag tooltipFlags) {
+        super.appendHoverText(stack, context, tooltipDisplay, lines, tooltipFlags);
         var enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         if (enchantments.isEmpty()) {
-            lines.add(Tooltips.of(GuiText.CanBeEnchanted));
+            lines.accept(Tooltips.of(GuiText.CanBeEnchanted));
         } else {
-            lines.add(Tooltips.of(GuiText.IncreasedEnergyUseFromEnchants));
+            lines.accept(Tooltips.of(GuiText.IncreasedEnergyUseFromEnchants));
         }
     }
 

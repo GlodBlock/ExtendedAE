@@ -1,9 +1,7 @@
 {
   "type": "extendedae:circuit_cutter",
   "input": {
-    "ingredient": {
-      "tag": "c:storage_blocks/entro"
-    }
+    "ingredient": "#c:storage_blocks/entro"
   },
   "output": {
     "count": 4,

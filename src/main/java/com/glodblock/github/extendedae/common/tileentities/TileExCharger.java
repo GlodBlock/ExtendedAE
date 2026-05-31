@@ -23,13 +23,13 @@ import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.api.caps.ICrankPowered;
-import com.glodblock.github.extendedae.common.EAESingletons;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +46,8 @@ public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGri
     private boolean working;
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, MAX_THREAD, 1, new ChargerInvFilter(this));
 
-    public TileExCharger(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileExCharger.class, TileExCharger::new, EAESingletons.EX_CHARGER), pos, blockState);
+    public TileExCharger(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode()
                 .setFlags()
                 .setIdlePowerUsage(0)
@@ -131,7 +131,7 @@ public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGri
         var wasWorking = this.working;
         this.working = false;
         var changed = false;
-        if (this.level == null) {
+        if (!(this.level instanceof ServerLevel world)) {
             return;
         }
         for (int x = 0; x < MAX_THREAD; x ++) {
@@ -159,11 +159,11 @@ public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGri
                             changed = true;
                         }
                     }
-                } else if (this.getInternalCurrentPower() > POWER_THRESHOLD && ChargerRecipes.findRecipe(level, myItem) != null) {
+                } else if (this.getInternalCurrentPower() > POWER_THRESHOLD && ChargerRecipes.findRecipe(world, myItem) != null) {
                     this.working = true;
-                    if (this.level.getRandom().nextFloat() > 0.8f) {
+                    if (world.getRandom().nextFloat() > 0.8f) {
                         this.extractAEPower(this.getInternalMaxPower(), Actionable.MODULATE, PowerMultiplier.CONFIG);
-                        var charged = Objects.requireNonNull(ChargerRecipes.findRecipe(level, myItem)).result;
+                        var charged = Objects.requireNonNull(ChargerRecipes.findRecipe(world, myItem)).result().create();
                         this.inv.setItemDirect(x, charged.copy());
                         changed = true;
                     }
@@ -204,10 +204,9 @@ public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGri
         for (int x = 0; x < MAX_THREAD; x ++) {
             var stored = this.inv.getStackInSlot(x);
             if (stored.isEmpty()) {
-                ItemStack held = player.getInventory().getSelected();
-                assert level != null;
-                if (ChargerRecipes.findRecipe(level, held) != null || Platform.isChargeable(held)) {
-                    held = player.getInventory().removeItem(player.getInventory().selected, 1);
+                ItemStack held = player.getInventory().getSelectedItem();
+                if (level instanceof ServerLevel world && ChargerRecipes.findRecipe(world, held) != null || Platform.isChargeable(held)) {
+                    held = player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1);
                     this.inv.setItemDirect(x, held);
                     return;
                 }
@@ -229,8 +228,10 @@ public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGri
         @Override
         public boolean allowInsert(InternalInventory inv, int i, ItemStack itemstack) {
             if (Platform.isChargeable(itemstack)) return true;
-            assert chargerBlockEntity.level != null;
-            return ChargerRecipes.allowInsert(chargerBlockEntity.level, itemstack);
+            if (chargerBlockEntity.level instanceof ServerLevel serverLevel) {
+                return ChargerRecipes.allowInsert(serverLevel, itemstack);
+            }
+            return false;
         }
 
         @Override
@@ -242,8 +243,10 @@ public class TileExCharger extends AENetworkedPoweredBlockEntity implements IGri
                     return true;
                 }
             }
-            assert chargerBlockEntity.level != null;
-            return ChargerRecipes.allowExtract(chargerBlockEntity.level, extractedItem);
+            if (chargerBlockEntity.level instanceof ServerLevel serverLevel) {
+                return ChargerRecipes.allowExtract(serverLevel, extractedItem);
+            }
+            return false;
         }
     }
 

@@ -12,9 +12,7 @@ import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.util.FCUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -26,16 +24,16 @@ import javax.annotation.Nonnull;
 
 public class ItemPatternModifier extends AEBaseItem implements IMenuItem {
 
-    public ItemPatternModifier() {
-        super(new Item.Properties().stacksTo(1));
+    public ItemPatternModifier(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player p, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player p, @NotNull InteractionHand hand) {
         if (!level.isClientSide()) {
             MenuOpener.open(ContainerPatternModifier.TYPE, p, MenuLocators.forHand(p, hand));
         }
-        return new InteractionResultHolder<>(InteractionResult.sidedSuccess(level.isClientSide()), p.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 
     @Nonnull

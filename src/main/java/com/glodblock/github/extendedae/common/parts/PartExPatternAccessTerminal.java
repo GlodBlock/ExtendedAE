@@ -3,36 +3,22 @@ package com.glodblock.github.extendedae.common.parts;
 import appeng.api.config.Settings;
 import appeng.api.config.ShowPatternProviders;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.storage.ILinkStatus;
 import appeng.api.storage.IPatternAccessTermMenuHost;
 import appeng.api.util.IConfigManager;
+import appeng.blockentity.AEModelData;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
-import appeng.parts.PartModel;
 import appeng.parts.reporting.AbstractDisplayPart;
 import appeng.util.ConfigManager;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Arrays;
-import java.util.List;
+import net.neoforged.neoforge.model.data.ModelData;
 
 public class PartExPatternAccessTerminal extends AbstractDisplayPart implements IPatternAccessTermMenuHost {
-
-    public static List<Identifier> MODELS = Arrays.asList(
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_pattern_access_terminal_off"),
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/ex_pattern_access_terminal_on")
-    );
-
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, MODELS.get(0), MODEL_STATUS_OFF);
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, MODELS.get(1), MODEL_STATUS_ON);
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, MODELS.get(1), MODEL_STATUS_HAS_CHANNEL);
 
     private final ConfigManager configManager = new ConfigManager(() -> this.getHost().markForSave());
 
@@ -50,8 +36,9 @@ public class PartExPatternAccessTerminal extends AbstractDisplayPart implements 
     }
 
     @Override
-    public IPartModel getStaticModels() {
-        return this.selectModel(MODELS_OFF, MODELS_ON, MODELS_HAS_CHANNEL);
+    public void collectModelData(ModelData.Builder builder) {
+        super.collectModelData(builder);
+        builder.with(AEModelData.SPIN, getSpin());
     }
 
     @Override
@@ -60,15 +47,15 @@ public class PartExPatternAccessTerminal extends AbstractDisplayPart implements 
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag, HolderLookup.Provider registries) {
-        super.writeToNBT(tag, registries);
-        configManager.writeToNBT(tag, registries);
+    public void writeToNBT(ValueOutput tag) {
+        super.writeToNBT(tag);
+        configManager.writeToNBT(tag);
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag, HolderLookup.Provider registries) {
-        super.readFromNBT(tag, registries);
-        configManager.readFromNBT(tag, registries);
+    public void readFromNBT(ValueInput tag) {
+        super.readFromNBT(tag);
+        configManager.readFromNBT(tag);
     }
 
     @Override

@@ -11,8 +11,8 @@ import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.OutputSlot;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.common.me.DirectionSet;
 import com.glodblock.github.extendedae.common.tileentities.TileCircuitCutter;
-import com.glodblock.github.extendedae.container.helper.DirectionSet;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.core.Direction;
@@ -20,7 +20,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> implements IProgressProvider, IActionHolder {
@@ -32,11 +31,11 @@ public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> i
     public YesNo autoExport = YesNo.NO;
 
     @GuiSync(9)
-    public DirectionSet outputSides = new DirectionSet(new ArrayList<>());
+    public DirectionSet outputSides = new DirectionSet(List.of());
 
     private final ActionMap actions = ActionMap.create();
 
-    public static final MenuType<ContainerCircuitCutter> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerCircuitCutter> TYPE = MenuTypeBuilder
             .create(ContainerCircuitCutter::new, TileCircuitCutter.class)
             .buildUnregistered(ExtendedAE.id("circuit_cutter"));
 
@@ -44,23 +43,22 @@ public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> i
         super(TYPE, id, ip, host);
         this.addSlot(new AppEngSlot(host.getInput(), 0), SlotSemantics.MACHINE_INPUT);
         this.addSlot(new OutputSlot(host.getOutput(), 0, null), SlotSemantics.MACHINE_OUTPUT);
-        this.actions.put("set_side", o -> this.setOutputSide(o.get(0), o.get(1)));
+        this.actions.put("set_side", o -> this.setOutputSide(o.get(Direction.class), o.getBoolean()));
     }
 
-    private void setOutputSide(String name, boolean value) {
-        var side = Direction.byName(name);
+    private void setOutputSide(Direction side, boolean value) {
         if (value) {
             this.getHost().getOutputSides().add(side);
         } else {
             this.getHost().getOutputSides().remove(side);
         }
+        this.getHost().saveChanges();
     }
 
     @Override
     protected void loadSettingsFromHost(IConfigManager cm) {
         this.autoExport = cm.getSetting(Settings.AUTO_EXPORT);
-        this.outputSides.clear();
-        this.outputSides.addAll(this.getHost().getOutputSides());
+        this.outputSides.reload(this.getHost().getOutputSides());
     }
 
     @Override
@@ -86,7 +84,7 @@ public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> i
     }
 
     public List<Direction> getOutputSides() {
-        return outputSides.sides();
+        return outputSides.asList();
     }
 
     @NotNull

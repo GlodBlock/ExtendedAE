@@ -2,30 +2,21 @@
   "type": "extendedae:crystal_assembler",
   "input_items": [
     {
-      "ingredient": {
-        "item": "ae2:formation_plane"
-      }
+      "ingredient": "ae2:formation_plane"
     },
     {
       "amount": 3,
-      "ingredient": {
-        "item": "minecraft:piston"
-      }
+      "ingredient": "minecraft:piston"
     },
     {
       "amount": 2,
-      "ingredient": {
-        "item": "ae2:formation_core"
-      }
+      "ingredient": "ae2:formation_core"
     },
     {
-      "ingredient": {
-        "item": "extendedae:ex_export_bus_part"
-      }
+      "ingredient": "extendedae:ex_export_bus_part"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:active_formation_plane"
   }
 }

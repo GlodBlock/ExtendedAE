@@ -1,11 +1,11 @@
 package com.glodblock.github.extendedae.client.gui;
 
-import appeng.client.gui.Icon;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.Blitter;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.core.AppEng;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.common.me.wireless.WirelessStatus;
@@ -14,8 +14,10 @@ import com.glodblock.github.extendedae.container.ContainerWirelessHub;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.extendedae.util.MessageUtil;
+import guideme.document.LytRect;
+import guideme.render.SimpleRenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -48,7 +50,7 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
             this.remotes[i] = new RemoteBlock(() -> menu.getRemotePosition(port), 0, 0, 16, 16);
             this.highlightBtn[i] = new HighlightButton();
             this.highlightBtn[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.highlight.tooltip")));
-            this.disconnectBtn[i] = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("disconnect", port)), Icon.CLEAR);
+            this.disconnectBtn[i] = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("disconnect", port)), Icon.CLEAR);
             this.disconnectBtn[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_hub.disconnect.tooltip")));
         }
     }
@@ -71,7 +73,7 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
     @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
-        var dim = this.getPlayer().clientLevel.dimension();
+        var dim = this.getPlayer().level().dimension();
         for (int i = 0; i < TileWirelessHub.MAX_PORT; i ++) {
             var status = this.menu.getStatus(i);
             if (status == WirelessStatus.WORKING || status == WirelessStatus.NO_POWER) {
@@ -81,8 +83,8 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
                 this.highlightBtn[i].setMultiplier(this.playerToBlockDis(remotePos));
                 this.highlightBtn[i].setSuccessJob(() -> {
                     if (this.getPlayer() != null) {
-                        Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, this.getPlayer().clientLevel.dimension(), "chat.wireless.highlight");
-                        this.getPlayer().displayClientMessage(message, false);
+                        Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, this.getPlayer().level().dimension(), "chat.wireless.highlight");
+                        this.getPlayer().sendOverlayMessage(message);
                     }
                 });
                 this.remotes[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.remote_channel", remotePos.getX(), remotePos.getY(), remotePos.getZ(), this.menu.getRemoteChannel(i))));
@@ -96,10 +98,10 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         int textColor = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
         int len = 12;
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.wireless_connect.power", String.format("%.2f", this.menu.powerUse)),
                 PADDING_X,
@@ -107,7 +109,7 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
                 textColor,
                 false
         );
-        guiGraphics.drawString(
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.wireless_connect.channel", this.menu.usedChannel, this.menu.maxChannel),
                 PADDING_X,
@@ -143,13 +145,18 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
         }
 
         @Override
-        protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             if (this.localPos != this.locator.get() && Minecraft.getInstance().level != null) {
                 this.localPos = this.locator.get();
                 this.localBlock = new ItemStack(Minecraft.getInstance().level.getBlockState(this.localPos).getBlock());
             }
             if (this.isConnected) {
-                graphics.renderItem(this.localBlock, this.getX(), this.getY(), 0, 3);
+                var renderContext = new SimpleRenderContext(LytRect.empty(), graphics);
+                renderContext.renderItem(
+                        this.localBlock,
+                        this.getX(), this.getY(),
+                        16,
+                        16);
             } else {
                 PORT.dest(this.getX(), this.getY()).blit(graphics);
             }

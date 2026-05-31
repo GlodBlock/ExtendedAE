@@ -9,41 +9,23 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
 import appeng.api.storage.StorageHelper;
-import appeng.core.AppEngBase;
 import appeng.core.definitions.AEItems;
-import appeng.parts.PartModel;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.ConfigInventory;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
-
-import java.util.Arrays;
-import java.util.List;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class PartPreciseExportBus extends ExportBusPart {
 
-    public static List<Identifier> MODELS = Arrays.asList(
-            Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/precise_export_bus_base"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_on"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_off"),
-            Identifier.fromNamespaceAndPath(AppEngBase.MOD_ID, "part/export_bus_has_channel")
-    );
-
-    public static final PartModel MODELS_OFF = new PartModel(MODELS.getFirst(), MODELS.get(2));
-    public static final PartModel MODELS_ON = new PartModel(MODELS.getFirst(), MODELS.get(1));
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.getFirst(), MODELS.get(3));
     private ConfigInventory config;
     private Object2LongMap<AEKey> amountMap;
 
@@ -52,9 +34,9 @@ public class PartPreciseExportBus extends ExportBusPart {
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
-        super.readFromNBT(extra, registries);
-        this.config.readFromChildTag(extra, "config2", registries);
+    public void readFromNBT(ValueInput extra) {
+        super.readFromNBT(extra);
+        this.config.readFromChildTag(extra, "config2");
         this.rebuildAmountMap();
     }
 
@@ -69,9 +51,9 @@ public class PartPreciseExportBus extends ExportBusPart {
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
-        super.writeToNBT(extra, registries);
-        this.config.writeToChildTag(extra, "config2", registries);
+    public void writeToNBT(ValueOutput extra) {
+        super.writeToNBT(extra);
+        this.config.writeToChildTag(extra, "config2");
     }
 
     @Override
@@ -178,17 +160,6 @@ public class PartPreciseExportBus extends ExportBusPart {
             return this.getRSMode() == RedstoneMode.SIGNAL_PULSE;
         }
         return false;
-    }
-
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
-        }
     }
 
     @Override

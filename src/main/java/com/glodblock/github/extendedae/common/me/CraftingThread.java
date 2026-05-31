@@ -19,18 +19,16 @@ import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class CraftingThread {
 
@@ -92,27 +90,21 @@ public class CraftingThread {
         this.updateSleepiness();
     }
 
-    public CompoundTag writeNBT(HolderLookup.Provider register) {
-        var data = new CompoundTag();
+    public void writeNBT(ValueOutput output) {
         var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
         if (!pattern.isEmpty()) {
-            data.put("myPlan", pattern.save(register));
-            data.putInt("pushDirection", this.pushDirection.ordinal());
+            output.store("myPlan", ItemStack.OPTIONAL_CODEC, pattern);
+            output.putInt("pushDirection", this.pushDirection.ordinal());
         }
-        return data;
     }
 
-    public void readNBT(CompoundTag data, HolderLookup.Provider register) {
+    public void readNBT(ValueInput input) {
         this.forcePlan = false;
-        this.myPattern = ItemStack.EMPTY;
         this.myPlan = null;
-        if (data.contains("myPlan")) {
-            var pattern = ItemStack.parseOptional(register, data.getCompound("myPlan"));
-            if (!pattern.isEmpty()) {
-                this.forcePlan = true;
-                this.myPattern = pattern;
-                this.pushDirection = Direction.values()[data.getInt("pushDirection")];
-            }
+        this.myPattern = input.read("myPlan", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        if (!this.myPattern.isEmpty()) {
+            this.forcePlan = true;
+            this.pushDirection = Direction.values()[input.getIntOr("pushDirection", 0)];
         }
         this.recalculatePlan();
     }

@@ -6,7 +6,7 @@ import com.glodblock.github.glodium.recipe.stack.IngredientStack;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -25,7 +25,7 @@ public class CrystalFixerRecipe extends MechanicsRecipe<RecipeInput> {
     protected final IngredientStack.Item fuel;
 
     // 10000 means 100% chance
-    public CrystalFixerRecipe(ItemStack input, ItemStack output, IngredientStack.Item fuel, int chance) {
+    public CrystalFixerRecipe(ItemStackTemplate input, ItemStackTemplate output, IngredientStack.Item fuel, int chance) {
         this(asBlock(input), asBlock(output), fuel, chance);
     }
 
@@ -36,8 +36,8 @@ public class CrystalFixerRecipe extends MechanicsRecipe<RecipeInput> {
         this.chance = chance;
     }
 
-    private static Block asBlock(ItemStack stack) {
-        return ((BlockItem) stack.getItem()).getBlock();
+    private static Block asBlock(ItemStackTemplate stack) {
+        return ((BlockItem) stack.item()).getBlock();
     }
 
     public boolean roll(RandomSource random) {

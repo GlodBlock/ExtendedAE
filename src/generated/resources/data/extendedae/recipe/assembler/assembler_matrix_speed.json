@@ -2,30 +2,21 @@
   "type": "extendedae:crystal_assembler",
   "input_items": [
     {
-      "ingredient": {
-        "item": "extendedae:assembler_matrix_wall"
-      }
+      "ingredient": "extendedae:assembler_matrix_wall"
     },
     {
       "amount": 8,
-      "ingredient": {
-        "item": "ae2:speed_card"
-      }
+      "ingredient": "ae2:speed_card"
     },
     {
       "amount": 6,
-      "ingredient": {
-        "item": "ae2:red_lumen_paint_ball"
-      }
+      "ingredient": "ae2:red_lumen_paint_ball"
     },
     {
-      "ingredient": {
-        "item": "extendedae:concurrent_processor"
-      }
+      "ingredient": "extendedae:concurrent_processor"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:assembler_matrix_speed"
   }
 }

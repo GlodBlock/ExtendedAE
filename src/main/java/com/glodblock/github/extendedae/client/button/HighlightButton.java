@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class HighlightButton extends EPPButton {
@@ -17,7 +18,7 @@ public class HighlightButton extends EPPButton {
     private float multiplier;
     private Runnable successJob;
     private BlockPos pos;
-    private ResourceKey<Level> dim;
+    private ResourceKey<@NotNull Level> dim;
     @Nullable
     private Direction face;
 
@@ -33,13 +34,13 @@ public class HighlightButton extends EPPButton {
         this.successJob = process;
     }
 
-    public void setTarget(BlockPos pos, Direction face, ResourceKey<Level> world) {
+    public void setTarget(BlockPos pos, Direction face, ResourceKey<@NotNull Level> world) {
         this.pos = pos;
         this.dim = world;
         this.face = face;
     }
 
-    public void setTarget(BlockPos pos, ResourceKey<Level> world) {
+    public void setTarget(BlockPos pos, ResourceKey<@NotNull Level> world) {
         this.setTarget(pos, null, world);
     }
 

@@ -1,37 +1,20 @@
 package com.glodblock.github.extendedae.common.parts;
 
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
-import appeng.core.AppEng;
-import appeng.items.parts.PartModels;
-import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.me.modlist.ModPriorityList;
 import com.glodblock.github.extendedae.common.parts.base.PartSpecialStorageBus;
 import com.glodblock.github.extendedae.container.ContainerModStorageBus;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class PartModStorageBus extends PartSpecialStorageBus {
-
-    public static final Identifier MODEL_BASE = Identifier.fromNamespaceAndPath(ExtendedAE.MODID, "part/mod_storage_bus_base");
-
-    @PartModels
-    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_off"));
-
-    @PartModels
-    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_on"));
-
-    @PartModels
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, Identifier.fromNamespaceAndPath(AppEng.MOD_ID, "part/storage_bus_has_channel"));
 
     private String modid = "";
 
@@ -40,14 +23,14 @@ public class PartModStorageBus extends PartSpecialStorageBus {
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.modid = data.getString("modid");
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.modid = data.getStringOr("modid", "");
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
         data.putString("modid", this.modid);
     }
 
@@ -93,17 +76,6 @@ public class PartModStorageBus extends PartSpecialStorageBus {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
             output.set(EAESingletons.MOD_EXPRESS, this.modid);
-        }
-    }
-
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
         }
     }
 

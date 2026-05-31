@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class TagExpParserV2 {
 
-    private final static LoadingCache<String, Predicate<Input>> COMPILED_EXPRESSION_CACHE = CacheBuilder.newBuilder()
+    private final static LoadingCache<@NotNull String, @NotNull Predicate<Input>> COMPILED_EXPRESSION_CACHE = CacheBuilder.newBuilder()
             .maximumSize(512) // Sensible cache size limit
             .build(new CacheLoader<>() {
                 @Override
@@ -52,7 +52,7 @@ public class TagExpParserV2 {
             List<String> tagStrings = Stream.concat(holder.tags(), assocateHolder == null ? Stream.empty() : assocateHolder.tags())
                     .map(tagKey -> tagKey.location().toString())
                     .collect(Collectors.toList());
-            holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.location().toString()));
+            holder.unwrapKey().ifPresent(resourceKey -> tagStrings.add(resourceKey.identifier().toString()));
             return expression.test(tagStrings);
         }
         return false;
@@ -62,11 +62,11 @@ public class TagExpParserV2 {
         pattern = removeExtraSyb(pattern.trim());
         var tokens = tokenize(pattern);
         if (tokens.isEmpty()) {
-            return i -> false;
+            return _ -> false;
         }
         var rpn = convertToRPN(tokens);
         if (rpn.isEmpty()) {
-            return i -> false;
+            return _ -> false;
         }
         return input -> {
             int evalCode = eval(input.input(), rpn);

@@ -12,10 +12,11 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerActiveFormationPlane extends UpgradeableMenu<PartActiveFormationPlane> {
 
-    public static final MenuType<ContainerActiveFormationPlane> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerActiveFormationPlane> TYPE = MenuTypeBuilder
             .create(ContainerActiveFormationPlane::new, PartActiveFormationPlane.class)
             .buildUnregistered(ExtendedAE.id("active_formation_plane"));
 
@@ -67,4 +68,5 @@ public class ContainerActiveFormationPlane extends UpgradeableMenu<PartActiveFor
         }
         return false;
     }
+
 }

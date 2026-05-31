@@ -11,7 +11,7 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import com.glodblock.github.extendedae.container.ContainerExIOPort;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -41,7 +41,7 @@ public class GuiExIOPort extends UpgradeableScreen<ContainerExIOPort> {
     }
 
     @Override
-    public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
+    public void drawBG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
 
         this.drawItem(guiGraphics, offsetX + 66 - 8, offsetY + 17, AEItems.ITEM_CELL_1K.stack());

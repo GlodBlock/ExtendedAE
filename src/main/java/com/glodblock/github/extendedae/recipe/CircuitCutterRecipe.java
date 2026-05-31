@@ -4,7 +4,7 @@ import appeng.recipes.MechanicsRecipe;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.glodium.recipe.stack.IngredientStack;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -20,9 +20,9 @@ public class CircuitCutterRecipe extends MechanicsRecipe<RecipeInput> {
     public static final RecipeType<@NotNull CircuitCutterRecipe> TYPE = RecipeType.simple(ID);
 
     protected final IngredientStack.Item input;
-    public final ItemStack output;
+    public final ItemStackTemplate output;
 
-    public CircuitCutterRecipe(ItemStack output, IngredientStack.Item input) {
+    public CircuitCutterRecipe(ItemStackTemplate output, IngredientStack.Item input) {
         this.output = output;
         this.input = input;
     }

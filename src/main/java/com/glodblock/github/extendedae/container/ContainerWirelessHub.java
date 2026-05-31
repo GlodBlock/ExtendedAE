@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class ContainerWirelessHub extends UpgradeableMenu<TileWirelessHub> implements IActionHolder {
 
-    public static final MenuType<ContainerWirelessHub> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerWirelessHub> TYPE = MenuTypeBuilder
             .create(ContainerWirelessHub::new, TileWirelessHub.class)
             .buildUnregistered(ExtendedAE.id("wireless_hub"));
 
@@ -36,7 +36,7 @@ public class ContainerWirelessHub extends UpgradeableMenu<TileWirelessHub> imple
 
     public ContainerWirelessHub(int id, Inventory ip, TileWirelessHub host) {
         super(TYPE, id, ip, host);
-        this.actions.put("disconnect", o -> this.disconnect(o.get(0)));
+        this.actions.put("disconnect", o -> this.disconnect(o.getInt()));
     }
 
     private void disconnect(int port) {

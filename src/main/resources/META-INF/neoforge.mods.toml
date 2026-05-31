@@ -30,7 +30,7 @@ license="${mod_license}"
 [[dependencies.extendedae]]
     modId="ae2"
     type="REQUIRED"
-    versionRange="[19.2.8,)"
+    versionRange="[26.1.8-alpha,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.extendedae]]
@@ -41,18 +41,6 @@ license="${mod_license}"
 [[dependencies.extendedae]]
     modId="glodium"
     type="REQUIRED"
-    versionRange="[1.21-2.0-neoforge,)"
-    ordering="AFTER"
-    side="BOTH"
-[[dependencies.extendedae]]
-    modId="ae2wtlib_api"
-    type="REQUIRED"
     versionRange="*"
-    ordering="BEFORE"
-    side="BOTH"
-[[dependencies.extendedae]]
-    modId="ae2wtlib"
-    type="OPTIONAL"
-    versionRange="[19.2.0,)"
     ordering="AFTER"
     side="BOTH"

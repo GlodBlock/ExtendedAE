@@ -10,15 +10,10 @@ import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.util.LazyInits;
 import com.glodblock.github.extendedae.xmod.ModConstants;
-import com.glodblock.github.extendedae.xmod.appliede.APESingletons;
 import com.glodblock.github.extendedae.xmod.darkmode.BlacklistGUI;
-import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
-import com.glodblock.github.extendedae.xmod.wt.HostWirelessExPAT;
 import com.glodblock.github.glodium.Glodium;
 import com.glodblock.github.glodium.util.GlodUtil;
 import com.mojang.logging.LogUtils;
-import de.mari_023.ae2wtlib.api.gui.Icon;
-import de.mari_023.ae2wtlib.api.registration.AddTerminalEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
@@ -48,32 +43,12 @@ public class ExtendedAE {
         if (!container.getModId().equals(MODID)) {
             throw new IllegalArgumentException("Invalid ID: " + MODID);
         }
+        EAERegistryHandler.INSTANCE = new EAERegistryHandler(bus);
+        EAESingletons.init(EAERegistryHandler.INSTANCE);
         container.registerConfig(ModConfig.Type.COMMON, EAEConfig.SPEC);
         bus.addListener((RegisterEvent e) -> {
             if (e.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
                 EAERegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));
-                return;
-            }
-            if (e.getRegistryKey().equals(Registries.BLOCK)) {
-                EAESingletons.init(EAERegistryHandler.INSTANCE);
-                if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
-                    APESingletons.init(EAERegistryHandler.INSTANCE);
-                }
-                EAERegistryHandler.INSTANCE.runRegister();
-                if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
-                    APESingletons.register();
-                }
-                return;
-            }
-            if (e.getRegistryKey().equals(Registries.ITEM)) {
-                Icon.Texture TX = new Icon.Texture(id("textures/guis/nicons.png"), 64, 64);
-                AddTerminalEvent.register(event -> event.builder(
-                        "ex_pattern_access",
-                        HostWirelessExPAT::new,
-                        ContainerWirelessExPAT.TYPE,
-                        EAESingletons.WIRELESS_EX_PAT,
-                        new Icon(32, 32, 16, 16, TX)
-                ).hotkeyName("wireless_pattern_access_terminal").translationKey("item.extendedae.wireless_ex_pat").addTerminal());
             }
         });
         if (FMLEnvironment.getDist().isClient()) {
@@ -113,6 +88,10 @@ public class ExtendedAE {
 
     public static Identifier id(String id) {
         return Glodium.id(MODID, id);
+    }
+
+    public static String stringId(String id) {
+        return id(id).toString();
     }
 
 }

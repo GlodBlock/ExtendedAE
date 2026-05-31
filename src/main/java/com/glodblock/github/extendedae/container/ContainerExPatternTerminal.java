@@ -14,13 +14,14 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerExPatternTerminal extends PatternAccessTermMenu {
 
-    public static final MenuType<ContainerExPatternTerminal> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExPatternTerminal> TYPE = MenuTypeBuilder
             .create(ContainerExPatternTerminal::new, IPatternAccessTermMenuHost.class)
             .buildUnregistered(ExtendedAE.id("ex_pattern_access_terminal"));
 

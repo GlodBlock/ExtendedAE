@@ -2,36 +2,25 @@
   "type": "extendedae:crystal_assembler",
   "input_items": [
     {
-      "ingredient": {
-        "tag": "extendedae:extended_interface"
-      }
+      "ingredient": "#extendedae:extended_interface"
     },
     {
-      "ingredient": {
-        "item": "extendedae:ingredient_buffer"
-      }
+      "ingredient": "extendedae:ingredient_buffer"
     },
     {
       "amount": 2,
-      "ingredient": {
-        "item": "extendedae:concurrent_processor"
-      }
+      "ingredient": "extendedae:concurrent_processor"
     },
     {
       "amount": 2,
-      "ingredient": {
-        "item": "ae2:annihilation_core"
-      }
+      "ingredient": "ae2:annihilation_core"
     },
     {
       "amount": 2,
-      "ingredient": {
-        "item": "ae2:formation_core"
-      }
+      "ingredient": "ae2:formation_core"
     }
   ],
   "output": {
-    "count": 1,
     "id": "extendedae:oversize_interface"
   }
 }

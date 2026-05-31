@@ -1,64 +1,37 @@
 package com.glodblock.github.extendedae.client.model;
 
-import appeng.client.render.DelegateBakedModel;
-import appeng.client.render.model.DriveModelData;
-import appeng.thirdparty.fabric.MutableQuadView;
-import appeng.thirdparty.fabric.RenderContext;
-import com.mojang.math.Transformation;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
+import appeng.block.storage.DriveModelData;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ExDriveBakedModel extends DelegateBakedModel {
-    private final Map<Item, BakedModel> cellModels;
-    private final Map<Item, BakedModel> invertCellModels;
-    private final BakedModel defaultCellModel;
-    private final BakedModel invertDefaultCellModel;
-    private final RenderContext.QuadTransform[] cellTransforms;
+public class ExDriveBakedModel implements DynamicBlockStateModel {
 
-    public ExDriveBakedModel(Transformation rotation, Transformation invertRotation, BakedModel bakedBase,
-                             Map<Item, BakedModel> cellModels, Map<Item, BakedModel> invertCellModels,
-                             BakedModel defaultCell, BakedModel invertDefaultCell) {
-        super(bakedBase);
+    private final BlockStateModelPart baseModel;
+    private final Map<Item, BlockStateModelPart[]> cellModels;
+    private final BlockStateModelPart[] defaultCellModel;
+
+    public ExDriveBakedModel(BlockStateModelPart baseModel, Map<Item, BlockStateModelPart[]> cellModels, BlockStateModelPart[] defaultCell) {
+        this.baseModel = baseModel;
         this.defaultCellModel = defaultCell;
-        this.invertDefaultCellModel = invertDefaultCell;
-        this.invertCellModels = invertCellModels;
         this.cellModels = cellModels;
-        this.cellTransforms = this.buildSlotTransforms(rotation.getLeftRotation(), invertRotation.getLeftRotation());
-    }
-
-    /**
-     * Calculates the origin of a drive slot for positioning a cell model into it.
-     */
-    public static void getSlotOrigin(int row, int col, Vector3f translation) {
-        // Position this drive model copy at the correct slot. The transform is based on
-        // the cell-model being in slot 0,0,0 while the upper left slot's origin is at
-        // 9,13,1
-        float xOffset = (9 - col * 8) / 16.0f;
-        float yOffset = (13 - row * 3) / 16.0f;
-        translation.set(xOffset, yOffset, 1 / 16.0f);
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
-        List<BakedQuad> result = new ArrayList<>(super.getQuads(state, side, rand, extraData, renderType));
-
-        var cells = extraData.get(DriveModelData.STATE);
-
+    public void collectParts(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull RandomSource rand, @NotNull List<BlockStateModelPart> parts) {
+        parts.add(this.baseModel);
+        var cells = level.getModelData(pos).get(DriveModelData.STATE);
         // Add cell models on top of the base model, if possible
         if (cells != null) {
             for (int disk = 0; disk < 2; disk++) {
@@ -67,77 +40,40 @@ public class ExDriveBakedModel extends DelegateBakedModel {
                         int slot = getSlotIndex(row, col, disk);
                         // Add the cell chassis
                         Item cell = slot < cells.length ? cells[slot] : null;
-                        BakedModel cellChassisModel = getCellChassisModel(cell, disk != 0);
-                        var quadView = MutableQuadView.getInstance();
-                        for (BakedQuad quad : cellChassisModel.getQuads(state, side, rand, ModelData.EMPTY, renderType)) {
-                            quadView.fromVanilla(quad, side);
-                            this.cellTransforms[getSlotIndex(row, col, disk)].transform(quadView);
-                            result.add(quadView.toBlockBakedQuad());
+                        var cellChassisModel = getCellChassisModel(cell, getSlotIndex(row, col, disk));
+                        if (cellChassisModel != null && cell != Items.AIR) {
+                            parts.add(cellChassisModel);
                         }
                     }
                 }
             }
         }
-        return result;
-    }
-
-    @Override
-    public boolean useAmbientOcclusion() {
-        // We have faces inside the chassis that are facing east, but should not receive
-        // ambient occlusion from the east-side, but sadly this cannot be fine-tuned on
-        // a face-by-face basis.
-        return false;
     }
 
     // Determine which drive chassis to show based on the used cell
-    public BakedModel getCellChassisModel(Item cell, boolean invert) {
+    public BlockStateModelPart getCellChassisModel(Item cell, int index) {
         if (cell == null) {
-            return cellModels.get(Items.AIR);
+            return null;
         }
-        final BakedModel model = invert ? invertCellModels.get(cell) : cellModels.get(cell);
+        final BlockStateModelPart[] model = cellModels.get(cell);
         if (model != null) {
-            return model;
+            return model[index];
         }
-        return invert ? invertDefaultCellModel : defaultCellModel;
+        return this.defaultCellModel[index];
     }
 
-    private RenderContext.QuadTransform[] buildSlotTransforms(Quaternionf rotation, Quaternionf invertRotation) {
-        RenderContext.QuadTransform[] transforms = new RenderContext.QuadTransform[20];
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 2; col++) {
-                Vector3f translation = new Vector3f();
-                getSlotOrigin(row, col, translation);
-                rotation.transform(translation);
-                transforms[getSlotIndex(row, col, 0)] = new ExDriveBakedModel.QuadTranslator(translation.x(), translation.y(), translation.z());
-            }
-        }
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 2; col++) {
-                Vector3f translation = new Vector3f();
-                getSlotOrigin(row, col, translation);
-                invertRotation.transform(translation);
-                transforms[getSlotIndex(row, col, 1)] = new ExDriveBakedModel.QuadTranslator(translation.x(), translation.y(), translation.z());
-            }
-        }
-        return transforms;
-    }
-
-    private static int getSlotIndex(int row, int col, int disk) {
+    public static int getSlotIndex(int row, int col, int disk) {
         return row * 2 + col + disk * 10;
     }
 
-    private record QuadTranslator(float x, float y, float z) implements RenderContext.QuadTransform {
-
-        @Override
-        public boolean transform(MutableQuadView quad) {
-            Vector3f target = new Vector3f();
-            for (int i = 0; i < 4; i++) {
-                quad.copyPos(i, target);
-                target.add(x, y, z);
-                quad.pos(i, target);
-            }
-            return true;
-        }
-
+    @Override
+    public Material.@NotNull Baked particleMaterial() {
+        return baseModel.particleMaterial();
     }
+
+    @Override
+    public @BakedQuad.MaterialFlags int materialFlags() {
+        return baseModel.materialFlags();
+    }
+
 }

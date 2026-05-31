@@ -15,10 +15,11 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.tileentities.TileExIOPort;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerExIOPort extends UpgradeableMenu<TileExIOPort> {
 
-    public static final MenuType<ContainerExIOPort> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExIOPort> TYPE = MenuTypeBuilder
             .create(ContainerExIOPort::new, TileExIOPort.class)
             .buildUnregistered(ExtendedAE.id("ex_ioport"));
 

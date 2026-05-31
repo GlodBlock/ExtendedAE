@@ -2,7 +2,7 @@ package com.glodblock.github.extendedae.client.gui.pattern;
 
 import appeng.core.AppEng;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,10 +18,10 @@ public class GuiSmithingTablePattern extends GuiPattern<ContainerSmithingTablePa
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float f, int x, int y) {
+    protected void extractMenuBackground(@NotNull GuiGraphicsExtractor guiGraphics) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(BG, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BG, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 
 }

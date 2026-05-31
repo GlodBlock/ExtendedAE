@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -61,78 +61,67 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (newState.getBlock() != state.getBlock()) {
-            var te = this.getBlockEntity(level, pos);
-            if (te != null) {
-                te.breakOnRemove();
-            }
-            super.onRemove(state, level, pos, newState, isMoving);
-        }
-    }
-
-    @Override
-    public ItemInteractionResult check(TileWirelessConnector tile, ItemStack stack, Level world, BlockPos thisPos, BlockHitResult hit, Player p) {
-        if (stack.getItem() == EAESingletons.WIRELESS_TOOL && world instanceof ServerLevel server) {
+    public InteractionResult check(TileWirelessConnector tile, ItemStack stack, Level world, BlockPos thisPos, BlockHitResult hit, Player p) {
+        if (stack.getItem() == EAESingletons.WIRELESS_TOOL.get() && world instanceof ServerLevel server) {
             var locator = stack.get(EAESingletons.WIRELESS_LOCATOR);
             if (locator != null) {
                 var f = locator.left();
                 var globalPos = locator.right();
                 if (f != 0) {
                     if (globalPos == null) {
-                        p.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
-                        return ItemInteractionResult.FAIL;
+                        p.sendOverlayMessage(WirelessFail.MISSING.getTranslation());
+                        return InteractionResult.FAIL;
                     }
                     var otherPos = globalPos.pos();
                     var otherWorld = globalPos.dimension();
                     var thisWorld = world.dimension();
                     if (otherPos.equals(thisPos) && otherWorld.equals(thisWorld)) {
-                        p.displayClientMessage(WirelessFail.SELF_REFERENCE.getTranslation(), true);
-                        return ItemInteractionResult.FAIL;
+                        p.sendOverlayMessage(WirelessFail.SELF_REFERENCE.getTranslation());
+                        return InteractionResult.FAIL;
                     }
                     if (!otherWorld.equals(thisWorld)) {
-                        p.displayClientMessage(WirelessFail.CROSS_DIMENSION.getTranslation(), true);
-                        return ItemInteractionResult.FAIL;
+                        p.sendOverlayMessage(WirelessFail.CROSS_DIMENSION.getTranslation());
+                        return InteractionResult.FAIL;
                     }
                     if (Math.sqrt(otherPos.distSqr(thisPos)) > EAEConfig.wirelessMaxRange) {
-                        p.displayClientMessage(WirelessFail.OUT_OF_RANGE.getTranslation(), true);
-                        return ItemInteractionResult.FAIL;
+                        p.sendOverlayMessage(WirelessFail.OUT_OF_RANGE.getTranslation());
+                        return InteractionResult.FAIL;
                     }
                     var otherWorldInstance = server.getServer().getLevel(otherWorld);
                     if (otherWorldInstance == null) {
-                        p.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
-                        return ItemInteractionResult.FAIL;
+                        p.sendOverlayMessage(WirelessFail.MISSING.getTranslation());
+                        return InteractionResult.FAIL;
                     }
                     var otherTile = otherWorldInstance.getBlockEntity(otherPos);
                     if (otherTile instanceof TileWirelessConnector otherConnector) {
                         otherConnector.setFrequency(f);
                         tile.setFrequency(f);
                         stack.remove(EAESingletons.WIRELESS_LOCATOR);
-                        p.displayClientMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-                        return ItemInteractionResult.sidedSuccess(world.isClientSide);
+                        p.sendOverlayMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()));
+                        return InteractionResult.SUCCESS;
                     } if (otherTile instanceof TileWirelessHub otherHub) {
                         int port = otherHub.allocatePort();
                         if (port < 0) {
-                            p.displayClientMessage(WirelessFail.OUT_OF_PORT.getTranslation(), true);
-                            return ItemInteractionResult.FAIL;
+                            p.sendOverlayMessage(WirelessFail.OUT_OF_PORT.getTranslation());
+                            return InteractionResult.FAIL;
                         } else {
                             otherHub.setFrequency(f, port);
                             tile.setFrequency(f);
                             stack.remove(EAESingletons.WIRELESS_LOCATOR);
-                            p.displayClientMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-                            return ItemInteractionResult.sidedSuccess(world.isClientSide);
+                            p.sendOverlayMessage(Component.translatable("chat.wireless_connect", thisPos.getX(), thisPos.getY(), thisPos.getZ()));
+                            return InteractionResult.SUCCESS;
                         }
                     } else {
-                        p.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
-                        return ItemInteractionResult.FAIL;
+                        p.sendOverlayMessage(WirelessFail.MISSING.getTranslation());
+                        return InteractionResult.FAIL;
                     }
                 }
             }
             var freq = tile.getNewFreq();
             var globalPos = GlobalPos.of(world.dimension(), thisPos);
             stack.set(EAESingletons.WIRELESS_LOCATOR, Pair.of(freq, globalPos));
-            p.displayClientMessage(Component.translatable("chat.wireless_bind", thisPos.getX(), thisPos.getY(), thisPos.getZ()), true);
-            return ItemInteractionResult.sidedSuccess(world.isClientSide);
+            p.sendOverlayMessage(Component.translatable("chat.wireless_bind", thisPos.getX(), thisPos.getY(), thisPos.getZ()));
+            return InteractionResult.SUCCESS;
         }
         return null;
     }

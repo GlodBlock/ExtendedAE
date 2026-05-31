@@ -68,16 +68,16 @@ public final class CutterHook {
                     Vec3 hitInBlock = new Vec3(hitVec.x - pos.getX(), hitVec.y - pos.getY(), hitVec.z - pos.getZ());
                     var part = cable.selectPartLocal(hitInBlock).part;
                     if (part instanceof AEBasePart p) {
-                        if (!level.isClientSide) {
+                        if (!level.isClientSide()) {
                             MenuOpener.open(ContainerRenamer.TYPE, player, MenuLocators.forPart(p));
                         }
-                        return InteractionResult.sidedSuccess(level.isClientSide);
+                        return InteractionResult.SUCCESS;
                     }
                 } else {
-                    if (!level.isClientSide) {
+                    if (!level.isClientSide()) {
                         MenuOpener.open(ContainerRenamer.TYPE, player, MenuLocators.forBlockEntity(tile));
                     }
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
             }
         }

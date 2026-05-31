@@ -11,7 +11,6 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.RelativeSide;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
@@ -34,32 +33,33 @@ import appeng.util.inv.filter.AEItemFilters;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
 import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.common.me.DirectionSet;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.util.FCUtil;
 import com.glodblock.github.extendedae.util.RecipeExecutor;
 import com.glodblock.github.glodium.recipe.CommonRecipeContext;
 import com.glodblock.github.glodium.recipe.RecipeSearchContext;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -87,10 +87,10 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     private final RecipeExecutor<CrystalAssemblerRecipe> exec;
     private boolean isWorking = false;
     private int progress = 0;
-    private final Set<Direction> outputSides = EnumSet.noneOf(Direction.class);
+    private final DirectionSet outputSides = new DirectionSet();
 
-    public TileCrystalAssembler(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCrystalAssembler.class, TileCrystalAssembler::new, EAESingletons.CRYSTAL_ASSEMBLER), pos, blockState);
+    public TileCrystalAssembler(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
@@ -98,7 +98,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
         this.tank.setCapacity(AEKeyType.fluids(), TANK_CAP);
-        this.exec = new RecipeExecutor<>(this, r -> r.output, MAX_PROGRESS);
+        this.exec = new RecipeExecutor<>(this, r -> r.output.create(), MAX_PROGRESS);
     }
 
     @Override
@@ -107,8 +107,8 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     }
 
     @Override
-    public IItemHandler getExposedItemHandler(@Nullable Direction side) {
-        return this.invExposed.toItemHandler();
+    public ResourceHandler<@NotNull ItemResource> getExposedItemHandler(@Nullable Direction side) {
+        return this.invExposed.toResourceHandler();
     }
 
     private void onConfigChanged(IConfigManager manager, Setting<?> setting) {
@@ -165,17 +165,12 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
 
     @Override
     public Set<Direction> getOutputSides() {
-        return this.outputSides;
+        return this.outputSides.asSet();
     }
 
     @Override
     public AECableType getCableConnectionType(Direction dir) {
         return AECableType.COVERED;
-    }
-
-    @Override
-    public Set<Direction> getGridConnectableSides(BlockOrientation orientation) {
-        return EnumSet.complementOf(EnumSet.of(orientation.getSide(RelativeSide.TOP)));
     }
 
     @Override
@@ -208,17 +203,23 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
-        this.tank.writeToChildTag(data, "tank_in", registries);
-        this.upgrades.writeToNBT(data, "upgrades", registries);
-        this.configManager.writeToNBT(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
+        this.tank.writeToChildTag(data, "tank_in");
+        this.upgrades.writeToNBT(data, "upgrades");
+        this.configManager.writeToNBT(data);
         this.ctx.save(data);
-        var sides = new ListTag();
-        for (var side : this.getOutputSides()) {
-            sides.add(StringTag.valueOf(side.getName()));
-        }
-        data.put("output_side", sides);
+        this.output.writeToNBT(data, "output_side");
+    }
+
+    @Override
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.tank.readFromChildTag(data, "tank_in");
+        this.upgrades.readFromNBT(data, "upgrades");
+        this.configManager.readFromNBT(data);
+        this.ctx.load(data);
+        this.outputSides.load(data, "output_side");
     }
 
     @Override
@@ -231,12 +232,9 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     @Override
     public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        var nbt = input.get(EAESingletons.EXTRA_SETTING);
-        if (nbt != null) {
-            this.outputSides.clear();
-            for (var side : nbt.getList("output_side", CompoundTag.TAG_STRING)) {
-                this.outputSides.add(Direction.byName(side.getAsString()));
-            }
+        var sides = input.get(EAESingletons.DIRECTION_SET);
+        if (sides != null) {
+            this.outputSides.reload(sides.asList());
         }
     }
 
@@ -244,31 +242,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output, @Nullable Player player) {
         super.exportSettings(mode, output, player);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            var nbt = new CompoundTag();
-            var sides = new ListTag();
-            for (var side : this.getOutputSides()) {
-                sides.add(StringTag.valueOf(side.getName()));
-            }
-            nbt.put("output_side", sides);
-            output.set(EAESingletons.EXTRA_SETTING, nbt);
-        }
-    }
-
-    @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.tank.readFromChildTag(data, "tank_in", registries);
-        this.upgrades.readFromNBT(data, "upgrades", registries);
-        this.configManager.readFromNBT(data, registries);
-        this.ctx.load(data);
-        this.outputSides.clear();
-        if (data.contains("output_side")) {
-            var list = data.getList("output_side", CompoundTag.TAG_STRING);
-            for (var name : list) {
-                this.outputSides.add(Direction.byName(name.getAsString()));
-            }
-        } else {
-            this.outputSides.addAll(List.of(Direction.values()));
+            output.set(EAESingletons.DIRECTION_SET, this.outputSides);
         }
     }
 
@@ -309,7 +283,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides, te -> te instanceof TileCrystalAssembler);
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides.asSet(), te -> te instanceof TileCrystalAssembler);
     }
 
     @Override
@@ -338,6 +312,15 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.ctx.onInvChange();
     }
 
+    @Nullable
+    private ServerLevel getServerLevel() {
+        if (this.level instanceof ServerLevel) {
+            return (ServerLevel) this.level;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public GenericStackInv getGenericInv() {
         return this.tank;
@@ -348,7 +331,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         private final TileCrystalAssembler host;
 
         protected CrystalRecipeContext(TileCrystalAssembler host) {
-            super(() -> host.level, CrystalAssemblerRecipe.TYPE);
+            super(host::getServerLevel, CrystalAssemblerRecipe.TYPE);
             this.host = host;
         }
 
@@ -359,14 +342,14 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         }
 
         @Override
-        public void onFind(@Nullable RecipeHolder<CrystalAssemblerRecipe> recipe) {
+        public void onFind(@Nullable RecipeHolder<@NotNull CrystalAssemblerRecipe> recipe) {
             super.onFind(recipe);
             this.host.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
         }
 
         @Override
-        public boolean testRecipe(RecipeHolder<CrystalAssemblerRecipe> recipe) {
-            var output = recipe.value().output.copy();
+        public boolean testRecipe(RecipeHolder<@NotNull CrystalAssemblerRecipe> recipe) {
+            var output = recipe.value().output.create();
             if (!this.host.output.insertItem(0, output, true).isEmpty()) {
                 return false;
             }
@@ -398,7 +381,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         }
 
         @Override
-        public void runRecipe(RecipeHolder<CrystalAssemblerRecipe> recipe) {
+        public void runRecipe(RecipeHolder<@NotNull CrystalAssemblerRecipe> recipe) {
             var sample = recipe.value().getSample();
             var fluid = this.host.tank.getStack(0);
             FluidStack fluidStack = null;

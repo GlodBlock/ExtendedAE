@@ -10,10 +10,11 @@ import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileExDrive;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerExDrive extends AEBaseMenu {
 
-    public static final MenuType<ContainerExDrive> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerExDrive> TYPE = MenuTypeBuilder
             .create(ContainerExDrive::new, TileExDrive.class)
             .buildUnregistered(ExtendedAE.id("ex_drive"));
 

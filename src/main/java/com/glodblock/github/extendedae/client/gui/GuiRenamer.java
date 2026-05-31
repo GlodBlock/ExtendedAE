@@ -9,6 +9,8 @@ import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import guideme.PageAnchor;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -25,27 +27,27 @@ public class GuiRenamer extends AEBaseScreen<ContainerRenamer> implements IActio
         this.renameInputs.setMaxLength(512);
         this.renameInputs.setPlaceholder(Component.translatable("gui.extendedae.renamer.input"));
         this.renameInputs.setResponder(s -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s)));
-        this.actions.put("init", o -> this.renameInputs.setValue(o.get(0)));
+        this.actions.put("init", o -> this.renameInputs.setValue(o.getString()));
         EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
     @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (btn == 1 && this.renameInputs.isMouseOver(xCoord, yCoord)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean btn) {
+        if (this.renameInputs.isMouseOver(event.x(), event.y()) && event.button() == 1) {
             this.renameInputs.setValue("");
         }
-        return super.mouseClicked(xCoord, yCoord, btn);
+        return super.mouseClicked(event, btn);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.renameInputs.isFocused() && keyCode == GLFW.GLFW_KEY_ENTER) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        if (this.renameInputs.isFocused() && event.key() == GLFW.GLFW_KEY_ENTER) {
             this.renameInputs.setFocused(false);
             EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", this.renameInputs.getValue()));
             this.onClose();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override

@@ -9,10 +9,11 @@ import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerPreciseExportBus extends UpgradeableMenu<PartPreciseExportBus> {
 
-    public static final MenuType<ContainerPreciseExportBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerPreciseExportBus> TYPE = MenuTypeBuilder
             .create(ContainerPreciseExportBus::new, PartPreciseExportBus.class)
             .buildUnregistered(ExtendedAE.id("precise_export_bus"));
 

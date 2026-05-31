@@ -21,15 +21,17 @@ import com.glodblock.github.extendedae.common.me.matrix.CalculatorAssemblerMatri
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     protected final CalculatorAssemblerMatrix calc = new CalculatorAssemblerMatrix(this);
     protected final ConfigManager manager;
     protected boolean isCore = false;
-    protected CompoundTag previousState = null;
+    protected ValueInput previousState = null;
     protected ClusterAssemblerMatrix cluster;
 
     public TileAssemblerMatrixBase(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -57,11 +59,11 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
         return this.manager;
     }
 
-    public CompoundTag getPreviousState() {
+    public ValueInput getPreviousState() {
         return this.previousState;
     }
 
-    public void setPreviousState(CompoundTag previousState) {
+    public void setPreviousState(ValueInput previousState) {
         this.previousState = previousState;
     }
 
@@ -100,7 +102,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
 
     public void updateMultiBlock(BlockPos changedPos) {
         if (level instanceof ServerLevel serverLevel) {
-            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, worldPosition, changedPos);
+            this.calc.updateMultiblockAfterNeighborChange(serverLevel, worldPosition, changedPos);
         }
     }
 
@@ -118,19 +120,19 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
         data.putBoolean("core", this.isCore);
-        this.manager.writeToNBT(data, registries);
+        this.manager.writeToNBT(data);
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
-        this.setCore(data.getBoolean("core"));
-        this.manager.readFromNBT(data, registries);
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.setCore(data.getBooleanOr("core", false));
+        this.manager.readFromNBT(data);
         if (this.isCore) {
-            this.setPreviousState(data.copy());
+            this.setPreviousState(data);
         }
     }
 
@@ -176,7 +178,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     }
 
     @Nullable
-    public IItemHandler getPatternInv(Direction ignored) {
+    public ResourceHandler<@NotNull ItemResource> getPatternInv(Direction ignored) {
         if (this.cluster == null) {
             return null;
         }
@@ -184,7 +186,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
         for (var pc : this.cluster.getPatterns()) {
             inv.add(pc.getExposedInventory());
         }
-        return new CombinedInternalInventory(inv.toArray(new InternalInventory[0])).toItemHandler();
+        return new CombinedInternalInventory(inv.toArray(new InternalInventory[0])).toResourceHandler();
     }
 
     public void updateStatus(ClusterAssemblerMatrix c) {
@@ -238,7 +240,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
 
     public BlockAssemblerMatrixBase<?> getMatrixBlock() {
         if (this.level == null || this.notLoaded() || this.isRemoved()) {
-            return EAESingletons.ASSEMBLER_MATRIX_FRAME;
+            return EAESingletons.ASSEMBLER_MATRIX_FRAME.get();
         }
         return (BlockAssemblerMatrixBase<?>) this.level.getBlockState(this.worldPosition).getBlock();
     }

@@ -2,7 +2,6 @@ package com.glodblock.github.extendedae.client.gui;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Settings;
-import appeng.client.gui.Icon;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
@@ -11,12 +10,13 @@ import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
+import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CUpdatePage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,8 +35,8 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
         super(menu, playerInventory, title, style);
 
         this.fuzzyMode = new ServerSettingToggleButton<>(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
-        this.nextPage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.ARROW_RIGHT);
-        this.prePage = new ActionEPPButton(b -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.ARROW_LEFT);
+        this.nextPage = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(1)), Icon.ARROW_RIGHT);
+        this.prePage = new ActionEPPButton(_ -> EAENetworkHandler.INSTANCE.sendToServer(new CUpdatePage(0)), Icon.ARROW_LEFT);
         this.nextPage.setMessage(Component.translatable("gui.extendedae.ex_interface.next"));
         this.prePage.setMessage(Component.translatable("gui.extendedae.ex_interface.pre"));
         addToLeftToolbar(this.fuzzyMode);
@@ -63,8 +63,8 @@ public class GuiExInterface extends UpgradeableScreen<ContainerExInterface> {
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
-        guiGraphics.drawString(
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+        guiGraphics.text(
                 this.font,
                 Component.translatable("gui.extendedae.ex_interface.config", this.menu.page + 1),
                 8,

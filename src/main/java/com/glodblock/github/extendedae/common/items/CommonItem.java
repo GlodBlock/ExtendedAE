@@ -4,8 +4,8 @@ import appeng.items.AEBaseItem;
 
 public class CommonItem extends AEBaseItem {
 
-    public CommonItem() {
-        super(new Properties());
+    public CommonItem(Properties properties) {
+        super(properties);
     }
 
 }

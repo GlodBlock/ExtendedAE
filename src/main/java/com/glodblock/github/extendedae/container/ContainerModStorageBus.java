@@ -5,6 +5,7 @@ import appeng.api.config.Settings;
 import appeng.api.config.StorageFilter;
 import appeng.api.config.YesNo;
 import appeng.api.util.IConfigManager;
+import appeng.menu.guisync.ClientActionKey;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
@@ -24,9 +25,9 @@ import org.jetbrains.annotations.Nullable;
 public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> implements IActionHolder {
 
     private final ActionMap actions = ActionMap.create();
-    private static final String ACTION_PARTITION = "partition";
+    private static final ClientActionKey<Void> ACTION_PARTITION = new ClientActionKey<>("partition");
 
-    public static final MenuType<ContainerModStorageBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerModStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerModStorageBus::new, PartModStorageBus.class)
             .buildUnregistered(ExtendedAE.id("mod_storage_bus"));
 
@@ -50,8 +51,8 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
         super(TYPE, id, ip, te);
 
         registerClientAction(ACTION_PARTITION, this::partition);
-        this.actions.put("set", o -> this.setExp(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set", o -> this.setExp(o.getString()));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.exp), sp);
             }

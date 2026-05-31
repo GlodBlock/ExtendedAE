@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": {
-      "item": "extendedae:entro_shard"
-    }
+    "S": "extendedae:entro_shard"
   },
   "pattern": [
     "SSS",
@@ -12,7 +10,6 @@
     "SSS"
   ],
   "result": {
-    "count": 1,
     "id": "extendedae:entro_crystal"
   }
 }

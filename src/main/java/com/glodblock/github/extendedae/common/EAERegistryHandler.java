@@ -2,11 +2,11 @@ package com.glodblock.github.extendedae.common;
 
 import appeng.api.AECapabilities;
 import appeng.api.client.StorageCellModels;
-import appeng.api.features.GridLinkables;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IInWorldGridNodeHost;
-import appeng.api.parts.PartModels;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartItem;
 import appeng.api.parts.RegisterPartCapabilitiesEvent;
 import appeng.api.storage.StorageCells;
 import appeng.api.upgrades.Upgrades;
@@ -23,7 +23,7 @@ import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.crafting.pattern.AESmithingTablePattern;
 import appeng.crafting.pattern.AEStonecuttingPattern;
 import appeng.items.AEBaseItem;
-import appeng.items.tools.powered.WirelessTerminalItem;
+import appeng.items.parts.PartItem;
 import appeng.items.tools.powered.powersink.PoweredItemCapabilities;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.caps.ICrankPowered;
@@ -32,22 +32,9 @@ import com.glodblock.github.extendedae.api.caps.IMEStorageAccess;
 import com.glodblock.github.extendedae.common.inventory.InfinityCellInventory;
 import com.glodblock.github.extendedae.common.inventory.VoidCellInventory;
 import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
-import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
-import com.glodblock.github.extendedae.common.parts.PartExExportBus;
-import com.glodblock.github.extendedae.common.parts.PartExImportBus;
 import com.glodblock.github.extendedae.common.parts.PartExInterface;
-import com.glodblock.github.extendedae.common.parts.PartExPatternAccessTerminal;
 import com.glodblock.github.extendedae.common.parts.PartExPatternProvider;
-import com.glodblock.github.extendedae.common.parts.PartModExportBus;
-import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartOversizeInterface;
-import com.glodblock.github.extendedae.common.parts.PartPreciseExportBus;
-import com.glodblock.github.extendedae.common.parts.PartPreciseStorageBus;
-import com.glodblock.github.extendedae.common.parts.PartSmartAnnihilationPlane;
-import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
-import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
-import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
-import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.glodblock.github.extendedae.config.ConfigCondition;
 import com.glodblock.github.extendedae.config.EAEConfig;
@@ -60,7 +47,6 @@ import com.glodblock.github.extendedae.container.ContainerCrystalAssembler;
 import com.glodblock.github.extendedae.container.ContainerExDrive;
 import com.glodblock.github.extendedae.container.ContainerExIOBus;
 import com.glodblock.github.extendedae.container.ContainerExIOPort;
-import com.glodblock.github.extendedae.container.ContainerExInscriber;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.container.ContainerExMolecularAssembler;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
@@ -91,70 +77,89 @@ import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeSerializer;
-import com.glodblock.github.extendedae.xmod.ModConstants;
-import com.glodblock.github.extendedae.xmod.aae.AAECommonLoad;
-import com.glodblock.github.extendedae.xmod.aae.AAERegister;
-import com.glodblock.github.extendedae.xmod.appflux.AFCommonLoad;
-import com.glodblock.github.extendedae.xmod.appliede.APECommonLoad;
-import com.glodblock.github.extendedae.xmod.framedblocks.FBCommonLoad;
-import com.glodblock.github.extendedae.xmod.framedblocks.FBRegister;
-import com.glodblock.github.extendedae.xmod.megacells.MEGACommonLoad;
-import com.glodblock.github.extendedae.xmod.pneumatics.APCommonLoad;
-import com.glodblock.github.extendedae.xmod.pneumatics.APRegister;
-import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
+import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.glodium.registry.RegistryHandler;
-import com.glodblock.github.glodium.util.GlodUtil;
+import com.glodblock.github.glodium.registry.defer.DeferredTileEntityType;
+import com.glodblock.github.glodium.registry.token.TileToken;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.function.Function;
 
 public class EAERegistryHandler extends RegistryHandler {
 
-    public static final EAERegistryHandler INSTANCE = new EAERegistryHandler();
+    public static EAERegistryHandler INSTANCE;
 
     @SuppressWarnings("UnstableApiUsage")
-    public EAERegistryHandler() {
-        super(ExtendedAE.MODID);
-        this.cap(AEBaseInvBlockEntity.class, Capabilities.ItemHandler.BLOCK, AEBaseInvBlockEntity::getExposedItemHandler);
-        this.cap(AEBasePoweredBlockEntity.class, Capabilities.EnergyStorage.BLOCK, AEBasePoweredBlockEntity::getEnergyStorage);
-        this.cap(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST, (object, context) -> object);
-        this.cap(IAEItemPowerStorage.class, Capabilities.EnergyStorage.ITEM, (object, context) -> new PoweredItemCapabilities(object, (IAEItemPowerStorage) object.getItem()));
+    public EAERegistryHandler(IEventBus modBus) {
+        super(ExtendedAE.MODID, modBus);
+        modBus.addListener(this::onRegisterEvent);
+        this.cap(AEBaseInvBlockEntity.class, Capabilities.Item.BLOCK, AEBaseInvBlockEntity::getExposedItemHandler);
+        this.cap(AEBasePoweredBlockEntity.class, Capabilities.Energy.BLOCK, AEBasePoweredBlockEntity::getEnergyStorage);
+        this.cap(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST, (object, _) -> object);
+        this.cap(IAEItemPowerStorage.class, Capabilities.Energy.ITEM, (object, context) -> new PoweredItemCapabilities(context, object.getItem(), (IAEItemPowerStorage) object.getItem()));
         this.cap(ICrankPowered.class, AECapabilities.CRANKABLE, ICrankPowered::getCrankable);
-        this.cap(ICraftingMachine.class, AECapabilities.CRAFTING_MACHINE, (object, context) -> object);
+        this.cap(ICraftingMachine.class, AECapabilities.CRAFTING_MACHINE, (object, _) -> object);
         this.cap(IGenericInvHost.class, AECapabilities.GENERIC_INTERNAL_INV, IGenericInvHost::getGenericInv);
         this.cap(IMEStorageAccess.class, AECapabilities.ME_STORAGE, IMEStorageAccess::getMEStorage);
-        this.cap(TileAssemblerMatrixBase.class, Capabilities.ItemHandler.BLOCK, TileAssemblerMatrixBase::getPatternInv);
+        this.cap(TileAssemblerMatrixBase.class, Capabilities.Item.BLOCK, TileAssemblerMatrixBase::getPatternInv);
     }
 
-    public <T extends AEBaseBlockEntity> void block(String name, AEBaseEntityBlock<T> block, Class<T> clazz, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
-        bindTileEntity(clazz, block, supplier);
-        block(name, block, b -> new AEBaseBlockItem(b, new Item.Properties()));
-        tile(name, block.getBlockEntityType());
+    public <T extends AEBaseBlockEntity, B extends AEBaseEntityBlock<T>> DeferredBlock<@NotNull B> block(String name, Function<BlockBehaviour.Properties, B> builder, Class<T> clazz, TileFactory<@NotNull T> supplier) {
+        var aeBlock = block(name, builder, BlockBehaviour.Properties.of(), AEBaseBlockItem::new);
+        tile(name, clazz, supplier, aeBlock);
+        return aeBlock;
     }
 
-    @Override
-    public void runRegister() {
-        super.runRegister();
-        this.onRegisterContainer();
-        this.onRegisterModels();
-        this.onRegisterRecipe();
+    public <P extends IPart> DeferredItem<@NotNull PartItem<P>> item(String name, Class<P> partClass, Function<IPartItem<P>, P> factory) {
+        return this.item(name, properties -> new PartItem<>(properties, partClass, factory));
+    }
+
+    public <T extends AEBaseBlockEntity> DeferredTileEntityType<T> tile(String name, Class<T> tileClass, TileFactory<@NotNull T> factory, DeferredBlock<? extends @NotNull AEBaseEntityBlock<T>> block) {
+        return (DeferredTileEntityType<T>) this.tiles.register(name, () -> {
+            CacheHolder<BlockEntityType<@NotNull T>> holder = CacheHolder.empty();
+            BlockEntityType<@NotNull T> tileType = new BlockEntityType<>((pos, state) -> factory.create(holder.get(), pos, state), Set.of(block.get()));
+            holder.update(tileType);
+            BlockEntityTicker<@NotNull T> serverTicker = null;
+            if (ServerTickingBlockEntity.class.isAssignableFrom(tileClass)) {
+                serverTicker = (_, _, _, entity) -> ((ServerTickingBlockEntity) entity).serverTick();
+            }
+            BlockEntityTicker<@NotNull T> clientTicker = null;
+            if (ClientTickingBlockEntity.class.isAssignableFrom(tileClass)) {
+                clientTicker = (_, _, _, entity) -> ((ClientTickingBlockEntity) entity).clientTick();
+            }
+            block.get().setBlockEntity(tileClass, tileType, clientTicker, serverTicker);
+            var token = new TileToken(holder::get, tileClass);
+            this.tileTypes.add(token);
+            this.tileBind.add(Pair.of(token, Set.of(block.get())));
+            return tileType;
+        });
     }
 
     public Collection<Block> getBlocks() {
-        return this.blocks.stream().map(Pair::getRight).toList();
+        return this.blocks.getEntries().stream().map(DeferredHolder::get).map(b -> (Block) b).toList();
     }
 
     @SubscribeEvent
@@ -164,19 +169,32 @@ public class EAERegistryHandler extends RegistryHandler {
         PartOversizeInterface.registerCapability(event);
     }
 
-    @SubscribeEvent
-    public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-        super.onRegisterCapabilities(event);
+    private void onRegisterEvent(RegisterEvent e) {
+        if (e.getRegistry().equals(BuiltInRegistries.RECIPE_TYPE)) {
+            this.onRegisterRecipeType();
+        } else if (e.getRegistry().equals(BuiltInRegistries.RECIPE_SERIALIZER)) {
+            this.onRegisterRecipeSerializer();
+        } else if (e.getRegistry().equals(NeoForgeRegistries.CONDITION_SERIALIZERS)) {
+            this.onRegisterCondition();
+        } else if (e.getRegistry().equals(BuiltInRegistries.MENU)) {
+            this.onRegisterContainer();
+        }
     }
 
-    private void onRegisterRecipe() {
-        Registry.register(NeoForgeRegistries.CONDITION_SERIALIZERS, ExtendedAE.id("config"), ConfigCondition.CODEC);
+    private void onRegisterRecipeType() {
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipe.TYPE);
-        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CircuitCutterRecipe.ID, CircuitCutterRecipe.TYPE);
-        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CircuitCutterRecipe.ID, CircuitCutterRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalFixerRecipe.ID, CrystalFixerRecipe.TYPE);
+    }
+
+    private void onRegisterRecipeSerializer() {
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipeSerializer.INSTANCE);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CircuitCutterRecipe.ID, CircuitCutterRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalFixerRecipe.ID, CrystalFixerRecipeSerializer.INSTANCE);
+    }
+
+    private void onRegisterCondition() {
+        Registry.register(NeoForgeRegistries.CONDITION_SERIALIZERS, ExtendedAE.id("config"), ConfigCondition.CODEC);
     }
 
     private void onRegisterContainer() {
@@ -190,7 +208,6 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("ex_drive"), ContainerExDrive.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("pattern_modifier"), ContainerPatternModifier.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("ex_molecular_assembler"), ContainerExMolecularAssembler.TYPE);
-        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("ex_inscriber"), ContainerExInscriber.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("tag_storage_bus"), ContainerTagStorageBus.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("tag_export_bus"), ContainerTagExportBus.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("threshold_level_emitter"), ContainerThresholdLevelEmitter.TYPE);
@@ -200,7 +217,6 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("active_formation_plane"), ContainerActiveFormationPlane.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("caner"), ContainerCaner.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("precise_export_bus"), ContainerPreciseExportBus.TYPE);
-        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("u_wireless_ex_pattern_access_terminal"), ContainerWirelessExPAT.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("ex_ioport"), ContainerExIOPort.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("precise_storage_bus"), ContainerPreciseStorageBus.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("threshold_export_bus"), ContainerThresholdExportBus.TYPE);
@@ -216,32 +232,11 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerSmithingTablePattern.ID, ContainerSmithingTablePattern.TYPE);
-        if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
-            FBRegister.register();
-        }
-        if (GlodUtil.checkMod(ModConstants.APPPNEU)) {
-            APRegister.register();
-        }
-        if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
-            AAERegister.register();
-        }
-    }
-
-    private <T extends AEBaseBlockEntity> void bindTileEntity(Class<T> clazz, AEBaseEntityBlock<T> block, BlockEntityType.BlockEntitySupplier<? extends T> supplier) {
-        BlockEntityTicker<T> serverTicker = null;
-        if (ServerTickingBlockEntity.class.isAssignableFrom(clazz)) {
-            serverTicker = (level, pos, state, entity) -> ((ServerTickingBlockEntity) entity).serverTick();
-        }
-        BlockEntityTicker<T> clientTicker = null;
-        if (ClientTickingBlockEntity.class.isAssignableFrom(clazz)) {
-            clientTicker = (level, pos, state, entity) -> ((ClientTickingBlockEntity) entity).clientTick();
-        }
-        block.setBlockEntity(clazz, GlodUtil.getTileType(clazz, supplier, block), clientTicker, serverTicker);
     }
 
     public void onInit() {
-        for (Pair<String, Block> entry : blocks) {
-            Block block = entry.getRight();
+        for (var entry : this.blocks.getEntries()) {
+            Block block = entry.value();
             if (block instanceof AEBaseEntityBlock<?>) {
                 AEBaseBlockEntity.registerBlockEntityItem(
                         ((AEBaseEntityBlock<?>) block).getBlockEntityType(),
@@ -253,15 +248,6 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerStorageHandler();
         this.registerRandomAPI();
         this.initPackageList();
-        if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
-            AFCommonLoad.init();
-        }
-        if (GlodUtil.checkMod(ModConstants.MEGA)) {
-            MEGACommonLoad.init();
-        }
-        if (GlodUtil.checkMod(ModConstants.APPLIED_E)) {
-            APECommonLoad.init();
-        }
     }
 
     private void registerAEUpgrade() {
@@ -286,7 +272,6 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_CONNECTOR, 4);
         Upgrades.add(AEItems.ENERGY_CARD, EAESingletons.WIRELESS_HUB, 4);
         Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_ASSEMBLER, 5);
-        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.EX_INSCRIBER, 4);
         Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.TAG_STORAGE_BUS, 1);
         Upgrades.add(AEItems.VOID_CARD, EAESingletons.TAG_STORAGE_BUS, 1);
         Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.TAG_EXPORT_BUS, 1);
@@ -330,64 +315,41 @@ public class EAERegistryHandler extends RegistryHandler {
         StorageCellModels.registerModel(EAESingletons.VOID_CELL, ExtendedAE.id("block/drive/void_cell"));
     }
 
-    private void onRegisterModels() {
-        PartModels.registerModels(PartExPatternProvider.MODELS);
-        PartModels.registerModels(PartExInterface.MODELS);
-        PartModels.registerModels(PartExExportBus.MODELS);
-        PartModels.registerModels(PartExImportBus.MODELS);
-        PartModels.registerModels(PartExPatternAccessTerminal.MODELS);
-        PartModels.registerModels(PartTagStorageBus.MODEL_BASE);
-        PartModels.registerModels(PartTagExportBus.MODEL_BASE);
-        PartModels.registerModels(PartThresholdLevelEmitter.MODELS);
-        PartModels.registerModels(PartModStorageBus.MODEL_BASE);
-        PartModels.registerModels(PartModExportBus.MODEL_BASE);
-        PartModels.registerModels(PartActiveFormationPlane.MODELS);
-        PartModels.registerModels(PartPreciseExportBus.MODELS);
-        PartModels.registerModels(PartPreciseStorageBus.MODEL_BASE);
-        PartModels.registerModels(PartThresholdExportBus.MODELS);
-        PartModels.registerModels(PartOversizeInterface.MODELS);
-        PartModels.registerModels(PartSmartAnnihilationPlane.MODELS);
-    }
-
     private void initPackageList() {
         EAEConfig.tapeWhitelist.forEach(ItemMEPackingTape::registerPackableDevice);
     }
 
     private void registerRandomAPI() {
-        GridLinkables.register(EAESingletons.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
         PatternGuiHandler.addPatternHandler(AEProcessingPattern.class, ContainerProcessingPattern.ID);
         PatternGuiHandler.addPatternHandler(AECraftingPattern.class, ContainerCraftingPattern.ID);
         PatternGuiHandler.addPatternHandler(AEStonecuttingPattern.class, ContainerStonecuttingPattern.ID);
         PatternGuiHandler.addPatternHandler(AESmithingTablePattern.class, ContainerSmithingTablePattern.ID);
-        if (GlodUtil.checkMod(ModConstants.FRAMED_BLOCKS)) {
-            FBCommonLoad.init();
-        }
-        if (GlodUtil.checkMod(ModConstants.APPPNEU)) {
-            APCommonLoad.init();
-        }
-        if (GlodUtil.checkMod(ModConstants.ADV_AE)) {
-            AAECommonLoad.init();
-        }
     }
 
-    public void registerTab(Registry<CreativeModeTab> registry) {
+    public void registerTab(Registry<@NotNull CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
                 .icon(() -> new ItemStack(EAESingletons.EX_PATTERN_PROVIDER))
                 .title(Component.translatable("itemGroup.extendedae"))
                 .displayItems((p, o) -> {
-                    for (Pair<String, Item> entry : items) {
-                        if (entry.getRight() instanceof AEBaseItem aeItem) {
+                    for (var entry : this.items.getEntries()) {
+                        if (entry.value() instanceof AEBaseItem aeItem) {
                             aeItem.addToMainCreativeTab(p, o);
                         } else {
-                            o.accept(entry.getRight());
+                            o.accept(entry.value());
                         }
                     }
-                    for (Pair<String, Block> entry : blocks) {
-                        o.accept(entry.getRight());
+                    for (var entry : this.blocks.getEntries()) {
+                        o.accept(entry.value());
                     }
                 })
                 .build();
         Registry.register(registry, ExtendedAE.id("tab_main"), tab);
+    }
+
+    public interface TileFactory<T extends BlockEntity> {
+
+        T create(BlockEntityType<@NotNull T> type, BlockPos worldPosition, BlockState blockState);
+
     }
 
 }

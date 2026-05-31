@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerVoidCell extends AEBaseMenu implements IActionHolder {
 
-    public static final MenuType<ContainerVoidCell> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerVoidCell> TYPE = MenuTypeBuilder
             .create(ContainerVoidCell::new, ItemMenuHost.class)
             .buildUnregistered(ExtendedAE.id("void_cell"));
     private final ActionMap actions = ActionMap.create();
@@ -31,8 +31,8 @@ public class ContainerVoidCell extends AEBaseMenu implements IActionHolder {
     public ContainerVoidCell(int id, Inventory playerInventory, ItemMenuHost<ItemVoidCell> host) {
         super(TYPE, id, playerInventory, host);
         this.stack = host.getItemStack();
-        this.actions.put("set", o -> this.setMode(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set", o -> this.setMode(o.get(VoidMode.class)));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode), sp);
             }
@@ -46,8 +46,8 @@ public class ContainerVoidCell extends AEBaseMenu implements IActionHolder {
         this.mode = stackMode.ordinal();
     }
 
-    public void setMode(int mode) {
-        this.stack.set(EAESingletons.VOID_MODE, VoidMode.values()[mode]);
+    public void setMode(VoidMode mode) {
+        this.stack.set(EAESingletons.VOID_MODE, mode);
         this.broadcastChanges();
     }
 

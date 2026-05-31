@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "ae2:quartz_glass",
+    "I": "#c:gems/diamond",
+    "W": "minecraft:water_bucket",
+    "X": "ae2:cell_component_16k"
+  },
+  "pattern": [
+    "CWC",
+    "WXW",
+    "III"
+  ],
+  "result": {
+    "id": "extendedae:infinity_water_cell"
+  }
+}

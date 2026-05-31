@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockIngredientBuffer extends BlockBaseGui<TileIngredientBuffer> {
 
     public BlockIngredientBuffer(Properties properties) {
-        super(glassProps(properties).noOcclusion().isViewBlocking((a, b, c) -> false));
+        super(glassProps(properties).noOcclusion().isViewBlocking((_, _, _) -> false));
     }
 
     @Override

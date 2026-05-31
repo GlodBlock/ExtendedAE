@@ -10,8 +10,6 @@ import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.RelativeSide;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
@@ -29,32 +27,33 @@ import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.AEItemFilters;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.common.me.DirectionSet;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.util.FCUtil;
 import com.glodblock.github.extendedae.util.RecipeExecutor;
 import com.glodblock.github.glodium.recipe.CommonRecipeContext;
 import com.glodblock.github.glodium.recipe.RecipeSearchContext;
-import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -75,17 +74,17 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     private boolean isWorking = false;
     private int progress = 0;
     private ItemStack renderOutput = ItemStack.EMPTY;
-    private final Set<Direction> outputSides = EnumSet.noneOf(Direction.class);
+    private final DirectionSet outputSides = new DirectionSet();
 
-    public TileCircuitCutter(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileCircuitCutter.class, TileCircuitCutter::new, EAESingletons.CIRCUIT_CUTTER), pos, blockState);
+    public TileCircuitCutter(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
         this.setPowerSides(getGridConnectableSides(getOrientation()));
         this.upgrades = UpgradeInventories.forMachine(EAESingletons.CIRCUIT_CUTTER, 4, this::saveChanges);
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
-        this.exec = new RecipeExecutor<>(this, r -> r.output, MAX_PROGRESS);
+        this.exec = new RecipeExecutor<>(this, r -> r.output.create(), MAX_PROGRESS);
     }
 
     @Override
@@ -94,8 +93,8 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     }
 
     @Override
-    public IItemHandler getExposedItemHandler(@Nullable Direction side) {
-        return this.invExposed.toItemHandler();
+    public ResourceHandler<@NotNull ItemResource> getExposedItemHandler(@Nullable Direction side) {
+        return this.invExposed.toResourceHandler();
     }
 
     @Override
@@ -147,7 +146,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
 
     @Override
     public Set<Direction> getOutputSides() {
-        return this.outputSides;
+        return this.outputSides.asSet();
     }
 
     public ItemStack getRenderOutput() {
@@ -167,11 +166,6 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     @Override
     public AECableType getCableConnectionType(Direction dir) {
         return AECableType.COVERED;
-    }
-
-    @Override
-    public Set<Direction> getGridConnectableSides(BlockOrientation orientation) {
-        return EnumSet.complementOf(EnumSet.of(orientation.getSide(RelativeSide.FRONT), orientation.getSide(RelativeSide.BACK)));
     }
 
     private void onConfigChanged(IConfigManager manager, Setting<?> setting) {
@@ -212,7 +206,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         data.writeBoolean(this.isWorking);
         data.writeInt(this.progress);
         ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.input.getStackInSlot(0));
-        this.renderOutput = this.ctx.currentRecipe == null ? ItemStack.EMPTY : this.ctx.currentRecipe.value().output;
+        this.renderOutput = this.ctx.currentRecipe == null ? ItemStack.EMPTY : this.ctx.currentRecipe.value().output.create();
         ItemStack.OPTIONAL_STREAM_CODEC.encode(data, this.renderOutput);
     }
 
@@ -225,16 +219,21 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
-        this.upgrades.writeToNBT(data, "upgrades", registries);
-        this.configManager.writeToNBT(data, registries);
+    public void saveAdditional(ValueOutput data) {
+        super.saveAdditional(data);
+        this.upgrades.writeToNBT(data, "upgrades");
+        this.configManager.writeToNBT(data);
         this.ctx.save(data);
-        var sides = new ListTag();
-        for (var side : this.getOutputSides()) {
-            sides.add(StringTag.valueOf(side.getName()));
-        }
-        data.put("output_side", sides);
+        this.outputSides.save(data, "output_side");
+    }
+
+    @Override
+    public void loadTag(ValueInput data) {
+        super.loadTag(data);
+        this.upgrades.readFromNBT(data, "upgrades");
+        this.configManager.readFromNBT(data);
+        this.ctx.load(data);
+        this.outputSides.load(data, "output_side");
     }
 
     @Override
@@ -246,12 +245,9 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     @Override
     public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
-        var nbt = input.get(EAESingletons.EXTRA_SETTING);
-        if (nbt != null) {
-            this.outputSides.clear();
-            for (var side : nbt.getList("output_side", CompoundTag.TAG_STRING)) {
-                this.outputSides.add(Direction.byName(side.getAsString()));
-            }
+        var sides = input.get(EAESingletons.DIRECTION_SET);
+        if (sides != null) {
+            this.outputSides.reload(sides.asList());
         }
     }
 
@@ -259,30 +255,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     public void exportSettings(SettingsFrom mode, DataComponentMap.Builder output, @Nullable Player player) {
         super.exportSettings(mode, output, player);
         if (mode == SettingsFrom.MEMORY_CARD) {
-            var nbt = new CompoundTag();
-            var sides = new ListTag();
-            for (var side : this.getOutputSides()) {
-                sides.add(StringTag.valueOf(side.getName()));
-            }
-            nbt.put("output_side", sides);
-            output.set(EAESingletons.EXTRA_SETTING, nbt);
-        }
-    }
-
-    @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data,registries);
-        this.upgrades.readFromNBT(data, "upgrades", registries);
-        this.configManager.readFromNBT(data, registries);
-        this.ctx.load(data);
-        this.outputSides.clear();
-        if (data.contains("output_side")) {
-            var list = data.getList("output_side", CompoundTag.TAG_STRING);
-            for (var name : list) {
-                this.outputSides.add(Direction.byName(name.getAsString()));
-            }
-        } else {
-            this.outputSides.addAll(List.of(Direction.values()));
+            output.set(EAESingletons.DIRECTION_SET, this.outputSides);
         }
     }
 
@@ -320,7 +293,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         if (!this.hasAutoExportWork()) {
             return false;
         }
-        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides, te -> te instanceof TileCircuitCutter);
+        return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides.asSet(), te -> te instanceof TileCircuitCutter);
     }
 
     @Override
@@ -334,12 +307,21 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         this.ctx.onInvChange();
     }
 
+    @Nullable
+    private ServerLevel getServerLevel() {
+        if (this.level instanceof ServerLevel) {
+            return (ServerLevel) this.level;
+        } else {
+            return null;
+        }
+    }
+
     private static class CutterRecipeContext extends CommonRecipeContext<CircuitCutterRecipe> {
 
         private final TileCircuitCutter host;
 
         protected CutterRecipeContext(TileCircuitCutter host) {
-            super(() -> host.level, CircuitCutterRecipe.TYPE);
+            super(host::getServerLevel, CircuitCutterRecipe.TYPE);
             this.host = host;
         }
 
@@ -350,14 +332,14 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         }
 
         @Override
-        public void onFind(@Nullable RecipeHolder<CircuitCutterRecipe> recipe) {
+        public void onFind(@Nullable RecipeHolder<@NotNull CircuitCutterRecipe> recipe) {
             super.onFind(recipe);
             this.host.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
         }
 
         @Override
-        public boolean testRecipe(RecipeHolder<CircuitCutterRecipe> recipe) {
-            var output = recipe.value().output.copy();
+        public boolean testRecipe(RecipeHolder<@NotNull CircuitCutterRecipe> recipe) {
+            var output = recipe.value().output.create();
             if (!this.host.output.insertItem(0, output, true).isEmpty()) {
                 return false;
             }
@@ -381,7 +363,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         }
 
         @Override
-        public void runRecipe(RecipeHolder<CircuitCutterRecipe> recipe) {
+        public void runRecipe(RecipeHolder<@NotNull CircuitCutterRecipe> recipe) {
             var sample = recipe.value().getSample();
             for (var tester : sample) {
                 for (int x = 0; x < this.host.input.size(); x ++) {

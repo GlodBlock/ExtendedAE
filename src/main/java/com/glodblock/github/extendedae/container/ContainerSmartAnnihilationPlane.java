@@ -10,10 +10,11 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartSmartAnnihilationPlane;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerSmartAnnihilationPlane extends UpgradeableMenu<PartSmartAnnihilationPlane> {
 
-    public static final MenuType<ContainerSmartAnnihilationPlane> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerSmartAnnihilationPlane> TYPE = MenuTypeBuilder
             .create(ContainerSmartAnnihilationPlane::new, PartSmartAnnihilationPlane.class)
             .buildUnregistered(ExtendedAE.id("smart_annihilation_plane"));
 

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class ContainerModExportBus extends UpgradeableMenu<PartModExportBus> implements IActionHolder {
     private final ActionMap actions = ActionMap.create();
 
-    public static final MenuType<ContainerModExportBus> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerModExportBus> TYPE = MenuTypeBuilder
             .create(ContainerModExportBus::new, PartModExportBus.class)
             .buildUnregistered(ExtendedAE.id("mod_export_bus"));
 
@@ -26,8 +26,8 @@ public class ContainerModExportBus extends UpgradeableMenu<PartModExportBus> imp
 
     public ContainerModExportBus(int id, Inventory ip, PartModExportBus host) {
         super(TYPE, id, ip, host);
-        this.actions.put("set", o -> this.setExp(o.get(0)));
-        this.actions.put("update", o -> {
+        this.actions.put("set", o -> this.setExp(o.getString()));
+        this.actions.put("update", _ -> {
             if (this.getPlayer() instanceof ServerPlayer sp) {
                 EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.exp), sp);
             }

@@ -7,12 +7,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ContainerSmithingTablePattern extends ContainerPattern {
 
     public static final Identifier ID = ExtendedAE.id("smithing_table_pattern");
-    public static final MenuType<ContainerSmithingTablePattern> TYPE = PatternGuiHandler.register(ID, ContainerSmithingTablePattern::new);
+    public static final MenuType<@NotNull ContainerSmithingTablePattern> TYPE = PatternGuiHandler.register(ID, ContainerSmithingTablePattern::new);
 
     public ContainerSmithingTablePattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
         super(menuType, world, id, stack);

@@ -8,11 +8,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,33 +25,33 @@ public class CrystalAssemblerRecipeBuilder {
     private final HolderGetter<@NotNull Fluid> fluidGetter;
     protected List<IngredientStack.Item> inputs = new ArrayList<>();
     protected IngredientStack.Fluid fluid = null;
-    public ItemStack output;
+    public ItemStackTemplate output;
 
-    public CrystalAssemblerRecipeBuilder(ItemStack output, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
-        this.output = output.copy();
+    public CrystalAssemblerRecipeBuilder(ItemStackTemplate output, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
+        this.output = output;
         this.itemGetter = itemGetter;
         this.fluidGetter = fluidGetter;
     }
 
-    public static CrystalAssemblerRecipeBuilder assemble(ItemStack stack, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
+    public static CrystalAssemblerRecipeBuilder assemble(ItemStackTemplate stack, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
         return new CrystalAssemblerRecipeBuilder(stack, itemGetter, fluidGetter);
     }
 
     public static CrystalAssemblerRecipeBuilder assemble(ItemLike stack, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
-        return new CrystalAssemblerRecipeBuilder(new ItemStack(stack), itemGetter, fluidGetter);
+        return new CrystalAssemblerRecipeBuilder(new ItemStackTemplate(stack.asItem()), itemGetter, fluidGetter);
     }
 
     public static CrystalAssemblerRecipeBuilder assemble(ItemLike stack, int count, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
-        return new CrystalAssemblerRecipeBuilder(new ItemStack(stack, count), itemGetter, fluidGetter);
+        return new CrystalAssemblerRecipeBuilder(new ItemStackTemplate(stack.asItem(), count), itemGetter, fluidGetter);
     }
 
-    public CrystalAssemblerRecipeBuilder fluid(FluidStack fluid) {
+    public CrystalAssemblerRecipeBuilder fluid(FluidStackTemplate fluid) {
         this.fluid = IngredientStack.of(fluid);
         return this;
     }
 
     public CrystalAssemblerRecipeBuilder fluid(Fluid fluid, int amount) {
-        this.fluid = IngredientStack.of(new FluidStack(fluid, amount));
+        this.fluid = IngredientStack.of(fluid, amount);
         return this;
     }
 
@@ -60,18 +60,18 @@ public class CrystalAssemblerRecipeBuilder {
         return this;
     }
 
-    public CrystalAssemblerRecipeBuilder input(ItemStack item) {
+    public CrystalAssemblerRecipeBuilder input(ItemStackTemplate item) {
         this.inputs.add(IngredientStack.of(item));
         return this;
     }
 
     public CrystalAssemblerRecipeBuilder input(ItemLike item) {
-        this.inputs.add(IngredientStack.of(new ItemStack(item)));
+        this.inputs.add(IngredientStack.of(item, 1));
         return this;
     }
 
     public CrystalAssemblerRecipeBuilder input(ItemLike item, int count) {
-        this.inputs.add(IngredientStack.of(new ItemStack(item, count)));
+        this.inputs.add(IngredientStack.of(item, count));
         return this;
     }
 

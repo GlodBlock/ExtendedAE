@@ -1,14 +1,17 @@
 package com.glodblock.github.extendedae.client.gui.widget;
 
-import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.MultilineTextField;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-
-import static net.minecraft.client.gui.screens.Screen.hasShiftDown;
 
 @OnlyIn(Dist.CLIENT)
 public class MultilineTextFieldWidget extends AbstractWidget {
@@ -71,7 +72,10 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         }
     }
 
-    public String getValue() { return textField.value(); }
+    public String getValue() {
+        return textField.value();
+    }
+
     public void setValue(String v) {
         String s = sanitize(v);
         textField.setValue(s);
@@ -79,7 +83,8 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean keyPressed(int key, int sc, int mod) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        var key = event.key();
         if (!isFocused() || key == GLFW.GLFW_KEY_TAB || key == GLFW.GLFW_KEY_ESCAPE) {
             return false;
         }
@@ -92,7 +97,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
             return true;
         }
 
-        this.textField.keyPressed(key);
+        this.textField.keyPressed(event);
         this.clampScroll();
         this.ensureCursorVisible();
         this.sanitizeAndNotify();
@@ -100,7 +105,8 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean charTyped(char chr, int mods) {
+    public boolean charTyped(@NotNull CharacterEvent event) {
+        var chr = event.codepoint();
         if (!isFocused()) return false;
         if (chr == '\n' || chr == '\r') return true;
         if (filter != null && !filter.matcher(String.valueOf(chr)).matches()) return true;
@@ -112,38 +118,40 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mx, double my, int btn) {
-        if (!isActive() || !isValidClickButton(btn) || !clicked(mx, my)) return false;
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClick) {
+        if (!isActive() || !isValidClickButton(event.buttonInfo()) || !isMouseOver(event.x(), event.y())) return false;
         this.setFocused(true);
 
-        if (!hasShiftDown()) {
+        if (!event.hasShiftDown()) {
             this.textField.setSelecting(false);
         }
 
-        moveCursorToMouse(mx, my);
+        moveCursorToMouse(event.x(), event.y());
         this.textField.setSelecting(true);
         dragging = true;
         return true;
     }
 
     @Override
-    public boolean mouseReleased(double mx, double my, int btn) {
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
         dragging = false;
         this.textField.setSelecting(false);
-        return super.mouseReleased(mx, my, btn);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseDragged(double mx, double my, int btn, double dx, double dy) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dx, double dy) {
         if (dragging && isFocused()) {
-            moveCursorToMouse(mx, my);
+            moveCursorToMouse(event.x(), event.y());
             return true;
         }
         return false;
     }
 
     @Override
-    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {}
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
+        // NO-OP
+    }
 
     @Override
     public boolean mouseScrolled(double mx, double my, double horizontal, double vertical) {
@@ -151,7 +159,6 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         setScrollAmount(scrollAmount - vertical * font.lineHeight);
         return true;
     }
-
 
     public double getMaxScroll() {
         int textH = textField.lineCount() * font.lineHeight;
@@ -183,13 +190,13 @@ public class MultilineTextFieldWidget extends AbstractWidget {
 
 
     @Override
-    protected void renderWidget(GuiGraphics g, int mX, int mY, float partial) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor g, int mX, int mY, float partial) {
         int bg = 0xFF202020, border = isFocused() ? 0xFFFFFFFF : 0xFF808080;
-        g.fill(RenderType.guiOverlay(), getX(), getY(), getX() + width, getY() + height, bg);
-        g.fill(RenderType.guiOverlay(), getX(), getY(), getX() + width, getY() + 1, border);
-        g.fill(RenderType.guiOverlay(), getX(), getY() + height - 1, getX() + width, getY() + height, border);
-        g.fill(RenderType.guiOverlay(), getX(), getY(), getX() + 1, getY() + height, border);
-        g.fill(RenderType.guiOverlay(), getX() + width - 1, getY(), getX() + width, getY() + height, border);
+        g.fill(RenderPipelines.GUI, getX(), getY(), getX() + width, getY() + height, bg);
+        g.fill(RenderPipelines.GUI, getX(), getY(), getX() + width, getY() + 1, border);
+        g.fill(RenderPipelines.GUI, getX(), getY() + height - 1, getX() + width, getY() + height, border);
+        g.fill(RenderPipelines.GUI, getX(), getY(), getX() + 1, getY() + height, border);
+        g.fill(RenderPipelines.GUI, getX() + width - 1, getY(), getX() + width, getY() + height, border);
 
         int clipL = getX() + 2, clipT = getY() + 2, clipR = getX() + width - 2, clipB = getY() + height - 2;
         g.enableScissor(clipL, clipT, clipR, clipB);
@@ -206,14 +213,14 @@ public class MultilineTextFieldWidget extends AbstractWidget {
             Line ln = textField.line(curLine);
             int cx = clipL + font.width(textField.value().substring(ln.begin(), textField.cursor()));
             int cy = clipT + curLine * font.lineHeight - (int) scrollAmount;
-            if (cy >= clipT && cy < clipB) g.fill(RenderType.guiOverlay(), cx, cy, cx + 1, cy + font.lineHeight, 0xFFFFFFFF);
+            if (cy >= clipT && cy < clipB) g.fill(RenderPipelines.GUI, cx, cy, cx + 1, cy + font.lineHeight, 0xFFFFFFFF);
         }
 
         for (int idx = firstLine; idx < textField.lineCount() && y <= clipB; idx++) {
             Line ln = textField.line(idx);
             String str = textField.value().substring(ln.begin(), ln.end());
 
-            g.drawString(font, str, clipL, y, 0xFFE0E0E0);
+            g.text(font, str, clipL, y, 0xFFE0E0E0);
             if (textField.hasSelection()) {
                 int lineStartChar = ln.begin();
                 int lineEndChar   = ln.end();
@@ -229,7 +236,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
                         int selX = clipL + font.width(preSel);
                         int selW = font.width(selectionText);
 
-                        g.fill(RenderType.guiTextHighlight(), selX, y, selX + selW, y + font.lineHeight, selectionColor);
+                        g.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, selX, y, selX + selW, y + font.lineHeight, selectionColor);
                     }
                 }
             }
@@ -239,7 +246,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         g.disableScissor();
 
         if (textField.value().isEmpty() && !isFocused()) {
-            g.drawString(font, getMessage(), clipL, clipT, 0xFF808080);
+            g.text(font, getMessage(), clipL, clipT, 0xFF808080);
         }
     }
 

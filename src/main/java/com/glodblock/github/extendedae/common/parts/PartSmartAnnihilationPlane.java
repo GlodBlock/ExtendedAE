@@ -13,7 +13,6 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
@@ -25,58 +24,37 @@ import appeng.core.AEConfig;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.IConfigInvHost;
-import appeng.items.parts.PartModels;
 import appeng.me.helpers.MachineSource;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
-import appeng.parts.PartModel;
+import appeng.parts.automation.PartModelData;
 import appeng.parts.automation.PlaneConnectionHelper;
 import appeng.parts.automation.PlaneConnections;
-import appeng.parts.automation.PlaneModelData;
-import appeng.parts.automation.PlaneModels;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.automation.UpgradeablePart;
 import appeng.util.ConfigInventory;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.ContainerSmartAnnihilationPlane;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings({"SequencedCollectionMethodCanBeUsed", "UnstableApiUsage"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGridTickable, IConfigInvHost {
-
-    public static final List<Identifier> MODELS = List.of(
-            ExtendedAE.id("part/smart_annihilation_plane"),
-            ExtendedAE.id("part/smart_annihilation_plane_on")
-    );
-
-    @PartModels
-    public static final IPartModel MODELS_OFF = new PartModel(MODELS.get(0), PlaneModels.MODEL_CHASSIS_OFF);
-
-    @PartModels
-    public static final IPartModel MODELS_ON = new PartModel(MODELS.get(0), PlaneModels.MODEL_CHASSIS_ON);
-
-    @PartModels
-    public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(1), PlaneModels.MODEL_CHASSIS_HAS_CHANNEL);
 
     private final PlaneConnectionHelper connectionHelper = new PlaneConnectionHelper(this);
     private final ConfigInventory config;
@@ -142,8 +120,9 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
     public void addToWorld() {
         super.addToWorld();
         var host = getBlockEntity();
-        var buildHeight = host.getLevel().getMaxBuildHeight();
+        var buildHeight = host.getLevel().getMaxY();
         continuousGenerationTicks = 0;
+        continuousGeneration = null;
         // When placed at max build height facing up, continuously generate 1 sky stone dust / 10 seconds
         if (AEConfig.instance().isAnnihilationPlaneSkyDustGenerationEnabled() && host.getBlockPos().getY() + 1 >= buildHeight && getSide() == Direction.UP) {
             continuousGeneration = new ContinuousGeneration(AEItemKey.of(AEItems.SKY_DUST), 1, 200);
@@ -151,28 +130,17 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.readFromNBT(data, registries);
-        this.config.readFromChildTag(data, "config", registries);
-        if (data.contains("enchantments")) {
-            var enchantmentsTag = data.getCompound("enchantments");
-            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-            this.enchantments = ItemEnchantments.CODEC.decode(ops, enchantmentsTag)
-                    .ifError(err -> ExtendedAE.LOGGER.warn("Failed to load enchantments for part {}: {}", this, err.message()))
-                    .getOrThrow()
-                    .getFirst();
-        }
+    public void readFromNBT(ValueInput data) {
+        super.readFromNBT(data);
+        this.config.readFromChildTag(data, "config");
+        this.enchantments = data.read("enchantments", ItemEnchantments.CODEC).orElse(ItemEnchantments.EMPTY);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
-        super.writeToNBT(data, registries);
-        this.config.writeToChildTag(data, "config", registries);
-        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        var enchantmentsTag = ItemEnchantments.CODEC.encodeStart(ops, this.enchantments).getOrThrow();
-        if (enchantmentsTag instanceof CompoundTag compoundTag && !compoundTag.isEmpty()) {
-            data.put("enchantments", enchantmentsTag);
-        }
+    public void writeToNBT(ValueOutput data) {
+        super.writeToNBT(data);
+        this.config.writeToChildTag(data, "config");
+        data.store("enchantments", ItemEnchantments.CODEC, this.enchantments);
     }
 
     @Override
@@ -384,24 +352,14 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
         return this.config;
     }
 
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isActive() && this.isPowered()) {
-            return MODELS_HAS_CHANNEL;
-        } else if (this.isPowered()) {
-            return MODELS_ON;
-        } else {
-            return MODELS_OFF;
-        }
-    }
-
-    @Override
-    public ModelData getModelData() {
-        return ModelData.builder().with(PlaneModelData.CONNECTIONS, getConnections()).build();
-    }
-
     public ItemEnchantments getEnchantments() {
         return this.enchantments;
+    }
+
+    @Override
+    public void collectModelData(net.neoforged.neoforge.model.data.ModelData.Builder builder) {
+        super.collectModelData(builder);
+        builder.with(PartModelData.CONNECTIONS, getConnections());
     }
 
     private record ContinuousGeneration(AEKey what, long amount, int ticks) {

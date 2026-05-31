@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.common.items;
 
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.util.Platform;
+import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.glodium.util.GlodCodecs;
 import com.mojang.serialization.Codec;
@@ -14,11 +15,12 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,8 +31,8 @@ public class ItemMEPackingTape extends Item {
 
     private static final ObjectSet<Identifier> WHITE_LIST = new ObjectOpenHashSet<>();
 
-    public ItemMEPackingTape() {
-        super(new Item.Properties().durability(64));
+    public ItemMEPackingTape(Properties properties) {
+        super(properties.durability(64));
     }
 
     @Nonnull
@@ -40,7 +42,7 @@ public class ItemMEPackingTape extends Item {
         var world = context.getLevel();
         var tile = world.getBlockEntity(pos);
         var player = context.getPlayer();
-        var pack = new ItemStack(EAESingletons.PACKAGE);
+        var pack = EAESingletons.PACKAGE.toStack();
         var success = false;
         if (tile != null && player != null) {
             if (tile instanceof CableBusBlockEntity cable) {
@@ -54,11 +56,13 @@ public class ItemMEPackingTape extends Item {
                     if (!WHITE_LIST.contains(id)) {
                         return InteractionResult.PASS;
                     }
-                    var ctxTag = new CompoundTag();
-                    part.writeToNBT(ctxTag, world.registryAccess());
-                    pack.set(EAESingletons.TAPE_PART_DATA, new PartPackageData(id, ctxTag));
-                    cable.removePart(part);
-                    success = true;
+                    try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(ExtendedAE.LOGGER)) {
+                        var output = TagValueOutput.createWithContext(reporter, world.registryAccess());
+                        part.writeToNBT(output);
+                        pack.set(EAESingletons.TAPE_PART_DATA, new PartPackageData(id, output.buildResult()));
+                        cable.removePart(part);
+                        success = true;
+                    }
                 }
             } else {
                 pack.set(EAESingletons.IS_PART, false);
@@ -76,8 +80,8 @@ public class ItemMEPackingTape extends Item {
             }
             if (success) {
                 Platform.spawnDrops(world, pos, Collections.singletonList(pack));
-                context.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                context.getItemInHand().hurtAndBreak(1, player, context.getHand());
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.PASS;
@@ -96,7 +100,7 @@ public class ItemMEPackingTape extends Item {
                                 CompoundTag.CODEC.fieldOf("ctx").forGetter(o -> o.context)
                         ).apply(builder, PartPackageData::new)
         );
-        public static final StreamCodec<RegistryFriendlyByteBuf, PartPackageData> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<@NotNull RegistryFriendlyByteBuf, @NotNull PartPackageData> STREAM_CODEC = StreamCodec.composite(
                 Identifier.STREAM_CODEC,
                 o -> o.id,
                 GlodCodecs.NBT_STREAM_CODEC,
@@ -117,7 +121,7 @@ public class ItemMEPackingTape extends Item {
                                 CompoundTag.CODEC.fieldOf("ctx").forGetter(o -> o.context)
                         ).apply(builder, TilePackageData::new)
         );
-        public static final StreamCodec<RegistryFriendlyByteBuf, TilePackageData> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<@NotNull RegistryFriendlyByteBuf, @NotNull TilePackageData> STREAM_CODEC = StreamCodec.composite(
                 Identifier.STREAM_CODEC,
                 o -> o.id,
                 Identifier.STREAM_CODEC,

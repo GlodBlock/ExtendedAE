@@ -16,7 +16,8 @@ import com.glodblock.github.extendedae.client.gui.widget.MultilineTextFieldWidge
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -37,7 +38,7 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
         super(menu, playerInventory, title, style);
 
         this.widgets.addOpenPriorityButton();
-        addToLeftToolbar(new ActionButton(ActionItems.COG, btn -> menu.partition()));
+        addToLeftToolbar(new ActionButton(ActionItems.COG, _ -> menu.partition()));
         this.rwMode = new ServerSettingToggleButton<>(Settings.ACCESS, AccessRestriction.READ_WRITE);
         this.storageFilter = new ServerSettingToggleButton<>(Settings.STORAGE_FILTER, StorageFilter.EXTRACTABLE_ONLY);
         this.filterOnExtract = new ServerSettingToggleButton<>(Settings.FILTER_ON_EXTRACT, YesNo.YES);
@@ -64,14 +65,14 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int btn) {
-        if (btn == 1 && this.filterInputs.isMouseOver(x, y)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (event.button() == 1 && this.filterInputs.isMouseOver(event.x(), event.y())) {
             this.filterInputs.setValue("");
         }
-        if (btn == 1 && this.filterInputs2.isMouseOver(x, y)) {
+        if (event.button() == 1 && this.filterInputs2.isMouseOver(event.x(), event.y())) {
             this.filterInputs2.setValue("");
         }
-        return super.mouseClicked(x, y, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
@@ -83,19 +84,19 @@ public class GuiTagStorageBus extends UpgradeableScreen<ContainerTagStorageBus> 
     }
 
     @Override
-    public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
+    public void drawFG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         super.drawFG(guiGraphics, offsetX, offsetY, mouseX, mouseY);
         var poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(10, 17, 0);
-        poseStack.scale(0.6f, 0.6f, 1);
+        poseStack.pushMatrix();
+        poseStack.translate(10, 17);
+        poseStack.scale(0.6f, 0.6f);
         var color = style.getColor(PaletteColor.DEFAULT_TEXT_COLOR);
         if (menu.getConnectedTo() != null) {
-            guiGraphics.drawString(font, GuiText.AttachedTo.text(menu.getConnectedTo()), 0, 0, color.toARGB(), false);
+            guiGraphics.text(font, GuiText.AttachedTo.text(menu.getConnectedTo()), 0, 0, color.toARGB(), false);
         } else {
-            guiGraphics.drawString(font, GuiText.Unattached.text(), 0, 0, color.toARGB(), false);
+            guiGraphics.text(font, GuiText.Unattached.text(), 0, 0, color.toARGB(), false);
         }
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
 }

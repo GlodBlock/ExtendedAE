@@ -2,28 +2,20 @@
   "type": "extendedae:crystal_assembler",
   "input_fluid": {
     "amount": 100,
-    "ingredient": {
-      "fluid": "minecraft:water"
-    }
+    "ingredient": "minecraft:water"
   },
   "input_items": [
     {
       "amount": 4,
-      "ingredient": {
-        "tag": "c:dusts/entro"
-      }
+      "ingredient": "#c:dusts/entro"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "tag": "c:ingots/gold"
-      }
+      "ingredient": "#c:ingots/gold"
     },
     {
       "amount": 4,
-      "ingredient": {
-        "item": "minecraft:lapis_lazuli"
-      }
+      "ingredient": "minecraft:lapis_lazuli"
     }
   ],
   "output": {
