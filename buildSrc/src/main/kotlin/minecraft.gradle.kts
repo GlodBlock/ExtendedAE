@@ -73,6 +73,7 @@ tasks.named<DeobfuscateTask>("srgifyBinpatchedJar") {
 // region JAR
 
 tasks.withType<Jar> {
+    archiveBaseName = modId
     manifest {
         val attrs = mutableMapOf<String, String>()
         attrs["FMLCorePlugin"] = coreModPluginPath
