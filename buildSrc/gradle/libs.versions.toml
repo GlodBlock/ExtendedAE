@@ -1,0 +1,9 @@
+[versions]
+retrofuturaGradle = "1.4.9"
+jvmDowngrader     = "1.3.6"
+ideaExt           = "1.1.8"
+
+[libraries]
+retrofuturaGradle = { group = "com.gtnewhorizons"                                 , name = "retrofuturagradle", version.ref = "retrofuturaGradle" }
+jvmDowngrader     = { group = "xyz.wagyourtail.jvmdowngrader"                     , name = "gradle-plugin"    , version.ref = "jvmDowngrader" }
+ideaExt           = { group = "gradle.plugin.org.jetbrains.gradle.plugin.idea-ext", name = "gradle-idea-ext"  , version.ref = "ideaExt" }

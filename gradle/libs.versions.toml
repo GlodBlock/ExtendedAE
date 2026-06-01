@@ -1,0 +1,7 @@
+[versions]
+appeng = "4688138"
+jei    = "4.16.1.302"
+
+[libraries]
+appeng = { group = "curse.maven", name = "ae2-extended-life-570458", version.ref = "appeng" }
+jei    = { group = "mezz.jei",    name = "jei_1.12.2",               version.ref = "jei"    }
