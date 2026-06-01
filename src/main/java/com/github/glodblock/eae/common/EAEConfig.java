@@ -1,6 +1,6 @@
 package com.github.glodblock.eae.common;
 
-import com.github.glodblock.eae.ExtendedAE;
+import com.github.glodblock.eae.EAETags;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -8,13 +8,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
-@Config(modid = ExtendedAE.MODID, name = "extendedae")
+@Config(modid = EAETags.MOD_ID, name = "extendedae")
 public class EAEConfig {
 
     @SubscribeEvent
     public static void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(ExtendedAE.MODID)) {
-            ConfigManager.sync(ExtendedAE.MODID, Config.Type.INSTANCE);
+        if (event.getModID().equals(EAETags.MOD_ID)) {
+            ConfigManager.sync(EAETags.MOD_ID, Config.Type.INSTANCE);
         }
     }
 

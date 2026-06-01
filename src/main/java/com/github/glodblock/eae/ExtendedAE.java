@@ -9,15 +9,19 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ExtendedAE.MODID, useMetadata = true, dependencies = "required:appliedenergistics2")
+@Mod(modid = EAETags.MOD_ID,
+     name = EAETags.MOD_NAME,
+     version = EAETags.MOD_VERSION,
+     acceptedMinecraftVersions = "[1.12.2,1.13)",
+     useMetadata = true,
+     dependencies = "required:appliedenergistics2")
 public class ExtendedAE {
 
-    public static final String MODID = "extendedae";
-
-    @Mod.Instance(MODID)
+    @Mod.Instance(EAETags.MOD_ID)
     public static ExtendedAE INSTANCE;
 
-    @SidedProxy(clientSide = "com.github.glodblock.eae.proxy.ClientProxy", serverSide = "com.github.glodblock.eae.proxy.CommonProxy")
+    @SidedProxy(clientSide = "com.github.glodblock.eae.proxy.ClientProxy",
+                serverSide = "com.github.glodblock.eae.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     public static Logger log;
@@ -39,7 +43,7 @@ public class ExtendedAE {
     }
 
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(MODID, path);
+        return new ResourceLocation(EAETags.MOD_ID, path);
     }
 
 }
