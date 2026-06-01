@@ -11,13 +11,11 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import com.github.glodblock.eae.common.EAEItemAndBlock;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class InfinityFluidCellInventory implements IMEInventoryHandler<IAEFluidStack> {
 
-    @Nonnull
-    private final IAEFluidStack record;
+    private final @NotNull IAEFluidStack record;
     private static final long SIZE = Integer.MAX_VALUE * 1000L;
 
     private InfinityFluidCellInventory(ItemStack stack) {

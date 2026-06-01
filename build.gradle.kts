@@ -10,6 +10,7 @@ plugins {
 dependencies {
     implementation(deobf.of(libs.appeng))
     implementation(deobf.of(libs.jei))
+    compileOnlyApi(libs.annotations)
 }
 
 configurations {

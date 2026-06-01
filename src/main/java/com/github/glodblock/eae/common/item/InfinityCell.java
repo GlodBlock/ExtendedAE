@@ -23,8 +23,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.IItemHandler;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
 
@@ -71,9 +70,8 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     }
 
     @SuppressWarnings("deprecation")
-    @Nonnull
     @Override
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
+    public @NotNull String getItemStackDisplayName(@NotNull ItemStack stack) {
         Object record = this.getRecord(stack);
         if (record instanceof IAEItemStack) {
             return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", ((IAEItemStack) record).getDefinition().getDisplayName());
