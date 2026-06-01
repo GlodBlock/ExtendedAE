@@ -28,7 +28,7 @@ public class EAEConfig {
 
     @Config.Comment({
             "ME Infinity Cell Supported Fluid List",
-            "Use fluid name as id by default, for example: \"water\" or \"\"."})
+            "Use fluid name as id by default, for example: \"water\" or \"soldering_alloy\"."})
     @Config.Name("Fluid IDs")
     @Config.RequiresMcRestart
     public static String[] infFluid = new String[] {"water"};
