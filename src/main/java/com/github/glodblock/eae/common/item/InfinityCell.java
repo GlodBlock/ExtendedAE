@@ -84,17 +84,29 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
 
     @Override
     protected void getCheckedSubItems(CreativeTabs creativeTab, NonNullList<ItemStack> itemStacks) {
-        for (String s : EAEConfig.infItem) {
-            ResourceLocation rl = new ResourceLocation(s);
-            Item item = ForgeRegistries.ITEMS.getValue(rl);
+        for (String rawStr : EAEConfig.infItem) {
+            String name = rawStr;
+            int metadata = 0;
+
+            int lastColon = rawStr.lastIndexOf(':');
+            int firstColon = rawStr.indexOf(':');
+            if (lastColon != firstColon) {
+                try {
+                    metadata = Integer.parseInt(rawStr.substring(lastColon + 1));
+                    name = rawStr.substring(0, lastColon);
+                } catch (NumberFormatException ignored) {}
+            }
+
+            ResourceLocation itemLocation = new ResourceLocation(name);
+            Item item = ForgeRegistries.ITEMS.getValue(itemLocation);
             if (item != null) {
-                itemStacks.add(this.getRecordCell(AEItemStack.fromItemStack(new ItemStack(item))));
+                itemStacks.add(getRecordCell(AEItemStack.fromItemStack(new ItemStack(item, 1, metadata))));
             }
         }
-        for (String s : EAEConfig.infFluid) {
-            Fluid fluid = FluidRegistry.getFluid(s.toLowerCase());
+        for (String rawStr : EAEConfig.infFluid) {
+            Fluid fluid = FluidRegistry.getFluid(rawStr.toLowerCase());
             if (fluid != null) {
-                itemStacks.add(this.getRecordCell(AEFluidStack.fromFluidStack(new FluidStack(fluid, 1))));
+                itemStacks.add(getRecordCell(AEFluidStack.fromFluidStack(new FluidStack(fluid, 1))));
             }
         }
     }

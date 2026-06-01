@@ -18,12 +18,19 @@ public class EAEConfig {
         }
     }
 
-    @Config.Comment("ME Infinity Cell type (Item's ID)")
+    @Config.Comment({
+            "ME Infinity Cell Supported Item List",
+            "Format: \"<modid>:<name>:<metadata>\", where metadata is optional by default.",
+            "For example: \"minecraft:cobblestone\" or \"appliedenergistics2:part:36\" (metadata)."})
     @Config.Name("Item IDs")
+    @Config.RequiresMcRestart
     public static String[] infItem = new String[] {"minecraft:cobblestone"};
 
-    @Config.Comment("ME Infinity Cell type (Fluid's ID)")
+    @Config.Comment({
+            "ME Infinity Cell Supported Fluid List",
+            "Use fluid name as id by default, for example: \"water\" or \"\"."})
     @Config.Name("Fluid IDs")
+    @Config.RequiresMcRestart
     public static String[] infFluid = new String[] {"water"};
 
 }
