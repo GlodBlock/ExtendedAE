@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
-@Config(modid = EAETags.MOD_ID, name = "extendedae")
+@Config(modid = EAETags.MOD_ID, name = EAETags.MOD_ID)
 public class EAEConfig {
 
     @SubscribeEvent

@@ -73,11 +73,11 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     @Override
     public @NotNull String getItemStackDisplayName(@NotNull ItemStack stack) {
         Object record = this.getRecord(stack);
-        if (record instanceof IAEItemStack) {
-            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", ((IAEItemStack) record).getDefinition().getDisplayName());
+        if (record instanceof IAEItemStack item) {
+            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", item.getDefinition().getDisplayName());
         }
-        if (record instanceof IAEFluidStack) {
-            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", ((IAEFluidStack) record).getFluidStack().getLocalizedName());
+        if (record instanceof IAEFluidStack fluid) {
+            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", fluid.getFluidStack().getLocalizedName());
         }
         return I18n.translateToLocal("cell.unknown");
     }
@@ -120,7 +120,5 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     }
 
     @Override
-    public void setFuzzyMode(ItemStack itemStack, FuzzyMode fuzzyMode) {
-
-    }
+    public void setFuzzyMode(ItemStack itemStack, FuzzyMode fuzzyMode) {}
 }

@@ -19,14 +19,16 @@ public class InfinityCellHandler implements ICellHandler {
     }
 
     @Override
-    public <T extends IAEStack<T>> ICellInventoryHandler<T> getCellInventory(ItemStack itemStack, ISaveProvider iSaveProvider, IStorageChannel<T> iStorageChannel) {
+    public <T extends IAEStack<T>> ICellInventoryHandler<T> getCellInventory(ItemStack itemStack,
+                                                                             ISaveProvider saveProvider,
+                                                                             IStorageChannel<T> storageChannel) {
         InfinityItemCellInventory itemCell = InfinityItemCellInventory.getInventory(itemStack);
-        if (itemCell != null && itemCell.getChannel() == iStorageChannel) {
-            return new BasicCellInventoryHandler<>(itemCell, iStorageChannel);
+        if (itemCell != null && itemCell.getChannel() == storageChannel) {
+            return new BasicCellInventoryHandler<>(itemCell, storageChannel);
         }
         InfinityFluidCellInventory fluidCell = InfinityFluidCellInventory.getInventory(itemStack);
-        if (fluidCell != null && fluidCell.getChannel() == iStorageChannel) {
-            return new BasicCellInventoryHandler<>(fluidCell, iStorageChannel);
+        if (fluidCell != null && fluidCell.getChannel() == storageChannel) {
+            return new BasicCellInventoryHandler<>(fluidCell, storageChannel);
         }
         return null;
     }

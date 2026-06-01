@@ -19,12 +19,12 @@ public class InfinityFluidCellInventory implements IMEInventoryHandler<IAEFluidS
     private static final long SIZE = Integer.MAX_VALUE * 1000L;
 
     private InfinityFluidCellInventory(ItemStack stack) {
-        Object obj = EAEItemAndBlock.INFINITY_CELL.getRecord(stack);
-        if (obj == null) {
+        Object record = EAEItemAndBlock.INFINITY_CELL.getRecord(stack);
+        if (record == null) {
             throw new IllegalArgumentException("Cell isn't an infinity cell!");
         }
-        if (obj instanceof IAEFluidStack) {
-            this.record = (IAEFluidStack) obj;
+        if (record instanceof IAEFluidStack fluid) {
+            this.record = fluid;
             this.record.setStackSize(SIZE);
         } else {
             throw new IllegalArgumentException("Wrong infinity cell record!");

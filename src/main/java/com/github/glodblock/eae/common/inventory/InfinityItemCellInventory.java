@@ -19,12 +19,12 @@ public class InfinityItemCellInventory implements IMEInventoryHandler<IAEItemSta
     private static final long SIZE = Integer.MAX_VALUE;
 
     private InfinityItemCellInventory(ItemStack stack) {
-        Object obj = EAEItemAndBlock.INFINITY_CELL.getRecord(stack);
-        if (obj == null) {
+        Object record = EAEItemAndBlock.INFINITY_CELL.getRecord(stack);
+        if (record == null) {
             throw new IllegalArgumentException("Cell isn't an infinity cell!");
         }
-        if (obj instanceof IAEItemStack) {
-            this.record = (IAEItemStack) obj;
+        if (record instanceof IAEItemStack item) {
+            this.record = item;
             this.record.setStackSize(SIZE);
         } else {
             throw new IllegalArgumentException("Wrong infinity cell record!");
