@@ -3,67 +3,88 @@
     "facing=down,spin=0": {
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 90
+      "x": 90,
+      "extended:x": 270,
+      "extended:z": 180
     },
     "facing=down,spin=1": {
       "z": 270,
-      "type": "extendedae:ex_drive", 
+      "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 90
+      "x": 90,
+      "extended:x": 270,
+      "extended:z": 90
     },
     "facing=down,spin=2": {
       "z": 180,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 90
+      "x": 90,
+      "extended:x": 270
     },
     "facing=down,spin=3": {
       "z": 90,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 90
+      "x": 90,
+      "extended:x": 270,
+      "extended:z": 270
     },
     "facing=east,spin=0": {
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 90
+      "y": 90,
+      "extended:y": 270
     },
     "facing=east,spin=1": {
       "z": 270,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 90
+      "y": 90,
+      "extended:y": 270,
+      "extended:z": 270
     },
     "facing=east,spin=2": {
       "z": 180,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 90
+      "y": 90,
+      "extended:y": 270,
+      "extended:z": 180
     },
     "facing=east,spin=3": {
       "z": 90,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 90
+      "y": 90,
+      "extended:y": 270,
+      "extended:z": 90
     },
     "facing=north,spin=0": {
       "type": "extendedae:ex_drive",
-      "model": "extendedae:extended_drive/extended_me_drive_base"
+      "model": "extendedae:extended_drive/extended_me_drive_base",
+      "extended:y": 180
     },
     "facing=north,spin=1": {
       "z": 270,
       "type": "extendedae:ex_drive",
-      "model": "extendedae:extended_drive/extended_me_drive_base"
+      "model": "extendedae:extended_drive/extended_me_drive_base",
+      "extended:y": 180,
+      "extended:z": 90
     },
     "facing=north,spin=2": {
       "z": 180,
       "type": "extendedae:ex_drive",
-      "model": "extendedae:extended_drive/extended_me_drive_base"
+      "model": "extendedae:extended_drive/extended_me_drive_base",
+      "extended:y": 180,
+      "extended:z": 180
     },
     "facing=north,spin=3": {
       "z": 90,
       "type": "extendedae:ex_drive",
-      "model": "extendedae:extended_drive/extended_me_drive_base"
+      "model": "extendedae:extended_drive/extended_me_drive_base",
+      "extended:y": 180,
+      "extended:z": 270
     },
     "facing=south,spin=0": {
       "type": "extendedae:ex_drive",
@@ -74,65 +95,82 @@
       "z": 90,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 180
+      "y": 180,
+      "extended:z": 270
     },
     "facing=south,spin=2": {
       "z": 180,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 180
+      "y": 180,
+      "extended:z": 180
     },
     "facing=south,spin=3": {
       "z": 270,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 180
+      "y": 180,
+      "extended:z": 90
     },
     "facing=up,spin=0": {
       "z": 180,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 270
+      "x": 270,
+      "extended:x": 90
     },
     "facing=up,spin=1": {
       "z": 90,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 270
+      "x": 270,
+      "extended:x": 90,
+      "extended:z": 270
     },
     "facing=up,spin=2": {
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 270
+      "x": 270,
+      "extended:x": 90,
+      "extended:z": 180
     },
     "facing=up,spin=3": {
       "z": 270,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "x": 270
+      "x": 270,
+      "extended:x": 90,
+      "extended:z": 90
     },
     "facing=west,spin=0": {
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 270
+      "y": 270,
+      "extended:y": 90
     },
     "facing=west,spin=1": {
       "z": 270,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 270
+      "y": 270,
+      "extended:y": 90,
+      "extended:z": 270
     },
     "facing=west,spin=2": {
       "z": 180,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 270
+      "y": 270,
+      "extended:y": 90,
+      "extended:z": 180
     },
     "facing=west,spin=3": {
       "z": 90,
       "type": "extendedae:ex_drive",
       "model": "extendedae:extended_drive/extended_me_drive_base",
-      "y": 270
+      "y": 270,
+      "extended:y": 90,
+      "extended:z": 90
     }
   }
 }

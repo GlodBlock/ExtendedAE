@@ -1,18 +1,18 @@
 package com.glodblock.github.extendedae.client.model;
 
 import appeng.api.client.StorageCellModels;
-import appeng.api.orientation.BlockOrientation;
 import appeng.client.model.SpinnableVariant;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.mojang.math.Quadrant;
 import com.mojang.math.Transformation;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.SimpleModelWrapper;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.model.ComposedModelState;
@@ -20,34 +20,33 @@ import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public record ExDriveModel(SpinnableVariant variant) implements CustomUnbakedBlockStateModel {
+public record ExDriveModel(SpinnableVariant variant, SpinnableVariant.SimpleModelState opposite) implements CustomUnbakedBlockStateModel {
 
-    public static MapCodec<ExDriveModel> CODEC = SpinnableVariant.MAP_CODEC.xmap(ExDriveModel::new, ExDriveModel::variant);
+    public static MapCodec<ExDriveModel> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
+            SpinnableVariant.MAP_CODEC.forGetter(ExDriveModel::variant),
+            Quadrant.CODEC.optionalFieldOf("extended:x", Quadrant.R0).forGetter(model -> model.opposite.x()),
+            Quadrant.CODEC.optionalFieldOf("extended:y", Quadrant.R0).forGetter(model -> model.opposite.y()),
+            Quadrant.CODEC.optionalFieldOf("extended:z", Quadrant.R0).forGetter(model -> model.opposite.z()))
+            .apply(builder, ExDriveModel::create)
+    );
     private static final Identifier MODEL_BASE = ExtendedAE.id("block/extended_drive/extended_me_drive_base");
-    private static final Map<Transformation, Transformation> OPPOSITE = new HashMap<>();
     private static final Transformation[] TRANSFORMATIONS = buildSlotTransforms();
 
-    static {
-        for (var dir : Direction.values()) {
-            for (int spin = 0; spin < 4; spin++) {
-                var oriBlock = BlockOrientation.get(dir, spin);
-                var oppositeBlock = BlockOrientation.get(dir.getOpposite(), spin);
-                OPPOSITE.put(oriBlock.getTransformation(), oppositeBlock.getTransformation());
-            }
-        }
+    private static ExDriveModel create(SpinnableVariant variant, Quadrant x, Quadrant y, Quadrant z) {
+        return new ExDriveModel(variant, new SpinnableVariant.SimpleModelState(x, y, z, false));
     }
 
     @Override
     public @NotNull BlockStateModel bake(@NotNull ModelBaker baker) {
         final Map<Item, BlockStateModelPart[]> cellModels = new IdentityHashMap<>();
         var modelState = variant.modelState().asModelState();
+        var oppoState = opposite.asModelState();
         ModelState[] bayTransforms = new ModelState[TRANSFORMATIONS.length];
         for (int i = 0; i < TRANSFORMATIONS.length; i++) {
-            bayTransforms[i] = new ComposedModelState(modelState, applySpinTransformation(modelState, TRANSFORMATIONS[i], i >= 10));
+            bayTransforms[i] = new ComposedModelState(i >= 10 ? oppoState : modelState, TRANSFORMATIONS[i]);
         }
         for (var entry : StorageCellModels.models().entrySet()) {
             var location = entry.getValue();
@@ -97,14 +96,6 @@ public record ExDriveModel(SpinnableVariant variant) implements CustomUnbakedBlo
             }
         }
         return transforms;
-    }
-
-    private Transformation applySpinTransformation(ModelState model, Transformation origin, boolean state) {
-        if (state) {
-            var trans = model.transformation();
-            return OPPOSITE.getOrDefault(trans, trans).compose(origin);
-        }
-        return origin;
     }
 
     public static void getSlotOrigin(int row, int col, Vector3f translation) {
