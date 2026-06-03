@@ -5,6 +5,7 @@ import appeng.block.AEBaseTileBlock;
 import appeng.core.features.ActivityState;
 import appeng.core.features.BlockStackSrc;
 import appeng.tile.AEBaseTile;
+import com.github.glodblock.eae.EAETags;
 import com.github.glodblock.eae.ExtendedAE;
 import com.github.glodblock.eae.common.EAEItemAndBlock;
 import net.minecraft.block.Block;
@@ -36,7 +37,7 @@ public class ServerRegister {
             String key = entry.getLeft();
             Block block = entry.getRight();
             block.setRegistryName(key);
-            block.setTranslationKey(ExtendedAE.MODID + ":" + key);
+            block.setTranslationKey(EAETags.MOD_ID + ":" + key);
             block.setCreativeTab(EAEItemAndBlock.TAB);
             event.getRegistry().register(block);
         }
@@ -55,7 +56,7 @@ public class ServerRegister {
 
     private static Item initItem(String key, Item item) {
         item.setRegistryName(key);
-        item.setTranslationKey(ExtendedAE.MODID + ":" + key);
+        item.setTranslationKey(EAETags.MOD_ID + ":" + key);
         item.setCreativeTab(EAEItemAndBlock.TAB);
         return item;
     }

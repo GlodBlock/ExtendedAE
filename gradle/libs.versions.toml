@@ -1,0 +1,11 @@
+[versions]
+# libraries
+annotations = "26.1.0"
+# mods
+appeng = "4688138"
+jei    = "4.16.1.302"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations",              version.ref = "annotations" }
+appeng      = { group = "curse.maven",   name = "ae2-extended-life-570458", version.ref = "appeng"      }
+jei         = { group = "mezz.jei",      name = "jei_1.12.2",               version.ref = "jei"         }

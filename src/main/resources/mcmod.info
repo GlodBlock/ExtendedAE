@@ -1,10 +1,10 @@
 [
   {
-    "modid": "extendedae",
-    "name": "ExtendedAE",
+    "modid": "${modId}",
+    "name": "${modName}",
     "description": "Add some QoL extended contents for AE2",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
+    "version": "${modVersion}",
+    "mcversion": "${mcVersion}",
     "url": "https://github.com/GlodBlock/ExtendedAE",
     "updateUrl": "",
     "authorList": ["GlodBlock"],

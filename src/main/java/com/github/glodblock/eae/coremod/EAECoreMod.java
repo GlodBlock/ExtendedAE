@@ -1,12 +1,14 @@
 package com.github.glodblock.eae.coremod;
 
+import com.github.glodblock.eae.EAETags;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
-@IFMLLoadingPlugin.Name("ExtendedAE")
-@IFMLLoadingPlugin.MCVersion("1.12.2")
+@IFMLLoadingPlugin.Name(EAETags.MOD_ID)
+@IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 @IFMLLoadingPlugin.TransformerExclusions("com.github.glodblock.eae.coremod")
 public class EAECoreMod implements IFMLLoadingPlugin {
 
@@ -15,27 +17,22 @@ public class EAECoreMod implements IFMLLoadingPlugin {
         return new String[] { EAECoreMod.class.getPackage().getName() + ".EAEClassTransformer" };
     }
 
-    @Nullable
     @Override
-    public String getModContainerClass() {
+    public @Nullable String getModContainerClass() {
         return null;
     }
 
-    @Nullable
+
     @Override
-    public String getSetupClass() {
+    public @Nullable String getSetupClass() {
         return null;
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {
-        // NO-OP
-    }
+    public void injectData(Map<String, Object> data) {}
 
-    @Nullable
     @Override
-    public String getAccessTransformerClass() {
+    public @Nullable String getAccessTransformerClass() {
         return null;
     }
-
 }

@@ -23,8 +23,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.IItemHandler;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
 
@@ -71,32 +70,43 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     }
 
     @SuppressWarnings("deprecation")
-    @Nonnull
     @Override
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
+    public @NotNull String getItemStackDisplayName(@NotNull ItemStack stack) {
         Object record = this.getRecord(stack);
-        if (record instanceof IAEItemStack) {
-            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", ((IAEItemStack) record).getDefinition().getDisplayName());
+        if (record instanceof IAEItemStack item) {
+            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", item.getDefinition().getDisplayName());
         }
-        if (record instanceof IAEFluidStack) {
-            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", ((IAEFluidStack) record).getFluidStack().getLocalizedName());
+        if (record instanceof IAEFluidStack fluid) {
+            return I18n.translateToLocalFormatted(getTranslationKey(stack) + ".name", fluid.getFluidStack().getLocalizedName());
         }
         return I18n.translateToLocal("cell.unknown");
     }
 
     @Override
     protected void getCheckedSubItems(CreativeTabs creativeTab, NonNullList<ItemStack> itemStacks) {
-        for (String s : EAEConfig.infItem) {
-            ResourceLocation rl = new ResourceLocation(s);
-            Item item = ForgeRegistries.ITEMS.getValue(rl);
+        for (String rawStr : EAEConfig.infItem) {
+            String name = rawStr;
+            int metadata = 0;
+
+            int lastColon = rawStr.lastIndexOf(':');
+            int firstColon = rawStr.indexOf(':');
+            if (lastColon != firstColon) {
+                try {
+                    metadata = Integer.parseInt(rawStr.substring(lastColon + 1));
+                    name = rawStr.substring(0, lastColon);
+                } catch (NumberFormatException ignored) {}
+            }
+
+            ResourceLocation itemLocation = new ResourceLocation(name);
+            Item item = ForgeRegistries.ITEMS.getValue(itemLocation);
             if (item != null) {
-                itemStacks.add(this.getRecordCell(AEItemStack.fromItemStack(new ItemStack(item))));
+                itemStacks.add(getRecordCell(AEItemStack.fromItemStack(new ItemStack(item, 1, metadata))));
             }
         }
-        for (String s : EAEConfig.infFluid) {
-            Fluid fluid = FluidRegistry.getFluid(s.toLowerCase());
+        for (String rawStr : EAEConfig.infFluid) {
+            Fluid fluid = FluidRegistry.getFluid(rawStr.toLowerCase());
             if (fluid != null) {
-                itemStacks.add(this.getRecordCell(AEFluidStack.fromFluidStack(new FluidStack(fluid, 1))));
+                itemStacks.add(getRecordCell(AEFluidStack.fromFluidStack(new FluidStack(fluid, 1))));
             }
         }
     }
@@ -122,7 +132,5 @@ public class InfinityCell extends AEBaseItem implements ICellWorkbenchItem {
     }
 
     @Override
-    public void setFuzzyMode(ItemStack itemStack, FuzzyMode fuzzyMode) {
-
-    }
+    public void setFuzzyMode(ItemStack itemStack, FuzzyMode fuzzyMode) {}
 }

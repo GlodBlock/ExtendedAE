@@ -11,22 +11,20 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import com.github.glodblock.eae.common.EAEItemAndBlock;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class InfinityItemCellInventory implements IMEInventoryHandler<IAEItemStack> {
 
-    @Nonnull
-    private final IAEItemStack record;
+    private final @NotNull IAEItemStack record;
     private static final long SIZE = Integer.MAX_VALUE;
 
     private InfinityItemCellInventory(ItemStack stack) {
-        Object obj = EAEItemAndBlock.INFINITY_CELL.getRecord(stack);
-        if (obj == null) {
+        Object record = EAEItemAndBlock.INFINITY_CELL.getRecord(stack);
+        if (record == null) {
             throw new IllegalArgumentException("Cell isn't an infinity cell!");
         }
-        if (obj instanceof IAEItemStack) {
-            this.record = (IAEItemStack) obj;
+        if (record instanceof IAEItemStack item) {
+            this.record = item;
             this.record.setStackSize(SIZE);
         } else {
             throw new IllegalArgumentException("Wrong infinity cell record!");
