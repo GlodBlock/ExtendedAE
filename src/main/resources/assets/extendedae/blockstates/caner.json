@@ -5,17 +5,17 @@
       "x": 90
     },
     "facing=down,spin=1": {
-      "ae2:z": 270,
+      "z": 270,
       "model": "extendedae:block/caner",
       "x": 90
     },
     "facing=down,spin=2": {
-      "ae2:z": 180,
+      "z": 180,
       "model": "extendedae:block/caner",
       "x": 90
     },
     "facing=down,spin=3": {
-      "ae2:z": 90,
+      "z": 90,
       "model": "extendedae:block/caner",
       "x": 90
     },
@@ -24,17 +24,17 @@
       "y": 90
     },
     "facing=east,spin=1": {
-      "ae2:z": 270,
+      "z": 270,
       "model": "extendedae:block/caner",
       "y": 90
     },
     "facing=east,spin=2": {
-      "ae2:z": 180,
+      "z": 180,
       "model": "extendedae:block/caner",
       "y": 90
     },
     "facing=east,spin=3": {
-      "ae2:z": 90,
+      "z": 90,
       "model": "extendedae:block/caner",
       "y": 90
     },
@@ -42,15 +42,15 @@
       "model": "extendedae:block/caner"
     },
     "facing=north,spin=1": {
-      "ae2:z": 270,
+      "z": 270,
       "model": "extendedae:block/caner"
     },
     "facing=north,spin=2": {
-      "ae2:z": 180,
+      "z": 180,
       "model": "extendedae:block/caner"
     },
     "facing=north,spin=3": {
-      "ae2:z": 90,
+      "z": 90,
       "model": "extendedae:block/caner"
     },
     "facing=south,spin=0": {
@@ -58,27 +58,27 @@
       "y": 180
     },
     "facing=south,spin=1": {
-      "ae2:z": 90,
+      "z": 90,
       "model": "extendedae:block/caner",
       "y": 180
     },
     "facing=south,spin=2": {
-      "ae2:z": 180,
+      "z": 180,
       "model": "extendedae:block/caner",
       "y": 180
     },
     "facing=south,spin=3": {
-      "ae2:z": 270,
+      "z": 270,
       "model": "extendedae:block/caner",
       "y": 180
     },
     "facing=up,spin=0": {
-      "ae2:z": 180,
+      "z": 180,
       "model": "extendedae:block/caner",
       "x": 270
     },
     "facing=up,spin=1": {
-      "ae2:z": 90,
+      "z": 90,
       "model": "extendedae:block/caner",
       "x": 270
     },
@@ -87,7 +87,7 @@
       "x": 270
     },
     "facing=up,spin=3": {
-      "ae2:z": 270,
+      "z": 270,
       "model": "extendedae:block/caner",
       "x": 270
     },
@@ -96,17 +96,17 @@
       "y": 270
     },
     "facing=west,spin=1": {
-      "ae2:z": 270,
+      "z": 270,
       "model": "extendedae:block/caner",
       "y": 270
     },
     "facing=west,spin=2": {
-      "ae2:z": 180,
+      "z": 180,
       "model": "extendedae:block/caner",
       "y": 270
     },
     "facing=west,spin=3": {
-      "ae2:z": 90,
+      "z": 90,
       "model": "extendedae:block/caner",
       "y": 270
     }

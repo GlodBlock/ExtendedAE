@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/orientable",
+	"parent": "block/block",
 	"texture_size": [64, 64],
 	"textures": {
 		"particle": "extendedae:block/extended_charger/base",

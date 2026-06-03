@@ -16,11 +16,9 @@ public class CrystalFixerTooltip implements IBlockComponentProvider {
     public void appendTooltip(@NotNull ITooltip tooltip, BlockAccessor accessor, @NotNull IPluginConfig iPluginConfig) {
         var target = accessor.getServerData();
         if (target.contains(ExtendedAE.MODID)) {
-            target.getCompound(ExtendedAE.MODID).ifPresent(data -> {
-                if (data.contains("crystal_fixer")) {
-                    var progress = data.getCompoundOrEmpty("crystal_fixer").getIntOr("progress", 0);
-                    tooltip.add(Component.translatable("jade.crystal_chamber.progress", progress));
-                }
+            target.getCompound(ExtendedAE.MODID).flatMap(data -> data.getCompound("crystal_fixer")).ifPresent(data -> {
+                var progress = data.getIntOr("progress", 0);
+                tooltip.add(Component.translatable("jade.crystal_chamber.progress", progress));
             });
         }
     }

@@ -12,8 +12,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,10 +20,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-@OnlyIn(Dist.CLIENT)
 public class MultilineTextFieldWidget extends AbstractWidget {
 
-    private Consumer<String> responder = s -> {};
+    private Consumer<String> responder = _ -> {};
     private Pattern filter = null;
     private int maxLength = DEFAULT_MAX_LENGTH;
 
@@ -45,7 +42,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
         this.textField = new CachedTextField(font, w - 4);
         this.textField.setCharacterLimit(DEFAULT_MAX_LENGTH);
         this.textField.setCursorListener(this::clampScroll);
-        this.textField.setValueListener(v -> clampScroll());
+        this.textField.setValueListener(_ -> clampScroll());
         this.textField.setCursorListener(this::ensureCursorVisible);
     }
 

@@ -12,8 +12,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +62,6 @@ public class SExPatternInfo implements IMessage {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal<?> gui) {
             gui.postTileInfo(this.id, this.pos, this.dim, this.face);

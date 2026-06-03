@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "extendedae:block/assembler_matrix_glass"
+      "type": "extendedae:assembler_matrix_glass"
     }
   }
 }

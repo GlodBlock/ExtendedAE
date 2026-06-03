@@ -10,8 +10,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class SAssemblerMatrixUpdate implements IMessage {
 
@@ -59,7 +57,6 @@ public class SAssemblerMatrixUpdate implements IMessage {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         if (Minecraft.getInstance().screen instanceof GuiAssemblerMatrix gui) {
             gui.receiveUpdate(this.patternID, this.updateMap);

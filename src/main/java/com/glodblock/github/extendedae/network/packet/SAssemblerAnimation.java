@@ -10,8 +10,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class SAssemblerAnimation implements IMessage {
@@ -45,7 +43,6 @@ public class SAssemblerAnimation implements IMessage {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void onMessage(Player player) {
         try (var level = player.level()) {
             BlockEntity te = level.getBlockEntity(this.pos);

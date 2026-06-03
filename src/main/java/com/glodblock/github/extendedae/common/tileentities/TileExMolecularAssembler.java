@@ -43,8 +43,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -61,7 +59,6 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
     private final InternalInventory internalInv;
     private final InternalInventory gridInvExt;
     private short states = 0b000000;
-    @OnlyIn(Dist.CLIENT)
     private MolecularAssemblerAnimationStatus animationStatus;
 
     public TileExMolecularAssembler(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -297,12 +294,10 @@ public class TileExMolecularAssembler extends AENetworkedInvBlockEntity implemen
         return this.threads[index].getCurrentPattern();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void setAnimationStatus(@Nullable MolecularAssemblerAnimationStatus status) {
         this.animationStatus = status;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Nullable
     public MolecularAssemblerAnimationStatus getAnimationStatus() {
         return this.animationStatus;

@@ -30,7 +30,7 @@ public record DirectionSet(Set<Direction> backend) implements PacketWritable {
     }
 
     public DirectionSet(Collection<Direction> init) {
-        this(EnumSet.copyOf(init));
+        this(init.isEmpty() ? EnumSet.noneOf(Direction.class) : EnumSet.copyOf(init));
     }
 
     public DirectionSet(RegistryFriendlyByteBuf buf) {
@@ -62,7 +62,7 @@ public record DirectionSet(Set<Direction> backend) implements PacketWritable {
     public void save(ValueOutput data, String name) {
         var list = data.childrenList(name);
         for (var side : this.backend) {
-            list.addChild().putString("side", side.name());
+            list.addChild().putString("side", side.getName());
         }
     }
 

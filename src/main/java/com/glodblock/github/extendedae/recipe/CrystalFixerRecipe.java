@@ -37,7 +37,7 @@ public class CrystalFixerRecipe extends MechanicsRecipe<RecipeInput> {
     }
 
     private static Block asBlock(ItemStackTemplate stack) {
-        return ((BlockItem) stack.item()).getBlock();
+        return ((BlockItem) stack.item().value()).getBlock();
     }
 
     public boolean roll(RandomSource random) {

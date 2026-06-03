@@ -4,7 +4,7 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
-import com.glodblock.github.extendedae.util.LazyInits;
+import com.glodblock.github.extendedae.util.FCUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -21,20 +21,20 @@ import java.util.function.Supplier;
 
 public class ItemInfinityCell extends AEBaseItem {
 
-    private AEKey record;
+    private final Supplier<AEKey> record;
 
     public ItemInfinityCell(@NotNull Supplier<AEKey> type, Properties properties) {
         super(properties.stacksTo(1));
-        LazyInits.addFinal(() -> this.record = type.get());
+        this.record = FCUtil.memoize(type);
     }
 
     public AEKey getRecord() {
-        return this.record;
+        return this.record.get();
     }
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack is) {
-        return Component.translatable("item.extendedae.infinity_cell_name", this.record.getDisplayName());
+        return Component.translatable("item.extendedae.infinity_cell_name", this.record.get().getDisplayName());
     }
 
     @SuppressWarnings("deprecation")
@@ -47,7 +47,7 @@ public class ItemInfinityCell extends AEBaseItem {
     @NotNull
     @Override
     public Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
-        var content = Collections.singletonList(new GenericStack(this.record, getAsIntMax(this.record)));
+        var content = Collections.singletonList(new GenericStack(this.record.get(), getAsIntMax(this.record.get())));
         return Optional.of(new StorageCellTooltipComponent(List.of(), content, false, true));
     }
 

@@ -18,20 +18,20 @@ public class WirelessConnectorTooltip implements IBlockComponentProvider {
     public void appendTooltip(@NotNull ITooltip tooltip, BlockAccessor accessor, @NotNull IPluginConfig iPluginConfig) {
         var target = accessor.getServerData();
         if (target.contains(ExtendedAE.MODID)) {
-            target.getCompound(ExtendedAE.MODID).ifPresent(data -> {
-                var color = data.getCompoundOrEmpty("wireless").getStringOr("color", "");
-                var used = data.getCompoundOrEmpty("wireless").getIntOr("used", 0);
+            target.getCompound(ExtendedAE.MODID).flatMap(data -> data.getCompound("wireless")).ifPresent(wireless -> {
+                var color = wireless.getStringOr("color", "");
+                var used = wireless.getIntOr("used", 0);
                 var aeColor = AEColor.valueOf(color);
                 if (aeColor != AEColor.TRANSPARENT) {
                     tooltip.add(Component.translatable(
-                                    "jade.wireless_connector.color",
-                                    Component.translatable(aeColor.toString())
-                            ));
+                            "jade.wireless_connector.color",
+                            Component.translatable(aeColor.toString())
+                    ));
                 }
                 tooltip.add(Component.translatable(
-                                "jade.wireless_connector.used",
-                                used
-                        ));
+                        "jade.wireless_connector.used",
+                        used
+                ));
             });
         }
     }

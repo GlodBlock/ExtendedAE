@@ -8,7 +8,9 @@ import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.hooks.CutterHook;
 import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.util.LazyInits;
+import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
+import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
+import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.darkmode.BlacklistGUI;
 import com.glodblock.github.glodium.Glodium;
@@ -23,10 +25,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 
@@ -57,15 +59,14 @@ public class ExtendedAE {
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);
         bus.addListener(this::sendIMC);
-        bus.addListener(this::onFinalization);
         bus.addListener(EAENetworkHandler.INSTANCE::onRegister);
         bus.register(EAERegistryHandler.INSTANCE);
         NeoForge.EVENT_BUS.register(CutterHook.INSTANCE);
+        NeoForge.EVENT_BUS.addListener(this::sendSyncRecipe);
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
         EAERegistryHandler.INSTANCE.onInit();
-        LazyInits.initCommon();
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
@@ -82,8 +83,8 @@ public class ExtendedAE {
         }
     }
 
-    public void onFinalization(FMLLoadCompleteEvent event) {
-        LazyInits.initFinal();
+    public void sendSyncRecipe(OnDatapackSyncEvent event) {
+        event.sendRecipes(CircuitCutterRecipe.TYPE, CrystalAssemblerRecipe.TYPE, CrystalFixerRecipe.TYPE);
     }
 
     public static Identifier id(String id) {

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class FCUtil {
 
@@ -129,6 +130,24 @@ public class FCUtil {
             }
         }
         return false;
+    }
+
+    public static <T> Supplier<T> memoize(Supplier<T> supplier) {
+        return new Supplier<>() {
+
+            private T value;
+            private boolean init = false;
+
+            @Override
+            public T get() {
+                if (!this.init) {
+                    this.init = true;
+                    this.value = supplier.get();
+                }
+                return this.value;
+            }
+
+        };
     }
 
 }

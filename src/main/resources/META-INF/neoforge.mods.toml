@@ -39,6 +39,12 @@ license="${mod_license}"
     versionRange="*"
     side="BOTH"
 [[dependencies.extendedae]]
+    modId="jei"
+    type="OPTIONAL"
+    versionRange="[29.5.0.26,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.extendedae]]
     modId="glodium"
     type="REQUIRED"
     versionRange="*"

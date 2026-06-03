@@ -19,8 +19,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -46,7 +44,6 @@ public class BlockExCharger extends BlockBaseGui<TileExCharger> {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource r) {
         if (!AEConfig.instance().isEnableEffects()) {
             return;
