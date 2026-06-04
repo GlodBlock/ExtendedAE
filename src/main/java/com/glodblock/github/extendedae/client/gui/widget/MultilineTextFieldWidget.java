@@ -103,7 +103,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(@NotNull CharacterEvent event) {
-        var chr = event.codepoint();
+        char chr = (char) event.codepoint();
         if (!isFocused()) return false;
         if (chr == '\n' || chr == '\r') return true;
         if (filter != null && !filter.matcher(String.valueOf(chr)).matches()) return true;

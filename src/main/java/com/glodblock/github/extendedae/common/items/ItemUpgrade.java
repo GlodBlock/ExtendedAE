@@ -8,7 +8,6 @@ import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.parts.AEBasePart;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.util.FCUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionResult;

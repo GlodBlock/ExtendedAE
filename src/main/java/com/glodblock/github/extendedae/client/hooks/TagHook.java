@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.client.hooks;
 
 import com.glodblock.github.extendedae.client.gui.GuiTagExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiTagStorageBus;
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.ChatFormatting;
@@ -20,6 +21,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,7 +35,7 @@ public class TagHook {
     @SuppressWarnings("deprecation")
     private static void hookTooltip(ItemStack stack, List<Component> tooltip, Player player) {
         if (Minecraft.getInstance().screen instanceof GuiTagExportBus || Minecraft.getInstance().screen instanceof GuiTagStorageBus) {
-            if (player.isShiftKeyDown()) {
+            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT)) {
                 Holder.Reference<@NotNull Block> blockHolder = null;
                 boolean anyTag = false;
                 if (stack.getItem() instanceof BlockItem block) {
