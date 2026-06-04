@@ -47,6 +47,6 @@ license="${mod_license}"
 [[dependencies.extendedae]]
     modId="glodium"
     type="REQUIRED"
-    versionRange="*"
+    versionRange="[26.1-1.2-neoforge,)"
     ordering="AFTER"
     side="BOTH"
