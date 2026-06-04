@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,13 @@ public class IngredientBufferTESR extends ExBaseTESR<TileIngredientBuffer, Singl
 
     @Override
     public void submit(@NotNull SingleItemState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodes, @NotNull CameraRenderState camera) {
-        this.renderSingleItem(state, poseStack, nodes);
+        if (state.item.isEmpty()) {
+            return;
+        }
+        poseStack.pushPose();
+        poseStack.mulPose(state.transform.getMatrix());
+        state.item.submit(poseStack, nodes, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
     }
 
 }
