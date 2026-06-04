@@ -151,3 +151,7 @@ tasks.withType(ProcessResources).configureEach {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+
+tasks.named('jar') {
+    exclude 'com/glodblock/github/**/datagen/**'
+}
