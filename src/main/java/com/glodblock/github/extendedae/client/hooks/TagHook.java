@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -29,11 +28,11 @@ import java.util.stream.Stream;
 public class TagHook {
 
     public static void onInit() {
-        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, (ItemTooltipEvent evt) -> hookTooltip(evt.getItemStack(), evt.getToolTip(), evt.getEntity()));
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, (ItemTooltipEvent evt) -> hookTooltip(evt.getItemStack(), evt.getToolTip()));
     }
 
     @SuppressWarnings("deprecation")
-    private static void hookTooltip(ItemStack stack, List<Component> tooltip, Player player) {
+    private static void hookTooltip(ItemStack stack, List<Component> tooltip) {
         if (Minecraft.getInstance().screen instanceof GuiTagExportBus || Minecraft.getInstance().screen instanceof GuiTagStorageBus) {
             if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT)) {
                 Holder.Reference<@NotNull Block> blockHolder = null;

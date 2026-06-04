@@ -55,6 +55,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -444,7 +445,7 @@ public class PartActiveFormationPlane extends UpgradeablePart implements IGridTi
     }
 
     @Override
-    public void collectModelData(net.neoforged.neoforge.model.data.ModelData.Builder builder) {
+    public void collectModelData(ModelData.Builder builder) {
         super.collectModelData(builder);
         builder.with(PartModelData.CONNECTIONS, getConnections());
     }
