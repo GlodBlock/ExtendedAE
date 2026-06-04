@@ -84,7 +84,7 @@ public class GuiWirelessHub extends UpgradeableScreen<ContainerWirelessHub> {
                 this.highlightBtn[i].setSuccessJob(() -> {
                     if (this.getPlayer() != null) {
                         Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, this.getPlayer().level().dimension(), "chat.wireless.highlight");
-                        this.getPlayer().sendOverlayMessage(message);
+                        this.getPlayer().sendSystemMessage(message);
                     }
                 });
                 this.remotes[i].setTooltip(Tooltip.create(Component.translatable("gui.wireless_connect.remote_channel", remotePos.getX(), remotePos.getY(), remotePos.getZ(), this.menu.getRemoteChannel(i))));

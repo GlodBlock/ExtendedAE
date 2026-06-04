@@ -62,7 +62,7 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
                 this.highlight.setSuccessJob(() -> {
                     if (this.getPlayer() != null) {
                         Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, level.dimension(), "chat.wireless.highlight");
-                        this.getPlayer().sendOverlayMessage(message);
+                        this.getPlayer().sendSystemMessage(message);
                     }
                 });
                 this.highlight.setVisibility(true);

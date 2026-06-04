@@ -47,6 +47,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.locale.Language;
@@ -462,7 +463,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
         this.needsRefresh = true;
     }
 
-    public void postTileInfo(long id, BlockPos pos, ResourceKey<Level> dim, Direction face) {
+    public void postTileInfo(long id, BlockPos pos, ResourceKey<@NotNull Level> dim, Direction face) {
         this.infoMap.put(id, new PatternProviderInfo(pos, face, dim));
         this.cachedSearches.clear();
         this.needsRefresh = true;
@@ -597,7 +598,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
                         btn.setSuccessJob(() -> {
                             if (this.getPlayer() != null && info.pos != null && info.world != null) {
                                 Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), info.pos, info.world, "chat.ex_pattern_access_terminal.pos");
-                                this.getPlayer().sendOverlayMessage(message);
+                                this.getPlayer().sendSystemMessage(message);
                             }
                         });
                         btn.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.ex_pattern_access_terminal.tooltip.03")));
@@ -750,7 +751,7 @@ public class GuiExPatternTerminal<T extends ContainerExPatternTerminal> extends 
      */
     private void blit(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, Rect2i srcRect) {
         var texture = AppEng.makeId("textures/guis/ex_pattern_access_terminal.png");
-        guiGraphics.blit(texture, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight(), 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, offsetX, offsetY, srcRect.getX(), srcRect.getY(), srcRect.getWidth(), srcRect.getHeight(), 256, 256);
     }
 
     sealed interface Row {

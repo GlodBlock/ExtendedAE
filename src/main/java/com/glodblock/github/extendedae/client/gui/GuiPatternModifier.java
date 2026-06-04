@@ -15,6 +15,7 @@ import com.glodblock.github.extendedae.network.packet.CUpdatePage;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -186,11 +187,11 @@ public class GuiPatternModifier extends AEBaseScreen<ContainerPatternModifier> {
     @Override
     public void drawBG(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         if (this.menu.page == 0 || this.menu.page == 2) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, AppEng.makeId("textures/guis/pattern_editor_1.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
         } else if (this.menu.page == 1) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, AppEng.makeId("textures/guis/pattern_editor_3.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
         } else if (this.menu.page == 3) {
-            guiGraphics.blit(AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, AppEng.makeId("textures/guis/pattern_editor_2.png"), offsetX, offsetY, 0, 0, 176, 212, 256, 256);
         }
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
     }

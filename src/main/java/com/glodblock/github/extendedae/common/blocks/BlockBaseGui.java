@@ -37,7 +37,7 @@ public abstract class BlockBaseGui<T extends AEBaseBlockEntity> extends AEBaseEn
     @Override
     public @NotNull InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player p, InteractionHand hand, BlockHitResult hit) {
         var parent = super.useItemOn(heldItem, state, level, pos, p, hand, hit);
-        if (parent != InteractionResult.PASS) {
+        if (parent != InteractionResult.PASS && parent != InteractionResult.TRY_WITH_EMPTY_HAND) {
             return parent;
         }
         if (InteractionUtil.isInAlternateUseMode(p)) {

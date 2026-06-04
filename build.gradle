@@ -89,7 +89,7 @@ repositories {
 }
 
 dependencies {
-    implementation "io.github.glodblock:Glodium:26.1-1.1-neoforge-SNAPSHOT"
+    implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge-SNAPSHOT"
     implementation "org.appliedenergistics:appliedenergistics2:26.1.8-alpha"
     implementation "org.appliedenergistics:guideme:26.1.10-alpha"
     //jarJar(implementation ("de.mari_023:ae2wtlib_api:19.2.0") { transitive = false })
