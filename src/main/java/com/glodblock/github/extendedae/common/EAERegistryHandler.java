@@ -1,7 +1,6 @@
 package com.glodblock.github.extendedae.common;
 
 import appeng.api.AECapabilities;
-import appeng.api.client.StorageCellModels;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IInWorldGridNodeHost;
@@ -310,9 +309,6 @@ public class EAERegistryHandler extends RegistryHandler {
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
         StorageCells.addCellHandler(VoidCellInventory.HANDLER);
-        StorageCellModels.registerModel(EAESingletons.INFINITY_WATER_CELL, ExtendedAE.id("block/drive/infinity_water_cell"));
-        StorageCellModels.registerModel(EAESingletons.INFINITY_COBBLESTONE_CELL, ExtendedAE.id("block/drive/infinity_cobblestone_cell"));
-        StorageCellModels.registerModel(EAESingletons.VOID_CELL, ExtendedAE.id("block/drive/void_cell"));
     }
 
     private void initPackageList() {

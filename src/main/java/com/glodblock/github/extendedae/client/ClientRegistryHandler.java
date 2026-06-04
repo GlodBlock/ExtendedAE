@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.client;
 
+import appeng.api.client.StorageCellModels;
 import appeng.client.InitScreens;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.GuiActiveFormationPlane;
@@ -129,6 +130,9 @@ public class ClientRegistryHandler {
     public void registerModels(RegisterBlockStateModels event) {
         event.registerModel(ExtendedAE.id("ex_drive"), ExDriveModel.CODEC);
         event.registerModel(ExtendedAE.id("assembler_matrix_glass"), AssemblerGlassModel.MAP_CODEC);
+        StorageCellModels.registerModel(EAESingletons.INFINITY_WATER_CELL, ExtendedAE.id("block/drive/infinity_water_cell"));
+        StorageCellModels.registerModel(EAESingletons.INFINITY_COBBLESTONE_CELL, ExtendedAE.id("block/drive/infinity_cobblestone_cell"));
+        StorageCellModels.registerModel(EAESingletons.VOID_CELL, ExtendedAE.id("block/drive/void_cell"));
     }
 
     @SubscribeEvent
