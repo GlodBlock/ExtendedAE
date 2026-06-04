@@ -18,18 +18,15 @@ import appeng.parts.AEBasePart;
 import appeng.util.SettingsFrom;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -106,20 +103,16 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     }
 
     @Override
-    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+    public void onRedstoneLevelMayHaveChanged() {
         this.logic.updateRedstoneState();
     }
 
     @Override
     public boolean onUseWithoutItem(Player p, Vec3 pos) {
-        try (var world = p.level()) {
-            if (!world.isClientSide()) {
-                openMenu(p, MenuLocators.forPart(this));
-            }
-            return true;
-        } catch (IOException e) {
-            return false;
+        if (!p.level().isClientSide()) {
+            openMenu(p, MenuLocators.forPart(this));
         }
+        return true;
     }
 
     @Override
@@ -169,4 +162,5 @@ public class PartExPatternProvider extends AEBasePart implements PatternProvider
     public ItemStack getMainMenuIcon() {
         return EAESingletons.EX_PATTERN_PROVIDER_PART.toStack();
     }
+
 }

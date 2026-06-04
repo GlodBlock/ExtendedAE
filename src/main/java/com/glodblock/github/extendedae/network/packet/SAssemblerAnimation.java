@@ -44,12 +44,9 @@ public class SAssemblerAnimation implements IMessage {
 
     @Override
     public void onMessage(Player player) {
-        try (var level = player.level()) {
-            BlockEntity te = level.getBlockEntity(this.pos);
-            if (te instanceof TileExMolecularAssembler ma) {
-                ma.setAnimationStatus(new MolecularAssemblerAnimationStatus(this.rate, this.what.wrapForDisplayOrFilter()));
-            }
-        } catch (Exception ignored) {
+        BlockEntity te = player.level().getBlockEntity(this.pos);
+        if (te instanceof TileExMolecularAssembler ma) {
+            ma.setAnimationStatus(new MolecularAssemblerAnimationStatus(this.rate, this.what.wrapForDisplayOrFilter()));
         }
     }
 

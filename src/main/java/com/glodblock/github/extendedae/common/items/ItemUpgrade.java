@@ -2,12 +2,14 @@ package com.glodblock.github.extendedae.common.items;
 
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
+import appeng.api.parts.PartHelper;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.parts.AEBasePart;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.util.FCUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -41,6 +43,9 @@ public abstract class ItemUpgrade extends Item {
         var pos = context.getClickedPos();
         var world = context.getLevel();
         var tile = world.getBlockEntity(pos);
+        if (!(world instanceof ServerLevel serverLevel)) {
+            return InteractionResult.PASS;
+        }
         if (tile != null) {
             var ctx = new BlockPlaceContext(context);
             var tClazz = tile.getClass();
@@ -77,16 +82,15 @@ public abstract class ItemUpgrade extends Item {
                     try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(ExtendedAE.LOGGER)) {
                         var output = TagValueOutput.createWithContext(reporter, world.registryAccess());
                         part.writeToNBT(output);
-                        var p = cable.replacePart(partItem.get(), side, context.getPlayer(), null);
+                        var p = PartHelper.setPart(serverLevel, pos, side, context.getPlayer(), partItem.get());
                         if (p != null) {
                             var contents = output.buildResult();
-                            contents.put("BYPASS_EXTENDEDAE", new CompoundTag());
+                            contents.putBoolean("BYPASS_EXTENDEDAE", true);
                             var input = TagValueInput.create(reporter, world.registryAccess(), contents);
                             p.readFromNBT(input);
                             p.addToWorld();
                         }
                     }
-
                 } else {
                     return InteractionResult.PASS;
                 }

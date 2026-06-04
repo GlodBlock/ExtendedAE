@@ -28,7 +28,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.List;
 
 public class PartExInterface extends AEBasePart implements InterfaceLogicHost, IPage {
@@ -119,14 +118,10 @@ public class PartExInterface extends AEBasePart implements InterfaceLogicHost, I
 
     @Override
     public boolean onUseWithoutItem(Player p, Vec3 pos) {
-        try (var world = p.level()) {
-            if (!world.isClientSide()) {
-                openMenu(p, MenuLocators.forPart(this));
-            }
-            return true;
-        } catch (IOException e) {
-            return false;
+        if (!p.level().isClientSide()) {
+            openMenu(p, MenuLocators.forPart(this));
         }
+        return true;
     }
 
     @Override

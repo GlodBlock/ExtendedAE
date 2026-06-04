@@ -16,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-import java.io.IOException;
 import java.util.Objects;
 
 public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessConnector> {
@@ -56,19 +55,16 @@ public class GuiWirelessConnector extends UpgradeableScreen<ContainerWirelessCon
                 this.remote.locate(remotePos);
                 this.lastPos = remotePos;
             }
-            try (var level = this.getPlayer().level()) {
-                this.highlight.setTarget(remotePos, level.dimension());
-                this.highlight.setMultiplier(this.playerToBlockDis(remotePos));
-                this.highlight.setSuccessJob(() -> {
-                    if (this.getPlayer() != null) {
-                        Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, level.dimension(), "chat.wireless.highlight");
-                        this.getPlayer().sendSystemMessage(message);
-                    }
-                });
-                this.highlight.setVisibility(true);
-            } catch (IOException e) {
-                this.highlight.setVisibility(false);
-            }
+            var level = this.getPlayer().level();
+            this.highlight.setTarget(remotePos, level.dimension());
+            this.highlight.setMultiplier(this.playerToBlockDis(remotePos));
+            this.highlight.setSuccessJob(() -> {
+                if (this.getPlayer() != null) {
+                    Component message = MessageUtil.createEnhancedHighlightMessage(this.getPlayer(), remotePos, level.dimension(), "chat.wireless.highlight");
+                    this.getPlayer().sendSystemMessage(message);
+                }
+            });
+            this.highlight.setVisibility(true);
         } else {
             this.remote.unload();
             this.highlight.setVisibility(false);
