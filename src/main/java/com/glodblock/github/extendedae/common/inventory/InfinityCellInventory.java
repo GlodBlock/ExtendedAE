@@ -30,7 +30,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public CellState getStatus() {
-        return CellState.NOT_EMPTY;
+        return CellState.TYPES_FULL;
     }
 
     @Override
