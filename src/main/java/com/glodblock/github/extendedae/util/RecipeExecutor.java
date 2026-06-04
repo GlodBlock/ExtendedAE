@@ -11,23 +11,7 @@ import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.function.Function;
 
-public class RecipeExecutor<T extends Recipe<?>> {
-
-    private final IRecipeMachine<?, T> machine;
-    private final int maxTime;
-    private final Function<T, ItemStack> outputGetter;
-    private final int energyMultiplier;
-
-    public RecipeExecutor(IRecipeMachine<?, T> machine, Function<T, ItemStack> outputGetter, int maxTime) {
-        this(machine, outputGetter, maxTime, 10);
-    }
-
-    public RecipeExecutor(IRecipeMachine<?, T> machine, Function<T, ItemStack> outputGetter, int maxTime, int energyMultiplier) {
-        this.machine = machine;
-        this.maxTime = maxTime;
-        this.outputGetter = outputGetter;
-        this.energyMultiplier = energyMultiplier;
-    }
+public record RecipeExecutor<T extends Recipe<?>>(IRecipeMachine<?, T> machine, Function<T, ItemStack> outputGetter, int maxTime) {
 
     public TickRateModulation execute(int speed, boolean usePower) {
         var ctx = this.machine.getContext();
@@ -36,9 +20,10 @@ public class RecipeExecutor<T extends Recipe<?>> {
         var runRecipe = ctx.currentRecipe;
         var output = this.machine.getOutput();
         if (runRecipe != null) {
+            var neededEnergy = this.machine.getNeededEnergy();
             this.machine.setWorking(true);
             if (usePower) {
-                final int powerConsumption = this.energyMultiplier * speed;
+                final double powerConsumption = ((double) neededEnergy) / this.maxTime * speed;
                 final double powerThreshold = powerConsumption - 0.01;
                 // Use network power when online
                 if (mainNode != null) {

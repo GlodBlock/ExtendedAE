@@ -25,18 +25,21 @@ public class CrystalAssemblerRecipe extends MechanicsRecipe<RecipeInput> {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected final Optional<IngredientStack.Fluid> fluid;
     public final ItemStackTemplate output;
+    public final long energy;
 
-    public CrystalAssemblerRecipe(ItemStackTemplate output, List<IngredientStack.Item> inputs, IngredientStack.Fluid fluid) {
+    public CrystalAssemblerRecipe(ItemStackTemplate output, List<IngredientStack.Item> inputs, IngredientStack.Fluid fluid, long energy) {
         this.output = output;
         this.inputs = inputs;
         this.fluid = Optional.ofNullable(fluid);
+        this.energy = energy;
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public CrystalAssemblerRecipe(ItemStackTemplate output, List<IngredientStack.Item> inputs, Optional<IngredientStack.Fluid> fluid) {
+    public CrystalAssemblerRecipe(ItemStackTemplate output, List<IngredientStack.Item> inputs, Optional<IngredientStack.Fluid> fluid, long energy) {
         this.output = output;
         this.inputs = inputs;
         this.fluid = fluid;
+        this.energy = energy;
     }
 
     public List<IngredientStack.Item> getInputs() {

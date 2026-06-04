@@ -38,4 +38,8 @@ public interface IRecipeMachine<C extends RecipeInput, T extends Recipe<@NotNull
         return null;
     }
 
+    default long getNeededEnergy() {
+        return 0;
+    }
+
 }

@@ -307,6 +307,14 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.ctx.onInvChange();
     }
 
+    @Override
+    public long getNeededEnergy() {
+        if (this.ctx.currentRecipe != null) {
+            return this.ctx.currentRecipe.value().energy;
+        }
+        return 0;
+    }
+
     public void onChangeTank() {
         this.saveChanges();
         this.ctx.onInvChange();

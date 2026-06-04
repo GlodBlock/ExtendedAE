@@ -21,10 +21,12 @@ public class CircuitCutterRecipe extends MechanicsRecipe<RecipeInput> {
 
     protected final IngredientStack.Item input;
     public final ItemStackTemplate output;
+    public final long energy;
 
-    public CircuitCutterRecipe(ItemStackTemplate output, IngredientStack.Item input) {
+    public CircuitCutterRecipe(ItemStackTemplate output, IngredientStack.Item input, long energy) {
         this.output = output;
         this.input = input;
+        this.energy = energy;
     }
 
     public IngredientStack.Item getInput() {

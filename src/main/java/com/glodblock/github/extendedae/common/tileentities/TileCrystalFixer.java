@@ -56,7 +56,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
         super(type, pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
-        this.exec = new RecipeExecutor<>(this, r -> new ItemStack(r.getOutput()), MAX_PROGRESS, 50);
+        this.exec = new RecipeExecutor<>(this, r -> new ItemStack(r.getOutput()), MAX_PROGRESS);
     }
 
     @Override
@@ -189,6 +189,11 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     @Nullable
     public IEnergySource getEnergy() {
         return this;
+    }
+
+    @Override
+    public long getNeededEnergy() {
+        return 5000;
     }
 
     public void onChanged() {

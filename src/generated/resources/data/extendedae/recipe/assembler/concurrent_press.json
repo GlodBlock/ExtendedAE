@@ -1,5 +1,6 @@
 {
   "type": "extendedae:crystal_assembler",
+  "energy": 2000,
   "input_items": [
     {
       "amount": 3,

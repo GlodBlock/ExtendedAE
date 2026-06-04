@@ -1,5 +1,6 @@
 {
   "type": "extendedae:crystal_assembler",
+  "energy": 1000,
   "input_items": [
     {
       "ingredient": "ae2:pattern_access_terminal"

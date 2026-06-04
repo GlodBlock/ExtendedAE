@@ -1,5 +1,6 @@
 {
   "type": "extendedae:crystal_assembler",
+  "energy": 50000,
   "input_items": [
     {
       "ingredient": "extendedae:machine_frame"

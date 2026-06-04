@@ -1,5 +1,6 @@
 {
   "type": "extendedae:circuit_cutter",
+  "energy": 8000,
   "input": {
     "ingredient": "ae2:quartz_block"
   },

@@ -1,5 +1,6 @@
 {
   "type": "extendedae:crystal_assembler",
+  "energy": 8000,
   "input_fluid": {
     "amount": 100,
     "ingredient": "minecraft:water"

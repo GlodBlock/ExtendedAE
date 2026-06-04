@@ -1,5 +1,6 @@
 {
   "type": "extendedae:circuit_cutter",
+  "energy": 20,
   "input": {
     "ingredient": "extendedae:mddyue"
   },

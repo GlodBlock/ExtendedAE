@@ -67,6 +67,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(Blocks.CRAFTING_TABLE, 3)
                 .input(EAESingletons.CONCURRENT_PROCESSOR)
                 .input(ConventionTags.GLASS_CABLE, 6)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/ex_pattern_provider"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.PATTERN_PROVIDER_UPGRADE)
@@ -93,6 +94,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.GLASS, 3)
                 .input(EAESingletons.CONCURRENT_PROCESSOR)
                 .input(ConventionTags.GLASS_CABLE, 6)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/ex_interface"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.INTERFACE_UPGRADE)
@@ -143,6 +145,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SPEED_CARD, 3)
                 .input(Blocks.PISTON, 2)
                 .input(AEItems.FORMATION_CORE)
+                .power(7000)
                 .save(this.output, ExtendedAE.id("assembler/ex_export_bus"));
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.EX_IMPORT_BUS, this.items, this.fluids)
@@ -150,6 +153,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SPEED_CARD, 3)
                 .input(Blocks.PISTON, 2)
                 .input(AEItems.ANNIHILATION_CORE)
+                .power(7000)
                 .save(this.output, ExtendedAE.id("assembler/ex_import_bus"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.IO_BUS_UPGRADE)
@@ -171,6 +175,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(Blocks.REDSTONE_LAMP)
                 .input(AEItems.LOGIC_PROCESSOR, 2)
                 .input(AEBlocks.QUARTZ_FIXTURE, 4)
+                .power(1000)
                 .save(this.output, ExtendedAE.id("assembler/ex_pattern_access_terminal"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.PATTERN_UPGRADE)
@@ -199,6 +204,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.SMART_DENSE_CABLE, 2)
                 .input(AEItems.WIRELESS_RECEIVER, 2)
                 .input(AEItems.WIRELESS_BOOSTER, 3)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/wireless_connector"));
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.WIRELESS_TOOL, this.items, this.fluids)
@@ -206,6 +212,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.IRON_INGOT, 2)
                 .input(AEItems.CALCULATION_PROCESSOR)
                 .input(AEItems.SINGULARITY)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/wireless_kit"));
 
         // Wireless Hub
@@ -215,6 +222,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.SMART_CABLE, 8)
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 4)
                 .input(AEBlocks.QUANTUM_LINK)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/wireless_hub"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.WIRELESS_CONNECTOR_UPGRADE)
@@ -242,6 +250,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.GLASS_CABLE, 2)
                 .input(AEItems.CAPACITY_CARD)
                 .input(EAESingletons.CONCURRENT_PROCESSOR)
+                .power(20000)
                 .save(this.output, ExtendedAE.id("assembler/ex_drive"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.DRIVE_UPGRADE)
@@ -269,6 +278,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.FLUIX_DUST, 4)
                 .input(AEItems.ENGINEERING_PROCESSOR, 3)
                 .input(AEItems.SPEED_CARD)
+                .power(20000)
                 .save(this.output, ExtendedAE.id("assembler/ex_molecular_assembler"));
 
         // Extended Charger
@@ -277,6 +287,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEBlocks.CHARGER)
                 .input(AEItems.CAPACITY_CARD)
                 .input(EAESingletons.CONCURRENT_PROCESSOR)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/ex_charger"));
 
         // Tag Storage Bus
@@ -349,6 +360,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(Blocks.PISTON, 3)
                 .input(AEItems.FORMATION_CORE, 2)
                 .input(EAESingletons.EX_EXPORT_BUS)
+                .power(20000)
                 .save(this.output, ExtendedAE.id("assembler/active_formation_plane"));
 
         // Smart Annihilation Plane
@@ -358,6 +370,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(Blocks.PISTON, 3)
                 .input(AEItems.ANNIHILATION_CORE, 2)
                 .input(EAESingletons.EX_IMPORT_BUS)
+                .power(20000)
                 .save(this.output, ExtendedAE.id("assembler/smart_annihilation_plane"));
 
         // ME Caner
@@ -367,6 +380,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.INGREDIENT_BUFFER)
                 .input(AEItems.FORMATION_CORE)
                 .input(AEItems.ANNIHILATION_CORE)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/caner"));
 
         // ME Precise Export Bus
@@ -385,6 +399,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SPEED_CARD, 4)
                 .input(AEItems.LOGIC_PROCESSOR, 3)
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 2)
+                .power(80000)
                 .save(this.output, ExtendedAE.id("assembler/ex_io_port"));
 
         // Crystal Fixer
@@ -393,6 +408,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.MACHINE_FRAME)
                 .input(ConventionTags.ALL_CERTUS_QUARTZ, 4)
                 .input(AEParts.QUARTZ_FIBER, 2)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/crystal_fixer"));
 
         // Precise Storage Bus
@@ -556,6 +572,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.ENTRO_SEED)
                 .input(AEBlocks.FLUIX_BLOCK)
                 .fluid(Fluids.WATER, 200)
+                .power(10000)
                 .save(this.output, ExtendedAE.id("assembler/budding"));
 
         // Silicon BLock
@@ -585,6 +602,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SILICON_PRESS)
                 .input(EAESingletons.CONCURRENT_PROCESSOR_PRESS)
                 .input(Blocks.STONECUTTER)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/circuit_cutter"));
 
         // Oversize Interface
@@ -595,6 +613,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 2)
                 .input(AEItems.ANNIHILATION_CORE, 2)
                 .input(AEItems.FORMATION_CORE, 2)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/oversize_interface"));
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.OVERSIZE_INTERFACE_PART)
@@ -656,6 +675,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAESingletons.EX_ASSEMBLER)
                 .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.PURPLE), 6)
                 .input(AEItems.LOGIC_PROCESSOR)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/assembler_matrix_crafter"));
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.ASSEMBLER_MATRIX_PATTERN, this.items, this.fluids)
@@ -663,6 +683,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAETags.EX_PATTERN_PROVIDER)
                 .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.BLUE), 6)
                 .input(AEItems.ENGINEERING_PROCESSOR)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/assembler_matrix_pattern"));
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.ASSEMBLER_MATRIX_SPEED, this.items, this.fluids)
@@ -670,6 +691,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.SPEED_CARD, 8)
                 .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.RED), 6)
                 .input(EAESingletons.CONCURRENT_PROCESSOR)
+                .power(50000)
                 .save(this.output, ExtendedAE.id("assembler/assembler_matrix_speed"));
 
         // Void Cell
@@ -750,6 +772,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.REDSTONE, 4)
                 .input(ConventionTags.NETHER_QUARTZ, 4)
                 .fluid(Fluids.WATER, 100)
+                .power(1000)
                 .save(this.output, ExtendedAE.id("assembler/fluix_transformation"));
         // Entro Infused Ingot
         CrystalAssemblerRecipeBuilder
@@ -758,6 +781,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.GOLD_INGOT, 4)
                 .input(Items.LAPIS_LAZULI, 4)
                 .fluid(Fluids.WATER, 100)
+                .power(8000)
                 .save(this.output, ExtendedAE.id("assembler/entro_ingot_transformation"));
     }
 
@@ -766,34 +790,41 @@ public class EAERecipeProvider extends RecipeProvider {
         CircuitCutterRecipeBuilder
                 .cut(AEItems.ENGINEERING_PROCESSOR_PRINT, 9, this.items)
                 .input(Tags.Items.STORAGE_BLOCKS_DIAMOND)
+                .power(18000)
                 .save(this.output, ExtendedAE.id("cutter/engineering_processor"));
         CircuitCutterRecipeBuilder
                 .cut(AEItems.LOGIC_PROCESSOR_PRINT, 9, this.items)
                 .input(Tags.Items.STORAGE_BLOCKS_GOLD)
+                .power(18000)
                 .save(this.output, ExtendedAE.id("cutter/logic_processor"));
         CircuitCutterRecipeBuilder
                 .cut(AEItems.CALCULATION_PROCESSOR_PRINT, 4, this.items)
                 .input(AEBlocks.QUARTZ_BLOCK)
+                .power(8000)
                 .save(this.output, ExtendedAE.id("cutter/calculation_processor"));
         CircuitCutterRecipeBuilder
                 .cut(AEItems.SILICON_PRINT, 9, this.items)
                 .input(EAETags.SILICON_BLOCK)
+                .power(18000)
                 .save(this.output, ExtendedAE.id("cutter/silicon_print"));
 
         // Entro Processor
         CircuitCutterRecipeBuilder
                 .cut(EAESingletons.CONCURRENT_PROCESSOR_PRINT, 4, this.items)
                 .input(EAETags.ENTRO_BLOCK)
+                .power(8000)
                 .save(this.output, ExtendedAE.id("cutter/concurrent_processor"));
 
         // Troll
         CircuitCutterRecipeBuilder
                 .cut(Items.PUFFERFISH, 8, this.items)
                 .input(EAESingletons.FISHBIG)
+                .power(20)
                 .save(this.output, ExtendedAE.id("cutter/fishbig_destroy"));
         CircuitCutterRecipeBuilder
                 .cut(Items.EGG, 8, this.items)
                 .input(EAESingletons.MDDYUE)
+                .power(20)
                 .save(this.output, ExtendedAE.id("cutter/mddyue_destroy"));
 
     }

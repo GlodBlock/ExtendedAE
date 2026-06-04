@@ -164,6 +164,14 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     }
 
     @Override
+    public long getNeededEnergy() {
+        if (this.ctx.currentRecipe != null) {
+            return this.ctx.currentRecipe.value().energy;
+        }
+        return 0;
+    }
+
+    @Override
     public AECableType getCableConnectionType(Direction dir) {
         return AECableType.COVERED;
     }

@@ -26,6 +26,7 @@ public class CrystalAssemblerRecipeBuilder {
     protected List<IngredientStack.Item> inputs = new ArrayList<>();
     protected IngredientStack.Fluid fluid = null;
     public ItemStackTemplate output;
+    public long energy = 2000;
 
     public CrystalAssemblerRecipeBuilder(ItemStackTemplate output, HolderGetter<@NotNull Item> itemGetter, HolderGetter<@NotNull Fluid> fluidGetter) {
         this.output = output;
@@ -90,8 +91,13 @@ public class CrystalAssemblerRecipeBuilder {
         return this;
     }
 
+    public CrystalAssemblerRecipeBuilder power(long energy) {
+        this.energy = energy;
+        return this;
+    }
+
     public void save(RecipeOutput consumer, Identifier id) {
-        var recipe = new CrystalAssemblerRecipe(this.output, this.inputs, this.fluid);
+        var recipe = new CrystalAssemblerRecipe(this.output, this.inputs, this.fluid, this.energy);
         consumer.accept(ResourceKey.create(Registries.RECIPE, id), recipe, null);
     }
 

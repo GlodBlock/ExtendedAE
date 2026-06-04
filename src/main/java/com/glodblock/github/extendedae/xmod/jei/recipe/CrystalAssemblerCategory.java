@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.xmod.jei.recipe;
 
 import appeng.core.AppEng;
+import appeng.util.ReadableNumberConverter;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -11,7 +12,9 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.types.IRecipeType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,13 +22,15 @@ public class CrystalAssemblerCategory extends EAERecipeCategory<CrystalAssembler
 
     public static IRecipeType<@NotNull RecipeHolder<@NotNull CrystalAssemblerRecipe>> RECIPE_TYPE = IRecipeType.create(CrystalAssemblerRecipe.TYPE);
     private final IDrawableAnimated progress;
+    private final IDrawableStatic energyIcon;
 
     public CrystalAssemblerCategory(IGuiHelper helpers) {
-        super(helpers, RECIPE_TYPE, EAESingletons.CRYSTAL_ASSEMBLER, 135, 58);
+        super(helpers, RECIPE_TYPE, EAESingletons.CRYSTAL_ASSEMBLER, 135, 75);
         var texture = AppEng.makeId("textures/guis/crystal_assembler.png");
-        this.background = helpers.createDrawable(texture, 23, 19, 135, 58);
+        this.background = helpers.createDrawable(texture, 23, 19, 135, 75);
         IDrawableStatic progressDrawable = helpers.drawableBuilder(texture, 176, 0, 6, 18).build();
         this.progress = helpers.createAnimatedDrawable(progressDrawable, 40, IDrawableAnimated.StartDirection.BOTTOM, false);
+        this.energyIcon = helpers.createDrawable(AppEng.makeId("textures/xei/xei_icons.png"), 0, 0, 16, 16);
     }
 
     @Override
@@ -51,6 +56,8 @@ public class CrystalAssemblerCategory extends EAERecipeCategory<CrystalAssembler
     @Override
     public void draw(@NotNull CrystalAssemblerRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         this.progress.draw(guiGraphics, 129, 20);
+        this.energyIcon.draw(guiGraphics, 2, 58);
+        guiGraphics.text(Minecraft.getInstance().font, Component.translatable("emi.extendedae.text.energy", ReadableNumberConverter.format(recipe.energy, 5)), 20, 62, 0xFF7E7E7E, false);
     }
 
 }

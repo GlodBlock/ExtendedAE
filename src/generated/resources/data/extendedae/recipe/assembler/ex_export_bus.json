@@ -1,5 +1,6 @@
 {
   "type": "extendedae:crystal_assembler",
+  "energy": 7000,
   "input_items": [
     {
       "ingredient": "ae2:export_bus"

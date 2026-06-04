@@ -18,6 +18,7 @@ public class CircuitCutterRecipeBuilder {
     private final HolderGetter<@NotNull Item> getter;
     protected IngredientStack.Item input;
     public ItemStackTemplate output;
+    public long energy = 2000;
 
     public CircuitCutterRecipeBuilder(ItemStackTemplate output, HolderGetter<@NotNull Item> getter) {
         this.output = output;
@@ -61,8 +62,13 @@ public class CircuitCutterRecipeBuilder {
         return this;
     }
 
+    public CircuitCutterRecipeBuilder power(long energy) {
+        this.energy = energy;
+        return this;
+    }
+
     public void save(RecipeOutput consumer, Identifier id) {
-        var recipe = new CircuitCutterRecipe(this.output, this.input);
+        var recipe = new CircuitCutterRecipe(this.output, this.input, this.energy);
         consumer.accept(ResourceKey.create(Registries.RECIPE, id), recipe, null);
     }
 

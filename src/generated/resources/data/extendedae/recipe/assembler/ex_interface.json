@@ -1,5 +1,6 @@
 {
   "type": "extendedae:crystal_assembler",
+  "energy": 10000,
   "input_items": [
     {
       "ingredient": "#ae2:interface"
