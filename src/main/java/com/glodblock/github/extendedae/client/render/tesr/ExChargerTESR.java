@@ -55,8 +55,10 @@ public class ExChargerTESR extends ExBaseTESR<TileExCharger, MultiItemState> {
         poseStack.pushPose();
         this.applyBlockSpinTransform(poseStack, state.blockOrientation);
         for (var item : state.items) {
+            poseStack.pushPose();
             poseStack.mulPose(item.transform().getMatrix());
             item.item().submit(poseStack, nodes, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+            poseStack.popPose();
         }
         poseStack.popPose();
     }
