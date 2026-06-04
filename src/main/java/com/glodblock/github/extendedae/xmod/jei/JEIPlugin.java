@@ -20,6 +20,7 @@ import com.glodblock.github.extendedae.xmod.jei.recipe.CrystalAssemblerCategory;
 import com.glodblock.github.extendedae.xmod.jei.recipe.CrystalFixerCategory;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IClickableIngredientFactory;
 import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
@@ -72,7 +73,13 @@ public class JEIPlugin implements IModPlugin {
         registry.addRecipes(CircuitCutterCategory.RECIPE_TYPE, this.getRecipes(CircuitCutterRecipe.TYPE));
         registry.addRecipes(CrystalFixerCategory.RECIPE_TYPE, this.getRecipes(CrystalFixerRecipe.TYPE));
         registry.addIngredientInfo(EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
-        registry.addIngredientInfo(EAESingletons.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));
+        registry.addIngredientInfo(List.of(
+                EAESingletons.ENTRO_SEED.toStack(),
+                EAESingletons.FULLY_ENTROIZED_FLUIX_BUDDING.toStack(),
+                EAESingletons.MOSTLY_ENTROIZED_FLUIX_BUDDING.toStack(),
+                EAESingletons.HALF_ENTROIZED_FLUIX_BUDDING.toStack(),
+                EAESingletons.HARDLY_ENTROIZED_FLUIX_BUDDING.toStack()
+        ), VanillaTypes.ITEM_STACK, Component.translatable("emi.extendedae.desc.entro_seed"));
     }
 
     @Override
