@@ -5,6 +5,7 @@ import appeng.core.definitions.AEItems;
 import appeng.datagen.providers.recipes.AE2RecipeProvider;
 import appeng.datagen.providers.tags.ConventionTags;
 import appeng.recipes.game.StorageCellDisassemblyRecipe;
+import appeng.recipes.game.StorageCellUpgradeRecipe;
 import appeng.recipes.handlers.ChargerRecipeBuilder;
 import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipeBuilder;
@@ -30,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class AFAERecipeProvider extends AE2RecipeProvider {
 
@@ -295,6 +295,34 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
         addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_16M, AFSingletons.FE_PORTABLE_CELL_16M, "16m");
         addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_64M, AFSingletons.FE_PORTABLE_CELL_64M, "64m");
         addFEMEGAPortableCellRecipe(consumer, AFSingletons.CORE_256M, AFSingletons.FE_PORTABLE_CELL_256M, "256m");
+        String[] prefix = {"1k", "4k", "16k", "64k", "256k", "1m", "4m", "16m", "64m", "256m"};
+        Item[] cores = {
+                AFSingletons.CORE_1k, AFSingletons.CORE_4k, AFSingletons.CORE_16k, AFSingletons.CORE_64k, AFSingletons.CORE_256k,
+                AFSingletons.CORE_1M, AFSingletons.CORE_4M, AFSingletons.CORE_16M, AFSingletons.CORE_64M, AFSingletons.CORE_256M
+        };
+        Item[] cell = {
+                AFSingletons.FE_CELL_1k, AFSingletons.FE_CELL_4k, AFSingletons.FE_CELL_16k, AFSingletons.FE_CELL_64k, AFSingletons.FE_CELL_256k,
+                AFSingletons.FE_CELL_1M, AFSingletons.FE_CELL_4M, AFSingletons.FE_CELL_16M, AFSingletons.FE_CELL_64M, AFSingletons.FE_CELL_256M
+        };
+        Item[] portableCell = {
+                AFSingletons.FE_PORTABLE_CELL_1k, AFSingletons.FE_PORTABLE_CELL_4k, AFSingletons.FE_PORTABLE_CELL_16k, AFSingletons.FE_PORTABLE_CELL_64k, AFSingletons.FE_PORTABLE_CELL_256k,
+                AFSingletons.FE_PORTABLE_CELL_1M, AFSingletons.FE_PORTABLE_CELL_4M, AFSingletons.FE_PORTABLE_CELL_16M, AFSingletons.FE_PORTABLE_CELL_64M, AFSingletons.FE_PORTABLE_CELL_256M
+        };
+        for (int i = 0; i < 10; i++) {
+            for (int j = i + 1; j < 10; j++) {
+                addFEUpgradeRecipe(consumer, cores[i], cell[i], cores[j], cell[j], prefix[i] + "_to_" + prefix[j]);
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            for (int j = i + 1; j < 5; j++) {
+                addFEUpgradeRecipe(consumer, cores[i], portableCell[i], cores[j], portableCell[j], prefix[i] + "_to_" + prefix[j] + "_portable");
+            }
+        }
+        for (int i = 6; i < 10; i++) {
+            for (int j = i + 1; j < 10; j++) {
+                addFEUpgradeRecipe(consumer, cores[i], portableCell[i], cores[j], portableCell[j], prefix[i] + "_to_" + prefix[j] + "_portable");
+            }
+        }
     }
 
     private void addFECellRecipe(RecipeOutput consumer, Item core, Item result, String id) {
@@ -358,6 +386,14 @@ public class AFAERecipeProvider extends AE2RecipeProvider {
                         AEBlocks.ME_CHEST.stack(),
                         AEBlocks.DENSE_ENERGY_CELL.stack(),
                         core.getDefaultInstance())),
+                null
+        );
+    }
+
+    private void addFEUpgradeRecipe(RecipeOutput consumer, Item currentCore, Item currentCell, Item upgradeCore, Item upgradeCell, String id) {
+        consumer.accept(
+                AppFlux.id("upgrade/" + "fe_" + id + "_cell"),
+                new StorageCellUpgradeRecipe(currentCell, upgradeCore, upgradeCell, currentCore),
                 null
         );
     }

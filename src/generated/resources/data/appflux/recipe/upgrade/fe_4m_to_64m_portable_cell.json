@@ -1,0 +1,7 @@
+{
+  "type": "ae2:storage_cell_upgrade",
+  "input_cell": "appflux:fe_4m_portable_cell",
+  "input_component": "appflux:core_64m",
+  "result_cell": "appflux:fe_64m_portable_cell",
+  "result_component": "appflux:core_4m"
+}
