@@ -41,7 +41,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -251,6 +250,9 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
 
         // Renaming
         if (!StringUtil.isNullOrEmpty(this.itemName)) {
+            if (this.anvilOutputSlot.getItem().getCount() != left.getCount()) {
+                hasOperation = true;
+            }
             String currentName = left.hasCustomHoverName() ? left.getHoverName().getString() : "";
             if (!this.itemName.equals(currentName)) {
                 baseCost += 1;
@@ -607,6 +609,8 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
             inputSlots = this.anvilInputSlots;
             type = null;
             setOutput = stack -> this.setAnvilOutput();
+            // Always marked changed in anvil mode
+            hasChanged = true;
         }
         for (int x = 0; x < 9; x++) {
             var stack = ItemStack.EMPTY;
