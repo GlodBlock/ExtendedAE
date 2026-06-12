@@ -38,6 +38,7 @@ public class ExtendedAE {
     public static final String MODID = "extendedae";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ExtendedAE INSTANCE;
+    public static IEventBus MOD_BUS;
 
     public ExtendedAE(IEventBus bus, ModContainer container) {
         assert INSTANCE == null;
@@ -45,6 +46,7 @@ public class ExtendedAE {
         if (!container.getModId().equals(MODID)) {
             throw new IllegalArgumentException("Invalid ID: " + MODID);
         }
+        MOD_BUS = bus;
         EAERegistryHandler.INSTANCE = new EAERegistryHandler(bus);
         EAESingletons.init(EAERegistryHandler.INSTANCE);
         container.registerConfig(ModConfig.Type.COMMON, EAEConfig.SPEC);

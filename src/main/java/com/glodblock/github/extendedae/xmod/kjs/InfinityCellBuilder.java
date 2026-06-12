@@ -5,23 +5,26 @@ import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import com.glodblock.github.extendedae.common.items.ItemInfinityCell;
-import com.glodblock.github.extendedae.util.LazyInits;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.ReturnsSelf;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 @ReturnsSelf
 public class InfinityCellBuilder extends ItemBuilder {
 
+    public static final List<Runnable> MODEL_BINDINGS = new ArrayList<>();
     private Supplier<AEKey> record;
-    private ResourceLocation model;
+    private Identifier model;
 
-    public InfinityCellBuilder(ResourceLocation id) {
+    public InfinityCellBuilder(Identifier id) {
         super(id);
     }
 
@@ -32,28 +35,28 @@ public class InfinityCellBuilder extends ItemBuilder {
     }
 
     @Info("Create an infinity cell with given item.")
-    public InfinityCellBuilder itemType(ResourceLocation id) {
-        this.record = new TraceableSupplier(id.toString(), () -> AEItemKey.of(BuiltInRegistries.ITEM.get(id)));
+    public InfinityCellBuilder itemType(Identifier id) {
+        this.record = new TraceableSupplier(id.toString(), () -> AEItemKey.of(BuiltInRegistries.ITEM.get(id).get().value()));
         return this;
     }
 
     @Info("Create an infinity cell with given fluid.")
-    public InfinityCellBuilder fluidType(ResourceLocation id) {
-        this.record = new TraceableSupplier(id.toString(), () -> AEFluidKey.of(BuiltInRegistries.FLUID.get(id)));
+    public InfinityCellBuilder fluidType(Identifier id) {
+        this.record = new TraceableSupplier(id.toString(), () -> AEFluidKey.of(BuiltInRegistries.FLUID.get(id).get().value()));
         return this;
     }
 
     @Info("Set infinity cell's model in ME drive.")
-    public InfinityCellBuilder cellModel(ResourceLocation model) {
+    public InfinityCellBuilder cellModel(Identifier model) {
         this.model = model;
         return this;
     }
 
     @Override
-    public Item createObject() {
+    public @NotNull Item createObject() {
         var cell = new ItemInfinityCell(this.record, this.createItemProperties().stacksTo(1));
         if (this.model != null) {
-            LazyInits.addCommon(() -> StorageCellModels.registerModel(cell, this.model));
+            MODEL_BINDINGS.add(() -> StorageCellModels.registerModel(cell, this.model));
         }
         return cell;
     }

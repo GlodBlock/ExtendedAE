@@ -74,8 +74,8 @@ repositories {
         }
     }
     maven {
-        name 'cursemaven'
-        url "https://www.cursemaven.com"
+        name = 'cursemaven'
+        url = "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
@@ -85,6 +85,10 @@ repositories {
         content {
             includeGroup 'mezz.jei'
         }
+    }
+    maven {
+        name = 'KubeJS'
+        url = "https://maven.latvian.dev/releases/"
     }
 }
 
@@ -100,9 +104,9 @@ dependencies {
     //compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
     //compileOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     //compileOnly "curse.maven:applied-mekanistics-574300:5978711"
-    //compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.1-build.188"
-    //compileOnly "dev.latvian.mods:rhino:2101.2.5-build.54"
-    //compileOnly "curse.maven:advancedae-1084104:6225993"
+    compileOnly "curse.maven:kubejs-238086:8235730"
+    compileOnly "dev.latvian.mods:rhino:2101.2.7-build.85"
+    compileOnly "curse.maven:advancedae-1084104:8236325"
     //compileOnly "curse.maven:functional-storage-556861:6467726"
     compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
     //compileOnly "curse.maven:appliede-1009940:6500056"

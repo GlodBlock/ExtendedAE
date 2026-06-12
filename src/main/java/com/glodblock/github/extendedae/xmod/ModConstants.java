@@ -21,5 +21,6 @@ public final class ModConstants {
     public static final String APPPNEU = "appliedpneumatics";
     public static final String ADV_AE = "advanced_ae";
     public static final String APPLIED_E = "appliede";
+    public static final String KJS = "kubejs";
 
 }
