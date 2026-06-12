@@ -7,6 +7,7 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
+import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.util.inv.AppEngInternalInventory;
@@ -15,6 +16,8 @@ import appeng.util.inv.InternalInventoryHost;
 import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
+import com.glodblock.github.extendedae.util.SingleThreadLRU;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -36,10 +39,11 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     public TileAssemblerMatrixCrafter(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.getMainNode().addService(IGridTickable.class, this);
+        SingleThreadLRU<AEItemKey, InternalInventory> cache = new SingleThreadLRU<>(new Object2ObjectOpenHashMap<>(20));
         var invs = new InternalInventory[MAX_THREAD];
         for (int x = 0; x < MAX_THREAD; x ++) {
             final int index = x;
-            this.threads[index] = new CraftingMatrixThread(this, this::getSrc, signal -> this.changeState(index, signal));
+            this.threads[index] = new CraftingMatrixThread(this, this::getSrc, signal -> this.changeState(index, signal), cache);
             invs[index] = this.threads[index].getInternalInventory();
         }
         this.internalInv = new CombinedInternalInventory(invs);
@@ -70,9 +74,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     public int usedThread() {
         int cnt = 0;
         for (var t : this.threads) {
-            if (t.getCurrentPattern() != null) {
-                cnt ++;
-            } else if (!t.getInternalInventory().isEmpty()) {
+            if (t.isAwake()) {
                 cnt ++;
             }
         }

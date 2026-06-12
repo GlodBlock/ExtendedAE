@@ -16,17 +16,17 @@ import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerM
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class ClusterAssemblerMatrix implements IAECluster {
 
@@ -38,8 +38,8 @@ public class ClusterAssemblerMatrix implements IAECluster {
     private MachineSource machineSrc = null;
     private IConfigManager manager = NullConfigManager.INSTANCE;
     private final List<TileAssemblerMatrixPattern> patterns = new ArrayList<>();
-    private final ReferenceSet<TileAssemblerMatrixCrafter> availableCrafters = new ReferenceOpenHashSet<>();
-    private final ReferenceSet<TileAssemblerMatrixCrafter> busyCrafters = new ReferenceOpenHashSet<>();
+    private final Set<TileAssemblerMatrixCrafter> availableCrafters = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Set<TileAssemblerMatrixCrafter> busyCrafters = Collections.newSetFromMap(new IdentityHashMap<>());
     private final Reference2IntMap<TileAssemblerMatrixCrafter> crafterStatusCache = new Reference2IntOpenHashMap<>();
     private int speedCore = 0;
 

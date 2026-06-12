@@ -1,13 +1,18 @@
 package com.glodblock.github.extendedae.common.me;
 
 import appeng.api.config.Actionable;
+import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.crafting.pattern.AECraftingPattern;
+import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
+import com.glodblock.github.extendedae.util.SingleThreadLRU;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +24,31 @@ public class CraftingMatrixThread extends CraftingThread {
     private static final int COOL_TIME = 5 * 20;
     private int blockCoolDown = 0;
     private final Supplier<IActionSource> sourceGetter;
+    private final SingleThreadLRU<AEItemKey, InternalInventory> cache;
 
-    public CraftingMatrixThread(@NotNull AEBaseBlockEntity host, @NotNull Supplier<IActionSource> sourceGetter, SignalAccepter accepter) {
+    public CraftingMatrixThread(@NotNull AEBaseBlockEntity host, @NotNull Supplier<IActionSource> sourceGetter, SignalAccepter accepter, SingleThreadLRU<AEItemKey, InternalInventory> cache) {
         super(host, accepter);
         this.sourceGetter = sourceGetter;
+        this.cache = cache;
+    }
+
+    @Override
+    protected void fillGrid(KeyCounter[] table, IMolecularAssemblerSupportedPattern adapter) {
+        if (adapter instanceof AECraftingPattern crafting) {
+            if (crafting.canSubstitute) {
+                adapter.fillCraftingGrid(table, this.gridInv::setItemDirect);
+            } else {
+                var layout = this.cache.get(crafting.getDefinition());
+                if (layout != null) {
+                    this.copyContents(layout);
+                } else {
+                    adapter.fillCraftingGrid(table, this.gridInv::setItemDirect);
+                    this.cache.put(crafting.getDefinition(), this.clone(this.gridInv));
+                }
+            }
+        } else {
+            adapter.fillCraftingGrid(table, this.gridInv::setItemDirect);
+        }
     }
 
     @Override
@@ -104,5 +130,20 @@ public class CraftingMatrixThread extends CraftingThread {
         }
         return stack;
     }
+
+    private void copyContents(InternalInventory target) {
+        for (var x = 0; x < 9; x++) {
+            this.gridInv.setItemDirect(x, target.getStackInSlot(x).copy());
+        }
+    }
+
+    private InternalInventory clone(InternalInventory inv) {
+        var copy = new AppEngInternalInventory(null, 9);
+        for (var x = 0; x < 9; x++) {
+            copy.setItemDirect(x, inv.getStackInSlot(x).copy());
+        }
+        return copy;
+    }
+
 
 }
