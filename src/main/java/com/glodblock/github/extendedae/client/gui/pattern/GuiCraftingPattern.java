@@ -33,7 +33,7 @@ public class GuiCraftingPattern extends GuiPattern<ContainerCraftingPattern> {
                 Component.translatable("gui.pattern_view.craft.substitute", this.menu.canSubstitute() ? ButtonToolTips.On.text() : ButtonToolTips.Off.text()),
                 8,
                 6,
-                0x303030,
+                0xFF303030,
                 false
         );
         guiGraphics.text(
@@ -41,7 +41,7 @@ public class GuiCraftingPattern extends GuiPattern<ContainerCraftingPattern> {
                 Component.translatable("gui.pattern_view.craft.fluid_substitute", this.menu.canSubstituteFluids() ? ButtonToolTips.On.text() : ButtonToolTips.Off.text()),
                 8,
                 19,
-                0x303030,
+                0xFF303030,
                 false
         );
     }

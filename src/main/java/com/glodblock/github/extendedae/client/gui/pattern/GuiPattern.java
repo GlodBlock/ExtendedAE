@@ -58,7 +58,7 @@ public abstract class GuiPattern<T extends ContainerPattern> extends AbstractCon
             this.cycle ++;
             this.menu.setCycleItem(this.cycle);
         }
-        //this.extractBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        this.extractMenuBackground(guiGraphics);
         super.extractContents(guiGraphics, mouseX, mouseY, partialTicks);
         if (this.hoveredSlot != null) {
             guiGraphics.horizontalLine(leftPos + this.hoveredSlot.x, leftPos + this.hoveredSlot.x + 16, topPos + this.hoveredSlot.y - 1, 0xFFdaffff);
