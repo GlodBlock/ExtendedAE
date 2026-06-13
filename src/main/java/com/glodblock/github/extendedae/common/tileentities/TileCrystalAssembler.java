@@ -209,7 +209,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.upgrades.writeToNBT(data, "upgrades");
         this.configManager.writeToNBT(data);
         this.ctx.save(data);
-        this.output.writeToNBT(data, "output_side");
+        this.outputSides.save(data, "output_side");
     }
 
     @Override
