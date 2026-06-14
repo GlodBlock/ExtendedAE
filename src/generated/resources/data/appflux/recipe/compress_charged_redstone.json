@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "#c:gems/charged_redstone",
+    "x": "appflux:charged_redstone"
+  },
+  "pattern": [
+    "XXX",
+    "XxX",
+    "XXX"
+  ],
+  "result": {
+    "id": "appflux:charged_redstone_block"
+  }
+}

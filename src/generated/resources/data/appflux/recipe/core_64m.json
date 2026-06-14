@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": "#c:dusts/emerald",
+    "G": "ae2:quartz_vibrant_glass",
+    "L": "appflux:core_16m",
+    "P": "ae2:engineering_processor"
+  },
+  "pattern": [
+    "DPD",
+    "LGL",
+    "DLD"
+  ],
+  "result": {
+    "id": "appflux:core_64m"
+  }
+}

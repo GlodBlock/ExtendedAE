@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": "#c:dusts/glowstone",
+    "I": "#c:ingots/copper",
+    "M": "ae2:energy_acceptor",
+    "P": "appflux:energy_processor"
+  },
+  "pattern": [
+    "DPD",
+    "IMI",
+    "DPD"
+  ],
+  "result": {
+    "id": "appflux:flux_accessor"
+  }
+}

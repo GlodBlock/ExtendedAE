@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "ae2:me_chest",
+    "appflux:core_256m",
+    "ae2:dense_energy_cell",
+    "appflux:fe_cell_housing"
+  ],
+  "result": {
+    "id": "appflux:fe_256m_portable_cell"
+  }
+}

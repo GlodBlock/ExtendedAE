@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": "#c:dusts/redstone",
+    "G": "ae2:quartz_glass",
+    "I": "#c:ingots/insulating_resin"
+  },
+  "pattern": [
+    "GDG",
+    "D D",
+    "III"
+  ],
+  "result": {
+    "id": "appflux:fe_cell_housing"
+  }
+}

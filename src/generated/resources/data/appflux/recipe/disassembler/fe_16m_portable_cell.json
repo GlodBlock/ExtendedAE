@@ -1,0 +1,18 @@
+{
+  "type": "ae2:storage_cell_disassembly",
+  "cell": "appflux:fe_16m_portable_cell",
+  "cell_disassembly_items": [
+    {
+      "id": "appflux:fe_cell_housing"
+    },
+    {
+      "id": "ae2:me_chest"
+    },
+    {
+      "id": "ae2:dense_energy_cell"
+    },
+    {
+      "id": "appflux:core_16m"
+    }
+  ]
+}

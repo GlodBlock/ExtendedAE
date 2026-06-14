@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "appflux:item/part_flux_accessor"
+  }
+}

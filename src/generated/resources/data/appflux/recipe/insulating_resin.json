@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:water_bucket",
+    "minecraft:cactus",
+    "minecraft:cactus",
+    "minecraft:bone_meal",
+    "#c:silicon",
+    "minecraft:slime_ball",
+    "#c:dusts/glowstone"
+  ],
+  "result": {
+    "id": "appflux:insulating_resin"
+  }
+}

@@ -1,0 +1,46 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+[[mods]]
+    modId="appflux"
+    issueTrackerURL="https://github.com/GlodBlock/ExtendedAE/issues"
+    displayURL="https://github.com/GlodBlock/ExtendedAE"
+    version="${mod_version}"
+    displayName="${mod_name}"
+    authors="${mod_authors}"
+    logoFile="logo.png"
+    credits="Ridanisaurus for the new textures."
+    description='''${mod_description}'''
+
+[[mixins]]
+    config="mixins.appflux.json"
+
+[[dependencies.appflux]]
+    modId="neoforge"
+    type="REQUIRED"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="minecraft"
+    type="REQUIRED"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="ae2"
+    type="REQUIRED"
+    versionRange="[26.1.8-alpha,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="guideme"
+    type="REQUIRED"
+    versionRange="*"
+    side="BOTH"
+[[dependencies.appflux]]
+    modId="glodium"
+    type="REQUIRED"
+    versionRange="[26.1-1.2-neoforge,)"
+    ordering="AFTER"
+    side="BOTH"

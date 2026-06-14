@@ -1,0 +1,7 @@
+{
+  "type": "ae2:charger",
+  "ingredient": "minecraft:iron_block",
+  "result": {
+    "id": "appflux:energy_processor_press"
+  }
+}

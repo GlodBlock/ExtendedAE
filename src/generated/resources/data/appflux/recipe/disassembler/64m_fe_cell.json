@@ -1,0 +1,12 @@
+{
+  "type": "ae2:storage_cell_disassembly",
+  "cell": "appflux:fe_64m_cell",
+  "cell_disassembly_items": [
+    {
+      "id": "appflux:fe_cell_housing"
+    },
+    {
+      "id": "appflux:core_64m"
+    }
+  ]
+}

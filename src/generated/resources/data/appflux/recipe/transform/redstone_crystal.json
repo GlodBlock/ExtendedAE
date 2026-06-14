@@ -1,0 +1,12 @@
+{
+  "type": "ae2:transform",
+  "ingredients": [
+    "#c:storage_blocks/redstone",
+    "#c:gems/fluix",
+    "#c:dusts/glowstone"
+  ],
+  "result": {
+    "count": 2,
+    "id": "appflux:redstone_crystal"
+  }
+}

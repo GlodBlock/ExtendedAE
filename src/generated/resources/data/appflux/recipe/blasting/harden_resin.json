@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.35,
+  "ingredient": "appflux:insulating_resin",
+  "result": {
+    "id": "appflux:harden_insulating_resin"
+  }
+}

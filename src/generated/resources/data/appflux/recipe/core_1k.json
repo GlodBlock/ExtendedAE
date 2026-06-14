@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "appflux:redstone_crystal",
+    "D": "#c:dusts/certus_quartz",
+    "P": "ae2:logic_processor"
+  },
+  "pattern": [
+    "DCD",
+    "CPC",
+    "DCD"
+  ],
+  "result": {
+    "id": "appflux:core_1k"
+  }
+}

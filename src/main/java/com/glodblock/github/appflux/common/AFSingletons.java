@@ -1,0 +1,117 @@
+package com.glodblock.github.appflux.common;
+
+import com.glodblock.github.appflux.common.blocks.BlockChargedRedstoneBlock;
+import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
+import com.glodblock.github.appflux.common.items.ItemFECell;
+import com.glodblock.github.appflux.common.items.ItemInductionCard;
+import com.glodblock.github.appflux.common.items.ItemPartFluxAccessor;
+import com.glodblock.github.appflux.common.items.ItemPortableFECell;
+import com.glodblock.github.appflux.common.items.NormalItem;
+import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
+import com.glodblock.github.glodium.registry.defer.DeferredDataComponentType;
+import com.mojang.serialization.Codec;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
+import org.jetbrains.annotations.NotNull;
+
+public class AFSingletons {
+
+    public static DeferredDataComponentType<Long> FE_ENERGY;
+    public static DeferredDataComponentType<Boolean> FAST_MODE;
+
+    public static DeferredItem<@NotNull NormalItem> CORE_1k;
+    public static DeferredItem<@NotNull NormalItem> CORE_4k;
+    public static DeferredItem<@NotNull NormalItem> CORE_16k;
+    public static DeferredItem<@NotNull NormalItem> CORE_64k;
+    public static DeferredItem<@NotNull NormalItem> CORE_256k;
+    public static DeferredItem<@NotNull NormalItem> CORE_1M;
+    public static DeferredItem<@NotNull NormalItem> CORE_4M;
+    public static DeferredItem<@NotNull NormalItem> CORE_16M;
+    public static DeferredItem<@NotNull NormalItem> CORE_64M;
+    public static DeferredItem<@NotNull NormalItem> CORE_256M;
+    public static DeferredItem<@NotNull NormalItem> CHARGED_REDSTONE;
+    public static DeferredItem<@NotNull NormalItem> ENERGY_PROCESSOR_PRINT;
+    public static DeferredItem<@NotNull NormalItem> ENERGY_PROCESSOR_PRESS;
+    public static DeferredItem<@NotNull NormalItem> ENERGY_PROCESSOR;
+    public static DeferredItem<@NotNull NormalItem> REDSTONE_CRYSTAL;
+    public static DeferredItem<@NotNull NormalItem> DIAMOND_DUST;
+    public static DeferredItem<@NotNull NormalItem> EMERALD_DUST;
+    public static DeferredItem<@NotNull NormalItem> INSULATING_RESIN;
+    public static DeferredItem<@NotNull NormalItem> HARDEN_INSULATING_RESIN;
+    public static DeferredItem<@NotNull NormalItem> FE_HOUSING;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_1k;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_4k;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_16k;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_64k;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_256k;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_1M;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_4M;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_16M;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_64M;
+    public static DeferredItem<@NotNull ItemFECell> FE_CELL_256M;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_1k;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_4k;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_16k;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_64k;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_256k;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_1M;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_4M;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_16M;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_64M;
+    public static DeferredItem<@NotNull ItemPortableFECell> FE_PORTABLE_CELL_256M;
+    public static DeferredBlock<@NotNull BlockFluxAccessor> FLUX_ACCESSOR;
+    public static DeferredItem<@NotNull ItemPartFluxAccessor> PART_FLUX_ACCESSOR;
+    public static DeferredItem<@NotNull ItemInductionCard> INDUCTION_CARD;
+    public static DeferredBlock<@NotNull BlockChargedRedstoneBlock> CHARGED_REDSTONE_BLOCK;
+
+    public static void init(AFRegistryHandler regHandler) {
+        FE_ENERGY = regHandler.comp("fe_energy", Codec.LONG, ByteBufCodecs.VAR_LONG);
+        FAST_MODE = regHandler.comp("fast_mode", Codec.BOOL, ByteBufCodecs.BOOL);
+        CORE_1k = regHandler.item("core_1k", NormalItem::new);
+        CORE_4k = regHandler.item("core_4k", NormalItem::new);
+        CORE_16k = regHandler.item("core_16k", NormalItem::new);
+        CORE_64k = regHandler.item("core_64k", NormalItem::new);
+        CORE_256k = regHandler.item("core_256k", NormalItem::new);
+        CORE_1M = regHandler.item("core_1m", NormalItem::new);
+        CORE_4M = regHandler.item("core_4m", NormalItem::new);
+        CORE_16M = regHandler.item("core_16m", NormalItem::new);
+        CORE_64M = regHandler.item("core_64m", NormalItem::new);
+        CORE_256M = regHandler.item("core_256m", NormalItem::new);
+        CHARGED_REDSTONE = regHandler.item("charged_redstone", NormalItem::new);
+        REDSTONE_CRYSTAL = regHandler.item("redstone_crystal", NormalItem::new);
+        INSULATING_RESIN = regHandler.item("insulating_resin", NormalItem::new);
+        HARDEN_INSULATING_RESIN = regHandler.item("harden_insulating_resin", NormalItem::new);
+        ENERGY_PROCESSOR = regHandler.item("energy_processor", NormalItem::new);
+        ENERGY_PROCESSOR_PRINT = regHandler.item("printed_energy_processor", NormalItem::new);
+        ENERGY_PROCESSOR_PRESS = regHandler.item("energy_processor_press", NormalItem::new);
+        FE_HOUSING = regHandler.item("fe_cell_housing", NormalItem::new);
+        FE_CELL_1k = regHandler.item("fe_1k_cell", properties -> new ItemFECell(properties, 1, 0.5));
+        FE_CELL_4k = regHandler.item("fe_4k_cell", properties -> new ItemFECell(properties, 4, 1.0));
+        FE_CELL_16k = regHandler.item("fe_16k_cell", properties -> new ItemFECell(properties, 16, 1.5));
+        FE_CELL_64k = regHandler.item("fe_64k_cell", properties -> new ItemFECell(properties, 64, 2.0));
+        FE_CELL_256k = regHandler.item("fe_256k_cell", properties -> new ItemFECell(properties, 256, 2.5));
+        FE_CELL_1M = regHandler.item("fe_1m_cell", properties -> new ItemFECell(properties, 1024, 3.0));
+        FE_CELL_4M = regHandler.item("fe_4m_cell", properties -> new ItemFECell(properties, 4 * 1024, 4.0));
+        FE_CELL_16M = regHandler.item("fe_16m_cell", properties -> new ItemFECell(properties, 16 * 1024, 5.0));
+        FE_CELL_64M = regHandler.item("fe_64m_cell", properties -> new ItemFECell(properties, 64 * 1024, 6.0));
+        FE_CELL_256M = regHandler.item("fe_256m_cell", properties -> new ItemFECell(properties, 256 * 1024, 7.0));
+        FE_PORTABLE_CELL_1k = regHandler.item("fe_1k_portable_cell", properties -> new ItemPortableFECell(properties, 1, 0.5, 0x80caff));
+        FE_PORTABLE_CELL_4k = regHandler.item("fe_4k_portable_cell", properties -> new ItemPortableFECell(properties, 4, 1.0, 0x80caff));
+        FE_PORTABLE_CELL_16k = regHandler.item("fe_16k_portable_cell", properties -> new ItemPortableFECell(properties, 16, 1.5, 0x80caff));
+        FE_PORTABLE_CELL_64k = regHandler.item("fe_64k_portable_cell", properties -> new ItemPortableFECell(properties, 64, 2.0, 0x80caff));
+        FE_PORTABLE_CELL_256k = regHandler.item("fe_256k_portable_cell", properties -> new ItemPortableFECell(properties, 256, 2.5, 0x80caff));
+        FE_PORTABLE_CELL_1M = regHandler.item("fe_1m_portable_cell", properties -> new ItemPortableFECell(properties, 1024, 3.0, 0x80caff));
+        FE_PORTABLE_CELL_4M = regHandler.item("fe_4m_portable_cell", properties -> new ItemPortableFECell(properties, 4 * 1024, 3.5, 0x80caff));
+        FE_PORTABLE_CELL_16M = regHandler.item("fe_16m_portable_cell", properties -> new ItemPortableFECell(properties, 16 * 1024, 4.0, 0x80caff));
+        FE_PORTABLE_CELL_64M = regHandler.item("fe_64m_portable_cell", properties -> new ItemPortableFECell(properties, 64 * 1024, 4.5, 0x80caff));
+        FE_PORTABLE_CELL_256M = regHandler.item("fe_256m_portable_cell", properties -> new ItemPortableFECell(properties, 256 * 1024, 5.0, 0x80caff));
+        PART_FLUX_ACCESSOR = regHandler.item("part_flux_accessor", ItemPartFluxAccessor::new);
+        DIAMOND_DUST = regHandler.item("diamond_dust", NormalItem::new);
+        EMERALD_DUST = regHandler.item("emerald_dust", NormalItem::new);
+        INDUCTION_CARD = regHandler.item("induction_card", ItemInductionCard::new);
+        FLUX_ACCESSOR = regHandler.block("flux_accessor", BlockFluxAccessor::new, TileFluxAccessor.class, TileFluxAccessor::new);
+        CHARGED_REDSTONE_BLOCK = regHandler.block("charged_redstone_block", BlockChargedRedstoneBlock::new);
+    }
+
+}

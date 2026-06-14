@@ -1,0 +1,10 @@
+{
+  "type": "ae2:inscriber",
+  "ingredients": {
+    "middle": "#c:gems/emerald"
+  },
+  "mode": "inscribe",
+  "result": {
+    "id": "appflux:emerald_dust"
+  }
+}
