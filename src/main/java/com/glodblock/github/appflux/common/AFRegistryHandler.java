@@ -114,7 +114,7 @@ public class AFRegistryHandler extends RegistryHandler {
     private void onRegisterEvent(RegisterEvent e) {
         if (e.getRegistry().equals(BuiltInRegistries.MENU)) {
             this.onRegisterContainer();
-        } else if (e.getRegistry().equals(AEKeyType.REGISTRY_KEY)) {
+        } else if (e.getRegistryKey().equals(AEKeyType.REGISTRY_KEY)) {
             AEKeyTypes.register(FluxKeyType.TYPE);
         }
     }

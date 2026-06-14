@@ -2,6 +2,7 @@ package com.glodblock.github.appflux.client.render;
 
 import appeng.client.api.AEKeyRenderer;
 import appeng.client.gui.style.Blitter;
+import appeng.util.Platform;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FluxKeyRenderHandler implements AEKeyRenderer<FluxKey, FluxKeyRenderHandler.State> {
@@ -92,7 +93,13 @@ public class FluxKeyRenderHandler implements AEKeyRenderer<FluxKey, FluxKeyRende
 
     @Override
     public List<Component> getTooltip(FluxKey stack) {
-        return Collections.singletonList(stack.getDisplayName());
+        var tooltip = new ArrayList<Component>();
+        tooltip.add(stack.getDisplayName());
+        var modName = Platform.formatModName(stack.getModId());
+        if (!tooltip.getLast().getString().equals(modName)) {
+            tooltip.add(Component.literal(modName));
+        }
+        return tooltip;
     }
 
     public static class State {
