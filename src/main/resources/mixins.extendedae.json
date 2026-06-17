@@ -6,6 +6,7 @@
   "mixins": [
     "MixinAbstractLevelEmitterPart",
     "MixinAEBasePart",
+    "MixinAppEngInternalInventory",
     "MixinEnderSavedData",
     "MixinPatternAccessTermMenu"
   ],

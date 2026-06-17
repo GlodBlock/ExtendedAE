@@ -30,8 +30,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-
 public class CraftingThread {
 
     @NotNull
@@ -324,8 +322,7 @@ public class CraftingThread {
         return output;
     }
 
-
-    private void fillGrid(KeyCounter[] table, IMolecularAssemblerSupportedPattern adapter) {
+    public void fillGrid(KeyCounter[] table, IMolecularAssemblerSupportedPattern adapter) {
         adapter.fillCraftingGrid(table, this.gridInv::setItemDirect);
         // Sanity check
         for (var list : table) {
