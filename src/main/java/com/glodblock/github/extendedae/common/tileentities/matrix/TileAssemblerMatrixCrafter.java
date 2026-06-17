@@ -71,9 +71,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     public int usedThread() {
         int cnt = 0;
         for (var t : this.threads) {
-            if (t.getCurrentPattern() != null) {
-                cnt ++;
-            } else if (!t.getInternalInventory().isEmpty()) {
+            if (t.isAwake()) {
                 cnt ++;
             }
         }
