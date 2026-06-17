@@ -2,16 +2,13 @@
   "required": false,
   "minVersion": "0.8",
   "package": "com.glodblock.github.extendedae.mixins",
-  "refmap": "mixins.epp.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinAbstractLevelEmitterPart",
-    "MixinAEBaseMenu",
     "MixinAEBasePart",
-    "MixinGlobalWireNetwork",
-    "MixinPatternAccessTermMenu",
-    "MixinRecipeManager",
-    "MixinSlot"
+    "MixinAppEngInternalInventory",
+    "MixinEnderSavedData",
+    "MixinPatternAccessTermMenu"
   ],
   "client": [
     "MixinAbstractContainerScreen",

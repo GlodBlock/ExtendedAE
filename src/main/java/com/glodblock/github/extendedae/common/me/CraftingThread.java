@@ -303,8 +303,7 @@ public class CraftingThread {
         return output;
     }
 
-
-    private void fillGrid(KeyCounter[] table, IMolecularAssemblerSupportedPattern adapter) {
+    public void fillGrid(KeyCounter[] table, IMolecularAssemblerSupportedPattern adapter) {
         adapter.fillCraftingGrid(table, this.gridInv::setItemDirect);
         // Sanity check
         for (var list : table) {
