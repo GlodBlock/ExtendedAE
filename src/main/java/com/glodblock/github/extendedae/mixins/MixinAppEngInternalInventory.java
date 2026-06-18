@@ -2,7 +2,7 @@ package com.glodblock.github.extendedae.mixins;
 
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
-import com.glodblock.github.extendedae.util.IntruderInventory;
+import com.glodblock.github.extendedae.util.helper.IntruderInventory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
@@ -32,6 +32,13 @@ public class MixinAppEngInternalInventory implements IntruderInventory {
         }
         if (this.host != null) {
             this.host.saveChangedInventory((AppEngInternalInventory) (Object) this);
+        }
+    }
+
+    @Override
+    public void silentClear() {
+        for (int x = 0; x < this.stacks.size(); ++x) {
+            this.stacks.set(x, ItemStack.EMPTY);
         }
     }
 

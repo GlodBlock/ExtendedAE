@@ -22,11 +22,11 @@ import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
 import appeng.util.ConfigInventory;
 import appeng.util.inv.AppEngInternalInventory;
+import com.glodblock.github.extendedae.util.helper.CraftingRecipePattern;
 import com.glodblock.github.glodium.reflect.ReflectKit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -44,8 +44,6 @@ public class Ae2Reflect {
     private static final Field fAbstractLevelEmitterPart_prevState;
     private static final Field fAEBaseBlockEntity_customName;
     private static final Field fAEBasePart_customName;
-    private static final Field fAECraftingPattern_recipeHolder;
-    private static final Field fAECraftingPattern_output;
     private static final Field fIOPortBlockEntity_inputCells;
     private static final Field fIOPortBlockEntity_upgrades;
     private static final Field fInterfaceLogic_config;
@@ -73,8 +71,6 @@ public class Ae2Reflect {
             fAbstractLevelEmitterPart_prevState = ReflectKit.reflectField(AbstractLevelEmitterPart.class, "prevState");
             fAEBaseBlockEntity_customName = ReflectKit.reflectField(AEBaseBlockEntity.class, "customName");
             fAEBasePart_customName = ReflectKit.reflectField(AEBasePart.class, "customName");
-            fAECraftingPattern_recipeHolder = ReflectKit.reflectField(AECraftingPattern.class, "recipeHolder");
-            fAECraftingPattern_output = ReflectKit.reflectField(AECraftingPattern.class, "output");
             fIOPortBlockEntity_inputCells = ReflectKit.reflectField(IOPortBlockEntity.class, "inputCells");
             fIOPortBlockEntity_upgrades = ReflectKit.reflectField(IOPortBlockEntity.class, "upgrades");
             fInterfaceLogic_config = ReflectKit.reflectField(InterfaceLogic.class, "config");
@@ -160,12 +156,9 @@ public class Ae2Reflect {
         return ReflectKit.executeMethod2(owner, mExportBusPart_createTransferContext, storageService, energyService);
     }
 
+    @SuppressWarnings("unchecked")
     public static RecipeHolder<CraftingRecipe> getCraftRecipe(AECraftingPattern owner) {
-        return ReflectKit.readField(owner, fAECraftingPattern_recipeHolder);
-    }
-
-    public static ItemStack getCraftRecipeResult(AECraftingPattern owner) {
-        return ReflectKit.readField(owner, fAECraftingPattern_output);
+        return (RecipeHolder<CraftingRecipe>) ((CraftingRecipePattern) owner).getRecipeHolder();
     }
 
     public static AppEngInternalInventory getInputCellInv(IOPortBlockEntity owner) {
