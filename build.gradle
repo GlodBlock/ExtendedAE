@@ -22,7 +22,7 @@ neoForge {
     version = project.neoforge_version
 
     mods {
-        ae2netanalyser {
+        extendedae {
             sourceSet sourceSets.main
         }
     }
