@@ -19,11 +19,13 @@ import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,19 +33,19 @@ import org.jetbrains.annotations.Nullable;
 public class CraftingThread {
 
     @NotNull
-    private final AEBaseBlockEntity host;
+    protected final AEBaseBlockEntity host;
     protected final IGridConnectedBlockEntity girdHost;
     protected final AppEngInternalInventory gridInv;
-    private final InternalInventory gridInvExt;
-    private final CraftingContainer craftingInv;
+    protected final InternalInventory gridInvExt;
+    protected final CraftingContainer craftingInv;
     private Direction pushDirection = null;
     private ItemStack myPattern = ItemStack.EMPTY;
     protected IMolecularAssemblerSupportedPattern myPlan = null;
-    private double progress = 0;
-    private boolean isAwake = false;
+    protected double progress = 0;
+    protected boolean isAwake = false;
     protected boolean forcePlan = false;
     private boolean reboot = true;
-    private ItemStack output = ItemStack.EMPTY;
+    protected ItemStack output = ItemStack.EMPTY;
     private final SignalAccepter accepter;
 
     public CraftingThread(@NotNull AEBaseBlockEntity host, SignalAccepter accepter) {
@@ -88,24 +90,22 @@ public class CraftingThread {
         this.updateSleepiness();
     }
 
-    public CompoundTag writeNBT() {
+    public CompoundTag writeNBT(HolderLookup.Provider register) {
         var data = new CompoundTag();
         var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
         if (!pattern.isEmpty()) {
-            var compound = new CompoundTag();
-            pattern.save(compound);
-            data.put("myPlan", compound);
+            data.put("myPlan", pattern.save(register));
             data.putInt("pushDirection", this.pushDirection.ordinal());
         }
         return data;
     }
 
-    public void readNBT(CompoundTag data) {
+    public void readNBT(CompoundTag data, HolderLookup.Provider register) {
         this.forcePlan = false;
         this.myPattern = ItemStack.EMPTY;
         this.myPlan = null;
         if (data.contains("myPlan")) {
-            var pattern = ItemStack.of(data.getCompound("myPlan"));
+            var pattern = ItemStack.parseOptional(register, data.getCompound("myPlan"));
             if (!pattern.isEmpty()) {
                 this.forcePlan = true;
                 this.myPattern = pattern;
@@ -138,22 +138,18 @@ public class CraftingThread {
             this.progress = 0;
             return this.isAwake ? TickRateModulation.IDLE : TickRateModulation.SLEEP;
         }
-
         if (this.myPlan == null) {
             // clear possible jammed stuffs
             this.ejectHeldItems();
             this.updateSleepiness();
             return TickRateModulation.SLEEP;
         }
-
         if (this.reboot) {
             ticksSinceLastCall = 1;
         }
-
         if (!this.isAwake) {
             return TickRateModulation.SLEEP;
         }
-
         this.reboot = false;
         switch (cards) {
             case 0 -> this.progress += this.userPower(ticksSinceLastCall, 20, 1.0);
@@ -163,44 +159,65 @@ public class CraftingThread {
             case 4 -> this.progress += this.userPower(ticksSinceLastCall, 50, 2.5);
             case 5 -> this.progress += this.userPower(ticksSinceLastCall, 100, 5.0);
         }
-
         if (this.progress >= 100) {
-            for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
-                this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
-            }
-
-            this.progress = 0;
-            this.output = this.assemblePattern(this.craftingInv);
-            if (!this.output.isEmpty()) {
-                // pushOut might reset the plan back to null, so get the remaining items before
-                var craftingRemainders = this.myPlan.getRemainingItems(this.craftingInv);
-
-                this.pushOut(this.output.copy());
-
-                for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
-                    this.gridInv.setItemDirect(x, craftingRemainders.get(x));
-                }
-                this.forcePlan = false;
-                this.myPlan = null;
-                this.pushDirection = null;
-                this.ejectHeldItems();
-                this.saveChanges();
-                this.updateSleepiness();
-                return this.isAwake ? TickRateModulation.IDLE : TickRateModulation.SLEEP;
-            } else {
-                ExtendedAE.LOGGER.warn("Molecular Assembler failed to craft, the crafting ingredients are returned.");
-                this.forcePlan = false;
-                this.myPlan = null;
-                this.pushDirection = null;
-                this.ejectHeldItems();
-                this.saveChanges();
-                this.updateSleepiness();
-            }
+            return this.onCraftingDone();
         }
         return TickRateModulation.FASTER;
     }
 
-    protected ItemStack assemblePattern(CraftingContainer input) {
+    protected TickRateModulation onCraftingDone() {
+        for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
+            this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
+        }
+        var positionedInput = this.craftingInv.asPositionedCraftInput();
+        var craftinginput = positionedInput.input();
+        this.progress = 0;
+        this.output = this.assemblePattern(craftinginput);
+        if (!this.output.isEmpty() && this.host.getLevel() != null) {
+            this.output.onCraftedBySystem(this.host.getLevel());
+
+            // pushOut might reset the plan back to null, so get the remaining items before
+            var craftingRemainders = this.myPlan.getRemainingItems(craftinginput);
+
+            this.pushOut(this.output.copy());
+
+            int craftingInputLeft = positionedInput.left();
+            int craftingInputTop = positionedInput.top();
+
+            // Clear out the rows/cols that are in the margin
+            for (int y = 0; y < this.craftingInv.getHeight(); y++) {
+                for (int x = 0; x < this.craftingInv.getWidth(); x++) {
+                    if (y < craftingInputTop || x < craftingInputLeft) {
+                        int idx = x + y * this.craftingInv.getWidth();
+                        this.gridInv.setItemDirect(idx, ItemStack.EMPTY);
+                    }
+                }
+            }
+            for (int y = 0; y < craftinginput.height(); y++) {
+                for (int x = 0; x < craftinginput.width(); x++) {
+                    int idx = x + craftingInputLeft + (y + craftingInputTop) * this.craftingInv.getWidth();
+                    this.gridInv.setItemDirect(idx, craftingRemainders.get(x + y * craftinginput.width()));
+                }
+            }
+            this.reset();
+            return this.isAwake ? TickRateModulation.IDLE : TickRateModulation.SLEEP;
+        } else {
+            ExtendedAE.LOGGER.warn("Molecular Assembler failed to craft, the crafting ingredients are returned.");
+            this.reset();
+            return TickRateModulation.FASTER;
+        }
+    }
+
+    protected final void reset() {
+        this.forcePlan = false;
+        this.myPlan = null;
+        this.pushDirection = null;
+        this.ejectHeldItems();
+        this.saveChanges();
+        this.updateSleepiness();
+    }
+
+    protected ItemStack assemblePattern(CraftingInput input) {
         return this.myPlan.assemble(input, this.host.getLevel());
     }
 
@@ -209,14 +226,13 @@ public class CraftingThread {
         if (this.forcePlan) {
             if (this.host.getLevel() != null && myPlan == null) {
                 if (!myPattern.isEmpty()) {
-                    if (PatternDetailsHelper.decodePattern(myPattern, this.host.getLevel(), false) instanceof IMolecularAssemblerSupportedPattern supportedPlan) {
+                    if (PatternDetailsHelper.decodePattern(myPattern, this.host.getLevel()) instanceof IMolecularAssemblerSupportedPattern supportedPlan) {
                         this.myPlan = supportedPlan;
                     }
                 }
-
                 this.myPattern = ItemStack.EMPTY;
                 if (myPlan == null) {
-                    AELog.warn("Unable to restore auto-crafting pattern after load: %s", myPattern.getTag());
+                    AELog.warn("Unable to restore auto-crafting pattern after load: %s", myPattern);
                     this.forcePlan = false;
                 }
             }
@@ -278,19 +294,19 @@ public class CraftingThread {
         this.gridInv.setItemDirect(9, output);
     }
 
-    protected void saveChanges() {
+    protected final void saveChanges() {
         this.host.saveChanges();
     }
 
     private ItemStack pushTo(ItemStack output, Direction d) {
-        if (output.isEmpty()) {
+        if (output.isEmpty() || this.host.getLevel() == null) {
             return output;
         }
         final BlockEntity te = this.host.getLevel().getBlockEntity(this.host.getBlockPos().relative(d));
         if (te == null) {
             return output;
         }
-        var adaptor = InternalInventory.wrapExternal(te, d.getOpposite());
+        var adaptor = InternalInventory.wrapExternal(this.host.getLevel(), te.getBlockPos(), d.getOpposite());
         if (adaptor == null) {
             return output;
         }
@@ -329,7 +345,7 @@ public class CraftingThread {
         for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
             this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
         }
-        return !this.myPlan.assemble(this.craftingInv, this.host.getLevel()).isEmpty();
+        return !this.myPlan.assemble(this.craftingInv.asCraftInput(), this.host.getLevel()).isEmpty();
     }
 
     private boolean canPush() {
