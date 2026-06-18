@@ -86,7 +86,6 @@ public class CraftingMatrixThread extends CraftingThread {
                         this.pusher.accept(stack.what(), stack.amount());
                     }
                     this.reset();
-                    this.saveChanges();
                     return this.isAwake ? TickRateModulation.IDLE : TickRateModulation.SLEEP;
                 } else {
                     return super.onCraftingDone();
