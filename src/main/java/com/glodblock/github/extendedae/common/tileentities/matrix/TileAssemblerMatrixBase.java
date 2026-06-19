@@ -198,7 +198,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     }
 
     public void updateSubType(boolean updateFormed) {
-        if (this.level == null || this.notLoaded() || this.isRemoved()) {
+        if (this.level == null || this.notLoaded() || this.isRemoved() || !this.getMainNode().isReady()) {
             return;
         }
 

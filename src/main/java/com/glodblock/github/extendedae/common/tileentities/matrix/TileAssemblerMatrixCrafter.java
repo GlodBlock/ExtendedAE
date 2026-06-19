@@ -287,7 +287,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
 
         public void save(ValueOutput output, String name) {
             var tagList = output.childrenList(name);
-            for (var entry : buffer.object2LongEntrySet()) {
+            for (var entry : this.buffer.object2LongEntrySet()) {
                 var key = entry.getKey();
                 var value = entry.getLongValue();
                 if (key != null && value > 0) {
