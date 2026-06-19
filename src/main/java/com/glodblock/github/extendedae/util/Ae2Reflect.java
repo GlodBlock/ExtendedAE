@@ -22,12 +22,12 @@ import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
 import appeng.util.ConfigInventory;
 import appeng.util.inv.AppEngInternalInventory;
+import com.glodblock.github.extendedae.util.helper.CraftingRecipePattern;
 import com.glodblock.github.glodium.reflect.FieldAccessor;
 import com.glodblock.github.glodium.reflect.MethodAccessor;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class Ae2Reflect {
@@ -41,8 +41,6 @@ public class Ae2Reflect {
     private static final FieldAccessor fAbstractLevelEmitterPart_prevState;
     private static final FieldAccessor fAEBaseBlockEntity_customName;
     private static final FieldAccessor fAEBasePart_customName;
-    private static final FieldAccessor fAECraftingPattern_recipeHolder;
-    private static final FieldAccessor fAECraftingPattern_output;
     private static final FieldAccessor fIOPortBlockEntity_inputCells;
     private static final FieldAccessor fIOPortBlockEntity_upgrades;
     private static final FieldAccessor fInterfaceLogic_config;
@@ -69,8 +67,6 @@ public class Ae2Reflect {
         fAbstractLevelEmitterPart_prevState = FieldAccessor.of(AbstractLevelEmitterPart.class, "prevState");
         fAEBaseBlockEntity_customName = FieldAccessor.of(AEBaseBlockEntity.class, "customName");
         fAEBasePart_customName = FieldAccessor.of(AEBasePart.class, "customName");
-        fAECraftingPattern_recipeHolder = FieldAccessor.of(AECraftingPattern.class, "recipeHolder");
-        fAECraftingPattern_output = FieldAccessor.of(AECraftingPattern.class, "output");
         fIOPortBlockEntity_inputCells = FieldAccessor.of(IOPortBlockEntity.class, "inputCells");
         fIOPortBlockEntity_upgrades = FieldAccessor.of(IOPortBlockEntity.class, "upgrades");
         fInterfaceLogic_config = FieldAccessor.of(InterfaceLogic.class, "config");
@@ -154,11 +150,7 @@ public class Ae2Reflect {
     }
 
     public static RecipeHolder<?> getCraftRecipe(AECraftingPattern owner) {
-        return fAECraftingPattern_recipeHolder.get(owner);
-    }
-
-    public static ItemStack getCraftRecipeResult(AECraftingPattern owner) {
-        return fAECraftingPattern_output.get(owner);
+        return ((CraftingRecipePattern) owner).getRecipeHolder();
     }
 
     public static AppEngInternalInventory getInputCellInv(IOPortBlockEntity owner) {

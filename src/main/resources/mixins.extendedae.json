@@ -6,6 +6,8 @@
   "mixins": [
     "MixinAbstractLevelEmitterPart",
     "MixinAEBasePart",
+    "MixinAECraftingPattern",
+    "MixinAppEngInternalInventory",
     "MixinPatternAccessTermMenu"
   ],
   "client": [
