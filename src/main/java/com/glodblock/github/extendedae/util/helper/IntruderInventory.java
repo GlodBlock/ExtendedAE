@@ -8,6 +8,8 @@ public interface IntruderInventory {
 
     void setStacks(ItemStack[] stacks);
 
+    void setStackSilent(int slot, ItemStack stack);
+
     void silentClear();
 
 }

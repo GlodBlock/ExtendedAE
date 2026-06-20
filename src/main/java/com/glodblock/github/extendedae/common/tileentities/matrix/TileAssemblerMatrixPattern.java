@@ -17,6 +17,7 @@ import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.common.inventory.FastInternalInventory;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -35,12 +36,12 @@ import java.util.function.Supplier;
 public class TileAssemblerMatrixPattern extends TileAssemblerMatrixFunction implements InternalInventoryHost, ICraftingProvider, PatternContainer {
 
     public final static int INV_SIZE = 36;
-    private final AppEngInternalInventory patternInventory;
+    private final FastInternalInventory patternInventory;
     private final List<IPatternDetails> patterns = new ArrayList<>();
 
     public TileAssemblerMatrixPattern(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
-        this.patternInventory = new AppEngInternalInventory(this, INV_SIZE, 1);
+        this.patternInventory = new FastInternalInventory(this, INV_SIZE, 1);
         this.patternInventory.setFilter(new Filter(this::getLevel));
         this.getMainNode().addService(ICraftingProvider.class, this);
     }

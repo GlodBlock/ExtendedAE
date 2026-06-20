@@ -37,6 +37,11 @@ public class MixinAppEngInternalInventory implements IntruderInventory {
     }
 
     @Override
+    public void setStackSilent(int slot, ItemStack stack) {
+        this.stacks.set(slot, stack);
+    }
+
+    @Override
     public void silentClear() {
         for (int x = 0; x < this.stacks.size(); ++x) {
             this.stacks.set(x, ItemStack.EMPTY);
