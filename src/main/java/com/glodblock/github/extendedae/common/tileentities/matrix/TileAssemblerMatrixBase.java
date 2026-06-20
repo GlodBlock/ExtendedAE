@@ -198,7 +198,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
     }
 
     public void updateSubType(boolean updateFormed) {
-        if (this.level == null || this.notLoaded() || this.isRemoved() || !this.getMainNode().isReady()) {
+        if (this.level == null || this.notLoaded() || this.isRemoved()) {
             return;
         }
 
@@ -216,7 +216,7 @@ public abstract class TileAssemblerMatrixBase extends AENetworkedBlockEntity imp
             }
         }
 
-        if (updateFormed) {
+        if (updateFormed && this.getMainNode().isReady()) {
             onGridConnectableSidesChanged();
         }
     }
