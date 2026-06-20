@@ -59,7 +59,7 @@ import java.util.Set;
 
 public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements IGridTickable, IUpgradeableObject, IConfigurableObject, IRecipeMachine<RecipeInput, CircuitCutterRecipe> {
 
-    public static final int POWER_MAXIMUM_AMOUNT = 8000;
+    public static final int POWER_MAXIMUM_AMOUNT = 20000;
     public static final int MAX_PROGRESS = 200;
     private final AppEngInternalInventory input = new AppEngInternalInventory(this, 1, 64);
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1, 64);

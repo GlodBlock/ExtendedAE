@@ -67,7 +67,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
 
     public static final int SLOTS = 9;
     public static final int TANK_CAP = 16000;
-    public static final int POWER_MAXIMUM_AMOUNT = 8000;
+    public static final int POWER_MAXIMUM_AMOUNT = 20000;
     public static final int MAX_PROGRESS = 200;
     private final AppEngInternalInventory input = new AppEngInternalInventory(this, SLOTS, 64);
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1, 64);
