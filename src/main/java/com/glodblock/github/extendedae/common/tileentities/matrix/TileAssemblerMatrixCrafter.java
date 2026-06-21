@@ -12,10 +12,9 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
-import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
-import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
@@ -23,7 +22,6 @@ import com.glodblock.github.glodium.util.GlodUtil;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -47,7 +45,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     private int blockCoolDown = 0;
 
     public TileAssemblerMatrixCrafter(BlockPos pos, BlockState blockState) {
-        super(GlodUtil.getTileType(TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new, EAESingletons.ASSEMBLER_MATRIX_CRAFTER), pos, blockState);
+        super(GlodUtil.getTileType(TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new, EPPItemAndBlock.ASSEMBLER_MATRIX_CRAFTER), pos, blockState);
         this.getMainNode().addService(IGridTickable.class, this);
         this.outputBuffer = new OutputBuffer();
         var invs = new InternalInventory[MAX_THREAD];
@@ -129,35 +127,41 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     }
 
     @Override
-    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
-        super.saveAdditional(data, registries);
+    public void saveAdditional(CompoundTag data) {
+        super.saveAdditional(data);
         for (int x = 0; x < MAX_THREAD; x ++) {
-            var tag = this.threads[x].writeNBT(registries);
+            var tag = this.threads[x].writeNBT();
             data.put("#ct" + x, tag);
         }
         final CompoundTag opt = new CompoundTag();
         for (int x = 0; x < this.internalInv.size(); x++) {
             var is = this.internalInv.getStackInSlot(x);
-            opt.put("item" + x, is.saveOptional(registries));
+            if (!is.isEmpty()) {
+                opt.put("item" + x, is.save(new CompoundTag()));
+            }
         }
         data.put("inv", opt);
-        this.outputBuffer.save(data, registries, "buffer");
+        this.outputBuffer.save(data, "buffer");
     }
 
     @Override
-    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
-        super.loadTag(data, registries);
+    public void loadTag(CompoundTag data) {
+        super.loadTag(data);
         for (int x = 0; x < MAX_THREAD; x ++) {
             if (data.contains("#ct" + x)) {
-                this.threads[x].readNBT(data.getCompound("#ct" + x), registries);
+                this.threads[x].readNBT(data.getCompound("#ct" + x));
             }
         }
         var opt = data.getCompound("inv");
         for (int x = 0; x < this.internalInv.size(); x++) {
-            var item = opt.getCompound("item" + x);
-            this.internalInv.setItemDirect(x, ItemStack.parseOptional(registries, item));
+            if (opt.contains("item" + x)) {
+                var item = opt.getCompound("item" + x);
+                this.internalInv.setItemDirect(x, ItemStack.of(item));
+            } else {
+                this.internalInv.setItemDirect(x, ItemStack.EMPTY);
+            }
         }
-        this.outputBuffer.load(data, registries, "buffer");
+        this.outputBuffer.load(data, "buffer");
     }
 
     @Override
@@ -176,7 +180,7 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
         if (this.outputBuffer.size != 0) {
             isAwake = true;
         }
-        return new TickingRequest(1, 1, !isAwake);
+        return new TickingRequest(1, 1, !isAwake, false);
     }
 
     @Override
@@ -214,19 +218,14 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
     }
 
     @Override
-    public void saveChangedInventory(AppEngInternalInventory inv) {
+    public void onChangeInventory(InternalInventory inv, int slot) {
         for (var t : this.threads) {
             if (inv == t.getInternalInventory()) {
                 t.recalculatePlan();
+                this.saveChanges();
                 break;
             }
         }
-        this.saveChanges();
-    }
-
-    @Override
-    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
-        this.saveChangedInventory(inv);
     }
 
     @Override
@@ -294,22 +293,22 @@ public class TileAssemblerMatrixCrafter extends TileAssemblerMatrixFunction impl
             }
         }
 
-        public void save(CompoundTag tag, HolderLookup.Provider registries, String name) {
+        public void save(CompoundTag tag, String name) {
             var tagList = new ListTag();
             for (var entry : buffer.object2LongEntrySet()) {
                 var key = entry.getKey();
                 var value = entry.getLongValue();
                 if (key != null && value > 0) {
-                    tagList.add(GenericStack.writeTag(registries, new GenericStack(key, value)));
+                    tagList.add(GenericStack.writeTag(new GenericStack(key, value)));
                 }
             }
             tag.put(name, tagList);
         }
 
-        public void load(CompoundTag tag, HolderLookup.Provider registries, String name) {
+        public void load(CompoundTag tag, String name) {
             var tagList = tag.getList(name, Tag.TAG_COMPOUND);
             for (var e : tagList) {
-                var stack = GenericStack.readTag(registries, (CompoundTag) e);
+                var stack = GenericStack.readTag((CompoundTag) e);
                 if (stack != null && stack.amount() > 0) {
                     this.buffer.put(stack.what(), stack.amount());
                 }

@@ -19,13 +19,11 @@ import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.glodblock.github.extendedae.ExtendedAE;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -90,22 +88,24 @@ public class CraftingThread {
         this.updateSleepiness();
     }
 
-    public CompoundTag writeNBT(HolderLookup.Provider register) {
+    public CompoundTag writeNBT() {
         var data = new CompoundTag();
         var pattern = this.myPlan != null ? this.myPlan.getDefinition().toStack() : this.myPattern;
         if (!pattern.isEmpty()) {
-            data.put("myPlan", pattern.save(register));
+            var compound = new CompoundTag();
+            pattern.save(compound);
+            data.put("myPlan", compound);
             data.putInt("pushDirection", this.pushDirection.ordinal());
         }
         return data;
     }
 
-    public void readNBT(CompoundTag data, HolderLookup.Provider register) {
+    public void readNBT(CompoundTag data) {
         this.forcePlan = false;
         this.myPattern = ItemStack.EMPTY;
         this.myPlan = null;
         if (data.contains("myPlan")) {
-            var pattern = ItemStack.parseOptional(register, data.getCompound("myPlan"));
+            var pattern = ItemStack.of(data.getCompound("myPlan"));
             if (!pattern.isEmpty()) {
                 this.forcePlan = true;
                 this.myPattern = pattern;
@@ -169,35 +169,13 @@ public class CraftingThread {
         for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
             this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
         }
-        var positionedInput = this.craftingInv.asPositionedCraftInput();
-        var craftinginput = positionedInput.input();
         this.progress = 0;
-        this.output = this.assemblePattern(craftinginput);
-        if (!this.output.isEmpty() && this.host.getLevel() != null) {
-            this.output.onCraftedBySystem(this.host.getLevel());
-
-            // pushOut might reset the plan back to null, so get the remaining items before
-            var craftingRemainders = this.myPlan.getRemainingItems(craftinginput);
-
+        this.output = this.assemblePattern(this.craftingInv);
+        if (!this.output.isEmpty()) {
+            var craftingRemainders = this.myPlan.getRemainingItems(this.craftingInv);
             this.pushOut(this.output.copy());
-
-            int craftingInputLeft = positionedInput.left();
-            int craftingInputTop = positionedInput.top();
-
-            // Clear out the rows/cols that are in the margin
-            for (int y = 0; y < this.craftingInv.getHeight(); y++) {
-                for (int x = 0; x < this.craftingInv.getWidth(); x++) {
-                    if (y < craftingInputTop || x < craftingInputLeft) {
-                        int idx = x + y * this.craftingInv.getWidth();
-                        this.gridInv.setItemDirect(idx, ItemStack.EMPTY);
-                    }
-                }
-            }
-            for (int y = 0; y < craftinginput.height(); y++) {
-                for (int x = 0; x < craftinginput.width(); x++) {
-                    int idx = x + craftingInputLeft + (y + craftingInputTop) * this.craftingInv.getWidth();
-                    this.gridInv.setItemDirect(idx, craftingRemainders.get(x + y * craftinginput.width()));
-                }
+            for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
+                this.gridInv.setItemDirect(x, craftingRemainders.get(x));
             }
             this.reset();
             return this.isAwake ? TickRateModulation.IDLE : TickRateModulation.SLEEP;
@@ -217,7 +195,7 @@ public class CraftingThread {
         this.updateSleepiness();
     }
 
-    protected ItemStack assemblePattern(CraftingInput input) {
+    protected ItemStack assemblePattern(CraftingContainer input) {
         return this.myPlan.assemble(input, this.host.getLevel());
     }
 
@@ -345,7 +323,7 @@ public class CraftingThread {
         for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
             this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
         }
-        return !this.myPlan.assemble(this.craftingInv.asCraftInput(), this.host.getLevel()).isEmpty();
+        return !this.myPlan.assemble(this.craftingInv, this.host.getLevel()).isEmpty();
     }
 
     private boolean canPush() {

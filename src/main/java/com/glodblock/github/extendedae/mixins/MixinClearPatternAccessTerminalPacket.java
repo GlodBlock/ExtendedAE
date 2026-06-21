@@ -19,7 +19,7 @@ public abstract class MixinClearPatternAccessTerminalPacket {
             cancellable = true
     )
     private void handleExGui(Player player, CallbackInfo ci) {
-        if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal patternAccessTerminal) {
+        if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal<?> patternAccessTerminal) {
             patternAccessTerminal.clear();
             ci.cancel();
         }

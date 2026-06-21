@@ -3,7 +3,7 @@ package com.glodblock.github.extendedae.mixins;
 import appeng.crafting.pattern.AECraftingPattern;
 import com.glodblock.github.extendedae.util.helper.CraftingRecipePattern;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +17,7 @@ public class MixinAECraftingPattern implements CraftingRecipePattern {
     private ItemStack output;
     @Final
     @Shadow(remap = false)
-    private RecipeHolder<?> recipeHolder;
+    private CraftingRecipe recipe;
 
     @Override
     public ItemStack getOutput() {
@@ -25,8 +25,8 @@ public class MixinAECraftingPattern implements CraftingRecipePattern {
     }
 
     @Override
-    public RecipeHolder<?> getRecipeHolder() {
-        return this.recipeHolder;
+    public CraftingRecipe getRecipeHolder() {
+        return this.recipe;
     }
 
 }

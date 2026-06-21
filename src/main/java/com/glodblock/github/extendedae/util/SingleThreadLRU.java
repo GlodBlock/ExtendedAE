@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.SequencedSet;
+import java.util.SortedSet;
 
 /**
  * A least-recently-used cache backed by an arbitrary {@link Map}. Recency is tracked in a side
@@ -19,7 +19,7 @@ public class SingleThreadLRU<K, V> {
     private static final int DEFAULT_SIZE = 20;
 
     private final Map<K, V> backingMap;
-    private final SequencedSet<K> accessOrder;
+    private final SortedSet<K> accessOrder;
     private final int size;
 
     public SingleThreadLRU(Map<K, V> backingMap, int size) {

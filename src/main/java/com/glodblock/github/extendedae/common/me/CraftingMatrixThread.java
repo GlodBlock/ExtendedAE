@@ -17,8 +17,8 @@ import com.glodblock.github.extendedae.util.helper.IntruderInventory;
 import com.glodblock.github.extendedae.util.SingleThreadLRU;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingInput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -78,9 +78,6 @@ public class CraftingMatrixThread extends CraftingThread {
                 if (cache != null && cache.isValid()) {
                     ((IntruderInventory) this.gridInv).silentClear();
                     this.output = cache.output;
-                    if (this.host.getLevel() != null) {
-                        this.output.onCraftedBySystem(this.host.getLevel());
-                    }
                     this.pusher.accept(cache.outputKey, (long) cache.amount);
                     for (var stack : cache.remains) {
                         this.pusher.accept(stack.what(), stack.amount());
@@ -97,9 +94,9 @@ public class CraftingMatrixThread extends CraftingThread {
     }
 
     @Override
-    protected ItemStack assemblePattern(CraftingInput input) {
+    protected ItemStack assemblePattern(CraftingContainer input) {
         if (this.myPlan instanceof AECraftingPattern crafting) {
-            var recipe = Ae2Reflect.getCraftRecipe(crafting).value();
+            var recipe = Ae2Reflect.getCraftRecipe(crafting);
             if (crafting.canSubstitute && recipe.isSpecial()) {
                 return super.assemblePattern(input);
             }
@@ -161,12 +158,10 @@ public class CraftingMatrixThread extends CraftingThread {
         for (int x = 0; x < this.craftingInv.getContainerSize(); x++) {
             this.craftingInv.setItem(x, this.gridInv.getStackInSlot(x));
         }
-        var positionedInput = this.craftingInv.asPositionedCraftInput();
-        var craftinginput = positionedInput.input();
-        var output = this.assemblePattern(craftinginput);
+        var output = this.assemblePattern(this.craftingInv);
         if (!output.isEmpty()) {
             List<GenericStack> left = new ArrayList<>();
-            for (var stack : pattern.getRemainingItems(craftinginput)) {
+            for (var stack : pattern.getRemainingItems(this.craftingInv)) {
                 if (stack != null && !stack.isEmpty()) {
                     var gs = GenericStack.fromItemStack(stack);
                     if (gs != null) {

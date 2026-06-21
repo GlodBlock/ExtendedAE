@@ -1,11 +1,9 @@
 package com.glodblock.github.extendedae.util;
 
 import appeng.api.behaviors.StackTransferContext;
-import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.storage.IStorageService;
-import appeng.api.stacks.AEKey;
 import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.StorageCell;
 import appeng.api.upgrades.IUpgradeInventory;
@@ -15,20 +13,18 @@ import appeng.blockentity.storage.IOPortBlockEntity;
 import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.patternprovider.PatternContainer;
-import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.parts.AEBasePart;
-import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
 import appeng.util.ConfigInventory;
 import appeng.util.inv.AppEngInternalInventory;
 import com.glodblock.github.extendedae.util.helper.CraftingRecipePattern;
 import com.glodblock.github.glodium.reflect.ReflectKit;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -37,18 +33,16 @@ public class Ae2Reflect {
 
     private static final Field fContainerTracker_serverId;
     private static final Field fContainerTracker_container;
-    private static final Field fContainerTracker_server;
+    private static final Field fUseOnContext_hitResult;
     private static final Field fDriveBlockEntity_clientSideCellState;
     private static final Field fDriveBlockEntity_clientSideCellItems;
     private static final Field fDriveBlockEntity_clientSideOnline;
-    private static final Field fAbstractLevelEmitterPart_prevState;
     private static final Field fAEBaseBlockEntity_customName;
     private static final Field fAEBasePart_customName;
     private static final Field fIOPortBlockEntity_inputCells;
     private static final Field fIOPortBlockEntity_upgrades;
     private static final Field fInterfaceLogic_config;
     private static final Field fInterfaceLogic_storage;
-    private static final Field fPatternAccessTermMenu_byId;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
     private static final Method mIOBusPart_updateState;
@@ -56,26 +50,22 @@ public class Ae2Reflect {
     private static final Method mIOPortBlockEntity_transferContents;
     private static final Method mIOPortBlockEntity_moveSlot;
     private static final Method mInterfaceLogic_onConfigRowChanged;
-    private static final Method mInterfaceLogic_isAllowedInStorageSlot;
     private static final Method mInterfaceLogic_onStorageChanged;
-    private static final Method mPatternAccessTermMenu_isVisible;
 
     static {
         try {
             fContainerTracker_serverId = ReflectKit.reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "serverId");
             fContainerTracker_container = ReflectKit.reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "container");
-            fContainerTracker_server = ReflectKit.reflectField(Class.forName("appeng.menu.implementations.PatternAccessTermMenu$ContainerTracker"), "server");
+            fUseOnContext_hitResult = ReflectKit.reflectField(UseOnContext.class, "hitResult", "f_43705_");
             fDriveBlockEntity_clientSideCellState = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideCellState");
             fDriveBlockEntity_clientSideCellItems = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideCellItems");
             fDriveBlockEntity_clientSideOnline = ReflectKit.reflectField(DriveBlockEntity.class, "clientSideOnline");
-            fAbstractLevelEmitterPart_prevState = ReflectKit.reflectField(AbstractLevelEmitterPart.class, "prevState");
             fAEBaseBlockEntity_customName = ReflectKit.reflectField(AEBaseBlockEntity.class, "customName");
             fAEBasePart_customName = ReflectKit.reflectField(AEBasePart.class, "customName");
             fIOPortBlockEntity_inputCells = ReflectKit.reflectField(IOPortBlockEntity.class, "inputCells");
             fIOPortBlockEntity_upgrades = ReflectKit.reflectField(IOPortBlockEntity.class, "upgrades");
             fInterfaceLogic_config = ReflectKit.reflectField(InterfaceLogic.class, "config");
             fInterfaceLogic_storage = ReflectKit.reflectField(InterfaceLogic.class, "storage");
-            fPatternAccessTermMenu_byId = ReflectKit.reflectField(PatternAccessTermMenu.class, "byId");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
             mIOBusPart_updateState = ReflectKit.reflectMethod(IOBusPart.class, "updateState");
@@ -83,9 +73,7 @@ public class Ae2Reflect {
             mIOPortBlockEntity_transferContents = ReflectKit.reflectMethod(IOPortBlockEntity.class, "transferContents", IGrid.class, StorageCell.class, long.class);
             mIOPortBlockEntity_moveSlot = ReflectKit.reflectMethod(IOPortBlockEntity.class, "moveSlot", int.class);
             mInterfaceLogic_onConfigRowChanged = ReflectKit.reflectMethod(InterfaceLogic.class, "onConfigRowChanged");
-            mInterfaceLogic_isAllowedInStorageSlot = ReflectKit.reflectMethod(InterfaceLogic.class, "isAllowedInStorageSlot", int.class, AEKey.class);
             mInterfaceLogic_onStorageChanged = ReflectKit.reflectMethod(InterfaceLogic.class, "onStorageChanged");
-            mPatternAccessTermMenu_isVisible = ReflectKit.reflectMethod(PatternAccessTermMenu.class, "isVisible", PatternContainer.class);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize AE2 reflection hacks!", e);
         }
@@ -99,16 +87,8 @@ public class Ae2Reflect {
         return ReflectKit.readField(owner, fContainerTracker_container);
     }
 
-    public static InternalInventory getServerInventory(Object owner) {
-        return ReflectKit.readField(owner, fContainerTracker_server);
-    }
-
-    public static Long2ObjectOpenHashMap<Object> getIDMap(Object owner) {
-        return ReflectKit.readField(owner, fPatternAccessTermMenu_byId);
-    }
-
-    public static boolean checkVisibility(PatternAccessTermMenu owner, PatternContainer container) {
-        return ReflectKit.executeMethod2(owner, mPatternAccessTermMenu_isVisible, container);
+    public static BlockHitResult getHitResult(UseOnContext owner) {
+        return ReflectKit.readField(owner, fUseOnContext_hitResult);
     }
 
     public static void updateDriveClientSideState(DriveBlockEntity owner) {
@@ -135,10 +115,6 @@ public class Ae2Reflect {
         return ReflectKit.executeMethod2(owner, mAECraftingPattern_getCompressedIndexFromSparse, id);
     }
 
-    public static boolean getPrevState(AbstractLevelEmitterPart owner) {
-        return ReflectKit.readField(owner, fAbstractLevelEmitterPart_prevState);
-    }
-
     public static void setCustomName(Object owner, Component name) {
         if (owner instanceof AEBaseBlockEntity) {
             ReflectKit.writeField(owner, fAEBaseBlockEntity_customName, name);
@@ -156,9 +132,8 @@ public class Ae2Reflect {
         return ReflectKit.executeMethod2(owner, mExportBusPart_createTransferContext, storageService, energyService);
     }
 
-    @SuppressWarnings("unchecked")
-    public static RecipeHolder<CraftingRecipe> getCraftRecipe(AECraftingPattern owner) {
-        return (RecipeHolder<CraftingRecipe>) ((CraftingRecipePattern) owner).getRecipeHolder();
+    public static CraftingRecipe getCraftRecipe(AECraftingPattern owner) {
+        return ((CraftingRecipePattern) owner).getRecipeHolder();
     }
 
     public static AppEngInternalInventory getInputCellInv(IOPortBlockEntity owner) {
@@ -187,10 +162,6 @@ public class Ae2Reflect {
 
     public static void onInterfaceConfigChange(InterfaceLogic owner) {
         ReflectKit.executeMethod(owner, mInterfaceLogic_onConfigRowChanged);
-    }
-
-    public static boolean isInterfaceSlotAllowed(InterfaceLogic owner, int slot, AEKey key) {
-        return ReflectKit.executeMethod2(owner, mInterfaceLogic_isAllowedInStorageSlot, slot, key);
     }
 
     public static void onInterfaceStorageChange(InterfaceLogic owner) {

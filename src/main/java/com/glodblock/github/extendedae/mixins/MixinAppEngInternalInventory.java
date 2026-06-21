@@ -31,7 +31,7 @@ public class MixinAppEngInternalInventory implements IntruderInventory {
             this.stacks.set(x, stacks[x].copy());
         }
         if (this.host != null) {
-            this.host.saveChangedInventory((AppEngInternalInventory) (Object) this);
+            this.host.saveChanges();
         }
     }
 
