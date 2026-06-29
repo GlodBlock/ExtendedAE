@@ -42,7 +42,12 @@ public class EMIPlugin implements EmiPlugin {
         registry.addCategory(EMICrystalFixerRecipe.CATEGORY);
         registry.addWorkstation(EMICrystalFixerRecipe.CATEGORY, EmiStack.of(EAESingletons.CRYSTAL_FIXER));
         adaptRecipeType(registry, CrystalFixerRecipe.TYPE, EMICrystalFixerRecipe::new);
-
+        registry.addRecipeHandler(ContainerExInterface.TYPE, new FakeSlotTransferHandler<>());
+        registry.addRecipeHandler(ContainerExInterface.TYPE_OVERSIZE, new FakeSlotTransferHandler<>());
+        registry.addRecipeHandler(ContainerExIOBus.EXPORT_TYPE, new FakeSlotTransferHandler<>());
+        registry.addRecipeHandler(ContainerPreciseExportBus.TYPE, new FakeSlotTransferHandler<>());
+        registry.addRecipeHandler(ContainerPreciseStorageBus.TYPE, new FakeSlotTransferHandler<>());
+        registry.addRecipeHandler(ContainerThresholdExportBus.TYPE, new FakeSlotTransferHandler<>());
         addInfo(registry, EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
         addInfo(registry, EAESingletons.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));
     }

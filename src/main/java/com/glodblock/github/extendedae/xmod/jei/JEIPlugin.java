@@ -11,6 +11,7 @@ import com.glodblock.github.extendedae.client.gui.GuiCircuitCutter;
 import com.glodblock.github.extendedae.client.gui.GuiCrystalAssembler;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.container.*;
 import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
@@ -28,6 +29,7 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IClickableIngredient;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
@@ -136,6 +138,27 @@ public class JEIPlugin implements IModPlugin {
                 }
         );
     }
+
+  @Override
+  public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
+    var helper = registration.getTransferHelper();
+
+    registration.addUniversalRecipeTransferHandler(
+        new FakeSlotTransferHandler<>(
+            ContainerExInterface.TYPE, ContainerExInterface.class, helper));
+    registration.addUniversalRecipeTransferHandler(
+        new FakeSlotTransferHandler<>(
+            ContainerExIOBus.EXPORT_TYPE, ContainerExIOBus.class, helper));
+    registration.addUniversalRecipeTransferHandler(
+        new FakeSlotTransferHandler<>(
+            ContainerThresholdExportBus.TYPE, ContainerThresholdExportBus.class, helper));
+    registration.addUniversalRecipeTransferHandler(
+        new FakeSlotTransferHandler<>(
+            ContainerPreciseExportBus.TYPE, ContainerPreciseExportBus.class, helper));
+    registration.addUniversalRecipeTransferHandler(
+        new FakeSlotTransferHandler<>(
+            ContainerPreciseStorageBus.TYPE, ContainerPreciseStorageBus.class, helper));
+  }
 
     private <I extends RecipeInput, T extends Recipe<@NotNull I>> List<RecipeHolder<@NotNull T>> getRecipes(RecipeType<@NotNull T> type) {
         var recipes = AppEngClient.instance().getRecipeMapForType(Minecraft.getInstance().level, type);
