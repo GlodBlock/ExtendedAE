@@ -2,11 +2,9 @@ package com.glodblock.github.extendedae.util;
 
 import appeng.api.stacks.GenericStack;
 import appeng.api.upgrades.IUpgradeableObject;
-import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.UpgradeableMenu;
 import appeng.menu.slot.FakeSlot;
 
-import com.glodblock.github.extendedae.ExtendedAE;
 import com.google.common.math.LongMath;
 
 import net.minecraft.world.inventory.Slot;
@@ -39,21 +37,7 @@ public class FakeSlotTransferHelper<T extends UpgradeableMenu<? extends IUpgrade
     }
 
     private List<FakeSlot> getFakeSlots(T menu) {
-        List<FakeSlot> slots =
-                new ArrayList<>(
-                        menu.getSlots(SlotSemantics.CONFIG).stream()
-                                .map(s -> (FakeSlot) s)
-                                .toList());
-        if (!slots.isEmpty()) {
-            return slots;
-        }
-        // `AEBaseMenu#getSlots` does not always work correctly with interfaces from addons,
-        // but this somewhat brute force approach _does._
-        ExtendedAE.LOGGER.info(
-                String.format(
-                        "Attempting to recipe fill into an interface (%s) that has not properly defined its SlotSemantics!",
-                        menu.getClass().getName()));
-
+        List<FakeSlot> slots = new ArrayList<>();
         for (Slot slot : menu.slots) {
             if (slot instanceof FakeSlot fs) {
                 slots.add(fs);
