@@ -4,9 +4,9 @@ navigation:
     position: 60
 ---
 
-# Extended Your AE setup!
+# Extend Your AE Setup!
 
-Extended AE brings some 1.7.10/1.12.2 AE features back for modern AE.
+Extended AE brings back some 1.7.10/1.12.2 AE features for modern AE.
 
 [Extended AE GitHub](https://github.com/GlodBlock/ExtendedAE) 
 

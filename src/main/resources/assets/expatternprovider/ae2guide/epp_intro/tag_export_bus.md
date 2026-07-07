@@ -15,7 +15,7 @@ item_ids:
   <ImportStructure src="../structure/cable_tag_export_bus.snbt"></ImportStructure>
 </GameScene>
 
-ME Tag Export Bus is a <ItemLink id="ae2:export_bus" /> that that can be filtered by item or fluid tags.
+The ME Tag Export Bus is a <ItemLink id="ae2:export_bus" /> that can be filtered by item or fluid tags.
 
-Its filter rule is same as <ItemLink id="expatternprovider:tag_storage_bus" />.
+Its filter rule is the same as <ItemLink id="expatternprovider:tag_storage_bus" />.
 

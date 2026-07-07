@@ -15,14 +15,14 @@ item_ids:
   <ImportStructure src="../structure/cable_precise_export_bus.snbt"></ImportStructure>
 </GameScene>
 
-ME Precise Export Bus exports items/fluids in specified quantities. It only exports if the container can fully accept the entire output.
+The ME Precise Export Bus exports items/fluids in specified quantities. It only exports if the container can fully accept the entire output.
 
 ## Example
 
 ![GUI](../pic/pre_bus_gui1.png)
 
-This means exporting 3 cobblestones per operation. It stops exporting when cobblestones amount is lower than 3 in network.
+This means exporting 3 cobblestone per operation. It stops exporting when the amount of cobblestone in the network is lower than 3.
 
 ![GUI](../pic/pre_bus_gui2.png)
 
-It also stops exporting when the target container can't hold all it exported. The chest only can hold 2 more cobblestones now, so the export bus stops.
+It also stops exporting when the target container can't hold the full output. The chest can only hold 2 more cobblestone now, so the export bus stops.

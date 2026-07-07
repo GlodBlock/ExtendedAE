@@ -15,8 +15,8 @@ item_ids:
 <BlockImage id="expatternprovider:circuit_cutter" scale="8"></BlockImage>
 </Row>
 
-Can't tolerate the slow speed of inscriber? Now we have the Circuit Slicer! They can slice material block into processor
-prints directly, so they are 9x faster than inscriber at most time.
+Can't tolerate the Inscriber's slow speed? Now there is the Circuit Slicer! It can slice material blocks into processor
+prints directly, making it up to 9x faster than an Inscriber most of the time.
 
-**Notice: The glass faces that don't have port can't connect to network.**
+**Notice: The glass faces without ports can't connect to the network.**
 

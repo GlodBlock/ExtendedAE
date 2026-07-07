@@ -12,7 +12,7 @@ item_ids:
 
 # ME Extended Pattern Access Terminal
 
-ME Extended Pattern Access Terminal provides 3 extra additional features compared with <ItemLink id="ae2:pattern_access_terminal" />.
+The ME Extended Pattern Access Terminal provides 3 additional features compared to <ItemLink id="ae2:pattern_access_terminal" />.
 
 <Row gap="20">
 <GameScene zoom="6" background="transparent">
@@ -24,21 +24,21 @@ ME Extended Pattern Access Terminal provides 3 extra additional features compare
 
 ## Better Pattern Search
 
-You can search pattern by input/output ingredients' name.
+You can search for patterns by input/output ingredient name.
 
 ![EPA1](../pic/epa_gui1.png)
 
 ## Pattern Highlight
 
-Sometimes it is still hard to find the desired pattern because patterns are always displayed as a group. Now the Extended
-Pattern Access Terminal can highlight the matched pattern in GUI.
+Sometimes it is still hard to find the desired pattern because patterns are always displayed in groups. Now the Extended
+Pattern Access Terminal can highlight the matched pattern in the GUI.
 
 ![EPA2](../pic/epa_gui2.png)
 
 ## Pattern Provider In-World Highlight
 
-It's annoying to find out which Pattern Provider is stuck when doing large crafting jobs. Extended Pattern Access Terminal
-can highlight the Pattern Provider in world, so you can locate it easily.
+It's annoying to find out which Pattern Provider is stuck when running large crafting jobs. The Extended Pattern Access Terminal
+can highlight the Pattern Provider in-world, so you can locate it easily.
 
 ![EPA3](../pic/epa_gui3.png)
 

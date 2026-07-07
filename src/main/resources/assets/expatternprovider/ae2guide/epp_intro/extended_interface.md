@@ -19,8 +19,8 @@ item_ids:
 </GameScene>
 </Row>
 
-ME Extended Interface is a <ItemLink id="ae2:interface" /> with a larger config inventory.
+The ME Extended Interface is a <ItemLink id="ae2:interface" /> with a larger config inventory.
 
-*Am I actually need this?*
+*Do I actually need this?*
 
 ![EIGui](../pic/ei_gui.png)

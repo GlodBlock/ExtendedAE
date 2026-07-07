@@ -16,5 +16,5 @@ item_ids:
   <ImportStructure src="../structure/cable_oversize_interface.snbt"></ImportStructure>
 </GameScene>
 </Row>
-ME Oversize Interface has the same amount of slots as <ItemLink id="expatternprovider:ex_interface" />, but it can hold x16 time (configurable) more
-items per slot. It means it can hold 1024 (64x16) items per slot.
+The ME Oversize Interface has the same number of slots as <ItemLink id="expatternprovider:ex_interface" />, but it can hold 16 times (configurable) more
+items per slot. This means it can hold 1024 (64x16) items per slot.

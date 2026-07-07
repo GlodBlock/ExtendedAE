@@ -15,7 +15,7 @@ item_ids:
 
 # ME Device Upgrades
 
-These upgrades allow you to replace normal ME devices with their extended version without breaking them.
+These upgrades allow you to replace normal ME devices with their extended versions without breaking them.
 
 <Row>
 <ItemImage id="expatternprovider:pattern_provider_upgrade" scale="4"></ItemImage>
@@ -25,20 +25,20 @@ These upgrades allow you to replace normal ME devices with their extended versio
 <ItemImage id="expatternprovider:drive_upgrade" scale="4"></ItemImage>
 </Row>
 
-Sneak + Right Mouse Click on these devices, they will be turned into their extended version. All device settings and inventory
+Sneak + Right-click these devices with the corresponding upgrade to turn them into their extended versions. All device settings and inventory
 will be kept.
 
 <GameScene zoom="6" background="transparent">
   <ImportStructure src="../structure/upgrade_show_1.snbt"></ImportStructure>
   <BoxAnnotation color="#ffffff" min="1 0 0" max="4 1 1">
-        The normal Pattern Providers. You can upgrade them with Pattern Provider Upgrade.
+        Normal Pattern Providers. You can upgrade them with the Pattern Provider Upgrade.
         <ItemImage id="expatternprovider:pattern_provider_upgrade" scale="2"></ItemImage>
   </BoxAnnotation>
 </GameScene>
 <GameScene zoom="6" background="transparent">
   <ImportStructure src="../structure/upgrade_show_2.snbt"></ImportStructure>
   <BoxAnnotation color="#ffffff" min="1 0 0" max="4 1 1">
-        The Extended Pattern Providers keep all settings and pattern inventory from origin Pattern Providers
+        The Extended Pattern Providers keep all settings and pattern inventory from the original Pattern Providers.
   </BoxAnnotation>
 </GameScene>
 

@@ -15,7 +15,7 @@ item_ids:
   <ImportStructure src="../structure/cable_tag_storage_bus.snbt"></ImportStructure>
 </GameScene>
 
-ME Tag Storage Bus is a <ItemLink id="ae2:storage_bus" /> that can be filtered by item or fluid tags and supports some basic logic operator.
+The ME Tag Storage Bus is a <ItemLink id="ae2:storage_bus" /> that can be filtered by item or fluid tags and supports some basic logic operators.
 
 Here are some examples:
 

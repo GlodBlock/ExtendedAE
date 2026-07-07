@@ -11,7 +11,7 @@ item_ids:
 
 # ME Extended Crafting Terminal
 
-ME Extended Crafting Terminal adds Stonecutter, Smithing Table and Anvil features to <ItemLink id="ae2:crafting_terminal" />.
+The ME Extended Crafting Terminal adds Stonecutter, Smithing Table, and Anvil features to <ItemLink id="ae2:crafting_terminal" />.
 
 <Row gap="20">
 <GameScene zoom="6" background="transparent">
@@ -22,9 +22,9 @@ ME Extended Crafting Terminal adds Stonecutter, Smithing Table and Anvil feature
 
 ## Extra recipes
 
-You can use Extended Crafting Terminal as a Stonecutter, Smithing Table and Anvil, use the tab button to change mode.
+You can use the Extended Crafting Terminal as a Stonecutter, Smithing Table, or Anvil. Use the tab button to change modes.
 
-Anvil mode can use liquid XP from other mods stored in ME network when you don't have enough levels.
+Anvil mode can use liquid XP from other mods stored in the ME network when you don't have enough levels.
 
 ![M1](../pic/ex_stonecutter.png)
 

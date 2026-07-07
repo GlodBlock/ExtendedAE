@@ -13,11 +13,11 @@ item_ids:
 
 <BlockImage id="expatternprovider:crystal_fixer" scale="8"></BlockImage>
 
-ME Crystal Fixer can repair budding certus block and turn it to the upgraded one.
+The ME Crystal Fixer can repair a budding Certus block and upgrade it.
 
-It needs <ItemLink id="ae2:charged_certus_quartz_crystal" /> and power to work. Right-click it with <ItemLink id="ae2:charged_certus_quartz_crystal" /> to input.
+It needs <ItemLink id="ae2:charged_certus_quartz_crystal" /> and power to work. Right-click it with <ItemLink id="ae2:charged_certus_quartz_crystal" /> to input one.
 
-However, it can't turn flawed one to flawless. The max tier Fixer can reach is flawed.
+However, it can't turn a flawed one into a flawless one. The highest tier the Fixer can reach is flawed.
 
 <Row gap="20">
 <GameScene zoom="4" background="transparent">

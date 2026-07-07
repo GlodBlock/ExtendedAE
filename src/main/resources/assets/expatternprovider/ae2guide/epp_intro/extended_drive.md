@@ -15,4 +15,4 @@ item_ids:
 <BlockImage id="expatternprovider:ex_drive" scale="8"></BlockImage>
 </Row>
 
-ME Extended Drive is a <ItemLink id="ae2:drive" /> with a larger cell inventory. It can hold 20 storage cells.
+The ME Extended Drive is a <ItemLink id="ae2:drive" /> with a larger cell inventory. It can hold 20 storage cells.
