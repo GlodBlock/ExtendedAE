@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "expatternprovider:wireless_ex_pat"
+    "expatternprovider:wireless_ex_pat",
+    "expatternprovider:wireless_ex_ct"
   ]
 }
