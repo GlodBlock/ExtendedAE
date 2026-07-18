@@ -10,6 +10,7 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.CraftingMode;
 import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
 import com.glodblock.github.extendedae.util.FCUtil;
+import com.glodblock.github.extendedae.util.helper.ExtendedCraftingTerminal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class PartExCraftingTerminal extends AbstractTerminalPart {
+public class PartExCraftingTerminal extends AbstractTerminalPart implements ExtendedCraftingTerminal {
 
     public static List<ResourceLocation> MODELS = Arrays.asList(
             new ResourceLocation(ExtendedAE.MODID, "part/ex_crafting_terminal_off"),
@@ -70,19 +71,23 @@ public class PartExCraftingTerminal extends AbstractTerminalPart {
         this.anvilGrid.clear();
     }
 
+    @Override
     public CraftingMode getCurrentMode() {
         return this.currentMode;
     }
 
+    @Override
     public @Nullable ResourceLocation getStonecuttingRecipe() {
         return this.stonecuttingRecipe;
     }
 
+    @Override
     public void setCurrentMode(CraftingMode mode) {
         this.currentMode = mode;
         this.getHost().markForSave();
     }
 
+    @Override
     public void setStonecuttingRecipe(ResourceLocation stonecuttingRecipe) {
         this.stonecuttingRecipe = stonecuttingRecipe;
         this.getHost().markForSave();

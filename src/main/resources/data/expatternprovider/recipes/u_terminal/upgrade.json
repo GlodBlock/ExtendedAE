@@ -1,7 +1,20 @@
 {
-  "type": "ae2wtlib:upgrade",
-  "terminal": {
-    "item": "expatternprovider:wireless_ex_pat"
-  },
-  "terminalName": "ex_pattern_access"
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "ae2wtlib"
+        }
+      ],
+      "recipe": {
+        "type": "ae2wtlib:upgrade",
+        "terminal": {
+          "item": "expatternprovider:wireless_ex_pat"
+        },
+        "terminalName": "ex_pattern_access"
+      }
+    }
+  ]
 }

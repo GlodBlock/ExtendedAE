@@ -7,6 +7,7 @@ categories:
 - extended devices
 item_ids:
 - expatternprovider:ex_crafting_terminal
+- expatternprovider:wireless_ex_ct
 ---
 
 # ME Extended Crafting Terminal
@@ -18,6 +19,7 @@ The ME Extended Crafting Terminal adds Stonecutter, Smithing Table, and Anvil fe
 <ImportStructure src="../structure/cable_ex_crafting_terminal.snbt"></ImportStructure>
 <IsometricCamera yaw="180"></IsometricCamera>
 </GameScene>
+<ItemImage id="expatternprovider:wireless_ex_ct" scale="4"></ItemImage>
 </Row>
 
 ## Extra recipes

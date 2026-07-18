@@ -1,32 +1,31 @@
 package com.glodblock.github.extendedae.container;
 
+import appeng.api.networking.IGridNode;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.menu.SlotSemantics;
 import appeng.menu.ToolboxMenu;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.slot.RestrictedInputSlot;
-import com.glodblock.github.extendedae.common.me.itemhost.HostWirelessExPAT;
+import com.glodblock.github.extendedae.common.me.itemhost.HostWirelessExCT;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
-public class ContainerWirelessExPAT extends ContainerExPatternTerminal {
+public class ContainerWirelessExCT extends ContainerExCraftingTerminal {
 
-    public static final MenuType<ContainerWirelessExPAT> TYPE = MenuTypeBuilder
-            .create(ContainerWirelessExPAT::new, HostWirelessExPAT.class)
-            .build("wireless_ex_pat");
+    public static final MenuType<ContainerWirelessExCT> TYPE = MenuTypeBuilder
+            .create(ContainerWirelessExCT::new, HostWirelessExCT.class)
+            .build("wireless_ex_ct");
 
-    protected final HostWirelessExPAT terminal;
     private final ToolboxMenu toolbox;
 
-    public ContainerWirelessExPAT(int id, Inventory ip, HostWirelessExPAT host) {
-        super(TYPE, id, ip, host, true);
-        this.terminal = host;
+    public ContainerWirelessExCT(int id, Inventory playerInventory, HostWirelessExCT host) {
+        super(TYPE, id, playerInventory, host, true);
         this.toolbox = new ToolboxMenu(this);
         this.setupUpgrades();
     }
 
     protected void setupUpgrades() {
-        var upgrades = this.terminal.getUpgrades();
+        var upgrades = this.getHost().getUpgrades();
         for (int i = 0; i < upgrades.size(); i++) {
             var slot = new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.UPGRADES, upgrades, i);
             slot.setNotDraggable();
@@ -40,8 +39,13 @@ public class ContainerWirelessExPAT extends ContainerExPatternTerminal {
         super.broadcastChanges();
     }
 
+    @Override
+    public IGridNode getNetworkNode() {
+        return ((HostWirelessExCT) this.getHost()).getActionableNode();
+    }
+
     public final IUpgradeInventory getUpgrades() {
-        return this.terminal.getUpgrades();
+        return this.getHost().getUpgrades();
     }
 
     public ToolboxMenu getToolbox() {

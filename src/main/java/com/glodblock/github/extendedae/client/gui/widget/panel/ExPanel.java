@@ -12,14 +12,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class ExPanel implements ICompositeWidget {
-    protected final GuiExCraftingTerminal screen;
+    protected final GuiExCraftingTerminal<? extends ContainerExCraftingTerminal> screen;
     protected final ContainerExCraftingTerminal menu;
     protected final WidgetContainer widgets;
     protected boolean visible = false;
     protected int x;
     protected int y;
 
-    public ExPanel(GuiExCraftingTerminal screen, WidgetContainer widgets) {
+    public ExPanel(GuiExCraftingTerminal<? extends ContainerExCraftingTerminal> screen, WidgetContainer widgets) {
         this.screen = screen;
         this.menu = screen.getMenu();
         this.widgets = widgets;
@@ -55,10 +55,6 @@ public abstract class ExPanel implements ICompositeWidget {
 
     protected void sendPacket(String id, Object... paras) {
         EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket(id, paras));
-    }
-
-    protected void sendPacket(String id) {
-        EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket(id));
     }
 
 }

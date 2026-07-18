@@ -23,6 +23,7 @@ import com.glodblock.github.extendedae.client.gui.widget.OutputResultSlot;
 import com.glodblock.github.extendedae.common.parts.PartExCraftingTerminal;
 import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.extendedae.util.EPPTags;
+import com.glodblock.github.extendedae.util.helper.ExtendedCraftingTerminal;
 import com.glodblock.github.glodium.network.packet.SGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import com.glodblock.github.glodium.network.packet.sync.Paras;
@@ -67,7 +68,7 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
     private static List<Fluid> XP_FLUIDS = new ArrayList<>();
 
     private final Map<String, Consumer<Paras>> actions = createHolder();
-    private final PartExCraftingTerminal host;
+    private final ExtendedCraftingTerminal host;
     private final CraftingMatrixSlot[] craftingInputSlots = new CraftingMatrixSlot[9];
     private final CraftingMatrixSlot[] stonecutterInputSlots = new CraftingMatrixSlot[1];
     private final CraftingMatrixSlot[] smithingInputSlots = new CraftingMatrixSlot[3];
@@ -93,8 +94,12 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
     @GuiSync(4)
     public StonecutterRecipeList stonecutterRecipes = new StonecutterRecipeList();
 
-    public ContainerExCraftingTerminal(int id, Inventory playerInventory, PartExCraftingTerminal host) {
-        super(TYPE, id, playerInventory, host, true);
+    public ContainerExCraftingTerminal(int id, Inventory playerInventory, ExtendedCraftingTerminal host) {
+        this(TYPE, id, playerInventory, host, true);
+    }
+
+    public ContainerExCraftingTerminal(MenuType<?> menuType, int id, Inventory playerInventory, ExtendedCraftingTerminal host, boolean bindInventory) {
+        super(menuType, id, playerInventory, host, bindInventory);
         this.host = host;
         this.currentMode = host.getCurrentMode();
         this.selectedStonecutterRecipe = host.getStonecuttingRecipe();
@@ -446,11 +451,14 @@ public class ContainerExCraftingTerminal extends MEStorageMenu implements IMenuC
 
     // Return the needed level - fluid experience
     private int consumeLiquidXp(int levelsRequired, boolean simulate) {
-        var grid = this.host.getMainNode().getGrid();
+        var node = this.host.getActionableNode();
+        if (node == null) {
+            return levelsRequired;
+        }
+        var grid = node.getGrid();
         if (grid == null) {
             return levelsRequired;
         }
-
         var storage = grid.getStorageService();
         var inventory = storage.getInventory();
         var source = this.getActionSource();

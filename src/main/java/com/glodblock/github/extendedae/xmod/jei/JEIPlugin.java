@@ -12,6 +12,7 @@ import com.glodblock.github.extendedae.client.gui.GuiExInscriber;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.container.ContainerExCraftingTerminal;
+import com.glodblock.github.extendedae.container.ContainerWirelessExCT;
 import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
@@ -71,6 +72,7 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        registration.addUniversalRecipeTransferHandler(new ExCraftingTransferHandler<>(ContainerWirelessExCT.TYPE, ContainerWirelessExCT.class, registration.getTransferHelper()));
         registration.addUniversalRecipeTransferHandler(new ExCraftingTransferHandler<>(ContainerExCraftingTerminal.TYPE, ContainerExCraftingTerminal.class, registration.getTransferHelper()));
     }
 

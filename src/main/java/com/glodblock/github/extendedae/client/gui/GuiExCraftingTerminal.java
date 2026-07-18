@@ -43,14 +43,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class GuiExCraftingTerminal extends MEStorageScreen<ContainerExCraftingTerminal> implements IActionHolder {
+public class GuiExCraftingTerminal<T extends ContainerExCraftingTerminal> extends MEStorageScreen<T> implements IActionHolder {
 
     private final Map<CraftingMode, ExPanel> modePanels = new EnumMap<>(CraftingMode.class);
     private final Map<CraftingMode, TabButton> modeTabButtons = new EnumMap<>(CraftingMode.class);
     private final Map<String, Consumer<Paras>> actions = createHolder();
     private final CacheHolder<Boolean> lackXP = CacheHolder.empty();
 
-    public GuiExCraftingTerminal(ContainerExCraftingTerminal menu, Inventory playerInventory, Component title, ScreenStyle style) {
+    public GuiExCraftingTerminal(T menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         for (var mode : CraftingMode.values()) {
             var panel = switch (mode) {

@@ -91,7 +91,8 @@ public class ClientRegistryHandler {
         InitScreens.register(ContainerExInterface.TYPE_OVERSIZE, GuiExInterface::new, "/screens/oversize_interface.json");
         InitScreens.register(ContainerAssemblerMatrix.TYPE, GuiAssemblerMatrix::new, "/screens/assembler_matrix.json");
         InitScreens.register(ContainerCircuitCutter.TYPE, GuiCircuitCutter::new, "/screens/circuit_cutter.json");
-        InitScreens.register(ContainerExCraftingTerminal.TYPE, GuiExCraftingTerminal::new, "/screens/ex_crafting_terminal.json");
+        InitScreens.<ContainerExCraftingTerminal, GuiExCraftingTerminal<ContainerExCraftingTerminal>>register(ContainerExCraftingTerminal.TYPE, GuiExCraftingTerminal::new, "/screens/ex_crafting_terminal.json");
+        InitScreens.register(ContainerWirelessExCT.TYPE, GuiWirelessExCT::new, "/screens/ex_crafting_terminal.json");
         MenuScreens.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         MenuScreens.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         MenuScreens.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);

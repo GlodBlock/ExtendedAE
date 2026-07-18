@@ -16,7 +16,7 @@ public class SmithingPanel extends ExPanel {
 
     private static final Blitter BG = Blitter.texture("guis/ex_crafting_modes.png").src(128, 70, 126, 68);
 
-    public SmithingPanel(GuiExCraftingTerminal screen, WidgetContainer widgets) {
+    public SmithingPanel(GuiExCraftingTerminal<?> screen, WidgetContainer widgets) {
         super(screen, widgets);
     }
 

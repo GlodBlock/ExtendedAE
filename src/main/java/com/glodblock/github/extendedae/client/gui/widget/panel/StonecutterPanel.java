@@ -35,7 +35,7 @@ public class StonecutterPanel extends ExPanel {
     private static final int ROWS = 3;
     private final Scrollbar scrollbar;
 
-    public StonecutterPanel(GuiExCraftingTerminal screen, WidgetContainer widgets) {
+    public StonecutterPanel(GuiExCraftingTerminal<?> screen, WidgetContainer widgets) {
         super(screen, widgets);
         this.scrollbar = widgets.addScrollBar("stonecuttingScrollbar", Scrollbar.SMALL);
         this.scrollbar.setRange(0, 0, COLS);

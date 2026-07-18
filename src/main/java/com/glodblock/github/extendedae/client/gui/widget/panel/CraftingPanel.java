@@ -16,7 +16,7 @@ public class CraftingPanel extends ExPanel {
 
     private static final Blitter BG = Blitter.texture("guis/ex_crafting_modes.png").src(0, 0, 126, 68);
 
-    public CraftingPanel(GuiExCraftingTerminal screen, WidgetContainer widgets) {
+    public CraftingPanel(GuiExCraftingTerminal<?> screen, WidgetContainer widgets) {
         super(screen, widgets);
     }
 

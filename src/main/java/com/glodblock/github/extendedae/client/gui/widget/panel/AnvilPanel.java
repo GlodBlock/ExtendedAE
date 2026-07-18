@@ -21,7 +21,7 @@ public class AnvilPanel extends ExPanel {
 
     private final AETextField rename;
 
-    public AnvilPanel(GuiExCraftingTerminal screen, WidgetContainer widgets) {
+    public AnvilPanel(GuiExCraftingTerminal<?> screen, WidgetContainer widgets) {
         super(screen, widgets);
         this.rename = widgets.addTextField("rename_input");
         this.rename.setMaxLength(50);

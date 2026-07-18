@@ -57,6 +57,7 @@
   "item.expatternprovider.ex_emc_import_bus_part": "ME Extended Transmutation Import Bus",
   "item.expatternprovider.emc_io_bus_upgrade": "Transmutation Import/Export Bus Upgrade",
   "item.expatternprovider.ex_crafting_terminal": "ME Extended Crafting Terminal",
+  "item.expatternprovider.wireless_ex_ct": "Wireless Extended Crafting Terminal",
   "infinity.tooltip": "It is an infinity source.",
   "packaged_device.error.tooltip": "Invalid",
   "packaged_device.tooltip": "Device: %s",

@@ -62,6 +62,7 @@ import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
+import com.glodblock.github.extendedae.container.ContainerWirelessExCT;
 import com.glodblock.github.extendedae.container.ContainerWirelessExPAT;
 import com.glodblock.github.extendedae.container.ContainerWirelessHub;
 import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPattern;
@@ -154,6 +155,7 @@ public class EAERegistryHandler extends RegistryHandler {
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("assembler_matrix"), ContainerAssemblerMatrix.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("circuit_cutter"), ContainerCircuitCutter.TYPE);
         ForgeRegistries.MENU_TYPES.register(AppEng.makeId("ex_crafting_terminal"), ContainerExCraftingTerminal.TYPE);
+        ForgeRegistries.MENU_TYPES.register(AppEng.makeId("wireless_ex_ct"), ContainerWirelessExCT.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         ForgeRegistries.MENU_TYPES.register(ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -247,6 +249,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CRAFTING_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 1);
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.PRECISE_EXPORT_BUS, 4);
         Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_EX_PAT, 2, GuiText.WirelessTerminals.getTranslationKey());
+        Upgrades.add(AEItems.ENERGY_CARD, EPPItemAndBlock.WIRELESS_EX_CT, 2, GuiText.WirelessTerminals.getTranslationKey());
         Upgrades.add(AEItems.SPEED_CARD, EPPItemAndBlock.EX_IO_PORT, 5);
         Upgrades.add(AEItems.REDSTONE_CARD, EPPItemAndBlock.EX_IO_PORT, 1);
         Upgrades.add(AEItems.CAPACITY_CARD, EPPItemAndBlock.PRECISE_STORAGE_BUS, 5);
@@ -287,8 +290,10 @@ public class EAERegistryHandler extends RegistryHandler {
 
     private void registerRandomAPI() {
         GridLinkables.register(EPPItemAndBlock.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
+        GridLinkables.register(EPPItemAndBlock.WIRELESS_EX_CT, WirelessTerminalItem.LINKABLE_HANDLER);
         if (!ModList.get().isLoaded("ae2wtlib")) {
             HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_CT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_CT.openFromInventory(player, i)), WIRELESS_TERMINAL);
         } else {
             HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
         }

@@ -610,6 +610,17 @@ public class EPPRecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(AEParts.CRAFTING_TERMINAL))
                 .save(c, ExtendedAE.id("ex_crafting_terminal"));
 
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, EPPItemAndBlock.WIRELESS_EX_CT)
+                .pattern("A")
+                .pattern("B")
+                .pattern("C")
+                .define('A', AEItems.WIRELESS_RECEIVER)
+                .define('B', EPPItemAndBlock.EX_CRAFTING_TERMINAL)
+                .define('C', AEBlocks.DENSE_ENERGY_CELL)
+                .unlockedBy(C, has(EPPItemAndBlock.EX_CRAFTING_TERMINAL))
+                .save(c, ExtendedAE.id("wireless_ex_ct"));
+
         if (ModList.get().isLoaded("appliede")) {
             var interfaceTag = TagKey.create(Registries.ITEM, new ResourceLocation("appliede", "emc_interface"));
             // Extended EMC Interface
