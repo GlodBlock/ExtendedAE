@@ -1,6 +1,6 @@
 package com.glodblock.github.extendedae.config;
 
-import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AEKeyType;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.util.FCUtil;
 import com.google.common.collect.Lists;
@@ -107,8 +107,8 @@ public class EPPConfig {
     public static boolean debugMode;
     public static int wirelessMaxQueueSize;
 
-    public static int getOversizeMultiplier(AEKey key) {
-        return customOversizeMultiplier.getOrDefault(key.getType().getId(), oversizeMultiplier);
+    public static int getOversizeMultiplier(AEKeyType type) {
+        return customOversizeMultiplier.getOrDefault(type.getId(), oversizeMultiplier);
     }
 
     @SubscribeEvent

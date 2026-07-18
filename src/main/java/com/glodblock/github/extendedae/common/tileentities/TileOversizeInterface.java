@@ -1,14 +1,11 @@
 package com.glodblock.github.extendedae.common.tileentities;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.storage.AEKeyFilter;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocator;
-import appeng.util.ConfigInventory;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
-import com.glodblock.github.extendedae.config.EPPConfig;
+import com.glodblock.github.extendedae.common.inventory.OversizeConfigInv;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -16,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 public class TileOversizeInterface extends TileExInterface {
 
@@ -42,23 +38,6 @@ public class TileOversizeInterface extends TileExInterface {
     @Override
     public ItemStack getMainMenuIcon() {
         return new ItemStack(EPPItemAndBlock.OVERSIZE_INTERFACE);
-    }
-
-    private static class OversizeConfigInv extends ConfigInventory {
-
-        private OversizeConfigInv(@Nullable AEKeyFilter filter, GenericStackInv.Mode mode, int size, @Nullable Runnable listener, boolean allowOverstacking) {
-            super(filter, mode, size, listener, allowOverstacking);
-        }
-
-        @Override
-        public long getMaxAmount(AEKey key) {
-            try {
-                return Math.multiplyExact(super.getMaxAmount(key), EPPConfig.getOversizeMultiplier(key));
-            } catch (Exception e) {
-                return Long.MAX_VALUE;
-            }
-        }
-
     }
 
 }
