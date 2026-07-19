@@ -1,6 +1,6 @@
 package com.glodblock.github.extendedae.config;
 
-import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AEKeyType;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
@@ -118,8 +118,8 @@ public class EAEConfig {
         }
     }
 
-    public static int getOversizeMultiplier(AEKey key) {
-        return customOversizeMultiplier.getOrDefault(key.getType().getId(), oversizeMultiplier);
+    public static int getOversizeMultiplier(AEKeyType type) {
+        return customOversizeMultiplier.getOrDefault(type.getId(), oversizeMultiplier);
     }
 
     @SubscribeEvent
