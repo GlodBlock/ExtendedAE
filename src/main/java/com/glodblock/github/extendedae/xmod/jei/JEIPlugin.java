@@ -63,32 +63,39 @@ public class JEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration registry) {
-        var helpers = registry.getJeiHelpers().getGuiHelper();
-        registry.addRecipeCategories(new CrystalAssemblerCategory(helpers));
-        registry.addRecipeCategories(new CircuitCutterCategory(helpers));
-        registry.addRecipeCategories(new CrystalFixerCategory(helpers));
+    public void registerCategories(@NotNull IRecipeCategoryRegistration registry) {
+        if (this.loadCata()) {
+            var helpers = registry.getJeiHelpers().getGuiHelper();
+            registry.addRecipeCategories(new CrystalAssemblerCategory(helpers));
+            registry.addRecipeCategories(new CircuitCutterCategory(helpers));
+            registry.addRecipeCategories(new CrystalFixerCategory(helpers));
+        }
     }
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registry) {
-        assert Minecraft.getInstance().level != null;
-        var manager = Minecraft.getInstance().level.getRecipeManager();
-        registry.addRecipes(CrystalAssemblerCategory.RECIPE_TYPE, this.getRecipes(CrystalAssemblerRecipe.TYPE, manager));
-        registry.addRecipes(CircuitCutterCategory.RECIPE_TYPE, this.getRecipes(CircuitCutterRecipe.TYPE, manager));
-        registry.addRecipes(CrystalFixerCategory.RECIPE_TYPE, this.getRecipes(CrystalFixerRecipe.TYPE, manager));
-        registry.addIngredientInfo(EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
-        registry.addIngredientInfo(EAESingletons.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));
+        if (this.loadCata()) {
+            assert Minecraft.getInstance().level != null;
+            var manager = Minecraft.getInstance().level.getRecipeManager();
+            registry.addRecipes(CrystalAssemblerCategory.RECIPE_TYPE, this.getRecipes(CrystalAssemblerRecipe.TYPE, manager));
+            registry.addRecipes(CircuitCutterCategory.RECIPE_TYPE, this.getRecipes(CircuitCutterRecipe.TYPE, manager));
+            registry.addRecipes(CrystalFixerCategory.RECIPE_TYPE, this.getRecipes(CrystalFixerRecipe.TYPE, manager));
+            registry.addIngredientInfo(EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
+            registry.addIngredientInfo(EAESingletons.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));
+
+        }
     }
 
     @Override
     public void registerRecipeCatalysts(@NotNull IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(EAESingletons.CRYSTAL_ASSEMBLER, CrystalAssemblerCategory.RECIPE_TYPE);
-        registry.addRecipeCatalyst(EAESingletons.CIRCUIT_CUTTER, CircuitCutterCategory.RECIPE_TYPE);
-        registry.addRecipeCatalyst(EAESingletons.CRYSTAL_FIXER, CrystalFixerCategory.RECIPE_TYPE);
-        if (GlodUtil.checkMod(ModConstants.AE_JEI)) {
-            registry.addRecipeCatalyst(EAESingletons.EX_CHARGER, ChargerCategory.RECIPE_TYPE);
-            registry.addRecipeCatalyst(EAESingletons.EX_INSCRIBER, InscriberRecipeCategory.RECIPE_TYPE);
+        if (this.loadCata()) {
+            registry.addRecipeCatalyst(EAESingletons.CRYSTAL_ASSEMBLER, CrystalAssemblerCategory.RECIPE_TYPE);
+            registry.addRecipeCatalyst(EAESingletons.CIRCUIT_CUTTER, CircuitCutterCategory.RECIPE_TYPE);
+            registry.addRecipeCatalyst(EAESingletons.CRYSTAL_FIXER, CrystalFixerCategory.RECIPE_TYPE);
+            if (GlodUtil.checkMod(ModConstants.AE_JEI)) {
+                registry.addRecipeCatalyst(EAESingletons.EX_CHARGER, ChargerCategory.RECIPE_TYPE);
+                registry.addRecipeCatalyst(EAESingletons.EX_INSCRIBER, InscriberRecipeCategory.RECIPE_TYPE);
+            }
         }
     }
 
@@ -153,6 +160,15 @@ public class JEIPlugin implements IModPlugin {
 
     private <I extends RecipeInput, T extends Recipe<I>> List<RecipeHolder<T>> getRecipes(RecipeType<T> type, RecipeManager manager) {
         return manager.getAllRecipesFor(type);
+    }
+
+    private boolean loadCata() {
+        try {
+            Class.forName("dev.ftb.mods.ftbjeiextras.extendedae.ExtendedAePlugin");
+            return false;
+        } catch (Throwable ex) {
+            return true;
+        }
     }
 
 }
