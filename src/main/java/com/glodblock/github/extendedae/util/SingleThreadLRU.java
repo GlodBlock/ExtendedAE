@@ -33,7 +33,7 @@ public class SingleThreadLRU<K, V> {
     }
 
     public void put(K key, V value) {
-        if (!this.backingMap.containsKey(key) && this.backingMap.size() >= this.size) {
+        if (this.backingMap.size() >= this.size && !this.backingMap.containsKey(key)) {
             evictEldest();
         }
         this.backingMap.put(key, value);

@@ -68,6 +68,13 @@ repositories {
     maven {
         name 'cursemaven'
         url = "https://www.cursemaven.com"
+        authentication {
+            header(HttpHeaderAuthentication)
+        }
+        credentials(HttpHeaderCredentials) {
+            name = "x-api-key"
+            value = System.getenv('CF_API_KEY')
+        }
     }
     maven {
         name = "Modmaven"
