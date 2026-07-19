@@ -15,5 +15,5 @@ item_ids:
 <ItemImage id="extendedae:entro_shard" scale="4"></ItemImage>
 </Row>
 
-You will get Entro Shard if you break [Entro bud](./entro_budding.md) when it isn't fully grown. 8 Entro Shards can be crafted back to
+You will get an Entro Shard if you break an [Entro Bud](./entro_budding.md) when it is not fully grown. Eight Entro Shards can be crafted back into
 <ItemLink id="extendedae:entro_crystal" />.

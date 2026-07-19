@@ -15,7 +15,7 @@ item_ids:
   <ImportStructure src="../structure/cable_smart_annihilation_plane.snbt"></ImportStructure>
 </GameScene>
 
-ME Smart Annihilation Plane is a <ItemLink id="ae2:annihilation_plane" /> that can break blocks or absorb items by its config inventory.
+ME Smart Annihilation Plane is a <ItemLink id="ae2:annihilation_plane" /> that can break blocks or absorb items according to its configuration inventory.
 
-You don't need to set up a subnet for it. It works like an <ItemLink id="ae2:import_bus" /> but breaks block instead of
-import it from a chest.
+You don't need to set up a subnet for it. It works like an <ItemLink id="ae2:import_bus" /> but breaks blocks instead of
+importing them from a chest.

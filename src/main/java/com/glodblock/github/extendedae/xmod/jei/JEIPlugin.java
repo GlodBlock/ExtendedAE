@@ -82,7 +82,6 @@ public class JEIPlugin implements IModPlugin {
             registry.addRecipes(CrystalFixerCategory.RECIPE_TYPE, this.getRecipes(CrystalFixerRecipe.TYPE, manager));
             registry.addIngredientInfo(EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
             registry.addIngredientInfo(EAESingletons.ENTRO_SEED, Component.translatable("emi.extendedae.desc.entro_seed"));
-
         }
     }
 

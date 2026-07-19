@@ -15,11 +15,11 @@ item_ids:
   <ImportStructure src="../structure/cable_tag_storage_bus.snbt"></ImportStructure>
 </GameScene>
 
-ME Tag Storage Bus is a <ItemLink id="ae2:storage_bus" /> that can be filtered by item or fluid tags and supports some basic logic operator.
+ME Tag Storage Bus is a <ItemLink id="ae2:storage_bus" /> that can be filtered by item or fluid tags and supports some basic logical operators.
 
 Here are some examples:
 
-- Only accept raw ore
+- Accept only raw ore
 
 c:raw_materials/*
 

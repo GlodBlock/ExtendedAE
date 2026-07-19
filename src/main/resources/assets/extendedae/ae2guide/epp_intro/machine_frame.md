@@ -15,5 +15,5 @@ item_ids:
 <BlockImage id="extendedae:machine_frame" scale="8"></BlockImage>
 </Row>
 
-After gathering enough <ItemLink id="extendedae:entro_crystal" />, you finally can craft the first Extended Machine Frame.
-These frames are the foundation of ExtendedAE, and most block form machines in ExtendedAE will need them.
+After gathering enough <ItemLink id="extendedae:entro_crystal" />, you can finally craft your first Extended Machine Frame.
+These frames are the foundation of ExtendedAE, and most block-form machines in ExtendedAE require them.

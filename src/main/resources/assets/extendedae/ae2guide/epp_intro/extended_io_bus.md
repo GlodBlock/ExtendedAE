@@ -21,8 +21,8 @@ item_ids:
 </GameScene>
 </Row>
 
-ME Extended Import/Export Bus works faster than the normal <ItemLink id="ae2:import_bus" />/<ItemLink id="ae2:export_bus" />
-(Default speed multiplier is 8. It is configurable).
+ME Extended Import/Export Buses work faster than the normal <ItemLink id="ae2:import_bus" /> and <ItemLink id="ae2:export_bus" />
+(the default speed multiplier is 8; it is configurable).
 
-They also have more upgrade slots compared with the normal ones.
+They also have more upgrade slots than the normal ones.
 

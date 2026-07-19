@@ -19,4 +19,4 @@ item_ids:
 <ItemImage id="extendedae:concurrent_processor_print" scale="4"></ItemImage>
 </Row>
 
-Concurrent Processor is commonly used in multi-thread machines, so they can handle multiple works at the same time.
+Concurrent Processors are commonly used in multithreaded machines, allowing them to handle multiple tasks simultaneously.

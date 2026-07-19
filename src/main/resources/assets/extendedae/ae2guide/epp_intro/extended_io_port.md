@@ -15,6 +15,6 @@ item_ids:
 <BlockImage id="extendedae:ex_io_port" p:powered="true" scale="8"></BlockImage>
 </Row>
 
-ME Extended IO Port works 8x faster than the normal <ItemLink id="ae2:io_port" />.
+ME Extended IO Port operates eight times faster than the normal <ItemLink id="ae2:io_port" />.
 
-They also have more upgrade slots compared with the normal ones.
+It also has more upgrade slots than the normal one.

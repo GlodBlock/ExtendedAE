@@ -15,7 +15,7 @@ item_ids:
   <ImportStructure src="../structure/cable_active_formation_plane.snbt"></ImportStructure>
 </GameScene>
 
-ME Active Formation Plane is a <ItemLink id="ae2:formation_plane" /> that can place block or drop items actively.
+ME Active Formation Plane is a <ItemLink id="ae2:formation_plane" /> that can actively place blocks or drop items.
 
-You don't need to set up a subnet for it. It works like an <ItemLink id="ae2:export_bus" /> but place block instead of
-outputting it to a chest.
+You don't need to set up a subnet for it. It works like an <ItemLink id="ae2:export_bus" /> but places blocks instead of
+outputting them to a chest.

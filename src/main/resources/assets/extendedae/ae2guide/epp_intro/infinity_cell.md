@@ -12,12 +12,12 @@ item_ids:
 
 # ME Infinity Cell
 
-An easy water and cobblestone sink but in storage cell form.
+A simple water and cobblestone sink in storage-cell form.
 
 <Row>
 <ItemImage id="extendedae:infinity_water_cell" scale="4"></ItemImage>
 <ItemImage id="extendedae:infinity_cobblestone_cell" scale="4"></ItemImage>
 </Row>
 
-They hold 2.1 billion items/fluids, and you can extract infinity cobblestone/water from them or inject infinity 
-cobblestone/water into them.
+They hold 2.1 billion items/fluids, and you can extract an unlimited amount of cobblestone/water from them or insert an unlimited
+amount of cobblestone/water into them.

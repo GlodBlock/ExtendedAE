@@ -15,6 +15,6 @@ item_ids:
 <ItemImage id="extendedae:entro_ingot" scale="4"></ItemImage>
 </Row>
 
-*"Entro Crystal is too friable to use in machine frame, but we can fuse it with gold ingot to improve its ductility."*
+*"Entro Crystal is too friable to use in a machine frame, but we can fuse it with a gold ingot to improve its ductility."*
 
-It is used to craft <ItemLink id="extendedae:machine_frame" /> and other a few ExtendedAE stuffs.
+It is used to craft <ItemLink id="extendedae:machine_frame" /> and a few other ExtendedAE items.

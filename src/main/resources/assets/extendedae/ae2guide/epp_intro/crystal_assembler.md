@@ -15,8 +15,8 @@ item_ids:
 <BlockImage id="extendedae:crystal_assembler" scale="8"></BlockImage>
 </Row>
 
-Those extended devices are too complex for crafting table to craft, and you will need Crystal Assembler to craft most of them.
+Those extended devices are too complex to craft in a crafting table, so you will need a Crystal Assembler to craft most of them.
 
-**Notice: The screen face can't connect to network.**
+**Note: The face with the screen cannot connect to the network.**
 
-It also can perform certain in-world transformation recipes, like fluix transformation.
+It can also perform certain in-world transformation recipes, such as fluix transformation.

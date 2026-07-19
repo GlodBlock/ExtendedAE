@@ -15,8 +15,8 @@ item_ids:
 <BlockImage id="extendedae:circuit_cutter" scale="8"></BlockImage>
 </Row>
 
-Can't tolerate the slow speed of inscriber? Now we have the Circuit Slicer! They can slice material block into processor 
-[prints](ae2:items-blocks-machines/processors.md) directly, so they are 9x faster than inscriber at most time.
+Can't tolerate an Inscriber's slow speed? The Circuit Slicer can slice material blocks directly into processor
+[prints](ae2:items-blocks-machines/processors.md), making it up to nine times faster than an Inscriber.
 
-**Notice: The glass faces that don't have port can't connect to network.**
+**Note: Glass faces without a port cannot connect to the network.**
 

@@ -15,11 +15,11 @@ item_ids:
 <BlockImage id="extendedae:wireless_hub" scale="6"></BlockImage>
 </Row>
 
-ME Wireless Hub works exactly like <ItemLink id="extendedae:wireless_connect" />, but it can connect up to 8 hubs/connectors
+The ME Wireless Hub works exactly like <ItemLink id="extendedae:wireless_connect" />, but it can connect up to 8 hubs or connectors
 at the same time.
 
 ## Connection Configuration
 
-There are 8 ports in ME Wireless Hub. It'll find the available port automatically when you link it with <ItemLink id="extendedae:wireless_tool" />.
+The ME Wireless Hub has 8 ports. It automatically finds an available port when you link it using <ItemLink id="extendedae:wireless_tool" />.
 
-However, when all of its ports are occupied, you need to disconnect manually by clicking the 'X' button to set up new connections.
+However, when all of its ports are occupied, you need to disconnect an existing connection manually by clicking the 'X' button before setting up a new connection.

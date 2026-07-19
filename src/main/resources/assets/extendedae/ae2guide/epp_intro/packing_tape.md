@@ -12,7 +12,7 @@ item_ids:
 
 # ME Packing Tape
 
-ME Packing Tape can pack in-world ME Device into a Packaged Device item
+ME Packing Tape can pack an in-world ME Device into a Packaged Device item.
 
 <Row>
 <ItemImage id="extendedae:me_packing_tape" scale="4"></ItemImage>
@@ -21,10 +21,10 @@ ME Packing Tape can pack in-world ME Device into a Packaged Device item
 
 ## Packing
 
-Sneak + Mouse Right Click on ME Device with the tape, and you can get a package item from it. All settings and inventory of
-the device will be kept. It can be very useful when you are moving your ME setup.
+Sneak + right-click an ME Device with the tape to obtain a package item from it. All device settings and inventory will be
+retained. It can be very useful when you are moving your ME setup.
 
-Notice that ME Packing Tape only supports the devices on list, the device list is configurable.
+Note that ME Packing Tape supports only the devices on the list; the device list is configurable.
 
 ### Default List
 
@@ -42,5 +42,5 @@ Notice that ME Packing Tape only supports the devices on list, the device list i
 
 ## Unpacking
 
-Just right mouse click with the package item as if it is the device block or part, then the packaged device will be recovered
-from the package.
+Right-click with the package item as if it were the device block or part; the packaged device will be recovered from the
+package.
