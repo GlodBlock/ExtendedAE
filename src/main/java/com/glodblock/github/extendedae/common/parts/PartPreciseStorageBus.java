@@ -43,12 +43,6 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
         super(partItem);
     }
 
-    protected void onConfigurationChanged() {
-        if (getMainNode().isReady()) {
-            updateTarget(true);
-        }
-    }
-
     @Override
     protected int getUpgradeSlots() {
         return 5;
@@ -58,12 +52,6 @@ public class PartPreciseStorageBus extends PartSpecialStorageBus implements ICon
     public void onSettingChanged(IConfigManager manager, Setting<?> setting) {
         this.onConfigurationChanged();
         this.getHost().markForSave();
-    }
-
-    @Override
-    public void upgradesChanged() {
-        super.upgradesChanged();
-        this.onConfigurationChanged();
     }
 
     @Override

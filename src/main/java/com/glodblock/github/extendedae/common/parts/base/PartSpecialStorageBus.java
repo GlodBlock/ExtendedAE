@@ -48,12 +48,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -77,6 +77,14 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     protected ITickingMonitor monitor = null;
     protected IPartitionList filter = null;
 
+    private final ICapabilityInvalidationListener capabilityListener = () -> {
+        if (!PartAdjacentApi.isPartValid(this)) {
+            return false;
+        }
+        this.onCapabilityInvalidation();
+        return true;
+    };
+
     public PartSpecialStorageBus(IPartItem<?> partItem) {
         super(partItem);
         this.adjacentStorageAccessor = new PartAdjacentApi<>(this, AECapabilities.ME_STORAGE);
@@ -93,12 +101,32 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     }
 
     @Override
+    public void addToWorld() {
+        super.addToWorld();
+        if (getLevel() instanceof ServerLevel serverLevel) {
+            var targetPos = getBlockEntity().getBlockPos().relative(getSide());
+            serverLevel.registerCapabilityListener(targetPos, this.capabilityListener);
+        }
+    }
+
+    @Override
     protected final void onMainNodeStateChanged(IGridNodeListener.State reason) {
         var currentOnline = this.getMainNode().isOnline();
         if (this.wasOnline != currentOnline) {
             this.wasOnline = currentOnline;
             this.getHost().markForUpdate();
             remountStorage();
+        }
+    }
+
+    private void onCapabilityInvalidation() {
+        this.handler.setDelegate(NullInventory.of());
+        this.scheduleUpdate();
+    }
+
+    protected void onConfigurationChanged() {
+        if (getMainNode().isReady()) {
+            updateTarget(true);
         }
     }
 
@@ -115,7 +143,7 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     @Override
     public void upgradesChanged() {
         super.upgradesChanged();
-        this.forceUpdate();
+        this.onConfigurationChanged();
     }
 
     @Override
@@ -167,13 +195,9 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     @Override
     public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
         if (pos.relative(getSide()).equals(neighbor)) {
-            var te = level.getBlockEntity(neighbor);
-
-            if (te == null) {
-                // In case the TE was destroyed, we have to update the target handler immediately.
-                this.updateTarget(false);
-            } else {
-                this.scheduleUpdate();
+            // Tick again to update the monitor.
+            if (!isClientSide()) {
+                getMainNode().ifPresent((grid, node) -> grid.getTickManager().alertDevice(node));
             }
         }
     }
@@ -268,8 +292,7 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
 
         // Apply other settings.
         this.handler.setAccessRestriction(this.getConfigManager().getSetting(Settings.ACCESS));
-        this.handler.setWhitelist(isUpgradedWith(AEItems.INVERTER_CARD) ? IncludeExclude.BLACKLIST
-                : IncludeExclude.WHITELIST);
+        this.handler.setWhitelist(isUpgradedWith(AEItems.INVERTER_CARD) ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST);
 
         this.handler.setPartitionList(createFilter());
         this.handler.setVoidOverflow(this.isUpgradedWith(AEItems.VOID_CARD));
@@ -319,9 +342,7 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     }
 
     protected void invalidateOnExternalStorageChange() {
-        getMainNode().ifPresent((grid, node) -> {
-            grid.getTickManager().alertDevice(node);
-        });
+        getMainNode().ifPresent((grid, node) -> grid.getTickManager().alertDevice(node));
     }
 
     protected void checkStorageBusOnInterface() {
