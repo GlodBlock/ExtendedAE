@@ -15,7 +15,7 @@ item_ids:
 <BlockImage id="extendedae:circuit_cutter" scale="8"></BlockImage>
 </Row>
 
-¿No puedes tolerar la lenta velocidad del inscribidor? ¡Ahora tenemos el cortador de circuitos! Puede cortar bloques de material en
-[impresiones](ae2:items-blocks-machines/processors.md) directamente, por lo que es hasta 9 veces más rápido que el inscribidor.
+¿No puedes tolerar la lenta velocidad del prensador? ¡Ahora tenemos el cortador de circuitos! Puede cortar bloques de material en
+[impresiones](ae2:items-blocks-machines/processors.md) directamente, por lo que es hasta 9 veces más rápido que el prensador.
 
 **Aviso: Las caras de cristal que no tienen puerto no pueden conectarse a la red.**
