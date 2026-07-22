@@ -25,7 +25,7 @@ item_ids:
 
 Son la fuente de <ItemLink id="extendedae:entro_crystal" /> y puedes obtener brotadores de fluix entroizados inyectando <ItemLink id="extendedae:entro_seed" /> en <ItemLink id="ae2:fluix_block" />.
 
-El mecanismo de crecimiento de los racimos de entro es similar al del [Cuarzo certus](ae2:items-blocks-machines/budding_certus.md). Sin embargo, el progreso
+El mecanismo de crecimiento de los brotes de entro es similar al del [Cuarzo certus](ae2:items-blocks-machines/budding_certus.md). Sin embargo, el progreso
 de degradación de los brotadores de fluix entroizado es inevitable, y finalmente se convertirá en <ItemLink id="ae2:quartz_block" />.
 Teóricamente, puedes obtener ~10 de <ItemLink id="extendedae:entro_crystal" /> de un fluix completamente entroizado sin el encantamiento de fortuna.
 

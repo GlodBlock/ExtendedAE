@@ -15,7 +15,7 @@ item_ids:
   <ImportStructure src="../structure/cable_threshold_level_emitter.snbt"></ImportStructure>
 </GameScene>
 
-Funciona como un cerrojo de reinicio-establecimiento. Apaga la señal de redstone cuando la cantidad de un objeto en
+Funciona como un interruptor con memoria. Apaga la señal de redstone cuando la cantidad de un objeto en
 la red es menor que el umbral inferior y se enciende cuando la cantidad es mayor que el umbral superior.
 
 Por ejemplo, dado que el umbral inferior se establece en 100 y el umbral superior se establece en 150.

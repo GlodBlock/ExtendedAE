@@ -15,7 +15,7 @@ item_ids:
 
 ¡La envasadora ME es una máquina que "envasa" cosas, incluyendo fluidos, gas del Mekanism, maná del Botania e incluso energía!
 
-La primera ranura es para lo que se va a llenar y la segunda ranura es para con qué se va a llenar.
+La primera ranura es para el material de relleno (con qué se llena), y la segunda ranura es para el objeto que se va a llenar.
 
 Necesita energía para funcionar y cada operación cuesta 80 AE.
 
@@ -48,11 +48,11 @@ Llenar el cubo de agua:
 
 ![P1](../pic/fill_water.png)
 
-Tableta de energía de poder (Necesita Applied Flux instalado):
+Cargar la tableta de energía (requiere Applied Flux):
 
 ![P1](../pic/fill_energy.png)
 
 
-## Vaciado
+## Desenvasando
 
 La envasadora ME también puede vaciar cosas de un contenedor en modo vacío. Necesitas cambiar las entradas y salidas en el patrón.

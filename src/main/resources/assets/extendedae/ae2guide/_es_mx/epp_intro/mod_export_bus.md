@@ -15,8 +15,8 @@ item_ids:
   <ImportStructure src="../structure/cable_mod_export_bus.snbt"></ImportStructure>
 </GameScene>
 
-El bus de exportación ME de mods es un <ItemLink id="ae2:export_bus" /> que se puede filtrar por nombre de mod o id de mod.
+El bus de exportación ME de mods es un <ItemLink id="ae2:export_bus" /> que se puede filtrar por nombre de mod o ID de mod.
 
-Usa coma para separar varios ids de mods en caso de que quieras filtrar varios mods.
+Usa comas para separar varios ID de mods en caso de que quieras filtrar varios mods.
 
 ![PIC](../pic/mod_bus_name2.png)

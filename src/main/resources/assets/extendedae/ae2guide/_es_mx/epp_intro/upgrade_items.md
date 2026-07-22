@@ -27,7 +27,7 @@ Estas mejoras te permiten reemplazar dispositivos ME normales con su versión ex
 <ItemImage id="extendedae:wireless_connector_upgrade" scale="4"></ItemImage>
 </Row>
 
-Haz clic derecho mientras agachas en estos dispositivos, se convertirán en su versión extendida. Todos los ajustes e inventario 
+Haz clic derecho agachándote en estos dispositivos, se convertirán en su versión extendida. Todos los ajustes e inventario 
 del dispositivo se mantendrán.
 
 <GameScene zoom="6" background="transparent">
