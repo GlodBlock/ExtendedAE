@@ -49,7 +49,11 @@ public class WirelessConnect implements IActionHost {
         }
     }
 
-    public void updateStatus() {
+    /**
+     * @return false if the update could not complete because an AE2 grid node
+     *         is not available yet and should be retried next tick.
+     */
+    public boolean updateStatus() {
         final long f = this.host.getFrequency();
         if (this.thisSide != f && this.thisSide != -f) {
             if (f != 0) {
@@ -75,6 +79,7 @@ public class WirelessConnect implements IActionHost {
 
         this.shutdown = false;
         this.dis = 0;
+        boolean completed = true;
 
         if (myOtherSide instanceof WirelessConnect sideB) {
             var sideA = this;
@@ -82,28 +87,35 @@ public class WirelessConnect implements IActionHost {
             if (sideA.isActive() && sideB.isActive()
                     && this.dis <= EPPConfig.INSTANCE.wirelessConnectorMaxRange
                     && (sideA.host.getWorld() == sideB.host.getWorld())) {
-                if (this.connection != null && this.connection.getConnection() != null) {
-                    final IGridNode a = this.connection.getConnection().a();
-                    final IGridNode b = this.connection.getConnection().b();
-                    final IGridNode sa = sideA.getNode();
-                    final IGridNode sb = sideB.getNode();
-                    if ((a == sa || b == sa) && (a == sb || b == sb)) {
-                        return;
+                final IGridNode nodeA = sideA.getNode();
+                final IGridNode nodeB = sideB.getNode();
+                if (nodeA == null || nodeB == null) {
+                    // AE2 creates grid nodes lazily, so they may not exist yet during startup
+                    this.shutdown = true;
+                    completed = false;
+                } else {
+                    if (this.connection != null && this.connection.getConnection() != null) {
+                        final IGridNode a = this.connection.getConnection().a();
+                        final IGridNode b = this.connection.getConnection().b();
+                        if ((a == nodeA || b == nodeA) && (a == nodeB || b == nodeB)) {
+                            return true;
+                        }
                     }
-                }
 
-                try {
-                    if (sideA.connection != null && sideA.connection.getConnection() != null) {
-                        sideA.connection.getConnection().destroy();
-                        sideA.connection = new ConnectionWrapper(null);
+                    try {
+                        if (sideA.connection != null && sideA.connection.getConnection() != null) {
+                            sideA.connection.getConnection().destroy();
+                            sideA.connection = new ConnectionWrapper(null);
+                        }
+                        if (sideB.connection != null && sideB.connection.getConnection() != null) {
+                            sideB.connection.getConnection().destroy();
+                            sideB.connection = new ConnectionWrapper(null);
+                        }
+                        sideA.connection = sideB.connection = new ConnectionWrapper(GridHelper.createGridConnection(nodeA, nodeB));
+                    } catch (FailedConnectionException e) {
+                        this.shutdown = true;
+                        EPP.LOGGER.debug("Failed to connect wireless connectors", e);
                     }
-                    if (sideB.connection != null && sideB.connection.getConnection() != null) {
-                        sideB.connection.getConnection().destroy();
-                        sideB.connection = new ConnectionWrapper(null);
-                    }
-                    sideA.connection = sideB.connection = new ConnectionWrapper(GridHelper.createGridConnection(sideA.getNode(), sideB.getNode()));
-                } catch (FailedConnectionException e) {
-                    EPP.LOGGER.debug(e.getMessage());
                 }
             } else {
                 this.shutdown = true;
@@ -117,6 +129,7 @@ public class WirelessConnect implements IActionHost {
             this.connection.setConnection(null);
             this.connection = new ConnectionWrapper(null);
         }
+        return completed;
     }
 
     public double getDistance() {
@@ -124,7 +137,7 @@ public class WirelessConnect implements IActionHost {
     }
 
     public boolean isConnected() {
-        return !this.shutdown;
+        return !this.shutdown && this.connection != null && this.connection.getConnection() != null;
     }
 
     @SuppressWarnings("deprecation")
