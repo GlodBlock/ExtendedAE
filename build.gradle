@@ -97,18 +97,24 @@ repositories {
         name = 'KubeJS'
         url = "https://maven.latvian.dev/releases/"
     }
+    maven {
+        url = uri("https://modmaven.dev/")
+    }
+    maven {
+        url = "https://maven.shedaniel.me/"
+    }
 }
 
 dependencies {
     implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
     implementation "org.appliedenergistics:appliedenergistics2:26.1.8-alpha"
     implementation "org.appliedenergistics:guideme:26.1.10-alpha"
-    //jarJar(implementation ("de.mari_023:ae2wtlib_api:19.2.0") { transitive = false })
-    //compileOnly "curse.maven:applied-flux-965012:5614830"
+    jarJar(implementation ("de.mari_023:ae2wtlib_api:26.1.0-beta") { transitive = false })
+    compileOnly "curse.maven:applied-flux-965012:8246560"
     //compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     //compileOnly "curse.maven:mega-cells-622112:6005043"
     compileOnly "curse.maven:jade-324717:8068368"
-    //compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:26.1.819"
     //compileOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     //compileOnly "curse.maven:applied-mekanistics-574300:5978711"
     compileOnly "curse.maven:kubejs-238086:8235730"
@@ -119,8 +125,8 @@ dependencies {
     //compileOnly "curse.maven:appliede-1009940:6500056"
     //compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
-    //runtimeOnly "curse.maven:applied-flux-965012:5614830"
-    //runtimeOnly ("de.mari_023:ae2wtlib:19.2.0") { transitive = false }
+    runtimeOnly "curse.maven:applied-flux-965012:8246560"
+    runtimeOnly ("de.mari_023:ae2wtlib:26.1.0-beta") { transitive = false }
     runtimeOnly "curse.maven:jade-324717:8068368"
     //runtimeOnly "curse.maven:mega-cells-622112:6005043"
     //runtimeOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
@@ -132,9 +138,9 @@ dependencies {
             //runtimeOnly "dev.emi:emi-neoforge:1.1.10+1.21"
             break
         case "rei":
-            //runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
-            //runtimeOnly "dev.architectury:architectury-neoforge:13.0.1"
-            //runtimeOnly "curse.maven:cloth-config-348521:5424576"
+            runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:26.1.819"
+            runtimeOnly "dev.architectury:architectury-neoforge:20.0.10"
+            runtimeOnly "curse.maven:cloth-config-348521:7817583"
             break
         case "jei":
             runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
