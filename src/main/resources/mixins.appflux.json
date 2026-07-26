@@ -5,6 +5,7 @@
   "plugin": "com.glodblock.github.appflux.mixins.MixinConfig",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "MixinChargerBlockEntity",
     "MixinCreativeEnergyCellBlockEntity",
     "MixinInterfaceLogic",
     "MixinPatternProviderLogic",
