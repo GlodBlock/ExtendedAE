@@ -78,6 +78,13 @@ repositories {
         content {
             includeGroup "curse.maven"
         }
+        authentication {
+            header(HttpHeaderAuthentication)
+        }
+        credentials(HttpHeaderCredentials) {
+            name = "x-api-key"
+            value = System.getenv('CF_API_KEY')
+        }
     }
     maven {
         name = "Modmaven"
@@ -95,7 +102,7 @@ dependencies {
     // compileOnly "curse.maven:grandpower-980156:5432440"
 	compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
     compileOnly "curse.maven:jade-324717:8068368"
-    // compileOnly "curse.maven:wireless-chargers-510656:5551798"
+    compileOnly "curse.maven:wireless-chargers-510656:8393817"
     // runtime test
     runtimeOnly "curse.maven:jade-324717:8068368"
 	runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
