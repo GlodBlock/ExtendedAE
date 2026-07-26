@@ -3,22 +3,15 @@ package com.glodblock.github.extendedae.common.parts;
 import appeng.api.AECapabilities;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.RegisterPartCapabilitiesEvent;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.AEKeyTypes;
-import appeng.api.storage.AEKeySlotFilter;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
-import appeng.util.ConfigInventory;
-import com.glodblock.github.extendedae.config.EAEConfig;
+import com.glodblock.github.extendedae.common.inventory.OversizeConfigInv;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Set;
 
 public class PartOversizeInterface extends PartExInterface {
 
@@ -53,23 +46,6 @@ public class PartOversizeInterface extends PartExInterface {
                 (part, _) -> part.getInterfaceLogic().getInventory(),
                 PartOversizeInterface.class
         );
-    }
-
-    private static class OversizeConfigInv extends ConfigInventory {
-
-        protected OversizeConfigInv(Set<AEKeyType> supportedTypes, @Nullable AEKeySlotFilter slotFilter, Mode mode, int size, @Nullable Runnable listener, boolean allowOverstacking) {
-            super(supportedTypes, slotFilter, mode, size, listener, allowOverstacking);
-        }
-
-        @Override
-        public long getMaxAmount(AEKey key) {
-            try {
-                return Math.multiplyExact(super.getMaxAmount(key), EAEConfig.getOversizeMultiplier(key));
-            } catch (Exception e) {
-                return Long.MAX_VALUE;
-            }
-        }
-
     }
 
 }
