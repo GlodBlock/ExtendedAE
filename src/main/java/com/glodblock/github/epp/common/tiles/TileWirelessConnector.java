@@ -37,10 +37,12 @@ public class TileWirelessConnector extends AENetworkBlockEntity implements Serve
     @Override
     public void serverTick() {
         if (this.updateStatus) {
-            this.updateStatus = false;
-            this.connect.updateStatus();
+            // retry every tick until the AE2 grid nodes of both sides exist
+            if (this.connect.updateStatus()) {
+                this.updateStatus = false;
+                this.markForUpdate();
+            }
             this.updatePowerUsage();
-            this.markForUpdate();
         }
     }
 
