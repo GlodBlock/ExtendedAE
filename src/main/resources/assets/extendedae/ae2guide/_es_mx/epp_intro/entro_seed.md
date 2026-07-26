@@ -15,5 +15,5 @@ item_ids:
 <ItemImage id="extendedae:entro_seed" scale="4"></ItemImage>
 </Row>
 
-Estas semillas contienen una fuerte energía entro. Haz clic derecho en un <ItemLink id="ae2:fluix_block" /> con la semilla de entro para convertirlo en un [Brotador de fluix entronizado](./entro_budding.md)
-o puedes usar un <ItemLink id="extendedae:crystal_assembler" /> para inyectar la semilla, pero da un [Brotador de fluix entronizado](./entro_budding.md) de menor calidad en comparación con la ruta manual.
+Estas semillas contienen una fuerte energía entro. Haz clic derecho en un <ItemLink id="ae2:fluix_block" /> con la semilla de entro para convertirlo en un [Brotador de fluix entroizado](./entro_budding.md)
+o puedes usar un <ItemLink id="extendedae:crystal_assembler" /> para inyectar la semilla, pero da un [Brotador de fluix entroizado](./entro_budding.md) de menor calidad en comparación con la ruta manual.

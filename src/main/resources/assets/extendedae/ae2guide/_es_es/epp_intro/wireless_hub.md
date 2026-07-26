@@ -22,4 +22,4 @@ hasta 8 centros/conectores al mismo tiempo.
 
 Hay 8 puertos en el centro ME inalámbrico. Detectará un puerto disponible automáticamente cuando lo enlaces con el <ItemLink id="extendedae:wireless_tool" />.
 
-Sin embargo, cuando todos sus puertos están ocupados, necesitas desconectarlo manualmente haciendo clic en el botón 'X' para configurar nuevas conexiones.
+Sin embargo, cuando todos sus puertos están ocupados, necesitas desconectar una conexión existente manualmente haciendo clic en el botón 'X' antes de configurar una nueva conexión.

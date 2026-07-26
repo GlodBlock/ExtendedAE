@@ -15,7 +15,5 @@ item_ids:
 <ItemImage id="extendedae:quartz_blend" scale="4"></ItemImage>
 </Row>
 
-A mixture of quartz, coal and sands. It can be smelt into more <ItemLink id="ae2:silicon" />s than directly smelting 
-certus quartz dusts.
-Una mezcla de cuarzo, carbón y arenas. Se puede fundir en más <ItemLink id="ae2:silicon" /> que fundiendo directamente
-polvos de cuarzo certus.
+Una mezcla de cuarzo, carbón y arena. Se puede fundir en más <ItemLink id="ae2:silicon" /> que fundiendo directamente
+polvo de cuarzo certus.

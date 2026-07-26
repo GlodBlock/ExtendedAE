@@ -23,6 +23,6 @@ item_ids:
 El proveedor de patrones ME extendido es un <ItemLink id="ae2:pattern_provider" /> con un inventario de
 patrones más grande.
 
-*Quien necesita una subred cuando puedes poner todos los patrones en un bloque.*
+*¿Quién necesita una subred cuando puedes poner todos los patrones en un solo bloque?*
 
 ![EPPGui](../pic/epp_gui.png)

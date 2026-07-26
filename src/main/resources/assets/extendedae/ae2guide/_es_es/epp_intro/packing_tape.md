@@ -21,24 +21,24 @@ La cinta de embalaje ME puede empaquetar dispositivos ME en el mundo en un objet
 
 ## Embalaje
 
-Haz clic derecho agachado en el dispositivo ME con la cinta, y puedes obtener un objeto de paquete de él. Todas las configuraciones
+Haz clic derecho agachándote en el dispositivo ME con la cinta, y puedes obtener un objeto de paquete de él. Todas las configuraciones
 e inventario del dispositivo se mantendrán. Puede ser muy útil cuando estás moviendo tu configuración ME.
 
 Tenga en cuenta que la cinta de embalaje ME solo es compatible con los dispositivos de la lista, la lista de dispositivos es configurable.
 
 ### Lista predeterminada
 
-|                                      Device                                       |                                 Name                                  |
-|:---------------------------------------------------------------------------------:|:---------------------------------------------------------------------:|
+|                                Dispositivo                                 |                             Nombre                             |
+|:--------------------------------------------------------------------------:|:--------------------------------------------------------------:|
 |    <ItemImage id="extendedae:ex_interface_part" scale="3"></ItemImage>     |    <ItemLink id="extendedae:ex_interface_part"></ItemLink>     |
 | <ItemImage id="extendedae:ex_pattern_provider_part" scale="3"></ItemImage> | <ItemLink id="extendedae:ex_pattern_provider_part"></ItemLink> |
 |       <ItemImage id="extendedae:ex_interface" scale="3"></ItemImage>       |       <ItemLink id="extendedae:ex_interface"></ItemLink>       |
 |   <ItemImage id="extendedae:ex_pattern_provider" scale="3"></ItemImage>    |   <ItemLink id="extendedae:ex_pattern_provider"></ItemLink>    |
-|            <ItemImage id="ae2:cable_interface" scale="3"></ItemImage>             |            <ItemLink id="ae2:cable_interface"></ItemLink>             |
-|         <ItemImage id="ae2:cable_pattern_provider" scale="3"></ItemImage>         |         <ItemLink id="ae2:cable_pattern_provider"></ItemLink>         |
-|               <ItemImage id="ae2:interface" scale="3"></ItemImage>                |               <ItemLink id="ae2:interface"></ItemLink>                |
-|            <ItemImage id="ae2:pattern_provider" scale="3"></ItemImage>            |            <ItemLink id="ae2:pattern_provider"></ItemLink>            |
-|                 <ItemImage id="ae2:drive" scale="3"></ItemImage>                  |                 <ItemLink id="ae2:drive"></ItemLink>                  |
+|         <ItemImage id="ae2:cable_interface" scale="3"></ItemImage>         |         <ItemLink id="ae2:cable_interface"></ItemLink>         |
+|     <ItemImage id="ae2:cable_pattern_provider" scale="3"></ItemImage>      |     <ItemLink id="ae2:cable_pattern_provider"></ItemLink>      |
+|            <ItemImage id="ae2:interface" scale="3"></ItemImage>            |            <ItemLink id="ae2:interface"></ItemLink>            |
+|        <ItemImage id="ae2:pattern_provider" scale="3"></ItemImage>         |        <ItemLink id="ae2:pattern_provider"></ItemLink>         |
+|              <ItemImage id="ae2:drive" scale="3"></ItemImage>              |              <ItemLink id="ae2:drive"></ItemLink>              |
 
 ## Desempaquetado
 
