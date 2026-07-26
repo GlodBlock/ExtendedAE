@@ -26,7 +26,7 @@ public class ContainerExEMCInterface extends UpgradeableMenu<EMCInterfaceLogicHo
 
     public static final MenuType<ContainerExEMCInterface> TYPE = MenuTypeBuilder
             .create(ContainerExEMCInterface::new, EMCInterfaceLogicHost.class)
-            .build(ExtendedAE.id("ex_emc_interface"));
+            .buildUnregistered(ExtendedAE.id("ex_emc_interface"));
 
     private static final int PAGE = 18;
     private static final int LINE = 9;
