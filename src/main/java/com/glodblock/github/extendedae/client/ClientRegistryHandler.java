@@ -78,6 +78,8 @@ import com.glodblock.github.extendedae.container.pattern.ContainerCraftingPatter
 import com.glodblock.github.extendedae.container.pattern.ContainerProcessingPattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerSmithingTablePattern;
 import com.glodblock.github.extendedae.container.pattern.ContainerStonecuttingPattern;
+import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
+import com.glodblock.github.extendedae.xmod.wt.GuiWirelessExPAT;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
@@ -109,6 +111,7 @@ public class ClientRegistryHandler {
         InitScreens.register(event, ContainerActiveFormationPlane.TYPE, GuiActiveFormationPlane::new, "/screens/active_formation_plane.json");
         InitScreens.register(event, ContainerCaner.TYPE, GuiCaner::new, "/screens/caner.json");
         InitScreens.register(event, ContainerPreciseExportBus.TYPE, GuiPreciseExportBus::new, "/screens/precise_export_bus.json");
+        InitScreens.register(event, ContainerWirelessExPAT.TYPE, GuiWirelessExPAT::new, "/screens/wireless_ex_pat.json");
         InitScreens.register(event, ContainerExIOPort.TYPE, GuiExIOPort::new, "/screens/ex_io_port.json");
         InitScreens.register(event, ContainerPreciseStorageBus.TYPE, GuiPreciseStorageBus::new, "/screens/precise_storage_bus.json");
         InitScreens.register(event, ContainerThresholdExportBus.TYPE, GuiThresholdExportBus::new, "/screens/threshold_export_bus.json");

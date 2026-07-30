@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "ae2:wireless_receiver",
+    "B": "extendedae:ex_pattern_access_part",
+    "C": "ae2:dense_energy_cell"
+  },
+  "pattern": [
+    "A",
+    "B",
+    "C"
+  ],
+  "result": {
+    "id": "extendedae:wireless_ex_pat"
+  }
+}

@@ -7,10 +7,21 @@ import com.glodblock.github.appflux.xmod.wc.ChargerBlacklist;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
+import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.glodium.registry.RegistryHandler;
+import com.glodblock.github.glodium.xmod.ThirdParty;
+import com.glodblock.github.glodium.xmod.XModLoader;
 
-public class AFCommonLoad {
+@ThirdParty(ModConstants.APPFLUX)
+public class AppFluxLoader implements XModLoader  {
 
-    public static void init() {
+    @Override
+    public String modid() {
+        return ModConstants.APPFLUX;
+    }
+
+    @Override
+    public void loadCommon() {
         try {
             ChargerBlacklist.BLACKLIST.add(te -> te instanceof TileIngredientBuffer);
             JadeBlacklist.BLACK_LIST.add(o -> o instanceof TileIngredientBuffer);
@@ -24,6 +35,16 @@ public class AFCommonLoad {
         } catch (Throwable ignored) {
             // NO-OP
         }
+    }
+
+    @Override
+    public void loadClient() {
+
+    }
+
+    @Override
+    public void onRegister(RegistryHandler handler) {
+
     }
 
 }

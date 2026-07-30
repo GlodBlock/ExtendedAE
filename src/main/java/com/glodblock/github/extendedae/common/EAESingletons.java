@@ -80,6 +80,7 @@ import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerM
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixSpeed;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
+import com.glodblock.github.extendedae.xmod.wt.ItemWirelessExPAT;
 import com.glodblock.github.glodium.registry.defer.DeferredDataComponentType;
 import com.glodblock.github.glodium.util.GlodCodecs;
 import com.mojang.serialization.Codec;
@@ -169,6 +170,7 @@ public class EAESingletons {
     public static DeferredBlock<@NotNull BlockCaner> CANER;
     public static DeferredBlock<@NotNull BlockExIOPort> EX_IO_PORT;
     public static DeferredItem<@NotNull PartItem<PartPreciseExportBus>> PRECISE_EXPORT_BUS;
+    public static DeferredItem<@NotNull ItemWirelessExPAT> WIRELESS_EX_PAT;
     public static DeferredItem<@NotNull PartItem<PartPreciseStorageBus>> PRECISE_STORAGE_BUS;
     public static DeferredItem<@NotNull PartItem<PartThresholdExportBus>> THRESHOLD_EXPORT_BUS;
     public static DeferredBlock<@NotNull BlockCircuitCutter> CIRCUIT_CUTTER;
@@ -265,6 +267,7 @@ public class EAESingletons {
         MOD_EXPORT_BUS = regHandler.item("mod_export_bus", PartModExportBus.class, PartModExportBus::new);
         ACTIVE_FORMATION_PLANE = regHandler.item("active_formation_plane", PartActiveFormationPlane.class, PartActiveFormationPlane::new);
         PRECISE_EXPORT_BUS = regHandler.item("precise_export_bus", PartPreciseExportBus.class, PartPreciseExportBus::new);
+        WIRELESS_EX_PAT = regHandler.item("wireless_ex_pat", ItemWirelessExPAT::new);
         PRECISE_STORAGE_BUS = regHandler.item("precise_storage_bus", PartPreciseStorageBus.class, PartPreciseStorageBus::new);
         THRESHOLD_EXPORT_BUS = regHandler.item("threshold_export_bus", PartThresholdExportBus.class, PartThresholdExportBus::new);
         OVERSIZE_INTERFACE_PART = regHandler.item("oversize_interface_part", PartOversizeInterface.class, PartOversizeInterface::new);

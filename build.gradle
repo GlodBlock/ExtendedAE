@@ -107,10 +107,10 @@ repositories {
 
 dependencies {
     implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
-    implementation "org.appliedenergistics:appliedenergistics2:26.1.8-alpha"
+    implementation "org.appliedenergistics:appliedenergistics2:26.1.10-beta"
     implementation "org.appliedenergistics:guideme:26.1.10-alpha"
     jarJar(implementation ("de.mari_023:ae2wtlib_api:26.1.0-beta") { transitive = false })
-    compileOnly "curse.maven:applied-flux-965012:8246560"
+    compileOnly "curse.maven:applied-flux-965012:8512902"
     //compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     //compileOnly "curse.maven:mega-cells-622112:6005043"
     compileOnly "curse.maven:jade-324717:8068368"
@@ -125,7 +125,7 @@ dependencies {
     //compileOnly "curse.maven:appliede-1009940:6500056"
     //compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
-    runtimeOnly "curse.maven:applied-flux-965012:8246560"
+    runtimeOnly "curse.maven:applied-flux-965012:8512902"
     runtimeOnly ("de.mari_023:ae2wtlib:26.1.0-beta") { transitive = false }
     runtimeOnly "curse.maven:jade-324717:8068368"
     //runtimeOnly "curse.maven:mega-cells-622112:6005043"

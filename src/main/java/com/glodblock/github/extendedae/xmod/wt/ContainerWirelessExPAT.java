@@ -13,10 +13,11 @@ import de.mari_023.ae2wtlib.api.terminal.ItemWUT;
 import de.mari_023.ae2wtlib.api.terminal.WTMenuHost;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerWirelessExPAT extends ContainerExPatternTerminal {
 
-    public static final MenuType<ContainerWirelessExPAT> TYPE = MenuTypeBuilder
+    public static final MenuType<@NotNull ContainerWirelessExPAT> TYPE = MenuTypeBuilder
             .create(ContainerWirelessExPAT::new, HostWirelessExPAT.class)
             .buildUnregistered(ExtendedAE.id("u_wireless_ex_pattern_access_terminal"));
     private final HostWirelessExPAT host;

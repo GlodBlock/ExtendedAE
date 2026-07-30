@@ -392,6 +392,18 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.EX_EXPORT_BUS))
                 .save(this.output);
 
+        // Wireless Ex PAT
+        ShapedRecipeBuilder
+                .shaped(this.items, RecipeCategory.MISC, EAESingletons.WIRELESS_EX_PAT)
+                .pattern("A")
+                .pattern("B")
+                .pattern("C")
+                .define('A', AEItems.WIRELESS_RECEIVER)
+                .define('B', EAESingletons.EX_PATTERN_TERMINAL)
+                .define('C', AEBlocks.DENSE_ENERGY_CELL)
+                .unlockedBy(C, has(EAESingletons.EX_PATTERN_TERMINAL))
+                .save(this.output);
+
         // Extended IO Port
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.EX_IO_PORT, this.items, this.fluids)

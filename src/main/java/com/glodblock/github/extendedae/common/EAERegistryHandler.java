@@ -1,6 +1,7 @@
 package com.glodblock.github.extendedae.common;
 
 import appeng.api.AECapabilities;
+import appeng.api.features.GridLinkables;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IInWorldGridNodeHost;
@@ -23,6 +24,7 @@ import appeng.crafting.pattern.AESmithingTablePattern;
 import appeng.crafting.pattern.AEStonecuttingPattern;
 import appeng.items.AEBaseItem;
 import appeng.items.parts.PartItem;
+import appeng.items.tools.powered.WirelessTerminalItem;
 import appeng.items.tools.powered.powersink.PoweredItemCapabilities;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.caps.ICrankPowered;
@@ -77,6 +79,7 @@ import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeSerializer;
 import com.glodblock.github.extendedae.util.CacheHolder;
+import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.registry.defer.DeferredTileEntityType;
 import com.glodblock.github.glodium.registry.token.TileToken;
@@ -216,6 +219,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("active_formation_plane"), ContainerActiveFormationPlane.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("caner"), ContainerCaner.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("precise_export_bus"), ContainerPreciseExportBus.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("u_wireless_ex_pattern_access_terminal"), ContainerWirelessExPAT.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("ex_ioport"), ContainerExIOPort.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("precise_storage_bus"), ContainerPreciseStorageBus.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("threshold_export_bus"), ContainerThresholdExportBus.TYPE);
@@ -316,6 +320,7 @@ public class EAERegistryHandler extends RegistryHandler {
     }
 
     private void registerRandomAPI() {
+        GridLinkables.register(EAESingletons.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
         PatternGuiHandler.addPatternHandler(AEProcessingPattern.class, ContainerProcessingPattern.ID);
         PatternGuiHandler.addPatternHandler(AECraftingPattern.class, ContainerCraftingPattern.ID);
         PatternGuiHandler.addPatternHandler(AEStonecuttingPattern.class, ContainerStonecuttingPattern.ID);

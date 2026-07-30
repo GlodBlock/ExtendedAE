@@ -8,6 +8,7 @@ import de.mari_023.ae2wtlib.api.terminal.AE2wtlibConfigManager;
 import de.mari_023.ae2wtlib.api.terminal.ItemWT;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,8 @@ import java.util.function.Supplier;
 
 public class ItemWirelessExPAT extends ItemWT {
 
-    public ItemWirelessExPAT() {
+    public ItemWirelessExPAT(Item.Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -29,4 +31,5 @@ public class ItemWirelessExPAT extends ItemWT {
                 .registerSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS, ShowPatternProviders.VISIBLE)
                 .build();
     }
+
 }
