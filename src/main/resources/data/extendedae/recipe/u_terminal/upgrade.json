@@ -6,8 +6,6 @@
     }
   ],
   "type": "ae2wtlib:upgrade",
-  "terminal": {
-    "item": "extendedae:wireless_ex_pat"
-  },
+  "terminal": "extendedae:wireless_ex_pat",
   "terminalName": "ex_pattern_access"
 }
