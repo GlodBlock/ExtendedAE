@@ -69,6 +69,13 @@ repositories {
         content {
             includeGroup "curse.maven"
         }
+        authentication {
+            header(HttpHeaderAuthentication)
+        }
+        credentials(HttpHeaderCredentials) {
+            name = "x-api-key"
+            value = System.getenv('CF_API_KEY')
+        }
     }
     maven {
         url = "https://maven.blamejared.com/"
