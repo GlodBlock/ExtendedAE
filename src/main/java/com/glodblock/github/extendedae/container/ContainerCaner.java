@@ -8,11 +8,8 @@ import appeng.util.ConfigMenuInventory;
 import com.glodblock.github.extendedae.api.CanerMode;
 import com.glodblock.github.extendedae.client.ExSemantics;
 import com.glodblock.github.extendedae.common.tileentities.TileCaner;
-import com.glodblock.github.extendedae.network.EPPNetworkHandler;
-import com.glodblock.github.glodium.network.packet.SGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import com.glodblock.github.glodium.network.packet.sync.Paras;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +21,10 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
 
     public static final MenuType<ContainerCaner> TYPE = MenuTypeBuilder
             .create(ContainerCaner::new, TileCaner.class)
+            .withInitialData(
+                    (host1, buffer) -> buffer.writeEnum(host1.getMode()),
+                    (host1, menu, buffer) -> menu.mode = buffer.readEnum(CanerMode.class)
+            )
             .build("caner");
 
     private final Map<String, Consumer<Paras>> actions = createHolder();
@@ -35,11 +36,6 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
         super(TYPE, id, playerInventory, host);
         this.host = host;
         this.actions.put("set", o -> this.setMode(o.get(0)));
-        this.actions.put("update", o -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EPPNetworkHandler.INSTANCE.sendTo(new SGenericPacket("init", this.mode.ordinal()), sp);
-            }
-        });
         this.addSlot(new AppEngSlot(new ConfigMenuInventory(host.getStuff()), 0), ExSemantics.EX_1);
         this.addSlot(new AppEngSlot(host.getContainer(), 0), ExSemantics.EX_2);
         this.createPlayerInventorySlots(playerInventory);
@@ -55,7 +51,6 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
 
     public void setMode(int mode) {
         this.host.setMode(CanerMode.values()[mode]);
-        this.broadcastChanges();
     }
 
     public CanerMode getMode() {
@@ -67,4 +62,5 @@ public class ContainerCaner extends AEBaseMenu implements IActionHolder {
     public Map<String, Consumer<Paras>> getActionMap() {
         return this.actions;
     }
+
 }
