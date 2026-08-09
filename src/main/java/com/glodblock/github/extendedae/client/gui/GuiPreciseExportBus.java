@@ -16,10 +16,15 @@ import appeng.core.localization.Tooltips;
 import appeng.core.sync.network.NetworkHandler;
 import appeng.core.sync.packets.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
+import com.glodblock.github.extendedae.api.BatchMode;
+import com.glodblock.github.extendedae.client.button.CycleEPPButton;
+import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.client.gui.subgui.SetAmount;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
+import com.glodblock.github.extendedae.network.EPPNetworkHandler;
 import com.glodblock.github.extendedae.util.Ae2ReflectClient;
+import com.glodblock.github.glodium.network.packet.CGenericPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,6 +39,7 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
     private final SettingToggleButton<RedstoneMode> redstoneMode;
     private final SettingToggleButton<YesNo> craftMode;
     private final SettingToggleButton<SchedulingMode> schedulingMode;
+    private final CycleEPPButton batchMode;
 
     public GuiPreciseExportBus(ContainerPreciseExportBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -54,6 +60,11 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
         } else {
             this.schedulingMode = null;
         }
+
+        this.batchMode = new CycleEPPButton();
+        this.batchMode.addActionPair(EPPIcon.EXACT, Component.translatable("gui.expatternprovider.precise_export_bus.exact"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", BatchMode.BATCH.ordinal())));
+        this.batchMode.addActionPair(EPPIcon.BATCH, Component.translatable("gui.expatternprovider.precise_export_bus.batch"), b -> EPPNetworkHandler.INSTANCE.sendToServer(new CGenericPacket("set", BatchMode.EXACT.ordinal())));
+        this.addToLeftToolbar(this.batchMode);
     }
 
     @Override
@@ -68,6 +79,7 @@ public class GuiPreciseExportBus extends UpgradeableScreen<ContainerPreciseExpor
         if (this.schedulingMode != null) {
             this.schedulingMode.set(menu.getSchedulingMode());
         }
+        this.batchMode.setState(menu.getMode().ordinal());
     }
 
     @Override

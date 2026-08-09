@@ -19,6 +19,8 @@ public class EPPIcon {
     public static final Blitter BUCKET = Blitter.texture(TEXTURE, 64, 64).src(48, 16, 16, 16);
     public static final Blitter OVER_STACK = Blitter.texture(TEXTURE, 64, 64).src(0, 32, 16, 16);
     public static final Blitter BELOW_STACK = Blitter.texture(TEXTURE, 64, 64).src(16, 32, 16, 16);
+    public static final Blitter EXACT = Blitter.texture(TEXTURE, 64, 64).src(32, 32, 16, 16);
+    public static final Blitter BATCH = Blitter.texture(TEXTURE, 64, 64).src(48, 32, 16, 16);
 
     public static final Blitter DEFAULT = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(0, 0, 16, 16);
     public static final Blitter GREATER_EQUAL = Blitter.texture(SYMBOL_TEXTURE, 64, 64).src(16, 16, 16, 16);

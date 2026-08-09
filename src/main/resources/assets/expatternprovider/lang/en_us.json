@@ -107,6 +107,8 @@
   "gui.expatternprovider.pattern_modifier.multi.desc": "Multiply the input and output amount by %s",
   "gui.expatternprovider.pattern_modifier.div.desc": "Divide the input and output amount by %s",
   "gui.expatternprovider.pattern_modifier.clear.desc": "Clear all patterns' contents, turn them into blank patterns",
+  "gui.expatternprovider.precise_export_bus.exact": "Exact Amount",
+  "gui.expatternprovider.precise_export_bus.batch": "Batch Output",
   "gui.expatternprovider.precise_storage_bus.default": "Default",
   "gui.expatternprovider.precise_storage_bus.greater_equal": "Show Greater or Equal",
   "gui.expatternprovider.precise_storage_bus.greater": "Show Greater",

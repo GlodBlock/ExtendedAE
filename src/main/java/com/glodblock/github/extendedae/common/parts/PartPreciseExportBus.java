@@ -18,6 +18,7 @@ import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.util.ConfigInventory;
 import com.glodblock.github.extendedae.ExtendedAE;
+import com.glodblock.github.extendedae.api.BatchMode;
 import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
@@ -41,21 +42,32 @@ public class PartPreciseExportBus extends ExportBusPart {
     public static final PartModel MODELS_ON = new PartModel(MODELS.get(0), MODELS.get(1));
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODELS.get(0), MODELS.get(3));
     private ConfigInventory config;
+    private BatchMode mode = BatchMode.EXACT;
 
     public PartPreciseExportBus(IPartItem<?> partItem) {
         super(partItem);
+    }
+
+    public void setMode(BatchMode mode) {
+        this.mode = mode;
+    }
+
+    public BatchMode getMode() {
+        return this.mode;
     }
 
     @Override
     public void readFromNBT(CompoundTag extra) {
         super.readFromNBT(extra);
         this.config.readFromChildTag(extra, "config2");
+        this.mode = BatchMode.values()[extra.getByte("mode")];
     }
 
     @Override
     public void writeToNBT(CompoundTag extra) {
         super.writeToNBT(extra);
         this.config.writeToChildTag(extra, "config2");
+        extra.putByte("mode", (byte) this.mode.ordinal());
     }
 
     @Override
@@ -114,10 +126,10 @@ public class PartPreciseExportBus extends ExportBusPart {
 
             long before = context.getOperationsRemaining();
             if (before < Math.max(1, amount / transferFactor)) {
-                break;
+                continue;
             }
 
-            long ceil = this.checkPulseRS() ? simulateExtract(context, what, amount) : (simulateExtract(context, what, before * transferFactor) / amount * amount);
+            long ceil = this.useExactAmount() ? simulateExtract(context, what, amount) : (simulateExtract(context, what, before * transferFactor) / amount * amount);
             long canHold = getExportStrategy().push(what, ceil, Actionable.SIMULATE) / amount * amount;
             if (canHold > 0) {
                 var realSend = getExportStrategy().transfer(context, what, canHold);
@@ -139,11 +151,11 @@ public class PartPreciseExportBus extends ExportBusPart {
         return context.hasDoneWork();
     }
 
-    private boolean checkPulseRS() {
+    private boolean useExactAmount() {
         if (this.getUpgrades().isInstalled(AEItems.REDSTONE_CARD)) {
             return this.getRSMode() == RedstoneMode.SIGNAL_PULSE;
         }
-        return false;
+        return this.mode == BatchMode.EXACT;
     }
 
     @Override
