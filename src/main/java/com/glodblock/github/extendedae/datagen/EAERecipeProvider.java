@@ -9,6 +9,7 @@ import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipeBuilder;
 import appeng.recipes.transform.TransformCircumstance;
 import appeng.recipes.transform.TransformRecipeBuilder;
+import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.config.ConfigCondition;
@@ -16,6 +17,8 @@ import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
+import com.glodblock.github.extendedae.xmod.ModConstants;
+import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -770,10 +773,30 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.CONFIG_MODIFIER))
                 .save(this.output);
 
+        if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
+            appflux();
+        }
+
         transformation();
         circuit();
         assemblerCircuit();
         fixer();
+    }
+
+    private void appflux() {
+        // Redstone Crystal
+        CrystalAssemblerRecipeBuilder
+                .assemble(AFSingletons.REDSTONE_CRYSTAL, 8, this.items, this.fluids)
+                .input(Tags.Items.STORAGE_BLOCKS_REDSTONE, 4)
+                .input(ConventionTags.FLUIX_CRYSTAL, 4)
+                .input(ConventionTags.GLOWSTONE, 4)
+                .fluid(Fluids.WATER, 100)
+                .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/redstone_crystal"));
+        // Energy Processor
+        CircuitCutterRecipeBuilder
+                .cut(AFSingletons.ENERGY_PROCESSOR_PRINT, 9, this.items)
+                .input(AFSingletons.CHARGED_REDSTONE_BLOCK)
+                .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("cutter/energy_processor"));
     }
 
     private void transformation() {
