@@ -6,7 +6,7 @@
     }
   ],
   "type": "extendedae:circuit_cutter",
-  "energy": 2000,
+  "energy": 18000,
   "input": {
     "ingredient": "appflux:charged_redstone_block"
   },

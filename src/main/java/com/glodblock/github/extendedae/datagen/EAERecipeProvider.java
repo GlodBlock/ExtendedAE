@@ -791,12 +791,21 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.FLUIX_CRYSTAL, 4)
                 .input(ConventionTags.GLOWSTONE, 4)
                 .fluid(Fluids.WATER, 100)
+                .power(5000)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/redstone_crystal"));
         // Energy Processor
         CircuitCutterRecipeBuilder
                 .cut(AFSingletons.ENERGY_PROCESSOR_PRINT, 9, this.items)
                 .input(AFSingletons.CHARGED_REDSTONE_BLOCK)
+                .power(18000)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("cutter/energy_processor"));
+        CrystalAssemblerRecipeBuilder
+                .assemble(AFSingletons.ENERGY_PROCESSOR, 4, this.items, this.fluids)
+                .input(AFSingletons.ENERGY_PROCESSOR_PRINT, 4)
+                .input(AEItems.SILICON_PRINT, 4)
+                .input(ConventionTags.REDSTONE, 4)
+                .power(4000)
+                .save(this.output.withConditions(new ConfigCondition(ConfigCondition.IDs.ASSEMBLER_CIRCUIT), mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/energy_processor"));
     }
 
     private void transformation() {
@@ -871,24 +880,28 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(AEItems.CALCULATION_PROCESSOR_PRINT, 4)
                 .input(AEItems.SILICON_PRINT, 4)
                 .input(ConventionTags.REDSTONE, 4)
+                .power(4000)
                 .save(this.output.withConditions(cond), ExtendedAE.id("assembler/calculation_processor"));
         CrystalAssemblerRecipeBuilder
                 .assemble(AEItems.ENGINEERING_PROCESSOR, 4, this.items, this.fluids)
                 .input(AEItems.ENGINEERING_PROCESSOR_PRINT, 4)
                 .input(AEItems.SILICON_PRINT, 4)
                 .input(ConventionTags.REDSTONE, 4)
+                .power(4000)
                 .save(this.output.withConditions(cond), ExtendedAE.id("assembler/engineering_processor"));
         CrystalAssemblerRecipeBuilder
                 .assemble(AEItems.LOGIC_PROCESSOR, 4, this.items, this.fluids)
                 .input(AEItems.LOGIC_PROCESSOR_PRINT, 4)
                 .input(AEItems.SILICON_PRINT, 4)
                 .input(ConventionTags.REDSTONE, 4)
+                .power(4000)
                 .save(this.output.withConditions(cond), ExtendedAE.id("assembler/logic_processor"));
         CrystalAssemblerRecipeBuilder
                 .assemble(EAESingletons.CONCURRENT_PROCESSOR, 4, this.items, this.fluids)
                 .input(EAESingletons.CONCURRENT_PROCESSOR_PRINT, 4)
                 .input(AEItems.SILICON_PRINT, 4)
                 .input(ConventionTags.REDSTONE, 4)
+                .power(4000)
                 .save(this.output.withConditions(cond), ExtendedAE.id("assembler/concurrent_processor"));
     }
 
