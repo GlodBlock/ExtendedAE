@@ -20,9 +20,9 @@ item_ids:
 </GameScene>
 </Row>
 
-ME Extended Pattern Provider is a <ItemLink id="ae2:pattern_provider" /> with a larger 
+The ME Extended Pattern Provider is a <ItemLink id="ae2:pattern_provider" /> with a larger
 pattern inventory.
 
-*Who need subnet when you can put all patterns in one block.*
+*Who needs a subnet when you can put all your patterns in one block?*
 
 ![EPPGui](../pic/epp_gui.png)

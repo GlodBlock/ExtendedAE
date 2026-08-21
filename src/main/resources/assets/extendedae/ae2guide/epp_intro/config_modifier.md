@@ -11,29 +11,29 @@ item_ids:
 
 # Config Modifier
 
-Config Modifier is a tool for bulk config inventory modification.
+The Config Modifier is a tool for modifying configuration inventories in bulk.
 
 <ItemImage id="extendedae:config_modifier" scale="4"></ItemImage>
 
-Right click it to open its GUI.
+Right-click it to open its GUI.
 
 ## Usage
 
-Config Modifier can modify things like interface's config inventory by its settings quickly, like setting the config items 
-amount to the maximum value or just removing all of them.
+The Config Modifier can quickly modify configuration inventories, such as an interface's configuration inventory, according to its settings. For example, it can set configured item
+amounts to the maximum value or remove them all.
 
-You can click the target device(block or subpart) in world with Config Modifier to modify its config.
+Use the Config Modifier on a target device (block or subpart) in the world to modify its configuration.
 
 ## Settings
 
-It has two main settings, the **modification mode** and **modification amount(X)**.
+It has two main settings: the **modification mode** and the **modification amount (X)**.
 
-You can click the button to change mode.
+Click the button to change the mode.
 
 ![GUI](../pic/cm.png)
 
-- Add/Subtract/Multiply/Divide: Add/Subtract/Multiply/Divide the number of config amount by X.
-- Maximize: Set the number of config amount to the maximum value.
-- Minimize: Set the number of config amount to the minimum value.
-- Set: Set the number of config amount to X.
-- Clear: Clear all config.
+- Add/Subtract/Multiply/Divide: Add, subtract, multiply, or divide each configured amount by X.
+- Maximize: Set each configured amount to the maximum value.
+- Minimize: Set each configured amount to the minimum value.
+- Set: Set each configured amount to X.
+- Clear: Clear the entire configuration.

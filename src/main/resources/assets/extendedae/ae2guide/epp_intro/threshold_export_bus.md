@@ -15,14 +15,14 @@ item_ids:
   <ImportStructure src="../structure/cable_threshold_export_bus.snbt"></ImportStructure>
 </GameScene>
 
-ME Threshold Export Bus works when the quantity of an item that stored in ME network is above/below the threshold.
+The ME Threshold Export Bus operates when the quantity of an item stored in the ME network is above or below the threshold.
 
 ## Example
 
 ![GUI](../pic/thr_bus_gui1.png)
 
-The threshold of copper is set to 128, so it exports copper when the stored copper in network is over 128.
+The copper threshold is set to 128, so the bus exports copper when the network stores more than 128.
 
 ![GUI](../pic/thr_bus_gui2.png)
 
-The threshold is same as above, but the mode is set to BELOW. it exports copper when the stored copper is below 128.
+The threshold is the same as above, but the mode is set to BELOW. The bus exports copper when the network stores less than 128.

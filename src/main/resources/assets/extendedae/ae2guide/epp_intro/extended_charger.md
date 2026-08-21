@@ -15,6 +15,6 @@ item_ids:
 <BlockImage id="extendedae:ex_charger" scale="8"></BlockImage>
 </Row>
 
-Extended Charger is an advanced <ItemLink id="ae2:charger" />.
+The Extended Charger is an advanced <ItemLink id="ae2:charger" />.
 
-It can charge 4 items at the same time.
+It can charge four items at the same time.

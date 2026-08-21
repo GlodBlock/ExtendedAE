@@ -15,4 +15,4 @@ item_ids:
 <BlockImage id="extendedae:entro_block" scale="8"></BlockImage>
 </Row>
 
-A storage block for <ItemLink id="extendedae:entro_crystal" />.
+A storage block for <ItemLink id="extendedae:entro_crystal" />s.

@@ -15,6 +15,6 @@ item_ids:
   <ImportStructure src="../structure/cable_precise_storage_bus.snbt"></ImportStructure>
 </GameScene>
 
-ME Precise Storage Bus is a <ItemLink id="ae2:storage_bus" /> that can be filtered with a number, and it will only insert items up to that limit.
+The ME Precise Storage Bus is an <ItemLink id="ae2:storage_bus" /> with a configurable quantity limit. It inserts items only up to that limit.
 
 ![GUI](../pic/pre_storage_bus.png)

@@ -15,10 +15,10 @@ item_ids:
 <BlockImage id="extendedae:ex_molecular_assembler" scale="8"></BlockImage>
 </Row>
 
-Extended Molecular Assembler is an advanced <ItemLink id="ae2:molecular_assembler" />.
+The Extended Molecular Assembler is an advanced <ItemLink id="ae2:molecular_assembler" />.
 
-It can run 8 crafting jobs at the same time (of course you need <ItemLink id="ae2:crafting_accelerator" /> in your ME network at first)
-and 2x faster than the normal one.
+It can run eight crafting jobs at the same time (provided that your ME network contains a <ItemLink id="ae2:crafting_accelerator" />)
+and is twice as fast as a standard Molecular Assembler.
 
-However, it only supports the crafting job from <ItemLink id="ae2:pattern_provider" />. So you can't put a pattern in it directly.
+However, it only supports crafting jobs from a <ItemLink id="ae2:pattern_provider" />, so you cannot insert a pattern directly.
 

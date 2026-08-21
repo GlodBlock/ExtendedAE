@@ -15,6 +15,6 @@ item_ids:
 <ItemImage id="extendedae:entro_seed" scale="4"></ItemImage>
 </Row>
 
-These seeds contain strong Entro energy. Right click <ItemLink id="ae2:fluix_block" /> with entro seed to turn it into [Entroized Fluix Budding](./entro_budding.md)
-or you can use <ItemLink id="extendedae:crystal_assembler" /> to inject the seed, but it gives lower grade [Entroized Fluix Budding](./entro_budding.md) compared
-with the manual route.
+These seeds contain potent Entro energy. Right-click a <ItemLink id="ae2:fluix_block" /> with an Entro Seed to turn it into [Entroized Fluix Budding](./entro_budding.md),
+or use a <ItemLink id="extendedae:crystal_assembler" /> to inject the seed. However, this produces lower-grade [Entroized Fluix Budding](./entro_budding.md) than
+the manual method.

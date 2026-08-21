@@ -17,17 +17,17 @@ item_ids:
 <ItemImage id="extendedae:wireless_tool" scale="6"></ItemImage>
 </Row>
 
-ME Wireless Connector can link two networks like <ItemLink id="ae2:quantum_link" /> but with limited distances and can't 
-cross dimensions. ME Wireless Connector only supports one-to-one connections, you need to use <ItemLink id="extendedae:wireless_hub" /> 
-if you want many-to-many connections.
+The ME Wireless Connector can link two networks like a <ItemLink id="ae2:quantum_link" />, but it has a limited range and cannot
+connect across dimensions. It supports only one-to-one connections; use an <ItemLink id="extendedae:wireless_hub" />
+for many-to-many connections.
 
-## Link the Wireless Connectors
+## Linking Wireless Connectors
 
-Click the two Wireless Connectors that you want to link with the ME Wireless Setup Kit, then you can link them together.
+Click the two Wireless Connectors you want to link with the ME Wireless Setup Kit to connect them.
 
-Sneak + Click to clear ME Wireless Setup Kit's current setting.
+Sneak-click to clear the ME Wireless Setup Kit's current settings.
 
-ME Wireless Connector will change its texture when a link is successfully established.
+The ME Wireless Connector changes its texture when a link is successfully established.
 
 Unlinked ME Wireless Connectors
 
@@ -43,11 +43,11 @@ Linked ME Wireless Connectors
 
 ## Color
 
-Wireless Connectors can be colored like cables and only connect the cable/connectors with the same color.
+Wireless Connectors can be colored like cables and connect only to cables and connectors of the same color.
 
-You need a <ItemLink id="ae2:color_applicator" /> to color the connector.
+You need a <ItemLink id="ae2:color_applicator" /> to color a connector.
 
-So you can set up your wireless connectors like this:
+You can set up your Wireless Connectors like this:
 
 <GameScene zoom="3" background="transparent" interactive={true}>
   <ImportStructure src="../structure/wireless_connector_setup.snbt"></ImportStructure>
@@ -55,8 +55,8 @@ So you can set up your wireless connectors like this:
 
 ## Power Usage
 
-ME Wireless Connector costs more energy when they are farther apart. Its cost-distance curve isn't linear so the power 
-cost can get very high if when they are too far apart.
+ME Wireless Connectors consume more energy when they are farther apart. The cost-distance curve is not linear, so the power
+cost can become very high when they are too far apart.
 
-You can use <ItemLink id="ae2:energy_card" /> to save power, every card can reduce 10% energy cost.
+You can use <ItemLink id="ae2:energy_card" />s to save power. Each card reduces the energy cost by 10%.
 

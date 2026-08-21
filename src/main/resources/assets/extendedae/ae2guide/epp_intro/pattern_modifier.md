@@ -11,19 +11,19 @@ item_ids:
 
 # Pattern Modifier
 
-Pattern Modifier is a tool for bulk pattern modification.
+The Pattern Modifier is a tool for modifying patterns in bulk.
 
 <ItemImage id="extendedae:pattern_modifier" scale="4"></ItemImage>
 
-Right click it to open its GUI.
+Right-click it to open its GUI.
 
 ## Multiply Mode
 
-You can multiply/divide processing pattern's input and output amount by x by clicking the corresponding button. 
+You can multiply or divide the input and output quantities of processing patterns by x by clicking the corresponding button.
 
 ![PM](../pic/pm.png)
 
-Origin Pattern:
+Original Pattern:
 
 ![PM1](../pic/pm1.png)
 
@@ -31,24 +31,24 @@ After x10:
 
 ![PM2](../pic/pm2.png)
 
-It also can clear all patterns contents and turn them into blank patterns by clicking the Clear button.
+You can also clear the contents of all patterns and turn them into blank patterns by clicking the Clear button.
 
-### Notes:
+### Notes
 
- - The division button only works when its amount is divisible. For example ÷2 button won't work when pattern requires 3x
-cobblestones as input, because 3÷2 is 1.5.
+- The division button works only when the amount is evenly divisible. For example, the ÷2 button does not work when a pattern requires 3
+cobblestone as input because 3÷2 is 1.5.
 
- - The multiplication button has a cap(999999). It can't make single ingredient's amount over this number.
+- The multiplication button has a cap of 999999. It cannot increase the amount of a single ingredient beyond this number.
 
 ## Replace Mode
 
-Replace pattern's certain input and output ingredient with the other item.
+Replace a specific input or output ingredient in patterns with another item.
 
 ![PM3](../pic/pm4.png)
 
-The slot A is what will be replaced and slot B is what the target will be replaced with.
+Slot A contains the ingredient to replace, and slot B contains its replacement.
 
-For example, the following setting will replace the plank with coal.
+For example, the following setting replaces the plank with coal.
 
 ![PM4](../pic/pm6.png)
 
@@ -60,13 +60,13 @@ Click the Replace button to perform the replacement.
 
 ## Property Mode
 
-Modify crafting pattern's Substitutions and Fluid Substitutions mode.
+Modify the Substitutions and Fluid Substitutions settings of crafting patterns.
 
 ![PM8](../pic/pm8.png)
 
 ## Clone Mode
 
-You make copy any give pattern in this mode.
+You can copy any given pattern in this mode.
 
 ![PM7](../pic/pm3.png)
 

@@ -4,11 +4,11 @@ navigation:
     position: 60
 ---
 
-# Extended Your AE setup!
+# Extend Your AE Setup!
 
-Extended AE brings some 1.7.10/1.12.2 AE features back for modern AE.
+Extended AE brings some AE features from Minecraft 1.7.10 and 1.12.2 to modern versions of AE.
 
-[Extended AE GitHub](https://github.com/GlodBlock/ExtendedAE) 
+[Extended AE GitHub](https://github.com/GlodBlock/ExtendedAE)
 
 ## Entro Crystal System
 <CategoryIndex category="entro system"></CategoryIndex>

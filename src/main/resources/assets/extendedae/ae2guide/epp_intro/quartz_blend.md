@@ -15,6 +15,6 @@ item_ids:
 <ItemImage id="extendedae:quartz_blend" scale="4"></ItemImage>
 </Row>
 
-A mixture of quartz, coal and sands. It can be smelt into more <ItemLink id="ae2:silicon" />s than directly smelting 
-certus quartz dusts.
+A mixture of quartz, coal, and sand. Smelting it produces more <ItemLink id="ae2:silicon" /> than smelting
+certus quartz dust directly.
 

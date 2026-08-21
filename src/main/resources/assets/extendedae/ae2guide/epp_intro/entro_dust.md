@@ -15,6 +15,6 @@ item_ids:
 <ItemImage id="extendedae:entro_dust" scale="4"></ItemImage>
 </Row>
 
-You can get it by crushing a <ItemLink id="extendedae:entro_crystal" /> or breaking [Entroized Fluix Budding](./entro_budding.md).
+You can obtain it by crushing an <ItemLink id="extendedae:entro_crystal" /> or breaking [Entroized Fluix Budding](./entro_budding.md).
 
 It is used to craft certain ExtendedAE machines and <ItemLink id="extendedae:entro_ingot" />.
