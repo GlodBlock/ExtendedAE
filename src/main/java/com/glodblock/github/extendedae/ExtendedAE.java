@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae;
 import com.glodblock.github.extendedae.client.ClientRegistryHandler;
 import com.glodblock.github.extendedae.client.hooks.TagHook;
 import com.glodblock.github.extendedae.client.hotkey.PatternHotKey;
+import com.glodblock.github.extendedae.client.render.EffectTileRender;
 import com.glodblock.github.extendedae.common.EAERegistryHandler;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.common.hooks.CutterHook;
@@ -77,6 +78,7 @@ public class ExtendedAE {
         });
         if (FMLEnvironment.dist.isClient()) {
             bus.register(ClientRegistryHandler.INSTANCE);
+            NeoForge.EVENT_BUS.addListener(EffectTileRender::hook);
         }
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);

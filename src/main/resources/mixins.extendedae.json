@@ -13,7 +13,9 @@
   ],
   "client": [
     "MixinAbstractContainerScreen",
+    "MixinBlockEntityRenderDispatcher",
     "MixinClearPatternAccessTerminalPacket",
+    "MixinLevelRenderer",
     "MixinPatternAccessTerminalPacket",
     "MixinRenderBlockOutlineHook",
     "MixinScreen"

@@ -12,7 +12,7 @@ public abstract class EPPButton extends IconButton {
         super(onPress);
     }
 
-    abstract Blitter getBlitterIcon();
+    protected abstract Blitter getBlitterIcon();
 
     @Override
     protected final Icon getIcon() {

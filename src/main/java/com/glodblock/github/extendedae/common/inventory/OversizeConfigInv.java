@@ -37,8 +37,9 @@ public class OversizeConfigInv extends ConfigInventory {
 
     @Override
     public long getMaxAmount(AEKey key) {
-        if (this.allowOverstacking)
+        if (this.allowOverstacking) {
             return this.getCapacity(key.getType());
+        }
         if (key instanceof AEItemKey itemKey) {
             return Math.min((long) itemKey.getMaxStackSize() * EAEConfig.getOversizeMultiplier(itemKey.getType()), getCapacity(key.getType()));
         }

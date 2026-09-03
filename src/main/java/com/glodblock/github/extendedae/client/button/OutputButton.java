@@ -63,7 +63,7 @@ public class OutputButton extends EPPButton {
     }
 
     @Override
-    Blitter getBlitterIcon() {
+    protected Blitter getBlitterIcon() {
         return null;
     }
 

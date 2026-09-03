@@ -101,7 +101,10 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
     private void updateFilter() {
         boolean isFuzzy = this.getUpgrades().isInstalled(AEItems.FUZZY_CARD);
         var builder = IPartitionList.builder();
-        builder.addAll(this.config.keySet());
+        var slotsToUse = 18 + this.getInstalledUpgrades(AEItems.CAPACITY_CARD) * 9;
+        for (var x = 0; x < this.config.size() && x < slotsToUse; x++) {
+            builder.add(this.config.getKey(x));
+        }
         if (isFuzzy) {
             builder.fuzzyMode(getConfigManager().getSetting(Settings.FUZZY_MODE));
         }

@@ -77,6 +77,7 @@ import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
+import com.glodblock.github.extendedae.container.ContainerVacuumInterface;
 import com.glodblock.github.extendedae.container.ContainerVoidCell;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
 import com.glodblock.github.extendedae.container.ContainerWirelessHub;
@@ -212,6 +213,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("config_modifier"), ContainerConfigModifier.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("wireless_hub"), ContainerWirelessHub.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("smart_annihilation_plane"), ContainerSmartAnnihilationPlane.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("vacuum_interface"), ContainerVacuumInterface.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -320,6 +322,9 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.SMART_ANNIHILATION_PLANE, 1);
         Upgrades.add(AEItems.INVERTER_CARD, EAESingletons.SMART_ANNIHILATION_PLANE, 1);
         Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.SMART_ANNIHILATION_PLANE, 5);
+        Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.VACUUM_INTERFACE, 5);
+        Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.VACUUM_INTERFACE, 1);
+        Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.VACUUM_INTERFACE, 1);
     }
 
     private void registerStorageHandler() {

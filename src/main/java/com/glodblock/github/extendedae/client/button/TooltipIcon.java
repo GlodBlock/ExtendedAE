@@ -10,7 +10,7 @@ public class TooltipIcon extends EPPButton {
     }
 
     @Override
-    Blitter getBlitterIcon() {
+    protected Blitter getBlitterIcon() {
         return EPPIcon.INFO;
     }
 }

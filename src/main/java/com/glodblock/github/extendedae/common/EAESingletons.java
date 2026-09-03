@@ -20,6 +20,7 @@ import com.glodblock.github.extendedae.common.blocks.BlockExPatternProvider;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockMascot;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
+import com.glodblock.github.extendedae.common.blocks.BlockVacuumInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessHub;
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixCrafter;
@@ -73,6 +74,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssemb
 import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileOversizeInterface;
+import com.glodblock.github.extendedae.common.tileentities.TileVacuumInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
@@ -187,6 +189,7 @@ public class EAESingletons {
     public static BlockWirelessHub WIRELESS_HUB;
     public static PartItem<PartSmartAnnihilationPlane> SMART_ANNIHILATION_PLANE;
     public static ItemWirelessConnectorUpgrade WIRELESS_CONNECTOR_UPGRADE;
+    public static BlockVacuumInterface VACUUM_INTERFACE;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -275,6 +278,7 @@ public class EAESingletons {
         WIRELESS_HUB = new BlockWirelessHub();
         SMART_ANNIHILATION_PLANE = new ItemSmartAnnihilationPlane();
         WIRELESS_CONNECTOR_UPGRADE = new ItemWirelessConnectorUpgrade();
+        VACUUM_INTERFACE = new BlockVacuumInterface();
         regHandler.comp("is_part", IS_PART);
         regHandler.comp("tape_part_data", TAPE_PART_DATA);
         regHandler.comp("tape_tile_data", TAPE_TILE_DATA);
@@ -318,6 +322,7 @@ public class EAESingletons {
         regHandler.block("assembler_matrix_crafter", ASSEMBLER_MATRIX_CRAFTER, TileAssemblerMatrixCrafter.class, TileAssemblerMatrixCrafter::new);
         regHandler.block("assembler_matrix_speed", ASSEMBLER_MATRIX_SPEED, TileAssemblerMatrixSpeed.class, TileAssemblerMatrixSpeed::new);
         regHandler.block("wireless_hub", WIRELESS_HUB, TileWirelessHub.class, TileWirelessHub::new);
+        regHandler.block("vacuum_interface", VACUUM_INTERFACE, TileVacuumInterface.class, TileVacuumInterface::new);
         regHandler.block("silicon_block", SILICON_BLOCK);
         regHandler.block("fishbig", FISHBIG);
         regHandler.block("mddyue", MDDYUE);
