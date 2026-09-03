@@ -293,11 +293,11 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
         return this.isWorking == YesNo.YES;
     }
 
-    public boolean doWork() {
+    public TickRateModulation doWork() {
         if (this.isWorking() && this.level != null) {
             var items = this.level.getEntitiesOfClass(ItemEntity.class, this.getWorkArea());
             if (items.isEmpty()) {
-                return true;
+                return TickRateModulation.SLOWER;
             }
             this.getMainNode().ifPresent(gird -> {
                 var storage = gird.getStorageService();
@@ -316,19 +316,19 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
                     }
                 }
             });
-            return true;
+            return TickRateModulation.URGENT;
         }
-        return false;
+        return TickRateModulation.SLEEP;
     }
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(1, 1, !this.isWorking());
+        return new TickingRequest(1, 10, !this.isWorking());
     }
 
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
-        return this.doWork() ? TickRateModulation.SAME : TickRateModulation.SLEEP;
+        return this.doWork();
     }
 
     @Override
