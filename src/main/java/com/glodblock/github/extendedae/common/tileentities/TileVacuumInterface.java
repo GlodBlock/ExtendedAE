@@ -59,6 +59,7 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
     private BlockPos offset = BlockPos.ZERO;
     private AABB workArea;
     private boolean displayArea;
+    private boolean urgent;
 
     public TileVacuumInterface(BlockPos pos, BlockState blockState) {
         super(GlodUtil.getTileType(TileVacuumInterface.class, TileVacuumInterface::new, EAESingletons.VACUUM_INTERFACE), pos, blockState);
@@ -128,6 +129,14 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
         return this.workArea;
     }
 
+    public boolean isUrgent() {
+        return this.urgent;
+    }
+
+    public void setUrgent(boolean urgent) {
+        this.urgent = urgent;
+    }
+
     private void onChanged() {
         this.filter = this.createFilter();
         this.changeWorkStatus();
@@ -181,6 +190,7 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
         data.putInt("lastRedstoneState", this.lastRedstoneState.ordinal());
         this.configManager.writeToNBT(data, registries);
         data.putBoolean("displayArea", this.displayArea);
+        data.putBoolean("urgent", this.urgent);
     }
 
     @Override
@@ -197,6 +207,7 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
         this.offset = BlockPos.of(data.getLong("offset"));
         this.configManager.readFromNBT(data, registries);
         this.displayArea = data.getBoolean("displayArea");
+        this.urgent = data.getBoolean("urgent");
     }
 
     @Override
@@ -297,6 +308,9 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
         if (this.isWorking() && this.level != null) {
             var items = this.level.getEntitiesOfClass(ItemEntity.class, this.getWorkArea());
             if (items.isEmpty()) {
+                if (this.urgent) {
+                    return TickRateModulation.URGENT;
+                }
                 return TickRateModulation.SLOWER;
             }
             this.getMainNode().ifPresent(gird -> {

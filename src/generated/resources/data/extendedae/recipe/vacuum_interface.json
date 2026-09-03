@@ -1,0 +1,25 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "ingredient": {
+        "tag": "extendedae:extended_interface"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:calculation_processor"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:spatial_cell_component_2"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae:vacuum_interface"
+  }
+}

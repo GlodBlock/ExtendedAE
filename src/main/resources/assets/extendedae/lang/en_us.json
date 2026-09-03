@@ -228,6 +228,8 @@
   "gui.extendedae.vacuum_interface": "ME Vacuum Interface",
   "gui.extendedae.vacuum_interface.render_enable": "Show working area",
   "gui.extendedae.vacuum_interface.render_disable": "Hide working area",
+  "gui.extendedae.vacuum_interface.urgent": "Fast Speed",
+  "gui.extendedae.vacuum_interface.normal": "Normal Speed",
   "gui.extendedae.vacuum_interface.set_work_area": "Area Config",
   "gui.extendedae.vacuum_interface.size_config": "Working Range (X Y Z)",
   "gui.extendedae.vacuum_interface.offset_config": "Offset (X Y Z)",

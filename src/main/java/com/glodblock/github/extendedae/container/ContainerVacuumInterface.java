@@ -23,11 +23,13 @@ public class ContainerVacuumInterface extends UpgradeableMenu<TileVacuumInterfac
                         buf.writeLong(tile.getSize().asLong());
                         buf.writeLong(tile.getOffset().asLong());
                         buf.writeBoolean(tile.isDisplayArea());
+                        buf.writeBoolean(tile.isUrgent());
                     },
                     (tile, container, buf) -> {
                         container.size = buf.readLong();
                         container.offset = buf.readLong();
                         container.displayArea = buf.readBoolean();
+                        container.urgent = buf.readBoolean();
                     }
             )
             .buildUnregistered(ExtendedAE.id("vacuum_interface"));
@@ -38,11 +40,14 @@ public class ContainerVacuumInterface extends UpgradeableMenu<TileVacuumInterfac
     public long offset;
     @GuiSync(12)
     public boolean displayArea;
+    @GuiSync(13)
+    public boolean urgent;
     private final ActionMap actions = ActionMap.create();
 
     public ContainerVacuumInterface(int id, Inventory ip, TileVacuumInterface host) {
         super(TYPE, id, ip, host);
         this.actions.put("display", o -> this.setDisplay(o.get(0)));
+        this.actions.put("urgent", o -> this.setUrgent(o.get(0)));
         this.actions.put("config_data", o -> this.setData(o.get(0), o.get(1), o.get(2)));
     }
 
@@ -75,11 +80,16 @@ public class ContainerVacuumInterface extends UpgradeableMenu<TileVacuumInterfac
         this.getHost().setDisplayArea(enable);
     }
 
+    private void setUrgent(boolean enable) {
+        this.getHost().setUrgent(enable);
+    }
+
     @Override
     public void broadcastChanges() {
         this.displayArea = this.getHost().isDisplayArea();
         this.size = this.getHost().getSize().asLong();
         this.offset = this.getHost().getOffset().asLong();
+        this.urgent = this.getHost().isUrgent();
         super.broadcastChanges();
     }
 

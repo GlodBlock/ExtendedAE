@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 public class GuiVacuumInterface extends UpgradeableScreen<ContainerVacuumInterface> {
 
     private final CycleEPPButton renderBtn;
+    private final CycleEPPButton speedBtn;
     private final SettingToggleButton<RedstoneMode> redstoneMode;
     private final SettingToggleButton<FuzzyMode> fuzzyMode;
 
@@ -40,9 +41,21 @@ public class GuiVacuumInterface extends UpgradeableScreen<ContainerVacuumInterfa
                 Component.translatable("gui.extendedae.vacuum_interface.render_disable"),
                 b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("display", false))
         );
-        var config = new ActionEPPButton(b -> this.openOutputConfig(), Icon.COG);
+        this.speedBtn = new CycleEPPButton();
+        this.speedBtn.addActionPair(
+                Icon.SCHEDULING_DEFAULT,
+                Component.translatable("gui.extendedae.vacuum_interface.normal"),
+                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("urgent", true))
+        );
+        this.speedBtn.addActionPair(
+                Icon.SCHEDULING_ROUND_ROBIN,
+                Component.translatable("gui.extendedae.vacuum_interface.urgent"),
+                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("urgent", false))
+        );
+        var config = new ActionEPPButton(b -> this.openOutputConfig(), Icon.PLACEMENT_BLOCK);
         config.setMessage(Component.translatable("gui.extendedae.vacuum_interface.set_work_area"));
         this.addToLeftToolbar(config);
+        this.addToLeftToolbar(this.speedBtn);
         this.addToLeftToolbar(this.renderBtn);
         this.redstoneMode = new ServerSettingToggleButton<>(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
         this.addToLeftToolbar(this.redstoneMode);
@@ -75,6 +88,11 @@ public class GuiVacuumInterface extends UpgradeableScreen<ContainerVacuumInterfa
             this.renderBtn.setState(1);
         } else {
             this.renderBtn.setState(0);
+        }
+        if (this.menu.urgent) {
+            this.speedBtn.setState(1);
+        } else {
+            this.speedBtn.setState(0);
         }
         this.redstoneMode.set(menu.getRedStoneMode());
         this.redstoneMode.setVisibility(menu.hasUpgrade(AEItems.REDSTONE_CARD));

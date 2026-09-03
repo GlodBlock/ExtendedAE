@@ -761,6 +761,14 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.CONFIG_MODIFIER))
                 .save(c, ExtendedAE.id("config_modifier"));
 
+        // Vacuum Interface
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.VACUUM_INTERFACE)
+                .input(EAETags.EX_INTERFACE)
+                .input(AEItems.CALCULATION_PROCESSOR, 4)
+                .input(AEItems.SPATIAL_2_CELL_COMPONENT)
+                .save(c, ExtendedAE.id("vacuum_interface"));
+
         transformation(c);
         circuit(c);
         assemblerCircuit(c);
