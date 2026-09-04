@@ -10,13 +10,11 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +26,10 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
 
     public static final MenuType<ContainerModStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerModStorageBus::new, PartModStorageBus.class)
+            .withInitialData(
+                    (host, buf) -> buf.writeUtf(host.getModNameFilter()),
+                    (host, container, buf) -> container.exp = buf.readUtf()
+            )
             .buildUnregistered(ExtendedAE.id("mod_storage_bus"));
 
     @GuiSync(3)
@@ -44,19 +46,14 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
     public Component connectedTo;
 
     @GuiSync(9)
-    public String exp = "";
+    public String exp;
 
     public ContainerModStorageBus(int id, Inventory ip, PartModStorageBus te) {
         super(TYPE, id, ip, te);
-
         registerClientAction(ACTION_PARTITION, this::partition);
         this.actions.put("set", o -> this.setExp(o.get(0)));
-        this.actions.put("update", o -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.exp), sp);
-            }
-        });
         this.connectedTo = te.getConnectedToDescription();
+        this.exp = te.getModNameFilter();
     }
 
     @Override
@@ -68,9 +65,6 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
     public void broadcastChanges() {
         super.broadcastChanges();
         this.connectedTo = getHost().getConnectedToDescription();
-        if (!this.exp.equals(getHost().getModNameFilter())) {
-            this.exp = getHost().getModNameFilter();
-        }
     }
 
     @Override
@@ -93,9 +87,14 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
         this.broadcastChanges();
     }
 
+    @Override
+    public void removed(@NotNull Player player) {
+        this.getHost().setModNameFilter(this.exp);
+        super.removed(player);
+    }
+
     public void setExp(String exp) {
-        getHost().setModNameFilter(exp);
-        this.broadcastChanges();
+        this.exp = exp;
     }
 
     public AccessRestriction getReadWriteMode() {
