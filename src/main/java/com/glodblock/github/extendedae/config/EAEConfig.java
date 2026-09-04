@@ -16,6 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = ExtendedAE.MODID)
@@ -101,7 +102,7 @@ public class EAEConfig {
     public static double infCellCost;
     public static double wirelessMaxRange;
     public static double wirelessPowerMultiplier;
-    public static List<ResourceLocation> tapeWhitelist;
+    public static Set<ResourceLocation> tapeWhitelist;
     public static boolean disableInscriberRender;
     private static int oversizeMultiplier;
     private static Map<ResourceLocation, Integer> customOversizeMultiplier;
@@ -129,7 +130,7 @@ public class EAEConfig {
             infCellCost = INFINITY_CELL_ENERGY.get();
             wirelessMaxRange = WIRELESS_CONNECTOR_RANGE.get();
             wirelessPowerMultiplier = WIRELESS_CONNECTOR_POWER_MULTIPLIER.get();
-            tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::parse).collect(Collectors.toList());
+            tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::parse).collect(Collectors.toSet());
             disableInscriberRender = INSCRIBER_RENDER.get();
             oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
             customOversizeMultiplier = new Object2IntOpenHashMap<>();

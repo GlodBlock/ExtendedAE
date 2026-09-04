@@ -3,11 +3,10 @@ package com.glodblock.github.extendedae.common.items;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.util.Platform;
 import com.glodblock.github.extendedae.common.EAESingletons;
+import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.glodium.util.GlodCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -26,8 +25,6 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 
 public class ItemMEPackingTape extends Item {
-
-    private static final ObjectSet<ResourceLocation> WHITE_LIST = new ObjectOpenHashSet<>();
 
     public ItemMEPackingTape() {
         super(new Item.Properties().durability(64));
@@ -51,7 +48,7 @@ public class ItemMEPackingTape extends Item {
                     pack.set(EAESingletons.IS_PART, true);
                     var partItem = part.getPartItem().asItem();
                     var id = BuiltInRegistries.ITEM.getKey(partItem);
-                    if (!WHITE_LIST.contains(id)) {
+                    if (invalid(id)) {
                         return InteractionResult.PASS;
                     }
                     var ctxTag = new CompoundTag();
@@ -64,7 +61,7 @@ public class ItemMEPackingTape extends Item {
                 pack.set(EAESingletons.IS_PART, false);
                 var state = tile.getBlockState();
                 var blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock());
-                if (!WHITE_LIST.contains(blockId)) {
+                if (invalid(blockId)) {
                     return InteractionResult.PASS;
                 }
                 var id = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(tile.getType());
@@ -83,8 +80,8 @@ public class ItemMEPackingTape extends Item {
         return InteractionResult.PASS;
     }
 
-    public static void registerPackableDevice(ResourceLocation id) {
-        WHITE_LIST.add(id);
+    private static boolean invalid(ResourceLocation id) {
+        return !EAEConfig.tapeWhitelist.contains(id);
     }
 
     public record PartPackageData(ResourceLocation id, CompoundTag context) {

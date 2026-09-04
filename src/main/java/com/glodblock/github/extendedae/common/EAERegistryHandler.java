@@ -31,7 +31,6 @@ import com.glodblock.github.extendedae.api.caps.IGenericInvHost;
 import com.glodblock.github.extendedae.api.caps.IMEStorageAccess;
 import com.glodblock.github.extendedae.common.inventory.InfinityCellInventory;
 import com.glodblock.github.extendedae.common.inventory.VoidCellInventory;
-import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
 import com.glodblock.github.extendedae.common.parts.PartExImportBus;
@@ -50,7 +49,6 @@ import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.glodblock.github.extendedae.config.ConfigCondition;
-import com.glodblock.github.extendedae.config.EAEConfig;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
 import com.glodblock.github.extendedae.container.ContainerCaner;
@@ -254,7 +252,6 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerAEUpgrade();
         this.registerStorageHandler();
         this.registerRandomAPI();
-        this.initPackageList();
         if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
             AFCommonLoad.init();
         }
@@ -352,10 +349,6 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartThresholdExportBus.MODELS);
         PartModels.registerModels(PartOversizeInterface.MODELS);
         PartModels.registerModels(PartSmartAnnihilationPlane.MODELS);
-    }
-
-    private void initPackageList() {
-        EAEConfig.tapeWhitelist.forEach(ItemMEPackingTape::registerPackableDevice);
     }
 
     private void registerRandomAPI() {
