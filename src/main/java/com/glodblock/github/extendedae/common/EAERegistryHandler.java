@@ -19,7 +19,6 @@ import appeng.items.AEBaseItem;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.inventory.InfinityCellInventory;
-import com.glodblock.github.extendedae.common.items.ItemMEPackingTape;
 import com.glodblock.github.extendedae.common.parts.PartActiveFormationPlane;
 import com.glodblock.github.extendedae.common.parts.PartExExportBus;
 import com.glodblock.github.extendedae.common.parts.PartExImportBus;
@@ -36,7 +35,6 @@ import com.glodblock.github.extendedae.common.parts.PartTagExportBus;
 import com.glodblock.github.extendedae.common.parts.PartTagStorageBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
 import com.glodblock.github.extendedae.common.parts.PartThresholdLevelEmitter;
-import com.glodblock.github.extendedae.config.EPPConfig;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
 import com.glodblock.github.extendedae.container.ContainerCaner;
@@ -193,7 +191,6 @@ public class EAERegistryHandler extends RegistryHandler {
         this.registerAEUpgrade();
         this.registerStorageHandler();
         this.registerRandomAPI();
-        this.initPackageList();
         if (ModList.get().isLoaded("ae2wtlib")) {
             WTCommonLoad.init();
         }
@@ -282,10 +279,6 @@ public class EAERegistryHandler extends RegistryHandler {
         PartModels.registerModels(PartThresholdExportBus.MODELS);
         PartModels.registerModels(PartOversizeInterface.MODELS);
         PartModels.registerModels(PartExCraftingTerminal.MODELS);
-    }
-
-    private void initPackageList() {
-        EPPConfig.tapeWhitelist.forEach(ItemMEPackingTape::registerPackableDevice);
     }
 
     private void registerRandomAPI() {

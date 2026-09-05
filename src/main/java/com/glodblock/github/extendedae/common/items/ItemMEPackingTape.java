@@ -3,8 +3,7 @@ package com.glodblock.github.extendedae.common.items;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.util.Platform;
 import com.glodblock.github.extendedae.common.EPPItemAndBlock;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
+import com.glodblock.github.extendedae.config.EPPConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -19,8 +18,6 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 
 public class ItemMEPackingTape extends Item {
-
-    private static final ObjectSet<ResourceLocation> WHITE_LIST = new ObjectOpenHashSet<>();
 
     public ItemMEPackingTape() {
         super(new Item.Properties().durability(64));
@@ -43,7 +40,7 @@ public class ItemMEPackingTape extends Item {
                     tag.putBoolean("part", true);
                     var partItem = part.getPartItem().asItem();
                     var id = ForgeRegistries.ITEMS.getKey(partItem);
-                    if (!WHITE_LIST.contains(id)) {
+                    if (invalid(id)) {
                         return InteractionResult.PASS;
                     }
                     assert id != null;
@@ -57,7 +54,7 @@ public class ItemMEPackingTape extends Item {
                 tag.putBoolean("part", false);
                 var state = tile.getBlockState();
                 var blockId = ForgeRegistries.BLOCKS.getKey(state.getBlock());
-                if (!WHITE_LIST.contains(blockId)) {
+                if (invalid(blockId)) {
                     return InteractionResult.PASS;
                 }
                 var id = ForgeRegistries.BLOCK_ENTITY_TYPES.getKey(tile.getType());
@@ -82,8 +79,8 @@ public class ItemMEPackingTape extends Item {
         return InteractionResult.PASS;
     }
 
-    public static void registerPackableDevice(ResourceLocation id) {
-        WHITE_LIST.add(id);
+    private static boolean invalid(ResourceLocation id) {
+        return !EPPConfig.tapeWhitelist.contains(id);
     }
 
 }

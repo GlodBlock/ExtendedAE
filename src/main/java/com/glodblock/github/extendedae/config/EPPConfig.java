@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = ExtendedAE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -99,7 +100,7 @@ public class EPPConfig {
     public static double wirelessPowerMultiplier;
     public static List<Fluid> infCellFluid;
     public static List<Item> infCellItem;
-    public static List<ResourceLocation> tapeWhitelist;
+    public static Set<ResourceLocation> tapeWhitelist;
     public static boolean disableInscriberRender;
     private static int oversizeMultiplier;
     private static Map<ResourceLocation, Integer> customOversizeMultiplier;
@@ -128,7 +129,7 @@ public class EPPConfig {
                         infCellFluid.add(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(s)));
                     }
                 });
-        tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::new).collect(Collectors.toList());
+        tapeWhitelist = PACKABLE_AE_DEVICE.get().stream().map(ResourceLocation::new).collect(Collectors.toSet());
         disableInscriberRender = INSCRIBER_RENDER.get();
         oversizeMultiplier = OVERSIZE_MULTIPLIER.get();
         customOversizeMultiplier = new Object2IntOpenHashMap<>();
