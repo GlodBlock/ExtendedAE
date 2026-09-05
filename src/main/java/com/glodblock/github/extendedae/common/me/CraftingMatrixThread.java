@@ -183,7 +183,7 @@ public class CraftingMatrixThread extends CraftingThread {
         static SearchResult NULL = new SearchResult(null, null, null, null, 0);
 
         boolean isValid() {
-            return this != NULL || this.results != null;
+            return this != NULL && this.results != null;
         }
 
     }
