@@ -16,6 +16,7 @@
     "MixinBlockEntityRenderDispatcher",
     "MixinClearPatternAccessTerminalPacket",
     "MixinLevelRenderer",
+    "MixinNetworkStatusScreen",
     "MixinPatternAccessTerminalPacket",
     "MixinRenderBlockOutlineHook",
     "MixinScreen"

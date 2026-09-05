@@ -16,6 +16,7 @@ import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.menu.implementations.PatternAccessTermMenu;
+import appeng.menu.me.networktool.NetworkStatusMenu;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.parts.automation.ExportBusPart;
@@ -49,6 +50,7 @@ public class Ae2Reflect {
     private static final Field fInterfaceLogic_config;
     private static final Field fInterfaceLogic_storage;
     private static final Field fPatternAccessTermMenu_byId;
+    private static final Field fNetworkStatusMenu_grid;
     private static final Method mDriveBlockEntity_updateClientSideState;
     private static final Method mAECraftingPattern_getCompressedIndexFromSparse;
     private static final Method mIOBusPart_updateState;
@@ -76,6 +78,7 @@ public class Ae2Reflect {
             fInterfaceLogic_config = ReflectKit.reflectField(InterfaceLogic.class, "config");
             fInterfaceLogic_storage = ReflectKit.reflectField(InterfaceLogic.class, "storage");
             fPatternAccessTermMenu_byId = ReflectKit.reflectField(PatternAccessTermMenu.class, "byId");
+            fNetworkStatusMenu_grid = ReflectKit.reflectField(NetworkStatusMenu.class, "grid");
             mDriveBlockEntity_updateClientSideState = ReflectKit.reflectMethod(DriveBlockEntity.class, "updateClientSideState");
             mAECraftingPattern_getCompressedIndexFromSparse = ReflectKit.reflectMethod(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
             mIOBusPart_updateState = ReflectKit.reflectMethod(IOBusPart.class, "updateState");
@@ -145,6 +148,10 @@ public class Ae2Reflect {
         } else if (owner instanceof AEBasePart) {
             ReflectKit.writeField(owner, fAEBasePart_customName, name);
         }
+    }
+
+    public static IGrid getNetworkGrid(NetworkStatusMenu container) {
+        return ReflectKit.readField(container, fNetworkStatusMenu_grid);
     }
 
     public static void updatePartState(IOBusPart owner) {
