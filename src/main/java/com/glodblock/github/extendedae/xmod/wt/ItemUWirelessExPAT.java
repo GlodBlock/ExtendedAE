@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class ItemUWirelessExPAT extends ItemWT {
 
     public ItemUWirelessExPAT() {
+        // NO-OP
     }
 
     @Override
@@ -25,4 +26,5 @@ public class ItemUWirelessExPAT extends ItemWT {
         configManager.readFromNBT(target.getOrCreateTag().copy());
         return configManager;
     }
+
 }

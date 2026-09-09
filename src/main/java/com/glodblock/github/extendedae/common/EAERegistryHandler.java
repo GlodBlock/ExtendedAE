@@ -13,8 +13,6 @@ import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
-import appeng.hotkeys.HotkeyActions;
-import appeng.hotkeys.InventoryHotkeyAction;
 import appeng.items.AEBaseItem;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import com.glodblock.github.extendedae.ExtendedAE;
@@ -89,8 +87,6 @@ import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collection;
-
-import static appeng.api.features.HotkeyAction.WIRELESS_TERMINAL;
 
 public class EAERegistryHandler extends RegistryHandler {
 
@@ -284,12 +280,6 @@ public class EAERegistryHandler extends RegistryHandler {
     private void registerRandomAPI() {
         GridLinkables.register(EPPItemAndBlock.WIRELESS_EX_PAT, WirelessTerminalItem.LINKABLE_HANDLER);
         GridLinkables.register(EPPItemAndBlock.WIRELESS_EX_CT, WirelessTerminalItem.LINKABLE_HANDLER);
-        if (!ModList.get().isLoaded("ae2wtlib")) {
-            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
-            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_CT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_CT.openFromInventory(player, i)), WIRELESS_TERMINAL);
-        } else {
-            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
-        }
     }
 
     public void registerTab(Registry<CreativeModeTab> registry) {

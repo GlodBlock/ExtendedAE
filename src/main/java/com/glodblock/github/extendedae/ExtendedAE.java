@@ -43,6 +43,7 @@ public class ExtendedAE {
         EPPItemAndBlock.init(EAERegistryHandler.INSTANCE);
         bus.register(EAERegistryHandler.INSTANCE);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.register(ClientRegistryHandler.INSTANCE));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler.INSTANCE::registerAEHotkey);
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);
         bus.addListener((RegisterEvent e) -> {

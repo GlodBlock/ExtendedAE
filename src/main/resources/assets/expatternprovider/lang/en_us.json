@@ -201,5 +201,6 @@
   "config.jade.plugin_expatternprovider.jade_chamber": "ME Crystal Fixer",
   "config.jade.plugin_expatternprovider.jade_wireless": "ME Wireless Connector Color",
   "key.epp.viewpattern": "View Pattern",
-  "key.epp.category": "Extended AE"
+  "key.epp.category": "Extended AE",
+  "key.ae2.wireless_ex_crafting_terminal": "Open Wireless Ex. Crafting Terminal"
 }

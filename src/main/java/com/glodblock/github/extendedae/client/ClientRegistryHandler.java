@@ -2,6 +2,8 @@ package com.glodblock.github.extendedae.client;
 
 import appeng.api.util.AEColor;
 import appeng.client.render.StaticItemColor;
+import appeng.hotkeys.HotkeyActions;
+import appeng.hotkeys.InventoryHotkeyAction;
 import appeng.init.client.InitScreens;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.GuiExCraftingTerminal;
@@ -48,6 +50,8 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 
+import static appeng.api.features.HotkeyAction.WIRELESS_TERMINAL;
+
 public class ClientRegistryHandler {
 
     public static final ClientRegistryHandler INSTANCE = new ClientRegistryHandler();
@@ -59,6 +63,16 @@ public class ClientRegistryHandler {
         }
         if (ModList.get().isLoaded("appliede")) {
             APEClientLoad.init();
+        }
+    }
+
+    public void registerAEHotkey() {
+        if (!ModList.get().isLoaded("ae2wtlib")) {
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_CT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_CT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), WIRELESS_TERMINAL);
+        } else {
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_CT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_CT.openFromInventory(player, i)), "wireless_ex_crafting_terminal");
+            HotkeyActions.register(new InventoryHotkeyAction(EPPItemAndBlock.WIRELESS_EX_PAT, (player, i) -> EPPItemAndBlock.WIRELESS_EX_PAT.openFromInventory(player, i)), "wireless_pattern_access_terminal");
         }
     }
 
