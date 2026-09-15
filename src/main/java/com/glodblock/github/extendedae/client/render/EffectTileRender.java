@@ -10,7 +10,6 @@ public class EffectTileRender {
         if (Minecraft.getInstance().levelRenderer instanceof RenderJobProvider provider) {
             var job = provider.getRenderJob(event.getStage());
             job.run();
-            Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
         }
     }
 
