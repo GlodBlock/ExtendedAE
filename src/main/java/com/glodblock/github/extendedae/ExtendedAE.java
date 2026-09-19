@@ -90,14 +90,14 @@ public class ExtendedAE {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
-        EAERegistryHandler.INSTANCE.onInit();
-        LazyInits.initCommon();
+        event.enqueueWork(EAERegistryHandler.INSTANCE::onInit);
+        event.enqueueWork(LazyInits::initCommon);
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
-        PatternHotKey.onInit();
-        TagHook.onInit();
-        CutterHook.addTooltip();
+        event.enqueueWork(PatternHotKey::onInit);
+        event.enqueueWork(TagHook::onInit);
+        event.enqueueWork(CutterHook::addTooltip);
     }
 
     public void sendIMC(InterModEnqueueEvent event) {
@@ -109,7 +109,7 @@ public class ExtendedAE {
     }
 
     public void onFinalization(FMLLoadCompleteEvent event) {
-        LazyInits.initFinal();
+        event.enqueueWork(LazyInits::initFinal);
     }
 
     public static ResourceLocation id(String id) {
