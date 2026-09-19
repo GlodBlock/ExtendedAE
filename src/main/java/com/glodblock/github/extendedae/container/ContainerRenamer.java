@@ -6,13 +6,10 @@ import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.parts.AEBasePart;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -25,6 +22,23 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
 
     public static final MenuType<ContainerRenamer> TYPE = MenuTypeBuilder
             .create(ContainerRenamer::new, Object.class)
+            .withInitialData(
+                    (host, buf) -> {
+                        var getter = getter(host);
+                        if (getter != null) {
+                            buf.writeBoolean(true);
+                            var text = getter.get();
+                            buf.writeUtf(text == null ? "" : text.getString());
+                        } else {
+                            buf.writeBoolean(false);
+                        }
+                    },
+                    (host, container, buf) -> {
+                        if (buf.readBoolean()) {
+                            container.name = buf.readUtf();
+                        }
+                    }
+            )
             .buildUnregistered(ExtendedAE.id("renamer"));
     private final ActionMap actions = ActionMap.create();
     private final Consumer<String> setter;
@@ -40,11 +54,6 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
             this.setValidMenu(false);
         }
         this.actions.put("set", o -> this.setName(o.get(0)));
-        this.actions.put("update", o -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.name), sp);
-            }
-        });
     }
 
     @Override
@@ -62,7 +71,6 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
         } else {
             this.setter.accept("");
         }
-        broadcastChanges();
     }
 
     private static Supplier<Component> getter(Object o) {

@@ -9,16 +9,12 @@ import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.container.ContainerVoidCell;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-public class GuiVoidCell extends AEBaseScreen<ContainerVoidCell> implements IActionHolder {
+public class GuiVoidCell extends AEBaseScreen<ContainerVoidCell> {
 
-    private final ActionMap actions = ActionMap.create();
     private final ActionEPPButton trash;
     private final ActionEPPButton matterBall;
     private final ActionEPPButton singularity;
@@ -29,12 +25,7 @@ public class GuiVoidCell extends AEBaseScreen<ContainerVoidCell> implements IAct
         this.trash = new ActionEPPButton(b -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.TRASH.ordinal())); this.mode = VoidMode.TRASH;}, Icon.CONDENSER_OUTPUT_TRASH);
         this.matterBall = new ActionEPPButton(b -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.MATTER_BALLS.ordinal())); this.mode = VoidMode.MATTER_BALLS;}, Icon.CONDENSER_OUTPUT_MATTER_BALL);
         this.singularity = new ActionEPPButton(b -> {EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", VoidMode.SINGULARITY.ordinal())); this.mode = VoidMode.SINGULARITY;}, Icon.CONDENSER_OUTPUT_SINGULARITY);
-        this.actions.put("init", o -> setMode(o.get(0)));
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
-    }
-
-    private void setMode(int modeId) {
-        this.mode = VoidMode.values()[modeId];
+        this.mode = menu.mode;
     }
 
     @Override
@@ -61,9 +52,4 @@ public class GuiVoidCell extends AEBaseScreen<ContainerVoidCell> implements IAct
         );
     }
 
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
-    }
 }

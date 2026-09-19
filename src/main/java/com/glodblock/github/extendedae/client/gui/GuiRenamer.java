@@ -6,17 +6,13 @@ import appeng.client.gui.widgets.AETextField;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import guideme.PageAnchor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-public class GuiRenamer extends AEBaseScreen<ContainerRenamer> implements IActionHolder {
+public class GuiRenamer extends AEBaseScreen<ContainerRenamer> {
 
-    private final ActionMap actions = ActionMap.create();
     private final AETextField renameInputs;
 
     public GuiRenamer(ContainerRenamer menu, Inventory playerInventory, Component title, ScreenStyle style) {
@@ -24,9 +20,8 @@ public class GuiRenamer extends AEBaseScreen<ContainerRenamer> implements IActio
         this.renameInputs = widgets.addTextField("rename_input");
         this.renameInputs.setMaxLength(512);
         this.renameInputs.setPlaceholder(Component.translatable("gui.extendedae.renamer.input"));
+        this.renameInputs.setValue(menu.name);
         this.renameInputs.setResponder(s -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s)));
-        this.actions.put("init", o -> this.renameInputs.setValue(o.get(0)));
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
     @Override
@@ -59,9 +54,4 @@ public class GuiRenamer extends AEBaseScreen<ContainerRenamer> implements IActio
         return null;
     }
 
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
-    }
 }

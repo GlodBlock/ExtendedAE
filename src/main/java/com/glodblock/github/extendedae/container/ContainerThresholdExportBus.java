@@ -8,11 +8,8 @@ import appeng.menu.implementations.UpgradeableMenu;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.api.ThresholdMode;
 import com.glodblock.github.extendedae.common.parts.PartThresholdExportBus;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -22,20 +19,19 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
 
     public static final MenuType<ContainerThresholdExportBus> TYPE = MenuTypeBuilder
             .create(ContainerThresholdExportBus::new, PartThresholdExportBus.class)
+            .withInitialData(
+                    (host, buf) -> buf.writeEnum(host.getMode()),
+                    (host, container, buf) -> container.mode = buf.readEnum(ThresholdMode.class)
+            )
             .buildUnregistered(ExtendedAE.id("threshold_export_bus"));
 
     private final ActionMap actions = ActionMap.create();
     @GuiSync(7)
-    private ThresholdMode mode = ThresholdMode.GREATER;
+    public ThresholdMode mode = ThresholdMode.GREATER;
 
     public ContainerThresholdExportBus(int id, Inventory ip, PartThresholdExportBus host) {
         super(TYPE, id, ip, host);
         this.actions.put("set", o -> this.setMode(o.get(0)));
-        this.actions.put("update", o -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode.ordinal()), sp);
-            }
-        });
     }
 
     @Override
@@ -63,7 +59,6 @@ public class ContainerThresholdExportBus extends UpgradeableMenu<PartThresholdEx
 
     public void setMode(int mode) {
         this.getHost().setMode(ThresholdMode.values()[mode]);
-        this.broadcastChanges();
     }
 
     public ThresholdMode getMode() {
