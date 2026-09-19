@@ -4,7 +4,6 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
-import appeng.api.networking.IGrid;
 import appeng.api.networking.IStackWatcher;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingWatcherNode;
@@ -79,7 +78,7 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
                     long currentTick = TickHandler.instance().getCurrentTick();
                     if (currentTick != lastUpdateTick) {
                         lastUpdateTick = currentTick;
-                        updateReportingValue(getGridNode().getGrid());
+                        updateReportingValue();
                     }
                 }
             }
@@ -126,7 +125,7 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
 
     @Override
     protected void onReportingValueChanged() {
-        getMainNode().ifPresent(this::updateReportingValue);
+        this.updateReportingValue();
     }
 
     @Override
@@ -159,7 +158,7 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
                     this.storageWatcher.add(myStack);
                 }
             }
-            getMainNode().ifPresent(this::updateReportingValue);
+            this.updateReportingValue();
         }
 
         updateState();
@@ -202,35 +201,38 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
         return this.currentState;
     }
 
-    private void updateReportingValue(IGrid grid) {
-        var stacks = grid.getStorageService().getCachedInventory();
-        var myStack = getConfiguredKey();
+    private void updateReportingValue() {
+        var node = this.getGridNode();
+        if (node != null && node.isActive()) {
+            var grid = node.getGrid();
+            var stacks = grid.getStorageService().getCachedInventory();
+            var myStack = getConfiguredKey();
 
-        if (myStack == null) {
-            this.lastReportedValue = 0;
-            for (var st : stacks) {
-                this.lastReportedValue += st.getLongValue();
-                if (this.lastReportedValue > this.getUpperValue()) {
-                    // Stop here, we have enough info! This prevents blank emitter spam from causing lots of lag.
-                    break;
+            if (myStack == null) {
+                this.lastReportedValue = 0;
+                for (var st : stacks) {
+                    this.lastReportedValue += st.getLongValue();
+                    if (this.lastReportedValue > this.getUpperValue()) {
+                        // Stop here, we have enough info! This prevents blank emitter spam from causing lots of lag.
+                        break;
+                    }
                 }
-            }
-        } else if (isUpgradedWith(AEItems.FUZZY_CARD)) {
-            this.lastReportedValue = 0;
-            var fzMode = this.getConfigManager().getSetting(Settings.FUZZY_MODE);
-            var fuzzyList = stacks.findFuzzy(myStack, fzMode);
-            for (var st : fuzzyList) {
-                this.lastReportedValue += st.getLongValue();
-                if (this.lastReportedValue > this.getUpperValue()) {
-                    // Stop here, we have enough info!
-                    break;
+            } else if (isUpgradedWith(AEItems.FUZZY_CARD)) {
+                this.lastReportedValue = 0;
+                var fzMode = this.getConfigManager().getSetting(Settings.FUZZY_MODE);
+                var fuzzyList = stacks.findFuzzy(myStack, fzMode);
+                for (var st : fuzzyList) {
+                    this.lastReportedValue += st.getLongValue();
+                    if (this.lastReportedValue > this.getUpperValue()) {
+                        // Stop here, we have enough info!
+                        break;
+                    }
                 }
+            } else {
+                this.lastReportedValue = stacks.get(myStack);
             }
-        } else {
-            this.lastReportedValue = stacks.get(myStack);
+            this.updateState();
         }
-
-        this.updateState();
     }
 
     @Override
@@ -278,12 +280,14 @@ public class PartThresholdLevelEmitter extends AbstractLevelEmitterPart implemen
         this.upperValue = value;
         this.onReportingValueChanged();
         this.updateState();
+        this.getHost().markForSave();
     }
 
     public void setLowerValue(long value) {
         this.lowerValue = value;
         this.onReportingValueChanged();
         this.updateState();
+        this.getHost().markForSave();
     }
 
     public long getUpperValue() {
