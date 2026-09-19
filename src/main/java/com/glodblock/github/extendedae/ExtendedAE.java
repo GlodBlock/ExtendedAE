@@ -56,13 +56,13 @@ public class ExtendedAE {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
-        EAERegistryHandler.INSTANCE.onInit();
-        EPPNetworkHandler.INSTANCE.init();
+        event.enqueueWork(EAERegistryHandler.INSTANCE::onInit);
+        event.enqueueWork(EPPNetworkHandler.INSTANCE::init);
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
-        ClientRegistryHandler.INSTANCE.init();
-        PatternHotKey.init();
+        event.enqueueWork(ClientRegistryHandler.INSTANCE::init);
+        event.enqueueWork(PatternHotKey::init);
     }
 
     public void onTagUpdate(TagsUpdatedEvent event) {
