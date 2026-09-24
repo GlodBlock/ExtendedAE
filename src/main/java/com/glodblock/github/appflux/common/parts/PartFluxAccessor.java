@@ -17,6 +17,7 @@ import appeng.parts.PartAdjacentApi;
 import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
 import com.glodblock.github.appflux.AppFlux;
+import com.glodblock.github.appflux.api.EnergyIO;
 import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
@@ -26,6 +27,7 @@ import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.container.ContainerFluxAccessor;
+import com.glodblock.github.appflux.util.IOSignal;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +47,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     private EnergyCapCache cacheApi;
     private boolean blocked = false;
     private boolean fast = false;
+    private EnergyIO io = EnergyIO.BOTH;
     private EnergyTickRecord lastTick = new EnergyTickRecord();
     private final ICapabilityInvalidationListener listener;
     private final IActionSource source = IActionSource.ofMachine(this);
@@ -115,7 +118,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
     public IEnergyStorage getEnergyStorage() {
         if (this.getStorage() != null) {
-            return new NetworkFEPower(this.getStorage(), this.source);
+            return new NetworkFEPower(this.getStorage(), this.source, IOSignal.of(this::getIOMode));
         } else {
             return new EnergyStorage(0);
         }
@@ -134,6 +137,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         super.importSettings(mode, input, player);
         if (input.has(AFSingletons.FAST_MODE)) {
             this.fast = input.getOrDefault(AFSingletons.FAST_MODE, false);
+            this.io = input.getOrDefault(AFSingletons.IO_MODE, EnergyIO.BOTH);
         }
     }
 
@@ -142,6 +146,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
         super.exportSettings(mode, output);
         if (mode == SettingsFrom.MEMORY_CARD) {
             output.set(AFSingletons.FAST_MODE, this.fast);
+            output.set(AFSingletons.IO_MODE, this.io);
         }
     }
 
@@ -149,38 +154,44 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
         super.readFromNBT(extra, registries);
         this.fast = extra.getBoolean("fast");
+        if (extra.contains("io")) {
+            this.io = EnergyIO.byId(extra.getInt("io"));
+        }
     }
 
     @Override
     public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
         super.writeToNBT(extra, registries);
         extra.putBoolean("fast", this.fast);
+        extra.putInt("io", this.io.ordinal());
     }
 
     @Override
     public void distribute(long ticks) {
-        if (this.getLevel() == null) {
-            return;
-        }
-        if (this.cacheApi == null) {
-            this.initCache();
-        }
-        var storage = this.getStorage();
-        var d = this.getSide();
-        var gird = this.getGrid();
-        if (storage != null && d != null) {
-            if (!this.blocked) {
-                if (this.isFastMode() || this.lastTick.needTick(ticks)) {
-                    long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
-                    if (sent == -1) {
-                        this.blocked = true;
-                    } else {
-                        this.lastTick.sent(sent);
+        if (this.io.isOutput()) {
+            if (this.getLevel() == null) {
+                return;
+            }
+            if (this.cacheApi == null) {
+                this.initCache();
+            }
+            var storage = this.getStorage();
+            var d = this.getSide();
+            var gird = this.getGrid();
+            if (storage != null && d != null) {
+                if (!this.blocked) {
+                    if (this.isFastMode() || this.lastTick.needTick(ticks)) {
+                        long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
+                        if (sent == -1) {
+                            this.blocked = true;
+                        } else {
+                            this.lastTick.sent(sent);
+                        }
                     }
                 }
-            }
-            if (AFConfig.selfCharge() && gird != null) {
-                EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.source);
+                if (AFConfig.selfCharge() && gird != null) {
+                    EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.source);
+                }
             }
         }
     }
@@ -206,6 +217,16 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     @Override
     public void setFastMode(boolean mode) {
         this.fast = mode;
+    }
+
+    @Override
+    public EnergyIO getIOMode() {
+        return this.io;
+    }
+
+    @Override
+    public void setIOMode(EnergyIO mode) {
+        this.io = mode;
     }
 
 }

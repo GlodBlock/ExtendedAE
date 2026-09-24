@@ -2,72 +2,63 @@ package com.glodblock.github.appflux.client.gui;
 
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.widgets.AE2Button;
+import appeng.client.gui.widgets.AECheckbox;
+import com.glodblock.github.appflux.api.EnergyIO;
 import com.glodblock.github.appflux.container.ContainerFluxAccessor;
 import com.glodblock.github.appflux.network.AFNetworkHandler;
 import com.glodblock.github.appflux.network.CAFGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-public class GuiFluxAccessor extends AEBaseScreen<ContainerFluxAccessor> implements IActionHolder {
+public class GuiFluxAccessor extends AEBaseScreen<ContainerFluxAccessor> {
 
-    private final ActionMap actions = ActionMap.create();
-    private final AE2Button fastBtn;
-    private final AE2Button slowBtn;
-    private boolean fastMode = false;
+    private final AECheckbox fastModeBtn;
+    private final AECheckbox inputBtn;
+    private final AECheckbox outputBtn;
+    private final AECheckbox ioBtn;
 
     public GuiFluxAccessor(ContainerFluxAccessor menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.actions.put("init", o -> setMode(o.get(0)));
-        AFNetworkHandler.INSTANCE.sendToServer(new CAFGenericPacket("update"));
-        this.fastBtn = new AE2Button(
-                0, 0, 81, 20,
-                Component.translatable("gui.appflux.flux_accessor.fast_on"),
-                b -> {
-                    AFNetworkHandler.INSTANCE.sendToServer(new CAFGenericPacket("set", false));
-                    this.fastMode = false;
-                }
+        this.fastModeBtn = this.widgets.addCheckbox(
+                "fast_mode_btn",
+                Component.translatable("gui.appflux.flux_accessor.fast_mode"),
+                this::setFastMode
         );
-        this.fastBtn.setTooltip(Tooltip.create(Component.translatable("gui.appflux.flux_accessor.warn")));
-        this.slowBtn = new AE2Button(
-                0, 0, 81, 20,
-                Component.translatable("gui.appflux.flux_accessor.fast_off"),
-                b -> {
-                    AFNetworkHandler.INSTANCE.sendToServer(new CAFGenericPacket("set", true));
-                    this.fastMode = true;
-                }
+        this.inputBtn = this.widgets.addCheckbox(
+                "input_btn",
+                Component.translatable("gui.appflux.flux_accessor.input_mode"),
+                () -> this.setIOMode(EnergyIO.INPUT.ordinal())
         );
-        this.slowBtn.setTooltip(Tooltip.create(Component.translatable("gui.appflux.flux_accessor.warn")));
+        this.inputBtn.setRadio(true);
+        this.outputBtn = this.widgets.addCheckbox(
+                "output_btn",
+                Component.translatable("gui.appflux.flux_accessor.output_mode"),
+                () -> this.setIOMode(EnergyIO.OUTPUT.ordinal())
+        );
+        this.outputBtn.setRadio(true);
+        this.ioBtn = this.widgets.addCheckbox(
+                "io_btn",
+                Component.translatable("gui.appflux.flux_accessor.input_output_mode"),
+                () -> this.setIOMode(EnergyIO.BOTH.ordinal())
+        );
+        this.ioBtn.setRadio(true);
     }
 
-    private void setMode(boolean mode) {
-        this.fastMode = mode;
+    private void setFastMode() {
+        AFNetworkHandler.INSTANCE.sendToServer(new CAFGenericPacket("fast_mode", this.fastModeBtn.isSelected()));
     }
 
-    @Override
-    public void init() {
-        super.init();
-        this.fastBtn.setPosition(this.leftPos + 20, this.topPos + 20);
-        this.slowBtn.setPosition(this.leftPos + 20, this.topPos + 20);
-        this.addRenderableWidget(this.fastBtn);
-        this.addRenderableWidget(this.slowBtn);
+    private void setIOMode(int code) {
+        AFNetworkHandler.INSTANCE.sendToServer(new CAFGenericPacket("io_mode", code));
     }
 
     @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
-        this.fastBtn.visible = this.fastMode;
-        this.slowBtn.visible = !this.fastMode;
-    }
-
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
+        this.fastModeBtn.setSelected(this.menu.fastMode);
+        this.inputBtn.setSelected(this.menu.ioMode == 0);
+        this.outputBtn.setSelected(this.menu.ioMode == 1);
+        this.ioBtn.setSelected(this.menu.ioMode == 2);
     }
 
 }

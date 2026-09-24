@@ -3,7 +3,7 @@
   "includes": ["common/common.json"],
   "background": {
     "texture": "guis/flux_accessor.png",
-    "srcRect": [0, 0, 121, 60]
+    "srcRect": [0, 0, 121, 122]
   },
   "text": {
     "dialog_title": {
@@ -14,6 +14,37 @@
         "left": 5,
         "top": 6
       }
+    },
+    "io_mode_hint": {
+      "text": {
+        "translate": "gui.appflux.flux_accessor.io_mode"
+      },
+      "position": {
+        "left": 5,
+        "top": 45
+      }
+    }
+  },
+  "widgets": {
+    "fast_mode_btn": {
+      "left": 10,
+      "top": 25,
+      "width": 100
+    },
+    "io_btn": {
+      "left": 10,
+      "top": 59,
+      "width": 100
+    },
+    "output_btn": {
+      "left": 10,
+      "top": 80,
+      "width": 100
+    },
+    "input_btn": {
+      "left": 10,
+      "top": 101,
+      "width": 100
     }
   }
 }

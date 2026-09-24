@@ -7,27 +7,31 @@ import aztech.modern_industrialization.api.energy.CableTier;
 import aztech.modern_industrialization.api.energy.EnergyApi;
 import aztech.modern_industrialization.api.energy.MIEnergyStorage;
 import aztech.modern_industrialization.config.MIServerConfig;
+import com.glodblock.github.appflux.api.EnergyIO;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.util.IOSignal;
 import dev.technici4n.grandpower.api.ILongEnergyStorage;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class MIEnergyCap extends LongEnergyCap implements MIEnergyStorage {
 
     public static final BlockCapability<MIEnergyStorage, Direction> CAP = EnergyApi.SIDED;
 
-    protected MIEnergyCap(IStorageService storage, IActionSource source) {
-        super(storage, source);
+    protected MIEnergyCap(IStorageService storage, IActionSource source, IOSignal signal) {
+        super(storage, source, signal);
     }
 
-    public static MIEnergyStorage of(@Nullable IStorageService storage, IActionSource source) {
+    public static MIEnergyStorage of(@Nullable IStorageService storage, IActionSource source, Supplier<EnergyIO> config) {
         if (storage == null) {
             return EnergyApi.EMPTY;
         } else {
-            return new MIEnergyCap(storage, source);
+            return new MIEnergyCap(storage, source, IOSignal.of(config));
         }
     }
 
@@ -53,22 +57,30 @@ public class MIEnergyCap extends LongEnergyCap implements MIEnergyStorage {
 
     @Override
     public long receive(long maxReceive, boolean simulate) {
-        int ratio = ratio();
-        maxReceive *= ratio;
-        if (ratio > 1L) {
-            maxReceive = super.receive(maxReceive, true) / ratio * ratio;
+        if (this.signal.isInput()) {
+            int ratio = ratio();
+            maxReceive *= ratio;
+            if (ratio > 1L) {
+                maxReceive = super.receive(maxReceive, true) / ratio * ratio;
+            }
+            return super.receive(maxReceive, simulate) / ratio;
+        } else {
+            return 0;
         }
-        return super.receive(maxReceive, simulate) / ratio;
     }
 
     @Override
     public long extract(long maxExtract, boolean simulate) {
-        int ratio = ratio();
-        maxExtract *= ratio;
-        if (ratio > 1L) {
-            maxExtract = super.extract(maxExtract, true) / ratio * ratio;
+        if (this.signal.isOutput()) {
+            int ratio = ratio();
+            maxExtract *= ratio;
+            if (ratio > 1L) {
+                maxExtract = super.extract(maxExtract, true) / ratio * ratio;
+            }
+            return super.extract(maxExtract, simulate) / ratio;
+        } else {
+            return 0;
         }
-        return super.extract(maxExtract, simulate) / ratio;
     }
 
     @Override

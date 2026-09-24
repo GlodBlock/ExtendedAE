@@ -1,6 +1,7 @@
 package com.glodblock.github.appflux.common.me.service;
 
 import appeng.api.networking.IGridNodeService;
+import com.glodblock.github.appflux.api.EnergyIO;
 import org.jetbrains.annotations.Nullable;
 
 public interface IEnergyDistributor extends IGridNodeService {
@@ -22,6 +23,14 @@ public interface IEnergyDistributor extends IGridNodeService {
     }
 
     default void setFastMode(boolean mode) {
+
+    }
+
+    default EnergyIO getIOMode() {
+        return EnergyIO.BOTH;
+    }
+
+    default void setIOMode(EnergyIO mode) {
 
     }
 

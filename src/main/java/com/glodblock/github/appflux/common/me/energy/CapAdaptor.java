@@ -18,16 +18,16 @@ public class CapAdaptor {
     public static void init(AFRegistryHandler event) {
         event.cap(TileFluxAccessor.class, Capabilities.EnergyStorage.BLOCK, (te, side) -> te.getEnergyStorage());
         if (GlodUtil.checkMod(ModConstants.MEK)) {
-            event.cap(TileFluxAccessor.class, MekEnergyCap.CAP, (te, side) -> MekEnergyCap.of(te.getStorage(), te.getSource()));
+            event.cap(TileFluxAccessor.class, MekEnergyCap.CAP, (te, side) -> MekEnergyCap.of(te.getStorage(), te.getSource(), te::getIOMode));
         }
         if (GlodUtil.checkMod(ModConstants.GP)) {
-            event.cap(TileFluxAccessor.class, LongEnergyCap.CAP, (te, side) -> LongEnergyCap.of(te.getStorage(), te.getSource()));
+            event.cap(TileFluxAccessor.class, LongEnergyCap.CAP, (te, side) -> LongEnergyCap.of(te.getStorage(), te.getSource(), te::getIOMode));
         }
         if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
-            event.cap(TileFluxAccessor.class, MIEnergyCap.CAP, (te, side) -> MIEnergyCap.of(te.getStorage(), te.getSource()));
+            event.cap(TileFluxAccessor.class, MIEnergyCap.CAP, (te, side) -> MIEnergyCap.of(te.getStorage(), te.getSource(), te::getIOMode));
         }
         if (GlodUtil.checkMod(ModConstants.FN)) {
-            event.cap(TileFluxAccessor.class, FluxNetworkCap.CAP, (te, side) -> FluxNetworkCap.of(te.getStorage(), te.getSource()));
+            event.cap(TileFluxAccessor.class, FluxNetworkCap.CAP, (te, side) -> FluxNetworkCap.of(te.getStorage(), te.getSource(), te::getIOMode));
         }
     }
 
@@ -40,28 +40,28 @@ public class CapAdaptor {
         if (GlodUtil.checkMod(ModConstants.MEK)) {
             event.register(
                     MekEnergyCap.CAP,
-                    (part, direction) -> MekEnergyCap.of(part.getStorage(), part.getSource()),
+                    (part, direction) -> MekEnergyCap.of(part.getStorage(), part.getSource(), part::getIOMode),
                     PartFluxAccessor.class
             );
         }
         if (GlodUtil.checkMod(ModConstants.GP)) {
             event.register(
                     LongEnergyCap.CAP,
-                    (part, direction) -> LongEnergyCap.of(part.getStorage(), part.getSource()),
+                    (part, direction) -> LongEnergyCap.of(part.getStorage(), part.getSource(), part::getIOMode),
                     PartFluxAccessor.class
             );
         }
         if (GlodUtil.checkMod(ModConstants.MI) && AFConfig.miSupport()) {
             event.register(
                     MIEnergyCap.CAP,
-                    (part, direction) -> MIEnergyCap.of(part.getStorage(), part.getSource()),
+                    (part, direction) -> MIEnergyCap.of(part.getStorage(), part.getSource(), part::getIOMode),
                     PartFluxAccessor.class
             );
         }
         if (GlodUtil.checkMod(ModConstants.FN)) {
             event.register(
                     FluxNetworkCap.CAP,
-                    (part, direction) -> FluxNetworkCap.of(part.getStorage(), part.getSource()),
+                    (part, direction) -> FluxNetworkCap.of(part.getStorage(), part.getSource(), part::getIOMode),
                     PartFluxAccessor.class
             );
         }
