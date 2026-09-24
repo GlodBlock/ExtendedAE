@@ -1,6 +1,7 @@
 package com.glodblock.github.appflux.common;
 
 import appeng.items.parts.PartItem;
+import com.glodblock.github.appflux.api.EnergyIO;
 import com.glodblock.github.appflux.common.blocks.BlockChargedRedstoneBlock;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
@@ -15,9 +16,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -26,6 +29,7 @@ public class AFSingletons {
 
     public static DataComponentType<Long> FE_ENERGY;
     public static DataComponentType<Boolean> FAST_MODE;
+    public static DataComponentType<EnergyIO> IO_MODE;
 
     public static NormalItem CORE_1k;
     public static NormalItem CORE_4k;
@@ -75,6 +79,7 @@ public class AFSingletons {
     public static void init(AFRegistryHandler regHandler) {
         FE_ENERGY = GlodUtil.getComponentType(Codec.LONG, ByteBufCodecs.VAR_LONG);
         FAST_MODE = GlodUtil.getComponentType(Codec.BOOL, ByteBufCodecs.BOOL);
+        IO_MODE = GlodUtil.getComponentType(StringRepresentable.fromEnum(EnergyIO::values), NeoForgeStreamCodecs.enumCodec(EnergyIO.class));
         CORE_1k = new NormalItem();
         CORE_4k = new NormalItem();
         CORE_16k = new NormalItem();
@@ -127,6 +132,7 @@ public class AFSingletons {
         CHARGED_REDSTONE_BLOCK = new BlockChargedRedstoneBlock();
         regHandler.comp("fe_energy", FE_ENERGY);
         regHandler.comp("fast_mode", FAST_MODE);
+        regHandler.comp("io_mode", IO_MODE);
         regHandler.item("core_1k", CORE_1k);
         regHandler.item("core_4k", CORE_4k);
         regHandler.item("core_16k", CORE_16k);

@@ -8,6 +8,7 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
 import appeng.util.SettingsFrom;
+import com.glodblock.github.appflux.api.EnergyIO;
 import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.caps.NetworkFEPower;
 import com.glodblock.github.appflux.common.me.energy.EnergyCapCache;
@@ -16,6 +17,7 @@ import com.glodblock.github.appflux.common.me.energy.EnergyTickRecord;
 import com.glodblock.github.appflux.common.me.service.EnergyDistributeService;
 import com.glodblock.github.appflux.common.me.service.IEnergyDistributor;
 import com.glodblock.github.appflux.config.AFConfig;
+import com.glodblock.github.appflux.util.IOSignal;
 import com.glodblock.github.appflux.util.helpers.Constants;
 import com.glodblock.github.glodium.util.GlodUtil;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
@@ -40,6 +42,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
 
     private EnergyCapCache cacheApi;
     private boolean fast = false;
+    private EnergyIO io = EnergyIO.BOTH;
     // mutable
     private final Set<Direction> blocked = EnumSet.noneOf(Direction.class);
     private final Reference2ReferenceMap<Direction, EnergyTickRecord> lastTick = new Reference2ReferenceOpenHashMap<>();
@@ -78,7 +81,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
 
     public IEnergyStorage getEnergyStorage() {
         if (this.getStorage() != null) {
-            return new NetworkFEPower(this.getStorage(), this.source);
+            return new NetworkFEPower(this.getStorage(), this.source, IOSignal.of(this::getIOMode));
         } else {
             return new EnergyStorage(0);
         }
@@ -96,6 +99,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
         super.importSettings(mode, input, player);
         if (input.has(AFSingletons.FAST_MODE)) {
             this.fast = input.getOrDefault(AFSingletons.FAST_MODE, false);
+            this.io = input.getOrDefault(AFSingletons.IO_MODE, EnergyIO.BOTH);
         }
     }
 
@@ -104,6 +108,7 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
         super.exportSettings(mode, output, player);
         if (mode == SettingsFrom.MEMORY_CARD) {
             output.set(AFSingletons.FAST_MODE, this.fast);
+            output.set(AFSingletons.IO_MODE, this.io);
         }
     }
 
@@ -111,12 +116,16 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
         this.fast = data.getBoolean("fast");
+        if (data.contains("io")) {
+            this.io = EnergyIO.byId(data.getInt("io"));
+        }
     }
 
     @Override
     public void saveAdditional(CompoundTag extra, HolderLookup.Provider registries) {
         super.saveAdditional(extra, registries);
         extra.putBoolean("fast", this.fast);
+        extra.putInt("io", this.io.ordinal());
     }
 
     @Override
@@ -126,31 +135,33 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
 
     @Override
     public void distribute(long ticks) {
-        if (this.level == null) {
-            return;
-        }
-        if (this.cacheApi == null) {
-            this.initCache();
-        }
-        var storage = this.getStorage();
-        var gird = this.getGrid();
-        if (storage != null) {
-            for (var d : Constants.ALL_DIRECTIONS_LIST) {
-                if (this.blocked.contains(d)) {
-                    continue;
-                }
-                var tickRate = this.lastTick.get(d);
-                if (this.isFastMode() || tickRate.needTick(ticks)) {
-                    long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
-                    if (sent == -1) {
-                        this.blocked.add(d);
-                    } else {
-                        tickRate.sent(sent);
+        if (this.io.isOutput()) {
+            if (this.level == null) {
+                return;
+            }
+            if (this.cacheApi == null) {
+                this.initCache();
+            }
+            var storage = this.getStorage();
+            var gird = this.getGrid();
+            if (storage != null) {
+                for (var d : Constants.ALL_DIRECTIONS_LIST) {
+                    if (this.blocked.contains(d)) {
+                        continue;
+                    }
+                    var tickRate = this.lastTick.get(d);
+                    if (this.isFastMode() || tickRate.needTick(ticks)) {
+                        long sent = EnergyHandler.send(this.cacheApi, d, storage, this.source);
+                        if (sent == -1) {
+                            this.blocked.add(d);
+                        } else {
+                            tickRate.sent(sent);
+                        }
                     }
                 }
-            }
-            if (AFConfig.selfCharge() && gird != null) {
-                EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.source);
+                if (AFConfig.selfCharge() && gird != null) {
+                    EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.source);
+                }
             }
         }
     }
@@ -178,6 +189,16 @@ public class TileFluxAccessor extends AENetworkedBlockEntity implements IEnergyD
     @Override
     public void setFastMode(boolean mode) {
         this.fast = mode;
+    }
+
+    @Override
+    public EnergyIO getIOMode() {
+        return this.io;
+    }
+
+    @Override
+    public void setIOMode(EnergyIO mode) {
+        this.io = mode;
     }
 
     @Override

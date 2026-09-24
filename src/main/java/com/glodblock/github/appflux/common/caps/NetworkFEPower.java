@@ -6,18 +6,27 @@ import appeng.api.networking.storage.IStorageService;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
+import com.glodblock.github.appflux.util.IOSignal;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public record NetworkFEPower(IStorageService storage, IActionSource source) implements IEnergyStorage {
+public record NetworkFEPower(IStorageService storage, IActionSource source, IOSignal signal) implements IEnergyStorage {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return (int) this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), maxReceive, Actionable.ofSimulate(simulate), this.source);
+        if (this.signal.isInput())  {
+            return (int) this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), maxReceive, Actionable.ofSimulate(simulate), this.source);
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return (int) this.storage.getInventory().extract(FluxKey.of(EnergyType.FE), maxExtract, Actionable.ofSimulate(simulate), this.source);
+        if (this.signal.isOutput())  {
+            return (int) this.storage.getInventory().extract(FluxKey.of(EnergyType.FE), maxExtract, Actionable.ofSimulate(simulate), this.source);
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -33,11 +42,12 @@ public record NetworkFEPower(IStorageService storage, IActionSource source) impl
 
     @Override
     public boolean canExtract() {
-        return true;
+        return this.signal.isOutput();
     }
 
     @Override
     public boolean canReceive() {
-        return true;
+        return this.signal.isInput();
     }
+
 }
