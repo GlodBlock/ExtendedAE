@@ -197,9 +197,6 @@ public class AFRegistryHandler extends RegistryHandler {
                             o.accept(entry.value());
                         }
                     }
-                    for (var entry : this.blocks.getEntries()) {
-                        o.accept(entry.value());
-                    }
                 })
                 .build();
         Registry.register(registry, AppFlux.id("tab_main"), tab);
