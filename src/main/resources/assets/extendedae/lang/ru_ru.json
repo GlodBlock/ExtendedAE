@@ -32,7 +32,7 @@
   "block.extendedae.assembler_matrix_glass": "Стекло сборочной матрицы",
   "block.extendedae.assembler_matrix_pattern": "Ядро шаблонов сборочной матрицы",
   "block.extendedae.assembler_matrix_crafter": "Ядро создания сборочной матрицы",
-  "block.extendedae.assembler_matrix_speed": "Ядро скорости сборочной матрицы"
+  "block.extendedae.assembler_matrix_speed": "Ядро скорости сборочной матрицы",
   "block.extendedae.wireless_hub": "МЭ беспроводной концентратор",
   "block.extendedae.ex_emc_interface": "МЭ расширенный интерфейс трансмутации",
   "item.extendedae.active_formation_plane": "МЭ активная плоскость формирования",
