@@ -51,9 +51,11 @@
   "appflux.type.fe.name": "FE",
   "appflux.cell.storage": "Содержит: %s %s",
   "gui.appflux.flux_accessor": "Флюсовый приёмник",
-  "gui.appflux.flux_accessor.fast_on": "Быстрый режим: ВКЛ",
-  "gui.appflux.flux_accessor.fast_off": "Быстрый режим: ВЫКЛ",
-  "gui.appflux.flux_accessor.warn": "Может вызвать задержки в быстром режиме.",
+  "gui.appflux.flux_accessor.fast_mode": "Быстрый режим",
+  "gui.appflux.flux_accessor.io_mode": "Режим ввода-вывода",
+  "gui.appflux.flux_accessor.input_mode": "Только ввод",
+  "gui.appflux.flux_accessor.output_mode": "Только вывод",
+  "gui.appflux.flux_accessor.input_output_mode": "Ввод-вывод",
   "group.pattern_provider.name": "МЭ поставщик шаблонов",
   "group.fe_portable_cells.name": "Переносные ячейки FE"
 }
