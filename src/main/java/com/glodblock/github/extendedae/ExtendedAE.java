@@ -82,13 +82,13 @@ public class ExtendedAE {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
-        EAERegistryHandler.INSTANCE.onInit();
+        event.enqueueWork(EAERegistryHandler.INSTANCE::onInit);
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
-        PatternHotKey.onInit();
-        TagHook.onInit();
-        CutterHook.addTooltip();
+        event.enqueueWork(PatternHotKey::onInit);
+        event.enqueueWork(TagHook::onInit);
+        event.enqueueWork(CutterHook::addTooltip);
     }
 
     public void sendIMC(InterModEnqueueEvent event) {

@@ -109,11 +109,11 @@ dependencies {
     implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
     implementation "org.appliedenergistics:appliedenergistics2:26.1.12-beta"
     implementation "org.appliedenergistics:guideme:26.1.14-beta"
-    jarJar(implementation ("de.mari_023:ae2wtlib_api:26.1.0-beta") { transitive = false })
-    compileOnly "curse.maven:applied-flux-965012:8512902"
+    jarJar(implementation ("de.mari_023:ae2wtlib_api:26.1.1-beta") { transitive = false })
+    compileOnly "curse.maven:applied-flux-965012:9025081"
     //compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     //compileOnly "curse.maven:mega-cells-622112:6005043"
-    compileOnly "curse.maven:jade-324717:8068368"
+    compileOnly "curse.maven:jade-324717:8857417"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:26.1.819"
     //compileOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     //compileOnly "curse.maven:applied-mekanistics-574300:5978711"
@@ -125,9 +125,9 @@ dependencies {
     //compileOnly "curse.maven:appliede-1009940:6500056"
     //compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
-    runtimeOnly "curse.maven:applied-flux-965012:8512902"
-    runtimeOnly ("de.mari_023:ae2wtlib:26.1.0-beta") { transitive = false }
-    runtimeOnly "curse.maven:jade-324717:8068368"
+    runtimeOnly "curse.maven:applied-flux-965012:9025081"
+    runtimeOnly ("de.mari_023:ae2wtlib:26.1.1-beta") { transitive = false }
+    runtimeOnly "curse.maven:jade-324717:8857417"
     //runtimeOnly "curse.maven:mega-cells-622112:6005043"
     //runtimeOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     //runtimeOnly "curse.maven:appliede-1009940:6500056"

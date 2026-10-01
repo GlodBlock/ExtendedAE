@@ -339,9 +339,6 @@ public class EAERegistryHandler extends RegistryHandler {
                             o.accept(entry.value());
                         }
                     }
-                    for (var entry : this.blocks.getEntries()) {
-                        o.accept(entry.value());
-                    }
                 })
                 .build();
         Registry.register(registry, ExtendedAE.id("tab_main"), tab);
