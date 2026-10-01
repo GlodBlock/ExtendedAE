@@ -95,8 +95,8 @@ repositories {
 
 dependencies {
     implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
-    implementation "org.appliedenergistics:appliedenergistics2:26.1.8-alpha"
-    implementation "org.appliedenergistics:guideme:26.1.10-alpha"
+    implementation "org.appliedenergistics:appliedenergistics2:26.1.12-beta"
+    implementation "org.appliedenergistics:guideme:26.1.14-beta"
     // compileOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
     // compileOnly "curse.maven:modern-industrialization-405388:6389065"
     // compileOnly "curse.maven:grandpower-980156:5432440"
