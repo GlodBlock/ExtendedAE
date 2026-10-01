@@ -1,5 +1,6 @@
 package com.glodblock.github.appflux.common;
 
+import com.glodblock.github.appflux.api.EnergyIO;
 import com.glodblock.github.appflux.common.blocks.BlockChargedRedstoneBlock;
 import com.glodblock.github.appflux.common.blocks.BlockFluxAccessor;
 import com.glodblock.github.appflux.common.items.ItemFECell;
@@ -11,6 +12,7 @@ import com.glodblock.github.appflux.common.tileentities.TileFluxAccessor;
 import com.glodblock.github.glodium.registry.defer.DeferredDataComponentType;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +21,7 @@ public class AFSingletons {
 
     public static DeferredDataComponentType<Long> FE_ENERGY;
     public static DeferredDataComponentType<Boolean> FAST_MODE;
+    public static DeferredDataComponentType<EnergyIO> IO_MODE;
 
     public static DeferredItem<@NotNull NormalItem> CORE_1k;
     public static DeferredItem<@NotNull NormalItem> CORE_4k;
@@ -68,6 +71,7 @@ public class AFSingletons {
     public static void init(AFRegistryHandler regHandler) {
         FE_ENERGY = regHandler.comp("fe_energy", Codec.LONG, ByteBufCodecs.VAR_LONG);
         FAST_MODE = regHandler.comp("fast_mode", Codec.BOOL, ByteBufCodecs.BOOL);
+        IO_MODE = regHandler.comp("io_mode", EnergyIO.CODEC, NeoForgeStreamCodecs.enumCodec(EnergyIO.class));
         CORE_1k = regHandler.item("core_1k", NormalItem::new);
         CORE_4k = regHandler.item("core_4k", NormalItem::new);
         CORE_16k = regHandler.item("core_16k", NormalItem::new);

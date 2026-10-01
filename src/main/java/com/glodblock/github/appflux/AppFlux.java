@@ -74,11 +74,11 @@ public class AppFlux {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
-        AFRegistryHandler.INSTANCE.init();
+        event.enqueueWork(AFRegistryHandler.INSTANCE::init);
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
-        AFClientRegistryHandler.INSTANCE.init();
+        event.enqueueWork(AFClientRegistryHandler.INSTANCE::init);
     }
 
     public static Identifier id(String id) {

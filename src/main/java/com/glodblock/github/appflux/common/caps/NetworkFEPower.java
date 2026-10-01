@@ -7,6 +7,7 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.util.AFUtil;
 import com.glodblock.github.appflux.util.DeltaEnergyJournal;
+import com.glodblock.github.appflux.util.IOSignal;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
@@ -16,11 +17,13 @@ public class NetworkFEPower implements EnergyHandler {
 
     private final IStorageService storage;
     private final IActionSource source;
+    private final IOSignal signal;
     private final DeltaEnergyJournal journal;
 
-    public NetworkFEPower(IStorageService storage, IActionSource source) {
+    public NetworkFEPower(IStorageService storage, IActionSource source, IOSignal signal) {
         this.storage = storage;
         this.source = source;
+        this.signal = signal;
         this.journal = new DeltaEnergyJournal(
                 (amount, simulate) -> this.storage.getInventory().extract(FluxKey.of(EnergyType.FE), amount, AFUtil.ofSim(simulate), this.source),
                 (amount, simulate) -> this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), amount, AFUtil.ofSim(simulate), this.source)
@@ -29,16 +32,24 @@ public class NetworkFEPower implements EnergyHandler {
 
     @Override
     public int insert(int amount, @NotNull TransactionContext transaction) {
-        TransferPreconditions.checkNonNegative(amount);
-        this.journal.updateSnapshots(transaction);
-        return (int) this.journal.onInsert(amount);
+        if (this.signal.isInput()) {
+            TransferPreconditions.checkNonNegative(amount);
+            this.journal.updateSnapshots(transaction);
+            return (int) this.journal.onInsert(amount);
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public int extract(int amount, @NotNull TransactionContext transaction) {
-        TransferPreconditions.checkNonNegative(amount);
-        this.journal.updateSnapshots(transaction);
-        return (int) this.journal.onExtract(amount);
+        if (this.signal.isOutput()) {
+            TransferPreconditions.checkNonNegative(amount);
+            this.journal.updateSnapshots(transaction);
+            return (int) this.journal.onExtract(amount);
+        } else {
+            return 0;
+        }
     }
 
     @Override
