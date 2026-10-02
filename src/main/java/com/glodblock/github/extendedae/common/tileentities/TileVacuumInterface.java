@@ -319,7 +319,7 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
                     if (entity.isAlive()) {
                         var key = AEItemKey.of(entity.getItem());
                         int amount = entity.getItem().getCount();
-                        if (this.getFilter().matchesFilter(key, this.listMode)) {
+                        if (key != null && this.getFilter().matchesFilter(key, this.listMode)) {
                             var added = storage.getInventory().insert(key, amount, Actionable.MODULATE, this.source);
                             if (added < amount) {
                                 entity.getItem().shrink((int) added);
