@@ -6,13 +6,10 @@ import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.parts.AEBasePart;
 import com.glodblock.github.extendedae.ExtendedAE;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.extendedae.util.Ae2Reflect;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -25,6 +22,17 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
 
     public static final MenuType<@NotNull ContainerRenamer> TYPE = MenuTypeBuilder
             .create(ContainerRenamer::new, Object.class)
+            .withInitialData(
+                    (host, buffer) -> {
+                        var getter = getter(host);
+                        if (getter != null && getter.get() != null) {
+                            buffer.writeUtf(getter.get().getString());
+                        } else {
+                            buffer.writeUtf("");
+                        }
+                    },
+                    (_, container, buffer) -> container.name = buffer.readUtf()
+            )
             .buildUnregistered(ExtendedAE.id("renamer"));
     private final ActionMap actions = ActionMap.create();
     private final Consumer<String> setter;
@@ -40,11 +48,6 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
             this.setValidMenu(false);
         }
         this.actions.put("set", o -> this.setName(o.getString()));
-        this.actions.put("update", _ -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.name), sp);
-            }
-        });
     }
 
     @Override
@@ -62,7 +65,6 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
         } else {
             this.setter.accept("");
         }
-        broadcastChanges();
     }
 
     private static Supplier<Component> getter(Object o) {
@@ -77,6 +79,11 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
             return s -> {
                 var c = s.isBlank() ? null : Component.literal(s);
                 Ae2Reflect.setCustomName(o, c);
+                if (o instanceof AEBaseBlockEntity te) {
+                    te.saveChanges();
+                } else if (o instanceof AEBasePart part) {
+                    part.getHost().markForSave();
+                }
             };
         }
         return null;
@@ -87,4 +94,5 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
     public ActionMap getActionMap() {
         return this.actions;
     }
+
 }

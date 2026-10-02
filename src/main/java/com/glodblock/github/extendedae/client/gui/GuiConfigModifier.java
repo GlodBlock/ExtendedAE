@@ -8,41 +8,32 @@ import com.glodblock.github.extendedae.common.items.tools.ItemConfigModifier;
 import com.glodblock.github.extendedae.container.ContainerConfigModifier;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
-public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> implements IActionHolder {
+public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> {
 
-    private final ActionMap actions = ActionMap.create();
-    private ItemConfigModifier.ConfigSettings.Mode mode = ItemConfigModifier.ConfigSettings.Mode.MUL;
+    private ItemConfigModifier.ConfigSettings.Mode mode;
     private final AE2Button changeMode;
     private final AETextField dataInput;
     private static final Pattern NUMBER = Pattern.compile("[0-9]*");
 
     public GuiConfigModifier(ContainerConfigModifier menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
+        this.mode = menu.mode;
         this.changeMode = new AE2Button(Component.empty(), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_mode", this.mode.getNext())));
         this.changeMode.setSize(50, 20);
         this.changeMode.setTooltip(Tooltip.create(Component.translatable("gui.extendedae.config_modifier.change_mode")));
         this.dataInput = widgets.addTextField("data_input");
+        this.dataInput.setValue(String.valueOf(menu.data));
         this.dataInput.setMaxLength(15);
         this.dataInput.setFilter(NUMBER.asMatchPredicate());
         this.dataInput.setPlaceholder(Component.translatable("gui.extendedae.config_modifier.data_input"));
         this.dataInput.setResponder(this::syncData);
-        this.actions.put("init", o -> setMode(o.get(ItemConfigModifier.ConfigSettings.Mode.class), o.getLong()));
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
-    }
-
-    private void setMode(ItemConfigModifier.ConfigSettings.Mode mode, long data) {
-        this.mode = mode;
-        this.dataInput.setValue(String.valueOf(data));
     }
 
     private void syncData(String data) {
@@ -74,11 +65,6 @@ public class GuiConfigModifier extends AEBaseScreen<ContainerConfigModifier> imp
             this.dataInput.setValue("");
         }
         return super.mouseClicked(event, doubleClick);
-    }
-
-    @Override
-    public @NotNull ActionMap getActionMap() {
-        return this.actions;
     }
 
 }

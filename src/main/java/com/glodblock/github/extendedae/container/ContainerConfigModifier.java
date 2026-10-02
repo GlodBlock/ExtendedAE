@@ -6,11 +6,8 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.items.tools.ItemConfigModifier;
 import com.glodblock.github.extendedae.common.me.itemhost.HostConfigModifier;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +17,16 @@ public class ContainerConfigModifier extends AEBaseMenu implements IActionHolder
     private final ActionMap actions = ActionMap.create();
     public static final MenuType<@NotNull ContainerConfigModifier> TYPE = MenuTypeBuilder
             .create(ContainerConfigModifier::new, HostConfigModifier.class)
+            .withInitialData(
+                    (host, buffer) -> {
+                        buffer.writeEnum(host.getSettings().mode());
+                        buffer.writeLong(host.getSettings().data());
+                    },
+                    (_, container, buffer) -> {
+                        container.mode = buffer.readEnum(ItemConfigModifier.ConfigSettings.Mode.class);
+                        container.data = buffer.readLong();
+                    }
+            )
             .buildUnregistered(ExtendedAE.id("config_modifier"));
 
     private final HostConfigModifier host;
@@ -33,11 +40,6 @@ public class ContainerConfigModifier extends AEBaseMenu implements IActionHolder
         this.host = host;
         this.actions.put("set_mode", o -> host.setMode(o.get(ItemConfigModifier.ConfigSettings.Mode.class)));
         this.actions.put("set_data", o -> host.setData(o.getLong()));
-        this.actions.put("update", _ -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.mode, this.data), sp);
-            }
-        });
     }
 
     @Override

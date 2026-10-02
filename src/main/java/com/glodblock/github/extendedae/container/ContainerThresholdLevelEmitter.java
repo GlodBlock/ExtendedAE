@@ -29,8 +29,8 @@ public class ContainerThresholdLevelEmitter extends UpgradeableMenu<PartThreshol
                 GenericStack.writeBuffer(host.getConfig().getStack(0), buffer);
                 buffer.writeVarLong(host.getUpperValue());
                 buffer.writeVarLong(host.getLowerValue());
-            }, (_, menu, buffer) -> {
-                menu.getHost().getConfig().setStack(0, GenericStack.readBuffer(buffer));
+            }, (host, menu, buffer) -> {
+                host.getConfig().setStack(0, GenericStack.readBuffer(buffer));
                 menu.upperValue = buffer.readVarLong();
                 menu.lowerValue = buffer.readVarLong();
             })

@@ -33,6 +33,7 @@ public class PartThresholdExportBus extends ExportBusPart {
 
     public void setMode(ThresholdMode mode) {
         this.mode = mode;
+        this.getHost().markForSave();
     }
 
     public ThresholdMode getMode() {

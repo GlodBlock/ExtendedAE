@@ -65,6 +65,7 @@ public class PartModExportBus extends PartSpecialExportBus {
         if (!exp.equals(this.modid)) {
             this.modid = exp;
             this.filter = null;
+            this.getHost().markForSave();
         }
     }
 

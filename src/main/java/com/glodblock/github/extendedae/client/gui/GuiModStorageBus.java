@@ -17,8 +17,6 @@ import com.glodblock.github.extendedae.container.ContainerModStorageBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
 import com.glodblock.github.extendedae.util.FCClientUtil;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -27,9 +25,8 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> implements IActionHolder {
+public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> {
 
-    private final ActionMap actions = ActionMap.create();
     private final SettingToggleButton<AccessRestriction> rwMode;
     private final SettingToggleButton<StorageFilter> storageFilter;
     private final SettingToggleButton<YesNo> filterOnExtract;
@@ -46,14 +43,13 @@ public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> 
         this.addToLeftToolbar(this.filterOnExtract);
         this.addToLeftToolbar(this.rwMode);
         this.filterInputs = widgets.addTextField("filter_input");
+        this.filterInputs.setValue(menu.exp);
         this.filterInputs.setMaxLength(512);
         this.filterInputs.setPlaceholder(Component.translatable("gui.extendedae.mod_storage_bus.tooltip"));
         this.filterInputs.setResponder(s -> {
             this.filterInputs.setSuggestion(FCClientUtil.getModName(s));
             EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", s));
         });
-        this.actions.put("init", o -> this.filterInputs.setValue(o.getString()));
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
     }
 
     @Override
@@ -106,9 +102,4 @@ public class GuiModStorageBus extends UpgradeableScreen<ContainerModStorageBus> 
         setInitialFocus(this.filterInputs);
     }
 
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
-    }
 }

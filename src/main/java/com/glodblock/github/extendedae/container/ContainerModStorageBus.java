@@ -11,12 +11,9 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.common.parts.PartModStorageBus;
-import com.glodblock.github.extendedae.network.EAENetworkHandler;
-import com.glodblock.github.extendedae.network.packet.SEAEGenericPacket;
 import com.glodblock.github.glodium.network.packet.sync.ActionMap;
 import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +26,10 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
 
     public static final MenuType<@NotNull ContainerModStorageBus> TYPE = MenuTypeBuilder
             .create(ContainerModStorageBus::new, PartModStorageBus.class)
+            .withInitialData(
+                    (host, buffer) -> buffer.writeUtf(host.getModNameFilter()),
+                    (_, container, buffer) -> container.exp = buffer.readUtf()
+            )
             .buildUnregistered(ExtendedAE.id("mod_storage_bus"));
 
     @GuiSync(3)
@@ -49,14 +50,8 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
 
     public ContainerModStorageBus(int id, Inventory ip, PartModStorageBus te) {
         super(TYPE, id, ip, te);
-
         registerClientAction(ACTION_PARTITION, this::partition);
         this.actions.put("set", o -> this.setExp(o.getString()));
-        this.actions.put("update", _ -> {
-            if (this.getPlayer() instanceof ServerPlayer sp) {
-                EAENetworkHandler.INSTANCE.sendTo(new SEAEGenericPacket("init", this.exp), sp);
-            }
-        });
         this.connectedTo = te.getConnectedToDescription();
     }
 
@@ -95,8 +90,7 @@ public class ContainerModStorageBus extends UpgradeableMenu<PartModStorageBus> i
     }
 
     public void setExp(String exp) {
-        getHost().setModNameFilter(exp);
-        this.broadcastChanges();
+        this.getHost().setModNameFilter(exp);
     }
 
     public AccessRestriction getReadWriteMode() {

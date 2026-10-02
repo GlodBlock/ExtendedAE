@@ -8,15 +8,11 @@ import com.glodblock.github.extendedae.client.button.EPPIcon;
 import com.glodblock.github.extendedae.container.ContainerCaner;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-public class GuiCaner extends AEBaseScreen<ContainerCaner> implements IActionHolder {
+public class GuiCaner extends AEBaseScreen<ContainerCaner> {
 
-    private final ActionMap actions = ActionMap.create();
     private final CycleEPPButton modeBtn;
 
     public GuiCaner(ContainerCaner menu, Inventory playerInventory, Component title, ScreenStyle style) {
@@ -24,8 +20,6 @@ public class GuiCaner extends AEBaseScreen<ContainerCaner> implements IActionHol
         this.modeBtn = new CycleEPPButton();
         this.modeBtn.addActionPair(EPPIcon.FILLED, Component.translatable("gui.extendedae.caner.fill"), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", CanerMode.EMPTY)));
         this.modeBtn.addActionPair(EPPIcon.BUCKET, Component.translatable("gui.extendedae.caner.empty"), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", CanerMode.FILL)));
-        this.actions.put("init", o -> this.modeBtn.setState(o.getInt()));
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
         addToLeftToolbar(this.modeBtn);
     }
 
@@ -35,9 +29,4 @@ public class GuiCaner extends AEBaseScreen<ContainerCaner> implements IActionHol
         this.modeBtn.setState(menu.getMode().ordinal());
     }
 
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
-    }
 }

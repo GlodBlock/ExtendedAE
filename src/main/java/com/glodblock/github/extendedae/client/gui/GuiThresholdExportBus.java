@@ -23,8 +23,6 @@ import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.network.packet.CEAEGenericPacket;
-import com.glodblock.github.glodium.network.packet.sync.ActionMap;
-import com.glodblock.github.glodium.network.packet.sync.IActionHolder;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -35,12 +33,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdExportBus> implements IActionHolder {
+public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdExportBus> {
 
     private final SettingToggleButton<RedstoneMode> redstoneMode;
     private final SettingToggleButton<SchedulingMode> schedulingMode;
     private final CycleEPPButton thresholdMode;
-    private final ActionMap actions = ActionMap.create();
 
     public GuiThresholdExportBus(ContainerThresholdExportBus menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -58,8 +55,6 @@ public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdE
         this.thresholdMode = new CycleEPPButton();
         this.thresholdMode.addActionPair(EPPIcon.OVER_STACK, Component.translatable("gui.extendedae.threshold_export_bus.greater"), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", ThresholdMode.LOWER)));
         this.thresholdMode.addActionPair(EPPIcon.BELOW_STACK, Component.translatable("gui.extendedae.threshold_export_bus.lower"), _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set", ThresholdMode.GREATER)));
-        this.actions.put("init", o -> this.thresholdMode.setState(o.getInt()));
-        EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("update"));
         addToLeftToolbar(this.thresholdMode);
     }
 
@@ -128,9 +123,4 @@ public class GuiThresholdExportBus extends UpgradeableScreen<ContainerThresholdE
         return slot != null && slot.isActive() && slot.hasItem() && this.menu.isConfigSlot(slot);
     }
 
-    @NotNull
-    @Override
-    public ActionMap getActionMap() {
-        return this.actions;
-    }
 }
