@@ -14,6 +14,7 @@ import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.common.me.key.type.FluxKeyType;
+import com.glodblock.github.appflux.config.AFConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -88,15 +89,16 @@ public abstract class FluxCellInventory implements StorageCell {
         if (!(what instanceof FluxKey)) {
             return 0;
         }
-
-        var inserted = Math.min(getMaxEnergy() - this.storedEnergy, amount);
+        var convertedAmount = (long)(amount * AFConfig.getConversionRate());
+        var inserted = Math.min(getMaxEnergy() - this.storedEnergy, convertedAmount);
 
         if (mode == Actionable.MODULATE) {
             this.storedEnergy += inserted;
             saveChanges();
         }
 
-        return this.hasVoidUpgrade ? amount : inserted;
+        // Need to return the amount before conversion loss so it will be deducted from the source correctly.
+        return this.hasVoidUpgrade ? amount : (long)(inserted / AFConfig.getConversionRate());
     }
 
     @Override
