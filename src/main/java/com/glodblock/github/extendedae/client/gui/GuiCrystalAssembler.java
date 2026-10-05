@@ -47,7 +47,7 @@ public class GuiCrystalAssembler extends UpgradeableScreen<ContainerCrystalAssem
         if (this.getMenu().getHost() != null) {
             switchToScreen(new OutputSideConfig<>(
                     this,
-                    new ItemStack(EAESingletons.CIRCUIT_CUTTER),
+                    new ItemStack(EAESingletons.CRYSTAL_ASSEMBLER),
                     this.getMenu().getHost(),
                     this.getMenu().getOutputSides(),
                     (side, value) -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("set_side", side.getName(), value)))

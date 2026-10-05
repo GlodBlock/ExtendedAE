@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 
 public class OutputButton extends EPPButton {
@@ -20,8 +19,8 @@ public class OutputButton extends EPPButton {
         super(onPress);
     }
 
-    public void setDisplay(ItemLike stack) {
-        this.display = new ItemStack(stack);
+    public void setDisplay(ItemStack stack) {
+        this.display = stack.copy();
     }
 
     public void setOn(boolean value) {

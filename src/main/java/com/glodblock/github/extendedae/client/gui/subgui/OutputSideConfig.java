@@ -12,11 +12,12 @@ import appeng.client.gui.widgets.TabButton;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
 import com.glodblock.github.extendedae.client.button.OutputButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -62,16 +63,17 @@ public class OutputSideConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> e
         }
     }
 
-    private ItemLike getDisplayIcon(AEBaseBlockEntity host, Level world, Direction side) {
+    private ItemStack getDisplayIcon(AEBaseBlockEntity host, Level world, Direction side) {
         var pos = host.getBlockPos().relative(side);
         var tile = world.getBlockEntity(pos);
         if (tile instanceof CableBusBlockEntity cable) {
             var part = cable.getPart(side.getOpposite());
             if (part != null) {
-                return part.getPartItem();
+                return new ItemStack(part.getPartItem());
             }
         }
-        return world.getBlockState(pos).getBlock();
+        assert Minecraft.getInstance().player != null;
+        return world.getBlockState(pos).getCloneItemStack(new BlockHitResult(pos.getCenter().relative(side.getOpposite(), 0.5), side.getOpposite(), pos, false), world, pos, Minecraft.getInstance().player);
     }
 
     @Override

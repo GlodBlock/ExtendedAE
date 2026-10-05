@@ -33,7 +33,7 @@ public abstract class MixinRenderBlockOutlineHook {
             remap = false
     )
     private static void renderPackedDevicePreview(Player player, PoseStack poseStack, MultiBufferSource buffers, Camera camera, BlockHitResult blockHitResult, ItemStack itemInHand, boolean insideBlock, CallbackInfo ci) {
-        if (itemInHand.getItem() instanceof ItemPackedDevice packed) {
+        if (itemInHand.getItem() instanceof ItemPackedDevice) {
             if (!itemInHand.has(EAESingletons.IS_PART)) {
                 return;
             }
