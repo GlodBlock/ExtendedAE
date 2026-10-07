@@ -21,8 +21,7 @@ public class VacuumInterfaceTESR implements BlockEntityRenderer<TileVacuumInterf
         if (tile.isDisplayArea()) {
             var area = tile.getWorkArea();
             if (area != null) {
-                area = area.inflate(0.001);
-                VacuumAreaHandler.addJob(tile.getLevel(), area);
+                VacuumAreaHandler.addJob(tile.getLevel(), area.inflate(0.001));
             }
         }
     }
