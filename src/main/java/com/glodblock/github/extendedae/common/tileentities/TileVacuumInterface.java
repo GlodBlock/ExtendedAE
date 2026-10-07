@@ -25,7 +25,6 @@ import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.util.ConfigInventory;
 import appeng.util.ConfigManager;
 import appeng.util.prioritylist.IPartitionList;
-import com.glodblock.github.extendedae.client.render.StageTESRTile;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -39,11 +38,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 import java.util.List;
 
-public class TileVacuumInterface extends AENetworkedBlockEntity implements IConfigInvHost, IConfigurableObject, IUpgradeableObject, IGridTickable, StageTESRTile {
+public class TileVacuumInterface extends AENetworkedBlockEntity implements IConfigInvHost, IConfigurableObject, IUpgradeableObject, IGridTickable {
 
     public static final int MAX_SIZE = 10;
     public static final int MAX_OFFSET = 16;
@@ -108,6 +106,7 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
         this.displayArea = enable;
         if (oldValue != this.displayArea) {
             this.fastUpdate();
+            this.setChanged();
         }
     }
 
@@ -357,11 +356,6 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
     public void clearContent() {
         super.clearContent();
         this.upgrades.clear();
-    }
-
-    @Override
-    public RenderLevelStageEvent.Stage renderStage() {
-        return RenderLevelStageEvent.Stage.AFTER_PARTICLES;
     }
 
 }
