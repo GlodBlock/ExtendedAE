@@ -7,6 +7,7 @@ import appeng.api.config.IncludeExclude;
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -99,6 +100,14 @@ public class PartSmartAnnihilationPlane extends UpgradeablePart implements IGrid
             this.updateFilter();
         }
         return this.filter;
+    }
+
+    @Override
+    protected void onMainNodeStateChanged(IGridNodeListener.State reason) {
+        super.onMainNodeStateChanged(reason);
+        if (getMainNode().hasGridBooted()) {
+            this.refresh();
+        }
     }
 
     @Override

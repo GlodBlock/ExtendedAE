@@ -12,10 +12,10 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
 import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.button.OutputButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import java.util.EnumMap;
@@ -62,16 +62,17 @@ public class OutputSideConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> e
         }
     }
 
-    private ItemLike getDisplayIcon(AEBaseBlockEntity host, Level world, Direction side) {
+    private ItemStack getDisplayIcon(AEBaseBlockEntity host, Level world, Direction side) {
         var pos = host.getBlockPos().relative(side);
         var tile = world.getBlockEntity(pos);
         if (tile instanceof CableBusBlockEntity cable) {
             var part = cable.getPart(side.getOpposite());
             if (part != null) {
-                return part.getPartItem();
+                return new ItemStack(part.getPartItem());
             }
         }
-        return world.getBlockState(pos).getBlock();
+        assert Minecraft.getInstance().player != null;
+        return world.getBlockState(pos).getCloneItemStack(pos, world, false, Minecraft.getInstance().player);
     }
 
     @Override

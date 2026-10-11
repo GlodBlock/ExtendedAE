@@ -18,7 +18,6 @@ import appeng.helpers.patternprovider.PatternContainer;
 import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.me.networktool.NetworkStatusMenu;
 import appeng.parts.AEBasePart;
-import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
 import appeng.util.ConfigInventory;
@@ -39,7 +38,6 @@ public class Ae2Reflect {
     private static final FieldAccessor fDriveBlockEntity_clientSideCellState;
     private static final FieldAccessor fDriveBlockEntity_clientSideCellItems;
     private static final FieldAccessor fDriveBlockEntity_clientSideOnline;
-    private static final FieldAccessor fAbstractLevelEmitterPart_prevState;
     private static final FieldAccessor fAEBaseBlockEntity_customName;
     private static final FieldAccessor fAEBasePart_customName;
     private static final FieldAccessor fIOPortBlockEntity_inputCells;
@@ -66,7 +64,6 @@ public class Ae2Reflect {
         fDriveBlockEntity_clientSideCellState = FieldAccessor.of(DriveBlockEntity.class, "clientSideCellState");
         fDriveBlockEntity_clientSideCellItems = FieldAccessor.of(DriveBlockEntity.class, "clientSideCellItems");
         fDriveBlockEntity_clientSideOnline = FieldAccessor.of(DriveBlockEntity.class, "clientSideOnline");
-        fAbstractLevelEmitterPart_prevState = FieldAccessor.of(AbstractLevelEmitterPart.class, "prevState");
         fAEBaseBlockEntity_customName = FieldAccessor.of(AEBaseBlockEntity.class, "customName");
         fAEBasePart_customName = FieldAccessor.of(AEBasePart.class, "customName");
         fIOPortBlockEntity_inputCells = FieldAccessor.of(IOPortBlockEntity.class, "inputCells");
@@ -133,10 +130,6 @@ public class Ae2Reflect {
 
     public static int getCompressIndex(AECraftingPattern owner, int id) {
         return mAECraftingPattern_getCompressedIndexFromSparse.get(owner, id);
-    }
-
-    public static boolean getPrevState(AbstractLevelEmitterPart owner) {
-        return fAbstractLevelEmitterPart_prevState.get(owner);
     }
 
     public static void setCustomName(Object owner, Component name) {
