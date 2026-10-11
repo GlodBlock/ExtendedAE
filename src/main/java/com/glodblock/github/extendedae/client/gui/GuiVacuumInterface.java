@@ -34,25 +34,25 @@ public class GuiVacuumInterface extends UpgradeableScreen<ContainerVacuumInterfa
         this.renderBtn.addActionPair(
                 Icon.PATTERN_TERMINAL_VISIBLE,
                 Component.translatable("gui.extendedae.vacuum_interface.render_enable"),
-                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("display", true))
+                _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("display", true))
         );
         this.renderBtn.addActionPair(
                 Icon.PATTERN_TERMINAL_ALL,
                 Component.translatable("gui.extendedae.vacuum_interface.render_disable"),
-                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("display", false))
+                _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("display", false))
         );
         this.speedBtn = new CycleEPPButton();
         this.speedBtn.addActionPair(
                 Icon.SCHEDULING_DEFAULT,
                 Component.translatable("gui.extendedae.vacuum_interface.normal"),
-                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("urgent", true))
+                _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("urgent", true))
         );
         this.speedBtn.addActionPair(
                 Icon.SCHEDULING_ROUND_ROBIN,
                 Component.translatable("gui.extendedae.vacuum_interface.urgent"),
-                b -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("urgent", false))
+                _ -> EAENetworkHandler.INSTANCE.sendToServer(new CEAEGenericPacket("urgent", false))
         );
-        var config = new ActionEPPButton(b -> this.openOutputConfig(), Icon.PLACEMENT_BLOCK);
+        var config = new ActionEPPButton(_ -> this.openOutputConfig(), Icon.PLACEMENT_BLOCK);
         config.setMessage(Component.translatable("gui.extendedae.vacuum_interface.set_work_area"));
         this.addToLeftToolbar(config);
         this.addToLeftToolbar(this.speedBtn);

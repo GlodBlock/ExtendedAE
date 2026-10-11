@@ -25,7 +25,7 @@ public class ContainerVacuumInterface extends UpgradeableMenu<TileVacuumInterfac
                         buf.writeBoolean(tile.isDisplayArea());
                         buf.writeBoolean(tile.isUrgent());
                     },
-                    (tile, container, buf) -> {
+                    (_, container, buf) -> {
                         container.size = buf.readLong();
                         container.offset = buf.readLong();
                         container.displayArea = buf.readBoolean();

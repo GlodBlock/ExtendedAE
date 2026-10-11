@@ -5,7 +5,7 @@ import appeng.client.gui.style.Blitter;
 public class TooltipIcon extends EPPButton {
 
     public TooltipIcon() {
-        super(b -> {});
+        super(_ -> {});
         this.setDisableClickSound(true);
     }
 

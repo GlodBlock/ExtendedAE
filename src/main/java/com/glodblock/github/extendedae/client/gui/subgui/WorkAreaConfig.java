@@ -31,7 +31,7 @@ public class WorkAreaConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> ext
     public WorkAreaConfig(P parent, ItemStack icon, GuiVacuumInterface.DataSetter setter, GuiVacuumInterface.DataGetter getter) {
         super(parent, "/screens/set_work_area.json");
         this.dataGetter = getter;
-        var button = new TabButton(Icon.BACK, icon.getHoverName(), btn -> this.returnToParent());
+        var button = new TabButton(Icon.BACK, icon.getHoverName(), _ -> this.returnToParent());
         this.widgets.add("return", button);
         for (int x = 0; x < 6; x++) {
             var btn = new NumberButton(NumberButton.LEFT, x % 3, x < 3, setter, getter);
@@ -68,7 +68,7 @@ public class WorkAreaConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> ext
         final BooleanSupplier checker;
 
         public NumberButton(int side, int seq, boolean size, GuiVacuumInterface.DataSetter setter, GuiVacuumInterface.DataGetter getter) {
-            super(b -> setter.set(delta(side), seq, size));
+            super(_ -> setter.set(delta(side), seq, size));
             this.side = side;
             this.checker = () -> {
                 var val = getter.get(seq, size);

@@ -17,7 +17,7 @@ public class CycleEPPButton extends EPPButton {
     private int size = 0;
 
     public CycleEPPButton() {
-        super(b -> {});
+        super(_ -> {});
     }
 
     public void addActionPair(Icon icon, Component tooltip, OnPress action) {
