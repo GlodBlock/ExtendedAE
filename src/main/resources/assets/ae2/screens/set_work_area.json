@@ -1,0 +1,115 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json"],
+  "background": {
+    "texture": "guis/work_area.png",
+    "srcRect": [0, 0, 122, 75]
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.extendedae.vacuum_interface.set_work_area"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    },
+    "size_config": {
+      "text": {
+        "translate": "gui.extendedae.vacuum_interface.size_config"
+      },
+      "position": {
+        "left": 8,
+        "top": 17
+      }
+    },
+    "offset_config": {
+      "text": {
+        "translate": "gui.extendedae.vacuum_interface.offset_config"
+      },
+      "position": {
+        "left": 8,
+        "top": 44
+      }
+    }
+  },
+  "widgets": {
+    "return": {
+      "right": 23,
+      "top": -5
+    },
+    "left_1": {
+      "left": 5,
+      "top": 28,
+      "width": 4,
+      "height": 8
+    },
+    "left_2": {
+      "left": 44,
+      "top": 28,
+      "width": 4,
+      "height": 8
+    },
+    "left_3": {
+      "left": 83,
+      "top": 28,
+      "width": 4,
+      "height": 8
+    },
+    "left_4": {
+      "left": 5,
+      "top": 55,
+      "width": 4,
+      "height": 8
+    },
+    "left_5": {
+      "left": 44,
+      "top": 55,
+      "width": 4,
+      "height": 8
+    },
+    "left_6": {
+      "left": 83,
+      "top": 55,
+      "width": 4,
+      "height": 8
+    },
+    "right_1": {
+      "left": 35,
+      "top": 28,
+      "width": 4,
+      "height": 8
+    },
+    "right_2": {
+      "left": 74,
+      "top": 28,
+      "width": 4,
+      "height": 8
+    },
+    "right_3": {
+      "left": 113,
+      "top": 28,
+      "width": 4,
+      "height": 8
+    },
+    "right_4": {
+      "left": 35,
+      "top": 55,
+      "width": 4,
+      "height": 8
+    },
+    "right_5": {
+      "left": 74,
+      "top": 55,
+      "width": 4,
+      "height": 8
+    },
+    "right_6": {
+      "left": 113,
+      "top": 55,
+      "width": 4,
+      "height": 8
+    }
+  }
+}

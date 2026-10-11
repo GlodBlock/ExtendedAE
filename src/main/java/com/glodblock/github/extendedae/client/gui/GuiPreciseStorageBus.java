@@ -86,7 +86,7 @@ public class GuiPreciseStorageBus extends UpgradeableScreen<ContainerPreciseStor
             if (unwrapped != null) {
                 itemTooltip.add(Tooltips.getAmountTooltip(ButtonToolTips.Amount, unwrapped));
             }
-            itemTooltip.add(Tooltips.getSetAmountTooltip());
+            itemTooltip.add(Tooltips.getSetAmountTooltip(this.minecraft.options.keyPickItem.getTranslatedKeyMessage()));
             drawTooltip(guiGraphics, x, y, itemTooltip);
         } else {
             super.extractTooltip(guiGraphics, x, y);

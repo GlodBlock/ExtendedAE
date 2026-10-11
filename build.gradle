@@ -107,7 +107,7 @@ repositories {
 
 dependencies {
     implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
-    implementation "org.appliedenergistics:appliedenergistics2:26.1.12-beta"
+    implementation "org.appliedenergistics:appliedenergistics2:26.1.13-beta"
     implementation "org.appliedenergistics:guideme:26.1.14-beta"
     jarJar(implementation ("de.mari_023:ae2wtlib_api:26.1.1-beta") { transitive = false })
     compileOnly "curse.maven:applied-flux-965012:9025081"

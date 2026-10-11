@@ -32,6 +32,7 @@
     "extendedae:wireless_hub",
     "extendedae:silicon_block",
     "extendedae:fishbig",
-    "extendedae:mddyue"
+    "extendedae:mddyue",
+    "extendedae:vacuum_interface"
   ]
 }

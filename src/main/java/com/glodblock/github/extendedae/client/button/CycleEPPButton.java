@@ -40,7 +40,7 @@ public class CycleEPPButton extends EPPButton {
     }
 
     @Override
-    Blitter getBlitterIcon() {
+    protected Blitter getBlitterIcon() {
         return this.icons.get(this.state);
     }
 

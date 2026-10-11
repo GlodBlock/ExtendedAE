@@ -773,6 +773,15 @@ public class EAERecipeProvider extends RecipeProvider {
                 .unlockedBy(C, has(EAESingletons.CONFIG_MODIFIER))
                 .save(this.output);
 
+        // Vacuum Interface
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.VACUUM_INTERFACE, this.items, this.fluids)
+                .input(EAETags.EX_INTERFACE)
+                .input(AEItems.CALCULATION_PROCESSOR, 4)
+                .input(AEItems.SPATIAL_2_CELL_COMPONENT)
+                .power(30000)
+                .save(this.output, ExtendedAE.id("assembler/vacuum_interface"));
+
         if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
             appflux();
         }

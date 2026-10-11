@@ -28,6 +28,7 @@ import com.glodblock.github.extendedae.client.gui.GuiTagExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiTagStorageBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdExportBus;
 import com.glodblock.github.extendedae.client.gui.GuiThresholdLevelEmitter;
+import com.glodblock.github.extendedae.client.gui.GuiVacuumInterface;
 import com.glodblock.github.extendedae.client.gui.GuiVoidCell;
 import com.glodblock.github.extendedae.client.gui.GuiWirelessConnector;
 import com.glodblock.github.extendedae.client.gui.GuiWirelessHub;
@@ -45,6 +46,7 @@ import com.glodblock.github.extendedae.client.render.tesr.ExChargerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExDriveTESR;
 import com.glodblock.github.extendedae.client.render.tesr.ExMolecularAssemblerTESR;
 import com.glodblock.github.extendedae.client.render.tesr.IngredientBufferTESR;
+import com.glodblock.github.extendedae.client.render.tesr.VacuumInterfaceTESR;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerActiveFormationPlane;
 import com.glodblock.github.extendedae.container.ContainerAssemblerMatrix;
@@ -71,6 +73,7 @@ import com.glodblock.github.extendedae.container.ContainerTagExportBus;
 import com.glodblock.github.extendedae.container.ContainerTagStorageBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdExportBus;
 import com.glodblock.github.extendedae.container.ContainerThresholdLevelEmitter;
+import com.glodblock.github.extendedae.container.ContainerVacuumInterface;
 import com.glodblock.github.extendedae.container.ContainerVoidCell;
 import com.glodblock.github.extendedae.container.ContainerWirelessConnector;
 import com.glodblock.github.extendedae.container.ContainerWirelessHub;
@@ -123,6 +126,7 @@ public class ClientRegistryHandler {
         InitScreens.register(event, ContainerConfigModifier.TYPE, GuiConfigModifier::new, "/screens/config_modifier.json");
         InitScreens.register(event, ContainerWirelessHub.TYPE, GuiWirelessHub::new, "/screens/wireless_hub.json");
         InitScreens.register(event, ContainerSmartAnnihilationPlane.TYPE, GuiSmartAnnihilationPlane::new, "/screens/smart_annihilation_plane.json");
+        InitScreens.register(event, ContainerVacuumInterface.TYPE, GuiVacuumInterface::new, "/screens/vacuum_interface.json");
         event.register(ContainerProcessingPattern.TYPE, GuiProcessingPattern::new);
         event.register(ContainerCraftingPattern.TYPE, GuiCraftingPattern::new);
         event.register(ContainerStonecuttingPattern.TYPE, GuiStonecuttingPattern::new);
@@ -147,6 +151,7 @@ public class ClientRegistryHandler {
         event.registerBlockEntityRenderer(EAESingletons.CANER.get().getBlockEntityType(), CanerTESR::new);
         event.registerBlockEntityRenderer(EAESingletons.CRYSTAL_FIXER.get().getBlockEntityType(), CrystalFixerTESR::new);
         event.registerBlockEntityRenderer(EAESingletons.CIRCUIT_CUTTER.get().getBlockEntityType(), CircuitCutterTESR::new);
+        event.registerBlockEntityRenderer(EAESingletons.VACUUM_INTERFACE.get().getBlockEntityType(), VacuumInterfaceTESR::new);
     }
 
     @SubscribeEvent
