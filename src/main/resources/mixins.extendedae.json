@@ -13,6 +13,7 @@
   "client": [
     "MixinAbstractContainerScreen",
     "MixinAEClientboundPacketHandler",
+    "MixinNetworkStatusScreen",
     "MixinRenderBlockOutlineHook"
   ],
   "server": []

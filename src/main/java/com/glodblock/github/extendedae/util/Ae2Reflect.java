@@ -16,6 +16,7 @@ import appeng.crafting.pattern.AECraftingPattern;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.menu.implementations.PatternAccessTermMenu;
+import appeng.menu.me.networktool.NetworkStatusMenu;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AbstractLevelEmitterPart;
 import appeng.parts.automation.ExportBusPart;
@@ -46,6 +47,7 @@ public class Ae2Reflect {
     private static final FieldAccessor fInterfaceLogic_config;
     private static final FieldAccessor fInterfaceLogic_storage;
     private static final FieldAccessor fPatternAccessTermMenu_byId;
+    private static final FieldAccessor fNetworkStatusMenu_grid;
     private static final MethodAccessor mDriveBlockEntity_updateClientSideState;
     private static final MethodAccessor mAECraftingPattern_getCompressedIndexFromSparse;
     private static final MethodAccessor mIOBusPart_updateState;
@@ -72,6 +74,7 @@ public class Ae2Reflect {
         fInterfaceLogic_config = FieldAccessor.of(InterfaceLogic.class, "config");
         fInterfaceLogic_storage = FieldAccessor.of(InterfaceLogic.class, "storage");
         fPatternAccessTermMenu_byId = FieldAccessor.of(PatternAccessTermMenu.class, "byId");
+        fNetworkStatusMenu_grid = FieldAccessor.of(NetworkStatusMenu.class, "grid");
         mDriveBlockEntity_updateClientSideState = MethodAccessor.of(DriveBlockEntity.class, "updateClientSideState");
         mAECraftingPattern_getCompressedIndexFromSparse = MethodAccessor.of(AECraftingPattern.class, "getCompressedIndexFromSparse", int.class);
         mIOBusPart_updateState = MethodAccessor.of(IOBusPart.class, "updateState");
@@ -122,6 +125,10 @@ public class Ae2Reflect {
 
     public static Item[] getCellItem(DriveBlockEntity owner) {
         return fDriveBlockEntity_clientSideCellItems.get(owner);
+    }
+
+    public static IGrid getNetworkGrid(NetworkStatusMenu container) {
+        return fNetworkStatusMenu_grid.get(container);
     }
 
     public static int getCompressIndex(AECraftingPattern owner, int id) {

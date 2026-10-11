@@ -53,6 +53,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -71,6 +72,13 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     protected Map<AEKeyType, ExternalStorageStrategy> externalStorageStrategies;
     protected boolean wasOnline = false;
     protected int priority = 0;
+    private final ICapabilityInvalidationListener capabilityListener = () -> {
+        if (!PartAdjacentApi.isPartValid(this)) {
+            return false;
+        }
+        this.onCapabilityInvalidation();
+        return true;
+    };
 
     protected PendingUpdateStatus updateStatus = PendingUpdateStatus.FAST_UPDATE;
     protected ITickingMonitor monitor = null;
@@ -81,6 +89,26 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
         this.adjacentStorageAccessor = new PartAdjacentApi<>(this, AECapabilities.ME_STORAGE);
         this.source = new MachineSource(this);
         getMainNode().addService(IStorageProvider.class, this).addService(IGridTickable.class, this);
+    }
+
+    @Override
+    public void addToWorld() {
+        super.addToWorld();
+        if (getLevel() instanceof ServerLevel serverLevel) {
+            var targetPos = getBlockEntity().getBlockPos().relative(getSide());
+            serverLevel.registerCapabilityListener(targetPos, this.capabilityListener);
+        }
+    }
+
+    private void onCapabilityInvalidation() {
+        this.handler.setDelegate(NullInventory.of());
+        this.scheduleUpdate();
+    }
+
+    protected void onConfigurationChanged() {
+        if (getMainNode().isReady()) {
+            updateTarget(true);
+        }
     }
 
     @Override
@@ -114,7 +142,7 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     @Override
     public void upgradesChanged() {
         super.upgradesChanged();
-        this.forceUpdate();
+        this.onConfigurationChanged();
     }
 
     @Override
@@ -318,9 +346,7 @@ public abstract class PartSpecialStorageBus extends UpgradeablePart implements I
     }
 
     protected void invalidateOnExternalStorageChange() {
-        getMainNode().ifPresent((grid, node) -> {
-            grid.getTickManager().alertDevice(node);
-        });
+        getMainNode().ifPresent((grid, node) -> grid.getTickManager().alertDevice(node));
     }
 
     protected void checkStorageBusOnInterface() {

@@ -18,6 +18,11 @@ public class EAEHighlightHandler {
     }
 
     public static void highlight(BlockPos pos, Direction face, ResourceKey<@NotNull Level> dim, long time, AABB box) {
+        System.out.println("Highlighting " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
+        System.out.println("Dim " + dim);
+        System.out.println("Face " + face);
+        System.out.println("Time " + time);
+        System.out.println("AABB " + box);
         HighlightHandler.highlight(pos, face, dim, time, box, RED, EAEHighlightHandler::blink);
     }
 
