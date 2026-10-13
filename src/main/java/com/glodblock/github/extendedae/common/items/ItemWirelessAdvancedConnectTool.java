@@ -71,8 +71,16 @@ public class ItemWirelessAdvancedConnectTool extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         var stack = player.getItemInHand(hand);
-        if (InteractionUtil.isInAlternateUseMode(player) && stack.getItem() == EPPItemAndBlock.WIRELESS_ADVANCED_TOOL) {
+
+        if (stack.getItem() == EPPItemAndBlock.WIRELESS_ADVANCED_TOOL) {
             if (!level.isClientSide) {
+                if (InteractionUtil.isInAlternateUseMode(player)) {
+                    stack.setTag(null);
+                    player.displayClientMessage(Component.translatable("wireless_advanced.cleared"), true);
+
+                    return InteractionResultHolder.sidedSuccess(stack, false);
+                }
+
                 var nbt = stack.getOrCreateTag();
                 var addMode = !nbt.getBoolean("addMode");
 
