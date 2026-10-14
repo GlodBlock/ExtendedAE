@@ -8,6 +8,7 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.IOSignal;
+import com.google.common.math.LongMath;
 import mekanism.api.Action;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.energy.IStrictEnergyHandler;
@@ -22,7 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 @NothingNullByDefault
-public record MekEnergyCap(IStorageService storage, IActionSource source, IOSignal signal) implements IStrictEnergyHandler {
+public record MekEnergyCap(IStorageService storage, IActionSource source,
+                           IOSignal signal) implements IStrictEnergyHandler {
 
     public static final BlockCapability<IStrictEnergyHandler, Direction> CAP = Capabilities.STRICT_ENERGY.block();
 
@@ -77,7 +79,7 @@ public record MekEnergyCap(IStorageService storage, IActionSource source, IOSign
     public long getMaxEnergy(int container) {
         if (container == 0) {
             var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
-            return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(space + this.storage.getCachedInventory().get(FluxKey.of(EnergyType.FE)));
+            return UnitDisplayUtils.EnergyUnit.FORGE_ENERGY.convertFrom(LongMath.saturatedAdd(space, this.storage.getCachedInventory().get(FluxKey.of(EnergyType.FE))));
         }
         return 0;
     }
