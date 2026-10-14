@@ -128,7 +128,7 @@ public class BlockWirelessHub extends BlockBaseGui<TileWirelessHub> {
                         var port = tile.allocatePort();
 
                         tile.setFrequency(freq, port);
-                    }, firstConnection, world, thisPos, p, () -> connections.remove(0));
+                    }, firstConnection, world, thisPos, p, () -> connections.remove(0), () -> connections.remove(0));
                 }
             }
         }

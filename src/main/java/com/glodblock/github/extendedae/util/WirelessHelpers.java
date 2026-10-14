@@ -38,6 +38,10 @@ public class WirelessHelpers {
     }
 
     public static InteractionResult connectWireless(Consumer<Long> setThisFreq, CompoundTag nbt, Level world, BlockPos thisPos, Player player, Runnable onSuccess) {
+        return connectWireless(setThisFreq, nbt, world, thisPos, player, onSuccess, () -> {});
+    }
+
+    public static InteractionResult connectWireless(Consumer<Long> setThisFreq, CompoundTag nbt, Level world, BlockPos thisPos, Player player, Runnable onSuccess, Runnable onBroken) {
         if (!nbt.contains("bind")) {
             player.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
 
@@ -105,6 +109,8 @@ public class WirelessHelpers {
 
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else {
+            if (otherWorldInstance.isLoaded(otherPos)) onBroken.run();
+
             player.displayClientMessage(WirelessFail.MISSING.getTranslation(), true);
 
             return InteractionResult.FAIL;

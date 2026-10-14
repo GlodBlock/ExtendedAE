@@ -141,7 +141,7 @@ public class BlockWirelessConnector extends BlockBaseGui<TileWirelessConnector> 
                     var connections = nbt.getList("connections", CompoundTag.TAG_COMPOUND);
                     var firstConnection = connections.getCompound(0);
 
-                    return WirelessHelpers.connectWireless(tile::setFrequency, firstConnection, world, thisPos, p, () -> connections.remove(0));
+                    return WirelessHelpers.connectWireless(tile::setFrequency, firstConnection, world, thisPos, p, () -> connections.remove(0), () -> connections.remove(0));
                 }
             }
         }

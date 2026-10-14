@@ -69,6 +69,7 @@
   "wireless_advanced.mode.add": "§bAdd",
   "wireless_advanced.mode.use": "§dUse",
   "wireless_advanced.mode.swapped": "Swapped Mode to: %s",
+  "wireless_advanced.cleared": "Cleared all saved connections",
   "pattern.tooltip": "Press [%s] to view pattern",
   "gui.expatternprovider.ex_pattern_provider": "ME Extended Pattern Provider",
   "gui.expatternprovider.ex_interface": "ME Extended Interface",
