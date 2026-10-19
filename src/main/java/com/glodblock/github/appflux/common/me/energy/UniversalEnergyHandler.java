@@ -23,7 +23,7 @@ public class UniversalEnergyHandler {
     private static final ArrayList<Pair<BlockCapability<?, Direction>, Handler<?>>> HANDLERS = new ArrayList<>();
     private static final Handler<EnergyHandler> DEFAULT = (accepter, storage, source) -> {
         try (var transaction = Transaction.openRoot()) {
-            var toAdd = Math.min(accepter.getCapacityAsInt() - accepter.getAmountAsInt(), AFConfig.getFluxAccessorIO());
+            int toAdd = (int) Math.min(Math.min(accepter.getCapacityAsLong() - accepter.getAmountAsLong(), AFConfig.getFluxAccessorIO()), Integer.MAX_VALUE);
             if (toAdd > 0) {
                 var drained = storage.getInventory().extract(FluxKey.of(EnergyType.FE), toAdd, Actionable.MODULATE, source);
                 if (drained > 0) {
