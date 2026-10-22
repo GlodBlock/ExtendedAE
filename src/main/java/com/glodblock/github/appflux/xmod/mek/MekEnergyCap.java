@@ -23,8 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 @NothingNullByDefault
-public record MekEnergyCap(IStorageService storage, IActionSource source,
-                           IOSignal signal) implements IStrictEnergyHandler {
+public record MekEnergyCap(IStorageService storage, IActionSource source, IOSignal signal) implements IStrictEnergyHandler {
 
     public static final BlockCapability<IStrictEnergyHandler, Direction> CAP = Capabilities.STRICT_ENERGY.block();
 

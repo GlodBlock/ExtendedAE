@@ -202,6 +202,7 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
             service.wake(this);
             this.blocked = false;
             if (this.getLevel() instanceof ServerLevel world) {
+                assert this.getSide() != null;
                 var pos = this.getBlockEntity().getBlockPos().relative(this.getSide());
                 world.registerCapabilityListener(pos, this.listener);
                 this.lastTick = new EnergyTickRecord();

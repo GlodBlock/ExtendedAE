@@ -8,6 +8,7 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.IOSignal;
+import com.google.common.math.LongMath;
 import dev.technici4n.grandpower.api.ILongEnergyStorage;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -80,7 +81,7 @@ public class LongEnergyCap implements ILongEnergyStorage {
     @Override
     public long getCapacity() {
         var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
-        return space + this.getAmount();
+        return LongMath.saturatedAdd(space, this.getAmount());
     }
 
     @Override

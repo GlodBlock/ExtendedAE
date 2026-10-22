@@ -8,6 +8,7 @@ import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.glodblock.github.appflux.config.AFConfig;
 import com.glodblock.github.appflux.util.IOSignal;
+import com.google.common.math.LongMath;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.Nullable;
@@ -71,7 +72,7 @@ public record FluxNetworkCap(IStorageService storage, IActionSource source, IOSi
     @Override
     public long getMaxEnergyStoredL() {
         var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
-        return space + this.getEnergyStoredL();
+        return LongMath.saturatedAdd(space, this.getEnergyStoredL());
     }
 
     @Override
