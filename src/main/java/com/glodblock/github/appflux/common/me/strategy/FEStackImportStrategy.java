@@ -48,9 +48,9 @@ public class FEStackImportStrategy implements StackImportStrategy {
 
         try (var trans = Transaction.openRoot()) {
             toExt = adjacentHandler.extract(AFUtil.clampLong(toExt), trans);
-            if (toExt > 0) {
-                realAdd = AFUtil.clampLong(inv.getInventory().insert(resource, toExt, Actionable.MODULATE, context.getActionSource()));
-            }
+        }
+        if (toExt > 0) {
+            realAdd = AFUtil.clampLong(inv.getInventory().insert(resource, toExt, Actionable.MODULATE, context.getActionSource()));
         }
 
         if (realAdd > 0) {
