@@ -25,6 +25,8 @@ changed in Appflux config.
 They have fast and normal mode. In fast mode, it outputs energy in every tick, which may cause lag if it is heavily used.
 In normal mode, it outputs energy depends on target's stored energy, which won't cause lag issues.
 
+When the Flux Accessor is storing energy to FE Storage Cells, a percentage of the incoming energy is lost. The default is 2.5%,
+matching the default loss when transfering energy via an Energy P2P Tunnel. This percentage is configurable.
+
 * Notice: The "energy" mentioned here is FE stored in your [FE Storage Cells](./flux_cells.md), not the energy in
 [Energy Cells](ae2:items-blocks-machines/energy_cells.md).
-
