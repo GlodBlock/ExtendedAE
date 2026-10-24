@@ -76,6 +76,7 @@ public class CraftingMatrixThread extends CraftingThread {
             } else {
                 var cache = LRU.get(cp.getDefinition());
                 if (cache != null && cache.isValid()) {
+                    this.progress = 0;
                     ((IntruderInventory) this.gridInv).silentClear();
                     this.output = cache.output;
                     this.pusher.accept(cache.outputKey, (long) cache.amount);
