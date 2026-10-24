@@ -41,9 +41,9 @@ public class FEStackExportStrategy implements StackExportStrategy {
 
         try (var trans = Transaction.openRoot()) {
             toAdd = storage.insert(AFUtil.clampLong(toAdd), trans);
-            if (toAdd > 0) {
-                realExt = AFUtil.clampLong(StorageHelper.poweredExtraction(context.getEnergySource(), inv.getInventory(), what, toAdd, context.getActionSource(), Actionable.MODULATE));
-            }
+        }
+        if (toAdd > 0) {
+            realExt = AFUtil.clampLong(StorageHelper.poweredExtraction(context.getEnergySource(), inv.getInventory(), what, toAdd, context.getActionSource(), Actionable.MODULATE));
         }
 
         if (realExt > 0) {

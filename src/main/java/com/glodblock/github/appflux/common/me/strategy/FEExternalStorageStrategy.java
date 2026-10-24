@@ -47,8 +47,8 @@ public class FEExternalStorageStrategy implements ExternalStorageStrategy {
         @Override
         public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
             if (FluxKey.of(EnergyType.FE).equals(what)) {
-                if (this.storage != null) {
-                    try (var trans = Transaction.openRoot()) {
+                if (this.storage != null && canOpenTransaction()) {
+                    try (var trans = openTransaction()) {
                         int in = this.storage.insert(AFUtil.clampLong(amount), trans);
                         if (in > 0 && mode == Actionable.MODULATE) {
                             this.callback.run();
@@ -64,8 +64,8 @@ public class FEExternalStorageStrategy implements ExternalStorageStrategy {
         @Override
         public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
             if (FluxKey.of(EnergyType.FE).equals(what)) {
-                if (this.storage != null) {
-                    try (var trans = Transaction.openRoot()) {
+                if (this.storage != null && canOpenTransaction()) {
+                    try (var trans = openTransaction()) {
                         int out = this.storage.extract(AFUtil.clampLong(amount), trans);
                         if (out > 0 && mode == Actionable.MODULATE) {
                             this.callback.run();
@@ -76,6 +76,15 @@ public class FEExternalStorageStrategy implements ExternalStorageStrategy {
                 }
             }
             return 0;
+        }
+
+        private static boolean canOpenTransaction() {
+            return Transaction.getLifecycle() != Transaction.Lifecycle.CLOSING;
+        }
+
+        @SuppressWarnings("deprecation")
+        private static Transaction openTransaction() {
+            return Transaction.open(Transaction.getCurrentOpenedTransaction());
         }
 
         @Override
