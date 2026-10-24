@@ -43,11 +43,13 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
     private final ActionMap actions = ActionMap.create();
     private final Consumer<String> setter;
     private final Supplier<Component> getter;
+    private final Runnable saver;
     @GuiSync(1)
     public String name = "";
 
     public ContainerRenamer(int id, Inventory playerInventory, Object host) {
         super(TYPE, id, playerInventory, host);
+        this.saver = saver(host);
         this.getter = getter(host);
         this.setter = setter(host);
         if (this.setter == null || this.getter == null) {
@@ -71,6 +73,7 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
         } else {
             this.setter.accept("");
         }
+        this.saver.run();
     }
 
     private static Supplier<Component> getter(Object o) {
@@ -88,6 +91,16 @@ public class ContainerRenamer extends AEBaseMenu implements IActionHolder {
             };
         }
         return null;
+    }
+
+    private static Runnable saver(Object o) {
+        if (o instanceof AEBaseBlockEntity tile) {
+            return tile::saveChanges;
+        }
+        if (o instanceof AEBasePart part) {
+            return () -> part.getHost().markForSave();
+        }
+        return () -> {};
     }
 
     @NotNull
