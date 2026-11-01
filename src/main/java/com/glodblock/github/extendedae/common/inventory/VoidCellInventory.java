@@ -168,7 +168,7 @@ public class VoidCellInventory implements StorageCell {
             }
         }
         if (mode == Actionable.MODULATE) {
-            this.voidEnergy += (double) amount / what.getAmountPerUnit();
+            this.voidEnergy += (double) amount / what.getAmountPerOperation();
             this.fillOutput();
             this.saveChanges();
         }
