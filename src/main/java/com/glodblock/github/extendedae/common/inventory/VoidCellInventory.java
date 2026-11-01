@@ -153,7 +153,7 @@ public class VoidCellInventory implements StorageCell {
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (amount == 0 || what == null) {
+        if (amount <= 0 || what == null) {
             return 0;
         }
         if (this.partitionList.isEmpty()) {
@@ -167,12 +167,14 @@ public class VoidCellInventory implements StorageCell {
                 return 0;
             }
         }
+        // Prevent long overflow
+        int safeAmount = (int) Math.min(Integer.MAX_VALUE, amount);
         if (mode == Actionable.MODULATE) {
-            this.voidEnergy += (double) amount / what.getAmountPerOperation();
+            this.voidEnergy += (double) safeAmount / what.getAmountPerOperation();
             this.fillOutput();
             this.saveChanges();
         }
-        return amount;
+        return safeAmount;
     }
 
     @Override
