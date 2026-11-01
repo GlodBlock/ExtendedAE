@@ -168,7 +168,7 @@ public class VoidCellInventory implements StorageCell {
             }
         }
         // Prevent long overflow
-        int safeAmount = (int) Math.min(Integer.MAX_VALUE, amount);
+        long safeAmount = Math.min((long) Integer.MAX_VALUE * what.getAmountPerOperation(), amount);
         if (mode == Actionable.MODULATE) {
             this.voidEnergy += (double) safeAmount / what.getAmountPerOperation();
             this.fillOutput();
