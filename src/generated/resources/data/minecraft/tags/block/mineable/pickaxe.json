@@ -33,6 +33,7 @@
     "extendedae:silicon_block",
     "extendedae:fishbig",
     "extendedae:mddyue",
-    "extendedae:vacuum_interface"
+    "extendedae:vacuum_interface",
+    "extendedae:pulverizer"
   ]
 }

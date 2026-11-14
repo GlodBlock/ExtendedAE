@@ -98,7 +98,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
         this.tank.setCapacity(AEKeyType.fluids(), TANK_CAP);
-        this.exec = new RecipeExecutor<>(this, r -> r.output.create(), MAX_PROGRESS_TICKS);
+        this.exec = new RecipeExecutor<>(this, MAX_PROGRESS_TICKS);
     }
 
     @Override
@@ -158,9 +158,18 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         return this.tank;
     }
 
-    @Override
     public AppEngInternalInventory getOutput() {
         return this.output;
+    }
+
+    @Override
+    public boolean collectOutputs(CrystalAssemblerRecipe recipe) {
+        var output = recipe.output.create();
+        if (this.output.insertItem(0, output, true).isEmpty()) {
+            this.output.insertItem(0, output, false);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -253,8 +262,8 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         return configManager;
     }
 
-    private boolean hasAutoExportWork() {
-        return !this.output.getStackInSlot(0).isEmpty() && configManager.getSetting(Settings.AUTO_EXPORT) == YesNo.YES;
+    private boolean stopAutoExport() {
+        return this.output.getStackInSlot(0).isEmpty() || configManager.getSetting(Settings.AUTO_EXPORT) != YesNo.YES;
     }
 
     @Override
@@ -270,7 +279,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && !this.hasAutoExportWork());
+        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && this.stopAutoExport());
     }
 
     @Override
@@ -278,11 +287,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         if (this.pushOutResult()) {
             return TickRateModulation.URGENT;
         }
-        return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)), true);
+        return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)));
     }
 
     private boolean pushOutResult() {
-        if (!this.hasAutoExportWork()) {
+        if (this.stopAutoExport()) {
             return false;
         }
         return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides.asSet(), te -> te instanceof TileCrystalAssembler);

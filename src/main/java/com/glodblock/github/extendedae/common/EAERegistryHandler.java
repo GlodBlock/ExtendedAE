@@ -58,6 +58,7 @@ import com.glodblock.github.extendedae.container.ContainerModStorageBus;
 import com.glodblock.github.extendedae.container.ContainerPatternModifier;
 import com.glodblock.github.extendedae.container.ContainerPreciseExportBus;
 import com.glodblock.github.extendedae.container.ContainerPreciseStorageBus;
+import com.glodblock.github.extendedae.container.ContainerPulverizer;
 import com.glodblock.github.extendedae.container.ContainerRenamer;
 import com.glodblock.github.extendedae.container.ContainerSmartAnnihilationPlane;
 import com.glodblock.github.extendedae.container.ContainerTagExportBus;
@@ -79,6 +80,8 @@ import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeSerializer;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeSerializer;
+import com.glodblock.github.extendedae.recipe.PulverizerRecipe;
+import com.glodblock.github.extendedae.recipe.PulverizerRecipeSerializer;
 import com.glodblock.github.extendedae.util.CacheHolder;
 import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
 import com.glodblock.github.glodium.registry.RegistryHandler;
@@ -188,12 +191,14 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipe.TYPE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CircuitCutterRecipe.ID, CircuitCutterRecipe.TYPE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, CrystalFixerRecipe.ID, CrystalFixerRecipe.TYPE);
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, PulverizerRecipe.ID, PulverizerRecipe.TYPE);
     }
 
     private void onRegisterRecipeSerializer() {
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalAssemblerRecipe.ID, CrystalAssemblerRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CircuitCutterRecipe.ID, CircuitCutterRecipeSerializer.INSTANCE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, CrystalFixerRecipe.ID, CrystalFixerRecipeSerializer.INSTANCE);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, PulverizerRecipe.ID, PulverizerRecipeSerializer.INSTANCE);
     }
 
     private void onRegisterCondition() {
@@ -233,6 +238,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("wireless_hub"), ContainerWirelessHub.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("smart_annihilation_plane"), ContainerSmartAnnihilationPlane.TYPE);
         Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("vacuum_interface"), ContainerVacuumInterface.TYPE);
+        Registry.register(BuiltInRegistries.MENU, ExtendedAE.id("pulverizer"), ContainerPulverizer.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerProcessingPattern.ID, ContainerProcessingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerCraftingPattern.ID, ContainerCraftingPattern.TYPE);
         Registry.register(BuiltInRegistries.MENU, ContainerStonecuttingPattern.ID, ContainerStonecuttingPattern.TYPE);
@@ -313,6 +319,7 @@ public class EAERegistryHandler extends RegistryHandler {
         Upgrades.add(AEItems.CAPACITY_CARD, EAESingletons.VACUUM_INTERFACE, 5);
         Upgrades.add(AEItems.FUZZY_CARD, EAESingletons.VACUUM_INTERFACE, 1);
         Upgrades.add(AEItems.REDSTONE_CARD, EAESingletons.VACUUM_INTERFACE, 1);
+        Upgrades.add(AEItems.SPEED_CARD, EAESingletons.PULVERIZER, 4);
     }
 
     private void registerStorageHandler() {

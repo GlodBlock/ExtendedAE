@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "extendedae:block/pulverizer/pulverizer_front",
+    "down": "ae2:block/generics/bottom",
+    "up": "extendedae:block/pulverizer/pulverizer_top",
+    "north": "extendedae:block/pulverizer/pulverizer_front",
+    "south": "extendedae:block/generics/back",
+    "east": "extendedae:block/generics/side",
+    "west": "extendedae:block/generics/side"
+  }
+}

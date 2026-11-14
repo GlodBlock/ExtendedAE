@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.api;
 
-import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.energy.IEnergySource;
 import com.glodblock.github.glodium.recipe.RecipeSearchContext;
@@ -24,7 +23,7 @@ public interface IRecipeMachine<C extends RecipeInput, T extends Recipe<@NotNull
 
     void setWorking(boolean work);
 
-    InternalInventory getOutput();
+    boolean collectOutputs(T recipe);
 
     Set<Direction> getOutputSides();
 

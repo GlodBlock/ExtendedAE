@@ -1,0 +1,42 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json", "common/player_inventory.json", "common/toolbox.json"],
+  "background": {
+    "texture": "guis/pulverizer.png",
+    "srcRect": [0, 0, 176, 165]
+  },
+  "slots": {
+    "MACHINE_INPUT": {
+      "left": 34,
+      "top": 43
+    },
+    "MACHINE_OUTPUT": {
+      "left": 99,
+      "top": 25,
+      "grid": "BREAK_AFTER_2COLS"
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.extendedae.pulverizer"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    }
+  },
+  "images": {
+    "progressBar": {
+      "texture": "guis/pulverizer.png",
+      "srcRect": [176, 0, 6, 18]
+    }
+  },
+  "widgets": {
+    "progressBar": {
+      "left": 139,
+      "top": 33
+    }
+  }
+}

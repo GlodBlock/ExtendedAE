@@ -84,7 +84,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         this.upgrades = UpgradeInventories.forMachine(EAESingletons.CIRCUIT_CUTTER, 4, this::saveChanges);
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
-        this.exec = new RecipeExecutor<>(this, r -> r.output.create(), MAX_PROGRESS_TICKS);
+        this.exec = new RecipeExecutor<>(this, MAX_PROGRESS_TICKS);
     }
 
     @Override
@@ -139,9 +139,18 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         return this.input;
     }
 
-    @Override
     public AppEngInternalInventory getOutput() {
         return this.output;
+    }
+
+    @Override
+    public boolean collectOutputs(CircuitCutterRecipe recipe) {
+        var output = recipe.output.create();
+        if (this.output.insertItem(0, output, true).isEmpty()) {
+            this.output.insertItem(0, output, false);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -274,13 +283,13 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
         return configManager;
     }
 
-    private boolean hasAutoExportWork() {
-        return !this.output.getStackInSlot(0).isEmpty() && configManager.getSetting(Settings.AUTO_EXPORT) == YesNo.YES;
+    private boolean stopAutoExport() {
+        return this.output.getStackInSlot(0).isEmpty() || configManager.getSetting(Settings.AUTO_EXPORT) != YesNo.YES;
     }
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && !this.hasAutoExportWork());
+        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && this.stopAutoExport());
     }
 
     @Override
@@ -289,7 +298,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
             return TickRateModulation.URGENT;
         }
         this.fastUpdate();
-        return this.exec.execute(FCUtil.speedCardMap(this.upgrades.getInstalledUpgrades(AEItems.SPEED_CARD)), true);
+        return this.exec.execute(FCUtil.speedCardMap(this.upgrades.getInstalledUpgrades(AEItems.SPEED_CARD)));
     }
 
     private void fastUpdate() {
@@ -300,7 +309,7 @@ public class TileCircuitCutter extends AENetworkedPoweredBlockEntity implements 
     }
 
     private boolean pushOutResult() {
-        if (!this.hasAutoExportWork()) {
+        if (this.stopAutoExport()) {
             return false;
         }
         return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides.asSet(), te -> te instanceof TileCircuitCutter);
