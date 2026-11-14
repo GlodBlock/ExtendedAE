@@ -29,7 +29,7 @@ public class CircuitCutterTESR extends ExBaseTESR<TileCircuitCutter, SingleItemS
     public void extractRenderState(TileCircuitCutter be, SingleItemState state, float partialTicks, @NotNull Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
         super.extractRenderState(be, state, partialTicks, cameraPos, crumblingOverlay);
         state.blockOrientation = BlockOrientation.get(be);
-        float progress = (float) GlodUtil.clamp((double) be.getProgress() / TileCircuitCutter.MAX_PROGRESS, 0, 1);
+        float progress = (float) GlodUtil.clamp(be.getProgress() / be.getMaxProcess(), 0, 1);
         var stack = progress > 0.5 ? be.getRenderOutput() : be.getInput().getStackInSlot(0);
         state.transform = getTransformer(progress * 0.5f + 0.25f, stack.getItem() instanceof BlockItem);
         state.item.clear();

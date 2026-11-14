@@ -14,11 +14,11 @@ import java.util.Set;
 
 public interface IRecipeMachine<C extends RecipeInput, T extends Recipe<@NotNull C>> {
 
-    int getProgress();
+    double getProgress();
 
-    void addProgress(int delta);
+    void addProgress(double delta);
 
-    void setProgress(int progress);
+    void setProgress(double progress);
 
     RecipeSearchContext<C, T> getContext();
 
@@ -38,8 +38,8 @@ public interface IRecipeMachine<C extends RecipeInput, T extends Recipe<@NotNull
         return null;
     }
 
-    default long getNeededEnergy() {
-        return 0;
+    default double getMaxProcess() {
+        return 1;
     }
 
 }

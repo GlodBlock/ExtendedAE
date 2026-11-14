@@ -3,7 +3,6 @@ package com.glodblock.github.extendedae.util;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.energy.IEnergyService;
-import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.ticking.TickRateModulation;
 import com.glodblock.github.extendedae.api.IRecipeMachine;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +12,8 @@ import java.util.function.Function;
 
 public record RecipeExecutor<T extends Recipe<?>>(IRecipeMachine<?, T> machine, Function<T, ItemStack> outputGetter, int maxTime) {
 
+    private static final double EPSILON = 0.1;
+
     public TickRateModulation execute(int speed, boolean usePower) {
         var ctx = this.machine.getContext();
         var mainNode = this.machine.getNode();
@@ -20,43 +21,41 @@ public record RecipeExecutor<T extends Recipe<?>>(IRecipeMachine<?, T> machine, 
         var runRecipe = ctx.currentRecipe;
         var output = this.machine.getOutput();
         if (runRecipe != null) {
-            var neededEnergy = this.machine.getNeededEnergy();
+            var total = this.machine.getMaxProcess();
+            var current = this.machine.getProgress();
             this.machine.setWorking(true);
             if (usePower) {
-                final double powerConsumption = ((double) neededEnergy) / this.maxTime * speed;
-                final double powerThreshold = powerConsumption - 0.01;
+                var energyUse = Math.min(total / this.maxTime * speed, total - current);
                 // Use network power when online
                 if (mainNode != null) {
                     mainNode.ifPresent(grid -> {
                         IEnergyService eg = grid.getEnergyService();
-                        IEnergySource src = power;
-                        double powerReq = 0;
-                        if (src != null) {
-                            powerReq = src.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+                        double toRemove = energyUse;
+                        if (eg != null && toRemove > 0) {
+                            var powerReq = eg.extractAEPower(toRemove, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                            toRemove -= powerReq;
                         }
-                        if (powerReq <= powerThreshold) {
-                            src = eg;
-                            powerReq = eg.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+                        if (power != null && toRemove > 0) {
+                            var powerReq = power.extractAEPower(toRemove, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                            toRemove -= powerReq;
                         }
-                        if (src != null && powerReq > powerThreshold) {
-                            src.extractAEPower(powerConsumption, Actionable.MODULATE, PowerMultiplier.CONFIG);
-                            this.machine.addProgress(speed);
-                        }
+                        toRemove = Math.max(0, toRemove);
+                        this.machine.addProgress(energyUse - toRemove);
                     });
                 } else {
                     // Use internal power when offline
                     if (power != null) {
-                        double powerReq = power.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
-                        if (powerReq > powerThreshold) {
-                            power.extractAEPower(powerConsumption, Actionable.MODULATE, PowerMultiplier.CONFIG);
-                            this.machine.addProgress(speed);
+                        double removed = power.extractAEPower(energyUse, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                        if (removed > 0) {
+                            removed = Math.min(removed, energyUse);
+                            this.machine.addProgress(removed);
                         }
                     }
                 }
             } else {
                 this.machine.addProgress(speed);
             }
-            if (this.machine.getProgress() >= this.maxTime) {
+            if (this.machine.getProgress() + EPSILON >= this.machine.getMaxProcess()) {
                 this.machine.setProgress(0);
                 var outputStack = this.outputGetter.apply(runRecipe.value()).copy();
                 if (ctx.testRecipe(runRecipe)) {

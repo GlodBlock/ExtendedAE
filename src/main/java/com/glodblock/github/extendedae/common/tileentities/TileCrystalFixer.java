@@ -50,7 +50,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, 1);
     private final CommonRecipeContext<CrystalFixerRecipe> ctx = new FixerRecipeContext(this);
     private final RecipeExecutor<CrystalFixerRecipe> exec;
-    private int progress = 0;
+    private double progress = 0;
 
     public TileCrystalFixer(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -91,17 +91,17 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     }
 
     @Override
-    public int getProgress() {
+    public double getProgress() {
         return this.progress;
     }
 
     @Override
-    public void addProgress(int delta) {
+    public void addProgress(double delta) {
         this.progress += delta;
     }
 
     @Override
-    public void setProgress(int progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 
@@ -156,14 +156,14 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     @Override
     public void saveAdditional(ValueOutput data) {
         super.saveAdditional(data);
-        data.putInt("progress", this.progress);
+        data.putDouble("progress", this.progress);
         this.ctx.save(data);
     }
 
     @Override
     public void loadTag(ValueInput data) {
         super.loadTag(data);
-        this.progress = data.getIntOr("progress", 0);
+        this.progress = data.getDoubleOr("progress", 0);
         this.ctx.load(data);
     }
 
@@ -192,7 +192,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     }
 
     @Override
-    public long getNeededEnergy() {
+    public double getMaxProcess() {
         return 5000;
     }
 
@@ -233,7 +233,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
 
     @Override
     public void collectJadeInfo(CompoundTag tag) {
-        tag.putInt("progress", this.progress);
+        tag.putInt("progress", (int) (this.progress * MAX_PROGRESS / this.getMaxProcess()));
     }
 
     private static class FixerRecipeContext extends CommonRecipeContext<CrystalFixerRecipe> {
