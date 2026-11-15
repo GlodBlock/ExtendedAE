@@ -121,7 +121,7 @@ dependencies {
     compileOnly "dev.latvian.mods:rhino:2101.2.7-build.85"
     compileOnly "curse.maven:advancedae-1084104:8236325"
     compileOnly "curse.maven:functional-storage-556861:8723367"
-    compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
+    compileOnly "mezz.jei:jei-26.1.2-neoforge:29.40.0.101"
     //compileOnly "curse.maven:appliede-1009940:6500056"
     //compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
@@ -143,7 +143,7 @@ dependencies {
             runtimeOnly "curse.maven:cloth-config-348521:7817583"
             break
         case "jei":
-            runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
+            runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.40.0.101"
             break
     }
 }
