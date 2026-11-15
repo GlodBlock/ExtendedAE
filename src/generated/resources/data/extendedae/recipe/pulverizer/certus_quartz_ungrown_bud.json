@@ -1,0 +1,18 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 500,
+  "input": {
+    "ingredient": [
+      "ae2:small_quartz_bud",
+      "ae2:medium_quartz_bud",
+      "ae2:large_quartz_bud"
+    ]
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "ae2:certus_quartz_dust"
+      }
+    }
+  ]
+}

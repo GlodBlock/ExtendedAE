@@ -1,0 +1,21 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": [
+      "minecraft:quartz_block",
+      "minecraft:chiseled_quartz_block",
+      "minecraft:quartz_bricks",
+      "minecraft:quartz_pillar",
+      "minecraft:smooth_quartz"
+    ]
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "minecraft:quartz"
+      }
+    }
+  ]
+}

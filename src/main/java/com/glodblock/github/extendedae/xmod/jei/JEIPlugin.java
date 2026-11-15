@@ -9,6 +9,7 @@ import appeng.items.misc.WrappedGenericStack;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.gui.GuiCircuitCutter;
 import com.glodblock.github.extendedae.client.gui.GuiCrystalAssembler;
+import com.glodblock.github.extendedae.client.gui.GuiPulverizer;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
@@ -20,9 +21,11 @@ import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
+import com.glodblock.github.extendedae.recipe.PulverizerRecipe;
 import com.glodblock.github.extendedae.xmod.jei.recipe.CircuitCutterCategory;
 import com.glodblock.github.extendedae.xmod.jei.recipe.CrystalAssemblerCategory;
 import com.glodblock.github.extendedae.xmod.jei.recipe.CrystalFixerCategory;
+import com.glodblock.github.extendedae.xmod.jei.recipe.PulverizerCategory;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -71,6 +74,7 @@ public class JEIPlugin implements IModPlugin {
         registry.addRecipeCategories(new CrystalAssemblerCategory(helpers));
         registry.addRecipeCategories(new CircuitCutterCategory(helpers));
         registry.addRecipeCategories(new CrystalFixerCategory(helpers));
+        registry.addRecipeCategories(new PulverizerCategory(helpers));
     }
 
     @Override
@@ -78,6 +82,7 @@ public class JEIPlugin implements IModPlugin {
         registry.addRecipes(CrystalAssemblerCategory.RECIPE_TYPE, this.getRecipes(CrystalAssemblerRecipe.TYPE));
         registry.addRecipes(CircuitCutterCategory.RECIPE_TYPE, this.getRecipes(CircuitCutterRecipe.TYPE));
         registry.addRecipes(CrystalFixerCategory.RECIPE_TYPE, this.getRecipes(CrystalFixerRecipe.TYPE));
+        registry.addRecipes(PulverizerCategory.RECIPE_TYPE, this.getRecipes(PulverizerRecipe.TYPE));
         registry.addIngredientInfo(EAESingletons.ENTRO_CRYSTAL, Component.translatable("emi.extendedae.desc.entro_crystal"));
         registry.addIngredientInfo(List.of(
                 EAESingletons.ENTRO_SEED.toStack(),
@@ -93,6 +98,7 @@ public class JEIPlugin implements IModPlugin {
         registry.addCraftingStation(CrystalAssemblerCategory.RECIPE_TYPE, EAESingletons.CRYSTAL_ASSEMBLER);
         registry.addCraftingStation(CircuitCutterCategory.RECIPE_TYPE, EAESingletons.CIRCUIT_CUTTER);
         registry.addCraftingStation(CrystalFixerCategory.RECIPE_TYPE, EAESingletons.CRYSTAL_FIXER);
+        registry.addCraftingStation(PulverizerCategory.RECIPE_TYPE, EAESingletons.PULVERIZER);
         registry.addCraftingStation(ChargerCategory.RECIPE_TYPE, EAESingletons.EX_CHARGER);
     }
 
@@ -111,6 +117,14 @@ public class JEIPlugin implements IModPlugin {
                     @Override
                     public @NotNull Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull GuiCircuitCutter screen, double mouseX, double mouseY) {
                         return List.of(IGuiClickableArea.createBasic(65, 39, 35, 12, CircuitCutterCategory.RECIPE_TYPE));
+                    }
+                }
+        );
+        registry.addGenericGuiContainerHandler(GuiPulverizer.class,
+                new IGuiContainerHandler<@NotNull GuiPulverizer>() {
+                    @Override
+                    public @NotNull Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull GuiPulverizer screen, double mouseX, double mouseY) {
+                        return List.of(IGuiClickableArea.createBasic(53, 36, 37, 12, PulverizerCategory.RECIPE_TYPE));
                     }
                 }
         );

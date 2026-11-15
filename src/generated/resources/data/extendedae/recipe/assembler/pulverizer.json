@@ -1,0 +1,24 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "energy": 20000,
+  "input_items": [
+    {
+      "ingredient": "extendedae:machine_frame"
+    },
+    {
+      "amount": 8,
+      "ingredient": "#c:gems/amethyst"
+    },
+    {
+      "amount": 4,
+      "ingredient": "#c:ingots/iron"
+    },
+    {
+      "amount": 2,
+      "ingredient": "ae2:calculation_processor"
+    }
+  ],
+  "output": {
+    "id": "extendedae:pulverizer"
+  }
+}

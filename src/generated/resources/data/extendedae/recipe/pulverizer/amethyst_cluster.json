@@ -1,0 +1,28 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": "minecraft:amethyst_cluster"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "minecraft:amethyst_shard"
+      }
+    },
+    {
+      "chance": 0.5,
+      "item": {
+        "count": 2,
+        "id": "minecraft:amethyst_shard"
+      }
+    },
+    {
+      "chance": 0.3,
+      "item": {
+        "id": "minecraft:amethyst_shard"
+      }
+    }
+  ]
+}

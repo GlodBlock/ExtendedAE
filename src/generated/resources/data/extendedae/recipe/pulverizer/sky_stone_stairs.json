@@ -1,0 +1,20 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": [
+      "ae2:smooth_sky_stone_stairs",
+      "ae2:sky_stone_small_brick_stairs",
+      "ae2:sky_stone_stairs",
+      "ae2:sky_stone_brick_stairs"
+    ]
+  },
+  "outputs": [
+    {
+      "chance": 0.75,
+      "item": {
+        "id": "ae2:sky_dust"
+      }
+    }
+  ]
+}

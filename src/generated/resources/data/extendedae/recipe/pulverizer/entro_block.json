@@ -1,0 +1,15 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": "#c:storage_blocks/entro"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "extendedae:entro_dust"
+      }
+    }
+  ]
+}

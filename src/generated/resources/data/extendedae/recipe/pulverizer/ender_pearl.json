@@ -1,0 +1,14 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": "#c:ender_pearls"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "ae2:ender_dust"
+      }
+    }
+  ]
+}

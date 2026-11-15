@@ -1,0 +1,15 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1500,
+  "input": {
+    "ingredient": "ae2:fluix_stairs"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 3,
+        "id": "ae2:fluix_dust"
+      }
+    }
+  ]
+}

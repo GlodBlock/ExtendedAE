@@ -1,0 +1,26 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": "extendedae:entro_cluster"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "extendedae:entro_crystal"
+      }
+    },
+    {
+      "chance": 0.8,
+      "item": {
+        "id": "extendedae:entro_shard"
+      }
+    },
+    {
+      "chance": 0.3,
+      "item": {
+        "id": "extendedae:entro_dust"
+      }
+    }
+  ]
+}

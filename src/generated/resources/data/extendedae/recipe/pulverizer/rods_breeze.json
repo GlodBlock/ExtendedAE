@@ -1,0 +1,28 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 3000,
+  "input": {
+    "ingredient": "#c:rods/breeze"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "minecraft:wind_charge"
+      }
+    },
+    {
+      "chance": 0.8,
+      "item": {
+        "count": 2,
+        "id": "minecraft:wind_charge"
+      }
+    },
+    {
+      "chance": 0.3,
+      "item": {
+        "id": "minecraft:wind_charge"
+      }
+    }
+  ]
+}

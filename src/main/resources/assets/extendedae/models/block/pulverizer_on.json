@@ -6,7 +6,7 @@
     "up": "extendedae:block/pulverizer/pulverizer_top",
     "north": "extendedae:block/pulverizer/pulverizer_front",
     "south": "extendedae:block/generics/back",
-    "east": "extendedae:block/generics/side",
+    "east": "extendedae:block/generics/side_flip",
     "west": "extendedae:block/generics/side"
   }
 }

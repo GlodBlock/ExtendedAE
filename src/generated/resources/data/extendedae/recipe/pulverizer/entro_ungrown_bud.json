@@ -1,0 +1,18 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 500,
+  "input": {
+    "ingredient": [
+      "extendedae:entro_cluster_small",
+      "extendedae:entro_cluster_medium",
+      "extendedae:entro_cluster_large"
+    ]
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "extendedae:entro_shard"
+      }
+    }
+  ]
+}

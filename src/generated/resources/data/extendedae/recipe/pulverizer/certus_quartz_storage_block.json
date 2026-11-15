@@ -1,0 +1,15 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": "#c:storage_blocks/certus_quartz"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "ae2:certus_quartz_dust"
+      }
+    }
+  ]
+}

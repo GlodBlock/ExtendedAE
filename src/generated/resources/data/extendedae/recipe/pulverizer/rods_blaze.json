@@ -1,0 +1,27 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 3000,
+  "input": {
+    "ingredient": "#c:rods/blaze"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 2,
+        "id": "minecraft:blaze_powder"
+      }
+    },
+    {
+      "chance": 0.8,
+      "item": {
+        "id": "minecraft:blaze_powder"
+      }
+    },
+    {
+      "chance": 0.3,
+      "item": {
+        "id": "minecraft:blaze_powder"
+      }
+    }
+  ]
+}

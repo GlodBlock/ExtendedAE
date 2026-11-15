@@ -53,6 +53,10 @@ public class PulverizerRecipe extends MechanicsRecipe<RecipeInput> {
         return this.outputs.stream().map(output -> output.roll(random)).toList();
     }
 
+    public List<ChanceOutput> getOutputs() {
+        return this.outputs;
+    }
+
     @Override
     public @NotNull RecipeSerializer<? extends @NotNull Recipe<@NotNull RecipeInput>> getSerializer() {
         return PulverizerRecipeSerializer.INSTANCE;

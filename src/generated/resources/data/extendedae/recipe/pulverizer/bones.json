@@ -1,0 +1,27 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1500,
+  "input": {
+    "ingredient": "#c:bones"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 3,
+        "id": "minecraft:bone_meal"
+      }
+    },
+    {
+      "chance": 0.9,
+      "item": {
+        "id": "minecraft:bone_meal"
+      }
+    },
+    {
+      "chance": 0.5,
+      "item": {
+        "id": "minecraft:bone_meal"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": "minecraft:prismarine_shard"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "minecraft:prismarine_crystals"
+      }
+    },
+    {
+      "chance": 0.5,
+      "item": {
+        "id": "minecraft:prismarine_crystals"
+      }
+    }
+  ]
+}
