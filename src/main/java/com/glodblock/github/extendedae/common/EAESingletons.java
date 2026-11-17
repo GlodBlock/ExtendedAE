@@ -19,6 +19,7 @@ import com.glodblock.github.extendedae.common.blocks.BlockExPatternProvider;
 import com.glodblock.github.extendedae.common.blocks.BlockIngredientBuffer;
 import com.glodblock.github.extendedae.common.blocks.BlockMascot;
 import com.glodblock.github.extendedae.common.blocks.BlockOversizeInterface;
+import com.glodblock.github.extendedae.common.blocks.BlockPulverizer;
 import com.glodblock.github.extendedae.common.blocks.BlockVacuumInterface;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessConnector;
 import com.glodblock.github.extendedae.common.blocks.BlockWirelessHub;
@@ -73,6 +74,7 @@ import com.glodblock.github.extendedae.common.tileentities.TileExMolecularAssemb
 import com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider;
 import com.glodblock.github.extendedae.common.tileentities.TileIngredientBuffer;
 import com.glodblock.github.extendedae.common.tileentities.TileOversizeInterface;
+import com.glodblock.github.extendedae.common.tileentities.TilePulverizer;
 import com.glodblock.github.extendedae.common.tileentities.TileVacuumInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessConnector;
 import com.glodblock.github.extendedae.common.tileentities.TileWirelessHub;
@@ -191,6 +193,7 @@ public class EAESingletons {
     public static DeferredItem<@NotNull PartItem<PartSmartAnnihilationPlane>> SMART_ANNIHILATION_PLANE;
     public static DeferredItem<@NotNull ItemWirelessConnectorUpgrade> WIRELESS_CONNECTOR_UPGRADE;
     public static DeferredBlock<@NotNull BlockVacuumInterface> VACUUM_INTERFACE;
+    public static DeferredBlock<@NotNull BlockPulverizer> PULVERIZER;
 
     public static void init(EAERegistryHandler regHandler) {
         IS_PART = regHandler.comp("is_part", Codec.BOOL, ByteBufCodecs.BOOL);
@@ -280,6 +283,7 @@ public class EAESingletons {
         SMART_ANNIHILATION_PLANE = regHandler.item("smart_annihilation_plane", ItemSmartAnnihilationPlane::new);
         WIRELESS_CONNECTOR_UPGRADE = regHandler.item("wireless_connector_upgrade", ItemWirelessConnectorUpgrade::new);
         VACUUM_INTERFACE = regHandler.block("vacuum_interface", BlockVacuumInterface::new, TileVacuumInterface.class, TileVacuumInterface::new);
+        PULVERIZER = regHandler.block("pulverizer", BlockPulverizer::new, TilePulverizer.class, TilePulverizer::new);
     }
 
 }

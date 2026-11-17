@@ -25,7 +25,9 @@ import java.util.List;
 public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> implements IProgressProvider, IActionHolder {
 
     @GuiSync(3)
-    public int processingTime = -1;
+    public double processing = -1;
+    @GuiSync(4)
+    public double maxProcess = 1;
 
     @GuiSync(8)
     public YesNo autoExport = YesNo.NO;
@@ -63,20 +65,21 @@ public class ContainerCircuitCutter extends UpgradeableMenu<TileCircuitCutter> i
 
     @Override
     protected void standardDetectAndSendChanges() {
-        if (isServerSide()) {
-            this.processingTime = getHost().getProgress();
+        if (this.isServerSide()) {
+            this.processing = this.getHost().getProgress();
+            this.maxProcess = this.getHost().getMaxProcess();
         }
         super.standardDetectAndSendChanges();
     }
 
     @Override
     public int getCurrentProgress() {
-        return this.processingTime;
+        return (int) this.processing;
     }
 
     @Override
     public int getMaxProgress() {
-        return TileCircuitCutter.MAX_PROGRESS;
+        return (int) this.maxProcess;
     }
 
     public YesNo getAutoExport() {

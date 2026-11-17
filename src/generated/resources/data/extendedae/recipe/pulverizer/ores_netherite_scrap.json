@@ -1,0 +1,27 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 10000,
+  "input": {
+    "ingredient": "#c:ores/netherite_scrap"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 2,
+        "id": "minecraft:netherite_scrap"
+      }
+    },
+    {
+      "chance": 0.2,
+      "item": {
+        "id": "minecraft:netherite_scrap"
+      }
+    },
+    {
+      "chance": 0.05,
+      "item": {
+        "id": "minecraft:netherite_scrap"
+      }
+    }
+  ]
+}

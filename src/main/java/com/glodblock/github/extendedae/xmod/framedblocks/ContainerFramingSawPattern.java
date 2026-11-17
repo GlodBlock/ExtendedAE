@@ -4,16 +4,17 @@ import appeng.api.stacks.GenericStack;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.container.pattern.ContainerPattern;
 import com.glodblock.github.extendedae.container.pattern.PatternGuiHandler;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ContainerFramingSawPattern extends ContainerPattern {
 
-    public static final ResourceLocation ID = ExtendedAE.id("framing_saw");
-    public static final MenuType<ContainerFramingSawPattern> TYPE = PatternGuiHandler.register(ID, ContainerFramingSawPattern::new);
+    public static final Identifier ID = ExtendedAE.id("framing_saw");
+    public static final MenuType<@NotNull ContainerFramingSawPattern> TYPE = PatternGuiHandler.register(ID, ContainerFramingSawPattern::new);
 
     public ContainerFramingSawPattern(@Nullable MenuType<?> menuType, int id, Level world, ItemStack stack) {
         super(menuType, world, id, stack);

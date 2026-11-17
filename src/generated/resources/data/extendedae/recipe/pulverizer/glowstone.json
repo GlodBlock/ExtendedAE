@@ -1,0 +1,15 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": "minecraft:glowstone"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "minecraft:glowstone_dust"
+      }
+    }
+  ]
+}

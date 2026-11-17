@@ -35,9 +35,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.VoidingResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,13 +48,13 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     private final AppEngInternalInventory inv = new AppEngInternalInventory(this, 1);
     private final CommonRecipeContext<CrystalFixerRecipe> ctx = new FixerRecipeContext(this);
     private final RecipeExecutor<CrystalFixerRecipe> exec;
-    private int progress = 0;
+    private double progress = 0;
 
     public TileCrystalFixer(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.getMainNode().setFlags().setIdlePowerUsage(0).addService(IGridTickable.class, this);
         this.setInternalMaxPower(POWER_MAXIMUM_AMOUNT);
-        this.exec = new RecipeExecutor<>(this, r -> new ItemStack(r.getOutput()), MAX_PROGRESS);
+        this.exec = new RecipeExecutor<>(this, MAX_PROGRESS);
     }
 
     @Override
@@ -68,7 +65,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
         markForUpdate();
-        return this.exec.execute(genProgress(), true);
+        return this.exec.execute(genProgress());
     }
 
     private int genProgress() {
@@ -92,17 +89,17 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     }
 
     @Override
-    public int getProgress() {
+    public double getProgress() {
         return this.progress;
     }
 
     @Override
-    public void addProgress(int delta) {
+    public void addProgress(double delta) {
         this.progress += delta;
     }
 
     @Override
-    public void setProgress(int progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 
@@ -117,8 +114,8 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     }
 
     @Override
-    public InternalInventory getOutput() {
-        return VoidInventory.INSTANCE;
+    public boolean collectOutputs(CrystalFixerRecipe recipe) {
+        return true;
     }
 
     @Override
@@ -157,14 +154,14 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     @Override
     public void saveAdditional(ValueOutput data) {
         super.saveAdditional(data);
-        data.putInt("progress", this.progress);
+        data.putDouble("progress", this.progress);
         this.ctx.save(data);
     }
 
     @Override
     public void loadTag(ValueInput data) {
         super.loadTag(data);
-        this.progress = data.getIntOr("progress", 0);
+        this.progress = data.getDoubleOr("progress", 0);
         this.ctx.load(data);
     }
 
@@ -193,7 +190,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
     }
 
     @Override
-    public long getNeededEnergy() {
+    public double getMaxProcess() {
         return 5000;
     }
 
@@ -234,7 +231,7 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
 
     @Override
     public void collectJadeInfo(CompoundTag tag) {
-        tag.putInt("progress", this.progress);
+        tag.putInt("progress", (int) (this.progress * MAX_PROGRESS / this.getMaxProcess()));
     }
 
     private static class FixerRecipeContext extends CommonRecipeContext<CrystalFixerRecipe> {
@@ -286,38 +283,6 @@ public class TileCrystalFixer extends AENetworkedPoweredBlockEntity implements I
                 }
             }
         }
-    }
-
-    private static class VoidInventory implements InternalInventory {
-
-        public static final VoidInventory INSTANCE = new VoidInventory();
-        public static final ResourceHandler<@NotNull ItemResource> VOID = new VoidingResourceHandler<>(ItemResource.EMPTY);
-
-        @Override
-        public ResourceHandler<@NotNull ItemResource> toResourceHandler() {
-            return VOID;
-        }
-
-        @Override
-        public int size() {
-            return 1;
-        }
-
-        @Override
-        public ItemStack getStackInSlot(int slotIndex) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public void setItemDirect(int slotIndex, ItemStack stack) {
-            // NO-OP
-        }
-
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return ItemStack.EMPTY;
-        }
-
     }
 
 }

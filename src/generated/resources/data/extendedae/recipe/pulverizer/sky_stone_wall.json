@@ -1,0 +1,19 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": [
+      "ae2:smooth_sky_stone_wall",
+      "ae2:sky_stone_small_brick_wall",
+      "ae2:sky_stone_wall",
+      "ae2:sky_stone_brick_wall"
+    ]
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "ae2:sky_dust"
+      }
+    }
+  ]
+}

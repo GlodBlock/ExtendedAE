@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class EAERecipeCategory<R extends Recipe<@NotNull RecipeInput>> extends AbstractRecipeCategory<@NotNull RecipeHolder<@NotNull R>> {
 
+    protected final IGuiHelper helpers;
     protected IDrawable background;
 
     public EAERecipeCategory(IGuiHelper helpers, IRecipeType<@NotNull RecipeHolder<@NotNull R>> recipeType, ItemLike icon, int width, int height) {
@@ -31,6 +32,7 @@ public abstract class EAERecipeCategory<R extends Recipe<@NotNull RecipeInput>> 
                 width,
                 height
         );
+        this.helpers = helpers;
     }
 
     abstract void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull R recipe, @NotNull IFocusGroup focuses);

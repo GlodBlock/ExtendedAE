@@ -1,0 +1,19 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": [
+      "minecraft:small_amethyst_bud",
+      "minecraft:medium_amethyst_bud",
+      "minecraft:large_amethyst_bud"
+    ]
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 2,
+        "id": "minecraft:amethyst_shard"
+      }
+    }
+  ]
+}

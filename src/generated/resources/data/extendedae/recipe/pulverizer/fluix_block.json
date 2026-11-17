@@ -1,0 +1,15 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": "ae2:fluix_block"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "ae2:fluix_dust"
+      }
+    }
+  ]
+}

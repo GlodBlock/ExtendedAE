@@ -1,0 +1,13 @@
+{
+  "type": "extendedae:crystal_fixer",
+  "chance": 500,
+  "fuel": {
+    "ingredient": "#c:gems/amethyst"
+  },
+  "input": {
+    "id": "minecraft:amethyst_block"
+  },
+  "output": {
+    "id": "minecraft:budding_amethyst"
+  }
+}

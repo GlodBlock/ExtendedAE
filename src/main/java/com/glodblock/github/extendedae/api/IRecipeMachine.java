@@ -1,6 +1,5 @@
 package com.glodblock.github.extendedae.api;
 
-import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.energy.IEnergySource;
 import com.glodblock.github.glodium.recipe.RecipeSearchContext;
@@ -14,17 +13,17 @@ import java.util.Set;
 
 public interface IRecipeMachine<C extends RecipeInput, T extends Recipe<@NotNull C>> {
 
-    int getProgress();
+    double getProgress();
 
-    void addProgress(int delta);
+    void addProgress(double delta);
 
-    void setProgress(int progress);
+    void setProgress(double progress);
 
     RecipeSearchContext<C, T> getContext();
 
     void setWorking(boolean work);
 
-    InternalInventory getOutput();
+    boolean collectOutputs(T recipe);
 
     Set<Direction> getOutputSides();
 
@@ -38,8 +37,8 @@ public interface IRecipeMachine<C extends RecipeInput, T extends Recipe<@NotNull
         return null;
     }
 
-    default long getNeededEnergy() {
-        return 0;
+    default double getMaxProcess() {
+        return 1;
     }
 
 }

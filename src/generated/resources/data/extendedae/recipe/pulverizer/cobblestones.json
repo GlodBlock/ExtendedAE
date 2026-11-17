@@ -1,0 +1,20 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": "#c:cobblestones"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "minecraft:gravel"
+      }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "id": "minecraft:sand"
+      }
+    }
+  ]
+}

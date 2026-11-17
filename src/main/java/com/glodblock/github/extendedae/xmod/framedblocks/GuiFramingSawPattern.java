@@ -2,15 +2,16 @@ package com.glodblock.github.extendedae.xmod.framedblocks;
 
 import appeng.core.AppEng;
 import com.glodblock.github.extendedae.client.gui.pattern.GuiPattern;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class GuiFramingSawPattern extends GuiPattern<ContainerFramingSawPattern> {
 
-    private static final ResourceLocation BG = AppEng.makeId("textures/guis/framing_saw_pattern.png");
+    private static final Identifier BG = AppEng.makeId("textures/guis/framing_saw_pattern.png");
 
     public GuiFramingSawPattern(ContainerFramingSawPattern container, Inventory inventory, Component title) {
         super(container, inventory, title);
@@ -18,10 +19,10 @@ public class GuiFramingSawPattern extends GuiPattern<ContainerFramingSawPattern>
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float f, int x, int y) {
+    protected void extractMenuBackground(@NotNull GuiGraphicsExtractor guiGraphics) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(BG, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 
 }

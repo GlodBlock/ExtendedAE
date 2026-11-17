@@ -68,7 +68,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     public static final int SLOTS = 9;
     public static final int TANK_CAP = 16000;
     public static final int POWER_MAXIMUM_AMOUNT = 20000;
-    public static final int MAX_PROGRESS = 200;
+    public static final int MAX_PROGRESS_TICKS = 200;
     private final AppEngInternalInventory input = new AppEngInternalInventory(this, SLOTS, 64);
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1, 64);
     private final CombinedInternalInventory inv = new CombinedInternalInventory(input, output);
@@ -86,7 +86,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     private final CommonRecipeContext<CrystalAssemblerRecipe> ctx = new CrystalRecipeContext(this);
     private final RecipeExecutor<CrystalAssemblerRecipe> exec;
     private boolean isWorking = false;
-    private int progress = 0;
+    private double progress = 0;
     private final DirectionSet outputSides = new DirectionSet();
 
     public TileCrystalAssembler(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -98,7 +98,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.configManager = new ConfigManager(this::onConfigChanged);
         this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
         this.tank.setCapacity(AEKeyType.fluids(), TANK_CAP);
-        this.exec = new RecipeExecutor<>(this, r -> r.output.create(), MAX_PROGRESS);
+        this.exec = new RecipeExecutor<>(this, MAX_PROGRESS_TICKS);
     }
 
     @Override
@@ -122,17 +122,17 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     }
 
     @Override
-    public int getProgress() {
+    public double getProgress() {
         return this.progress;
     }
 
     @Override
-    public void addProgress(int delta) {
+    public void addProgress(double delta) {
         this.progress += delta;
     }
 
     @Override
-    public void setProgress(int progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 
@@ -158,9 +158,18 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         return this.tank;
     }
 
-    @Override
     public AppEngInternalInventory getOutput() {
         return this.output;
+    }
+
+    @Override
+    public boolean collectOutputs(CrystalAssemblerRecipe recipe) {
+        var output = recipe.output.create();
+        if (this.output.insertItem(0, output, true).isEmpty()) {
+            this.output.insertItem(0, output, false);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -210,6 +219,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.configManager.writeToNBT(data);
         this.ctx.save(data);
         this.outputSides.save(data, "output_side");
+        data.putDouble("progress", this.progress);
     }
 
     @Override
@@ -220,6 +230,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         this.configManager.readFromNBT(data);
         this.ctx.load(data);
         this.outputSides.load(data, "output_side");
+        this.progress = data.getDoubleOr("progress", 0);
     }
 
     @Override
@@ -251,8 +262,8 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         return configManager;
     }
 
-    private boolean hasAutoExportWork() {
-        return !this.output.getStackInSlot(0).isEmpty() && configManager.getSetting(Settings.AUTO_EXPORT) == YesNo.YES;
+    private boolean stopAutoExport() {
+        return this.output.getStackInSlot(0).isEmpty() || configManager.getSetting(Settings.AUTO_EXPORT) != YesNo.YES;
     }
 
     @Override
@@ -268,7 +279,7 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && !this.hasAutoExportWork());
+        return new TickingRequest(TickRates.Inscriber, !this.ctx.shouldTick() && this.stopAutoExport());
     }
 
     @Override
@@ -276,11 +287,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
         if (this.pushOutResult()) {
             return TickRateModulation.URGENT;
         }
-        return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)), true);
+        return this.exec.execute(FCUtil.speedCardMap(this.getUpgrades().getInstalledUpgrades(AEItems.SPEED_CARD)));
     }
 
     private boolean pushOutResult() {
-        if (!this.hasAutoExportWork()) {
+        if (this.stopAutoExport()) {
             return false;
         }
         return FCUtil.ejectInv(this.level, this.getBlockPos(), this.output, this.outputSides.asSet(), te -> te instanceof TileCrystalAssembler);
@@ -308,11 +319,11 @@ public class TileCrystalAssembler extends AENetworkedPoweredBlockEntity implemen
     }
 
     @Override
-    public long getNeededEnergy() {
+    public double getMaxProcess() {
         if (this.ctx.currentRecipe != null) {
             return this.ctx.currentRecipe.value().energy;
         }
-        return 0;
+        return 1;
     }
 
     public void onChangeTank() {

@@ -1,0 +1,14 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 500,
+  "input": {
+    "ingredient": "#c:gems/fluix"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "ae2:fluix_dust"
+      }
+    }
+  ]
+}

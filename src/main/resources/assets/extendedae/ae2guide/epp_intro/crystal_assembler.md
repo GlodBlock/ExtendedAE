@@ -12,7 +12,7 @@ item_ids:
 # Crystal Assembler
 
 <Row>
-<BlockImage id="extendedae:crystal_assembler" scale="8"></BlockImage>
+<BlockImage id="extendedae:crystal_assembler" p:working="true" scale="8"></BlockImage>
 </Row>
 
 Most ExtendedAE devices are too complex to craft using a crafting table, so you will need a Crystal Assembler to craft them.

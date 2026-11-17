@@ -1,0 +1,15 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 500,
+  "input": {
+    "ingredient": "extendedae:mddyue"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 8,
+        "id": "minecraft:egg"
+      }
+    }
+  ]
+}

@@ -12,7 +12,7 @@ item_ids:
 # Circuit Slicer
 
 <Row gap="20">
-<BlockImage id="extendedae:circuit_cutter" scale="8"></BlockImage>
+<BlockImage id="extendedae:circuit_cutter" p:working="true" scale="8"></BlockImage>
 </Row>
 
 Tired of the Inscriber's slow speed? Try the Circuit Slicer! It can slice material blocks directly into processor

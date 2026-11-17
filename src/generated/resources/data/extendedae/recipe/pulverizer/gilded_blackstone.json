@@ -1,0 +1,20 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 2000,
+  "input": {
+    "ingredient": "minecraft:gilded_blackstone"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "minecraft:blackstone"
+      }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "id": "minecraft:gold_nugget"
+      }
+    }
+  ]
+}

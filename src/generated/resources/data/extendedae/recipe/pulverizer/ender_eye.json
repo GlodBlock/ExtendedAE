@@ -1,0 +1,19 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1000,
+  "input": {
+    "ingredient": "minecraft:ender_eye"
+  },
+  "outputs": [
+    {
+      "item": {
+        "id": "ae2:ender_dust"
+      }
+    },
+    {
+      "item": {
+        "id": "minecraft:blaze_powder"
+      }
+    }
+  ]
+}

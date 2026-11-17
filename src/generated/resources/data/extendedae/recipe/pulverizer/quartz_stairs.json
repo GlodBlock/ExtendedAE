@@ -1,0 +1,18 @@
+{
+  "type": "extendedae:pulverizer",
+  "energy": 1500,
+  "input": {
+    "ingredient": [
+      "minecraft:quartz_stairs",
+      "minecraft:smooth_quartz_stairs"
+    ]
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 3,
+        "id": "minecraft:quartz"
+      }
+    }
+  ]
+}

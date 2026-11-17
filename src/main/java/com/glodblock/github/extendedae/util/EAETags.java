@@ -24,4 +24,8 @@ public class EAETags {
     public static final TagKey<@NotNull Block> ENTRO_BLOCK_BLOCK = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", "storage_blocks/entro"));
     public static final TagKey<@NotNull Block> SILICON_BLOCK_BLOCK = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", "storage_blocks/silicon"));
 
+    public static TagKey<@NotNull Item> castToItemTag(TagKey<?> any) {
+        return TagKey.create(Registries.ITEM, any.location());
+    }
+
 }

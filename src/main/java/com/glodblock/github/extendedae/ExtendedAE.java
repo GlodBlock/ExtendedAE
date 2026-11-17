@@ -11,6 +11,7 @@ import com.glodblock.github.extendedae.network.EAENetworkHandler;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipe;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipe;
+import com.glodblock.github.extendedae.recipe.PulverizerRecipe;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.extendedae.xmod.darkmode.BlacklistGUI;
 import com.glodblock.github.extendedae.xmod.wt.ContainerWirelessExPAT;
@@ -100,7 +101,7 @@ public class ExtendedAE {
     }
 
     public void sendSyncRecipe(OnDatapackSyncEvent event) {
-        event.sendRecipes(CircuitCutterRecipe.TYPE, CrystalAssemblerRecipe.TYPE, CrystalFixerRecipe.TYPE);
+        event.sendRecipes(CircuitCutterRecipe.TYPE, CrystalAssemblerRecipe.TYPE, CrystalFixerRecipe.TYPE, PulverizerRecipe.TYPE);
     }
 
     public static Identifier id(String id) {

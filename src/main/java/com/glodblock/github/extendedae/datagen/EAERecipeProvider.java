@@ -16,6 +16,7 @@ import com.glodblock.github.extendedae.config.ConfigCondition;
 import com.glodblock.github.extendedae.recipe.CircuitCutterRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.recipe.CrystalFixerRecipeBuilder;
+import com.glodblock.github.extendedae.recipe.PulverizerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -784,6 +785,16 @@ public class EAERecipeProvider extends RecipeProvider {
                 .power(30000)
                 .save(this.output, ExtendedAE.id("assembler/vacuum_interface"));
 
+        // Pulverizer
+        CrystalAssemblerRecipeBuilder
+                .assemble(EAESingletons.PULVERIZER, this.items, this.fluids)
+                .input(EAESingletons.MACHINE_FRAME)
+                .input(Tags.Items.GEMS_AMETHYST, 8)
+                .input(Tags.Items.INGOTS_IRON, 4)
+                .input(AEItems.CALCULATION_PROCESSOR, 2)
+                .power(20000)
+                .save(this.output, ExtendedAE.id("assembler/pulverizer"));
+
         if (GlodUtil.checkMod(ModConstants.APPFLUX)) {
             appflux();
         }
@@ -792,6 +803,7 @@ public class EAERecipeProvider extends RecipeProvider {
         circuit();
         assemblerCircuit();
         fixer();
+        crush();
     }
 
     private void appflux() {
@@ -817,6 +829,23 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(ConventionTags.REDSTONE, 4)
                 .power(4000)
                 .save(this.output.withConditions(new ConfigCondition(ConfigCondition.IDs.ASSEMBLER_CIRCUIT), mod(ModConstants.APPFLUX)), ExtendedAE.id("assembler/energy_processor"));
+
+        PulverizerRecipeBuilder
+                .crush(ConventionTags.DIAMOND, this.items)
+                .output(AFSingletons.DIAMOND_DUST)
+                .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/diamond"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.STORAGE_BLOCKS_DIAMOND, this.items)
+                .output(AFSingletons.DIAMOND_DUST, 9)
+                .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/storage_blocks_diamond"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.GEMS_EMERALD, this.items)
+                .output(AFSingletons.EMERALD_DUST)
+                .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/emerald"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.STORAGE_BLOCKS_EMERALD, this.items)
+                .output(AFSingletons.EMERALD_DUST, 9)
+                .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/storage_blocks_emerald"));
     }
 
     private void transformation() {
@@ -869,19 +898,6 @@ public class EAERecipeProvider extends RecipeProvider {
                 .input(EAETags.ENTRO_BLOCK)
                 .power(8000)
                 .save(this.output, ExtendedAE.id("cutter/concurrent_processor"));
-
-        // Troll
-        CircuitCutterRecipeBuilder
-                .cut(Items.PUFFERFISH, 8, this.items)
-                .input(EAESingletons.FISHBIG)
-                .power(20)
-                .save(this.output, ExtendedAE.id("cutter/fishbig_destroy"));
-        CircuitCutterRecipeBuilder
-                .cut(Items.EGG, 8, this.items)
-                .input(EAESingletons.MDDYUE)
-                .power(20)
-                .save(this.output, ExtendedAE.id("cutter/mddyue_destroy"));
-
     }
 
     private void assemblerCircuit() {
@@ -947,6 +963,234 @@ public class EAERecipeProvider extends RecipeProvider {
                 .fuel(ConventionTags.ENDER_PEARL_DUST)
                 .chance(0.7)
                 .save(this.output, ExtendedAE.id("fixer/entro_mostly"));
+        CrystalFixerRecipeBuilder
+                .fixer(Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST, this.items)
+                .fuel(Tags.Items.GEMS_AMETHYST)
+                .chance(0.05)
+                .save(this.output, ExtendedAE.id("fixer/budding_amethyst"));
+    }
+
+    private void crush() {
+        PulverizerRecipeBuilder
+                .crush(ConventionTags.CERTUS_QUARTZ, this.items)
+                .output(AEItems.CERTUS_QUARTZ_DUST)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz"));
+        PulverizerRecipeBuilder
+                .crush(EAETags.castToItemTag(ConventionTags.CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK), this.items)
+                .output(AEItems.CERTUS_QUARTZ_DUST, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_storage_block"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.CUT_QUARTZ_BLOCK, AEBlocks.SMOOTH_QUARTZ_BLOCK, AEBlocks.QUARTZ_BRICKS, AEBlocks.QUARTZ_PILLAR, AEBlocks.CHISELED_QUARTZ_BLOCK))
+                .output(AEItems.CERTUS_QUARTZ_DUST, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_block_alt"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.QUARTZ_WALL, AEBlocks.CUT_QUARTZ_WALL, AEBlocks.SMOOTH_QUARTZ_WALL, AEBlocks.QUARTZ_BRICK_WALL, AEBlocks.QUARTZ_PILLAR_WALL, AEBlocks.CHISELED_QUARTZ_WALL))
+                .output(AEItems.CERTUS_QUARTZ_DUST, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_walls"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.QUARTZ_STAIRS, AEBlocks.CUT_QUARTZ_STAIRS, AEBlocks.SMOOTH_QUARTZ_STAIRS, AEBlocks.QUARTZ_BRICK_STAIRS, AEBlocks.QUARTZ_PILLAR_STAIRS, AEBlocks.CHISELED_QUARTZ_STAIRS))
+                .output(AEItems.CERTUS_QUARTZ_DUST, 3)
+                .power(1500)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_stairs"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.QUARTZ_SLAB, AEBlocks.CUT_QUARTZ_SLAB, AEBlocks.SMOOTH_QUARTZ_SLAB, AEBlocks.QUARTZ_BRICK_SLAB, AEBlocks.QUARTZ_PILLAR_SLAB, AEBlocks.CHISELED_QUARTZ_SLAB))
+                .output(AEItems.CERTUS_QUARTZ_DUST, 2)
+                .power(1000)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_slabs"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.SMALL_QUARTZ_BUD, AEBlocks.MEDIUM_QUARTZ_BUD, AEBlocks.LARGE_QUARTZ_BUD))
+                .output(AEItems.CERTUS_QUARTZ_DUST)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_ungrown_bud"));
+        PulverizerRecipeBuilder
+                .crush(AEBlocks.QUARTZ_CLUSTER)
+                .output(AEItems.CERTUS_QUARTZ_CRYSTAL, 4)
+                .output(AEItems.CERTUS_QUARTZ_CRYSTAL, 2, 0.5)
+                .output(AEItems.CERTUS_QUARTZ_DUST, 2, 0.2)
+                .power(3000)
+                .save(this.output, ExtendedAE.id("pulverizer/certus_quartz_cluster"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.CHIPPED_BUDDING_QUARTZ, AEBlocks.FLAWED_BUDDING_QUARTZ, AEBlocks.FLAWLESS_BUDDING_QUARTZ, AEBlocks.DAMAGED_BUDDING_QUARTZ))
+                .output(AEItems.CERTUS_QUARTZ_CRYSTAL, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/recycle_budding_quartz"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(Blocks.QUARTZ_BLOCK, Blocks.CHISELED_QUARTZ_BLOCK, Blocks.QUARTZ_BRICKS, Blocks.QUARTZ_PILLAR, Blocks.SMOOTH_QUARTZ))
+                .output(Items.QUARTZ, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/quartz_blocks"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(Blocks.QUARTZ_STAIRS, Blocks.SMOOTH_QUARTZ_STAIRS))
+                .output(Items.QUARTZ, 3)
+                .power(1500)
+                .save(this.output, ExtendedAE.id("pulverizer/quartz_stairs"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(Blocks.QUARTZ_SLAB, Blocks.SMOOTH_QUARTZ_SLAB))
+                .output(Items.QUARTZ, 2)
+                .power(1000)
+                .save(this.output, ExtendedAE.id("pulverizer/quartz_slab"));
+        PulverizerRecipeBuilder
+                .crush(ConventionTags.FLUIX_CRYSTAL, this.items)
+                .output(AEItems.FLUIX_DUST)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/fluix_crystal"));
+        PulverizerRecipeBuilder
+                .crush(AEBlocks.FLUIX_BLOCK)
+                .output(AEItems.FLUIX_DUST, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/fluix_block"));
+        PulverizerRecipeBuilder
+                .crush(AEBlocks.FLUIX_WALL)
+                .output(AEItems.FLUIX_DUST, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/fluix_wall"));
+        PulverizerRecipeBuilder
+                .crush(AEBlocks.FLUIX_STAIRS)
+                .output(AEItems.FLUIX_DUST, 3)
+                .power(1500)
+                .save(this.output, ExtendedAE.id("pulverizer/fluix_stairs"));
+        PulverizerRecipeBuilder
+                .crush(AEBlocks.FLUIX_SLAB)
+                .output(AEItems.FLUIX_DUST, 2)
+                .power(1000)
+                .save(this.output, ExtendedAE.id("pulverizer/fluix_slab"));
+        PulverizerRecipeBuilder
+                .crush(EAETags.ENTRO_CRYSTAL, this.items)
+                .output(EAESingletons.ENTRO_DUST)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/entro_crystal"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(EAESingletons.ENTRO_BUD_SMALL, EAESingletons.ENTRO_BUD_MEDIUM, EAESingletons.ENTRO_BUD_LARGE))
+                .output(EAESingletons.ENTRO_SHARD)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/entro_ungrown_bud"));
+        PulverizerRecipeBuilder
+                .crush(EAESingletons.ENTRO_CLUSTER)
+                .output(EAESingletons.ENTRO_CRYSTAL)
+                .output(EAESingletons.ENTRO_SHARD, 1, 0.8)
+                .output(EAESingletons.ENTRO_DUST, 1, 0.3)
+                .power(1000)
+                .save(this.output, ExtendedAE.id("pulverizer/entro_cluster"));
+        PulverizerRecipeBuilder
+                .crush(Blocks.AMETHYST_BLOCK)
+                .output(Items.AMETHYST_SHARD, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/amethyst_block"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(Blocks.SMALL_AMETHYST_BUD, Blocks.MEDIUM_AMETHYST_BUD, Blocks.LARGE_AMETHYST_BUD))
+                .output(Items.AMETHYST_SHARD, 2)
+                .power(1000)
+                .save(this.output, ExtendedAE.id("pulverizer/amethyst_ungrown_bud"));
+        PulverizerRecipeBuilder
+                .crush(Blocks.AMETHYST_CLUSTER)
+                .output(Items.AMETHYST_SHARD, 4)
+                .output(Items.AMETHYST_SHARD, 2, 0.5)
+                .output(Items.AMETHYST_SHARD, 1, 0.3)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/amethyst_cluster"));
+        PulverizerRecipeBuilder
+                .crush(EAETags.ENTRO_BLOCK, this.items)
+                .output(EAESingletons.ENTRO_DUST, 4)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/entro_block"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.SMOOTH_SKY_STONE_BLOCK, AEBlocks.SKY_STONE_SMALL_BRICK, AEBlocks.SKY_STONE_BLOCK, AEBlocks.SKY_STONE_BRICK))
+                .output(AEItems.SKY_DUST)
+                .save(this.output, ExtendedAE.id("pulverizer/sky_stone_block"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.SMOOTH_SKY_STONE_WALL, AEBlocks.SKY_STONE_SMALL_BRICK_WALL, AEBlocks.SKY_STONE_WALL, AEBlocks.SKY_STONE_BRICK_WALL))
+                .output(AEItems.SKY_DUST)
+                .save(this.output, ExtendedAE.id("pulverizer/sky_stone_wall"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.SMOOTH_SKY_STONE_STAIRS, AEBlocks.SKY_STONE_SMALL_BRICK_STAIRS, AEBlocks.SKY_STONE_STAIRS, AEBlocks.SKY_STONE_BRICK_STAIRS))
+                .output(AEItems.SKY_DUST, 1, 0.75)
+                .save(this.output, ExtendedAE.id("pulverizer/sky_stone_stairs"));
+        PulverizerRecipeBuilder
+                .crush(Ingredient.of(AEBlocks.SMOOTH_SKY_STONE_SLAB, AEBlocks.SKY_STONE_SMALL_BRICK_SLAB, AEBlocks.SKY_STONE_SLAB, AEBlocks.SKY_STONE_BRICK_SLAB))
+                .output(AEItems.SKY_DUST, 1, 0.5)
+                .save(this.output, ExtendedAE.id("pulverizer/sky_stone_slab"));
+        PulverizerRecipeBuilder
+                .crush(ConventionTags.ENDER_PEARL, this.items)
+                .output(AEItems.ENDER_DUST)
+                .save(this.output, ExtendedAE.id("pulverizer/ender_pearl"));
+        PulverizerRecipeBuilder
+                .crush(Items.ENDER_EYE)
+                .output(AEItems.ENDER_DUST)
+                .output(Items.BLAZE_POWDER)
+                .save(this.output, ExtendedAE.id("pulverizer/ender_eye"));
+        PulverizerRecipeBuilder
+                .crush(Blocks.GLOWSTONE)
+                .output(Items.GLOWSTONE_DUST, 4)
+                .save(this.output, ExtendedAE.id("pulverizer/glowstone"));
+        PulverizerRecipeBuilder
+                .crush(Blocks.CLAY)
+                .output(Items.CLAY_BALL, 4)
+                .save(this.output, ExtendedAE.id("pulverizer/clay"));
+        PulverizerRecipeBuilder
+                .crush(Blocks.GILDED_BLACKSTONE)
+                .output(Blocks.BLACKSTONE)
+                .output(Items.GOLD_NUGGET, 1, 0.1)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/gilded_blackstone"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.ORES_NETHERITE_SCRAP, this.items)
+                .output(Items.NETHERITE_SCRAP, 2)
+                .output(Items.NETHERITE_SCRAP, 1, 0.2)
+                .output(Items.NETHERITE_SCRAP, 1, 0.05)
+                .power(10000)
+                .save(this.output, ExtendedAE.id("pulverizer/ores_netherite_scrap"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.BONES, this.items)
+                .output(Items.BONE_MEAL, 3)
+                .output(Items.BONE_MEAL, 1, 0.9)
+                .output(Items.BONE_MEAL, 1, 0.5)
+                .power(1500)
+                .save(this.output, ExtendedAE.id("pulverizer/bones"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.RODS_BLAZE, this.items)
+                .output(Items.BLAZE_POWDER, 2)
+                .output(Items.BLAZE_POWDER, 1, 0.8)
+                .output(Items.BLAZE_POWDER, 1, 0.3)
+                .power(3000)
+                .save(this.output, ExtendedAE.id("pulverizer/rods_blaze"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.RODS_BREEZE, this.items)
+                .output(Items.WIND_CHARGE, 4)
+                .output(Items.WIND_CHARGE, 2, 0.8)
+                .output(Items.WIND_CHARGE, 1, 0.3)
+                .power(3000)
+                .save(this.output, ExtendedAE.id("pulverizer/rods_breeze"));
+        PulverizerRecipeBuilder
+                .crush(Items.PRISMARINE_SHARD)
+                .output(Items.PRISMARINE_CRYSTALS)
+                .output(Items.PRISMARINE_CRYSTALS, 1, 0.5)
+                .power(2000)
+                .save(this.output, ExtendedAE.id("pulverizer/prismarine_shard"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.COBBLESTONES, this.items)
+                .output(Items.GRAVEL)
+                .output(Items.SAND, 1, 0.1)
+                .save(this.output, ExtendedAE.id("pulverizer/cobblestones"));
+        PulverizerRecipeBuilder
+                .crush(Tags.Items.GRAVELS, this.items)
+                .output(Items.FLINT)
+                .output(Items.FLINT, 1, 0.1)
+                .power(1500)
+                .save(this.output, ExtendedAE.id("pulverizer/gravels"));
+        PulverizerRecipeBuilder
+                .crush(EAESingletons.FISHBIG)
+                .output(Items.PUFFERFISH, 8)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/fishbig_destroy"));
+        PulverizerRecipeBuilder
+                .crush(EAESingletons.MDDYUE)
+                .output(Items.EGG, 8)
+                .power(500)
+                .save(this.output, ExtendedAE.id("pulverizer/mddyue_destroy"));
     }
 
     private ICondition mod(String modid) {
