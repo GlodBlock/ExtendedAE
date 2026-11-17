@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:ex_pattern_access_terminal_upgrade"
+        "recipes": "extendedae:ex_pattern_access_terminal_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

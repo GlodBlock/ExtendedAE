@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:entro_compress"
+        "recipes": "extendedae:entro_compress"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

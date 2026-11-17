@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:mddyue"
+        "recipes": "extendedae:mddyue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

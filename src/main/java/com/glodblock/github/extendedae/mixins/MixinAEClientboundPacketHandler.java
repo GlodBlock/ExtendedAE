@@ -21,7 +21,7 @@ public abstract class MixinAEClientboundPacketHandler {
             cancellable = true
     )
     private void handleExGuiClear(ClearPatternAccessTerminalPacket packet, Minecraft minecraft, Player player, CallbackInfo ci) {
-        if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal<?> patternAccessTerminal) {
+        if (Minecraft.getInstance().gui.screen() instanceof GuiExPatternTerminal<?> patternAccessTerminal) {
             patternAccessTerminal.clear();
             ci.cancel();
         }
@@ -34,7 +34,7 @@ public abstract class MixinAEClientboundPacketHandler {
             cancellable = true
     )
     private void handleExGuiUpdate(PatternAccessTerminalPacket packet, Minecraft minecraft, Player player, CallbackInfo ci) {
-        if (Minecraft.getInstance().screen instanceof GuiExPatternTerminal<?> patternAccessTerminal) {
+        if (Minecraft.getInstance().gui.screen() instanceof GuiExPatternTerminal<?> patternAccessTerminal) {
             var fullUpdate = packet.fullUpdate();
             var inventoryId = packet.inventoryId();
             var sortBy = packet.sortBy();

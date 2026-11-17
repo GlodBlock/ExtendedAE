@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:threshold_level_emitter"
+        "recipes": "extendedae:threshold_level_emitter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

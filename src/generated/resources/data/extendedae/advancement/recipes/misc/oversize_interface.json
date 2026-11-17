@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:oversize_interface"
+        "recipes": "extendedae:oversize_interface"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

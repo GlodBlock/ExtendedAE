@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'net.neoforged.moddev' version '2.0.134'
+    id 'net.neoforged.moddev' version '2.0.148'
 }
 
 version = mod_version
@@ -91,6 +91,7 @@ repositories {
         url = 'https://maven.blamejared.com/'
         content {
             includeGroup 'mezz.jei'
+            includeGroup "net.mezzdev.config"
         }
     }
     maven {
@@ -106,28 +107,28 @@ repositories {
 }
 
 dependencies {
-    implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
-    implementation "org.appliedenergistics:appliedenergistics2:26.1.13-beta"
-    implementation "org.appliedenergistics:guideme:26.1.14-beta"
-    jarJar(implementation ("de.mari_023:ae2wtlib_api:26.1.1-beta") { transitive = false })
-    compileOnly "curse.maven:applied-flux-965012:9025081"
+    implementation "io.github.glodblock:Glodium:${glodium_version}"
+    implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    implementation "org.appliedenergistics:guideme:${guideme_version}"
+    jarJar(implementation ("de.mari_023:ae2wtlib_api:${ae2wtlib_version}") { transitive = false })
+    //compileOnly "curse.maven:applied-flux-965012:9025081" TODO
     //compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     //compileOnly "curse.maven:mega-cells-622112:6005043"
-    compileOnly "curse.maven:jade-324717:8857417"
-    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:26.1.819"
+    compileOnly "curse.maven:jade-324717:${jade_file_id}"
+    //compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:26.1.819"
     //compileOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     //compileOnly "curse.maven:applied-mekanistics-574300:5978711"
-    compileOnly "curse.maven:kubejs-238086:8235730"
-    compileOnly "dev.latvian.mods:rhino:2101.2.7-build.85"
-    compileOnly "curse.maven:advancedae-1084104:8236325"
+    //compileOnly "curse.maven:kubejs-238086:8235730"
+    //compileOnly "dev.latvian.mods:rhino:2101.2.7-build.85"
+    //compileOnly "curse.maven:advancedae-1084104:8236325" TODO
     compileOnly "curse.maven:functional-storage-556861:8723367"
-    compileOnly "mezz.jei:jei-26.1.2-neoforge:29.40.0.101"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
     //compileOnly "curse.maven:appliede-1009940:6500056"
     //compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
-    runtimeOnly "curse.maven:applied-flux-965012:9025081"
-    runtimeOnly ("de.mari_023:ae2wtlib:26.1.1-beta") { transitive = false }
-    runtimeOnly "curse.maven:jade-324717:8857417"
+    //runtimeOnly "curse.maven:applied-flux-965012:9025081"
+    runtimeOnly ("de.mari_023:ae2wtlib:${ae2wtlib_version}") { transitive = false }
+    runtimeOnly "curse.maven:jade-324717:${jade_file_id}"
     //runtimeOnly "curse.maven:mega-cells-622112:6005043"
     //runtimeOnly "mekanism:Mekanism:1.21.1-10.7.17.83"
     //runtimeOnly "curse.maven:appliede-1009940:6500056"
@@ -143,7 +144,7 @@ dependencies {
             runtimeOnly "curse.maven:cloth-config-348521:7817583"
             break
         case "jei":
-            runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.40.0.101"
+            runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
             break
     }
 }

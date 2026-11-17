@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:assembler_matrix_wall"
+        "recipes": "extendedae:assembler_matrix_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

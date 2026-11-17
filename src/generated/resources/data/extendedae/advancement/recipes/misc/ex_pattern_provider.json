@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:ex_pattern_provider"
+        "recipes": "extendedae:ex_pattern_provider"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

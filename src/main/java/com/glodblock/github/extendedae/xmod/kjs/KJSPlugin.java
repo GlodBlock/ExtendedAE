@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.xmod.kjs;
 
+/*
 import com.glodblock.github.extendedae.ExtendedAE;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
@@ -14,3 +15,4 @@ public class KJSPlugin implements KubeJSPlugin {
     }
 
 }
+*/

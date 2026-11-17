@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:assembler_matrix_frame"
+        "recipes": "extendedae:assembler_matrix_frame"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

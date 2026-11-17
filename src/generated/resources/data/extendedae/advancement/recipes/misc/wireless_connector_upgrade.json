@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:wireless_connector_upgrade"
+        "recipes": "extendedae:wireless_connector_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

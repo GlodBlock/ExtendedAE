@@ -20,7 +20,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,8 +32,8 @@ public class TagHook {
 
     @SuppressWarnings("deprecation")
     private static void hookTooltip(ItemStack stack, List<Component> tooltip) {
-        if (Minecraft.getInstance().screen instanceof GuiTagExportBus || Minecraft.getInstance().screen instanceof GuiTagStorageBus) {
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT)) {
+        if (Minecraft.getInstance().gui.screen() instanceof GuiTagExportBus || Minecraft.getInstance().gui.screen() instanceof GuiTagStorageBus) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT) || InputConstants.isKeyDown(InputConstants.KEY_RSHIFT)) {
                 Holder.Reference<@NotNull Block> blockHolder = null;
                 boolean anyTag = false;
                 if (stack.getItem() instanceof BlockItem block) {

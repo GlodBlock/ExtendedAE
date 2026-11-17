@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "C": "ae2:logic_processor",
     "E": "ae2:export_bus",
