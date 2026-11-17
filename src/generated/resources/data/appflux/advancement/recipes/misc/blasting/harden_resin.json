@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:blasting/harden_resin"
+        "recipes": "appflux:blasting/harden_resin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

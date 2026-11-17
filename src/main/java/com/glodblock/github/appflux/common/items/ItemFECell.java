@@ -15,6 +15,7 @@ import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.google.common.base.Preconditions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -116,11 +117,14 @@ public class ItemFECell extends AEBaseItem implements IFluxCell {
 
         // Drop items from the recipe.
         for (var disassembledStack : disassembledStacks) {
-            playerInventory.placeItemBackInInventory(disassembledStack.copy());
+            playerInventory.placeItemBackInInventory(disassembledStack.copy(), Prediction.SERVER_ONLY);
         }
 
         // Drop upgrades
-        getUpgrades(stack).forEach(playerInventory::placeItemBackInInventory);
+        var upgrades = getUpgrades(stack);
+        for (ItemStack itemStack : upgrades) {
+            playerInventory.placeItemBackInInventory(itemStack, Prediction.SERVER_ONLY);
+        }
         return true;
     }
 

@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'net.neoforged.moddev' version '2.0.134'
+    id 'net.neoforged.moddev' version '2.0.148'
 }
 
 version = mod_version
@@ -94,18 +94,18 @@ repositories {
 }
 
 dependencies {
-    implementation "io.github.glodblock:Glodium:26.1-1.2-neoforge"
-    implementation "org.appliedenergistics:appliedenergistics2:26.1.12-beta"
-    implementation "org.appliedenergistics:guideme:26.1.14-beta"
+    implementation "io.github.glodblock:Glodium:26.3-1.0-neoforge"
+    implementation "org.appliedenergistics:appliedenergistics2:26.3.1-alpha"
+    implementation "org.appliedenergistics:guideme:26.3.7-alpha"
     // compileOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
     // compileOnly "curse.maven:modern-industrialization-405388:6389065"
     // compileOnly "curse.maven:grandpower-980156:5432440"
-	compileOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
-    compileOnly "curse.maven:jade-324717:8068368"
-    compileOnly "curse.maven:wireless-chargers-510656:8393817"
+	compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    compileOnly "curse.maven:jade-324717:${jade_file_id}"
+    //compileOnly "curse.maven:wireless-chargers-510656:8393817"
     // runtime test
-    runtimeOnly "curse.maven:jade-324717:8068368"
-	runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.5.0.26"
+    runtimeOnly "curse.maven:jade-324717:${jade_file_id}"
+	runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
     // runtimeOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
 }
 

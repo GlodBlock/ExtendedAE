@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:compress_charged_redstone"
+        "recipes": "appflux:compress_charged_redstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:tools/fe_1k_portable_cell"
+        "recipes": "appflux:tools/fe_1k_portable_cell"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

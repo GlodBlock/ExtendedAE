@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "D": "#c:dusts/fluix",
     "G": "ae2:quartz_vibrant_glass",

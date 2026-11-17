@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:core_16k"
+        "recipes": "appflux:core_16k"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
