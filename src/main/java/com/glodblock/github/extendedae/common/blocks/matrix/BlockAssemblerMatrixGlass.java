@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockAssemblerMatrixGlass extends BlockAssemblerMatrixBase<TileAssemblerMatrixGlass> {
 
     public BlockAssemblerMatrixGlass(Properties properties) {
-        super(glassProps(properties).noOcclusion().isViewBlocking((_, _, _) -> false));
+        super(glassProps(properties).noOcclusion().isViewBlocking((_, _, _, _) -> false));
     }
 
     @Override

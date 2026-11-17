@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:ingredient_buffer"
+        "recipes": "extendedae:ingredient_buffer"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

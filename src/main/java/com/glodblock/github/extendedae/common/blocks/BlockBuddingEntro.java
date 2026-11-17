@@ -30,7 +30,7 @@ public class BlockBuddingEntro extends AEBaseBlock implements ISpecialDrop {
 
     @Override
     public PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.DESTROY;
+        return PushReaction.POPPED;
     }
 
     @Override

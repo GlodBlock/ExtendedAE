@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "B": "extendedae:ex_export_bus_part",
     "P": "ae2:calculation_processor"

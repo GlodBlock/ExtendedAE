@@ -39,7 +39,7 @@ public abstract class ExBaseTESR<T extends BlockEntity, S extends BlockEntityRen
 
     public void applyBlockSpinTransform(PoseStack poseStack, BlockOrientation orientation) {
         poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.mulPose(orientation.getQuaternion());
+        poseStack.rotate(orientation.getQuaternion());
         poseStack.translate(-0.5, -0.5, -0.5);
     }
 

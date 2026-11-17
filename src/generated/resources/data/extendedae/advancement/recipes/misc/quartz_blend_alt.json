@@ -22,7 +22,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:quartz_blend_alt"
+        "recipes": "extendedae:quartz_blend_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

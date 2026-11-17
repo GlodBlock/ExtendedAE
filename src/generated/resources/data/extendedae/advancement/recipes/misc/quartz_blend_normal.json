@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:quartz_blend_normal"
+        "recipes": "extendedae:quartz_blend_normal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

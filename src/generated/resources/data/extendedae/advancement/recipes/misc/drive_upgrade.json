@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:drive_upgrade"
+        "recipes": "extendedae:drive_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

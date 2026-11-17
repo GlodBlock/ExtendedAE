@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:entro_recycle"
+        "recipes": "extendedae:entro_recycle"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

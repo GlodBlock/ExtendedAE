@@ -13,7 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
+
+import com.mojang.blaze3d.platform.InputConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +83,11 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     @Override
     public boolean keyPressed(@NotNull KeyEvent event) {
         var key = event.key();
-        if (!isFocused() || key == GLFW.GLFW_KEY_TAB || key == GLFW.GLFW_KEY_ESCAPE) {
+        if (!isFocused() || key == InputConstants.KEY_TAB || key == InputConstants.KEY_ESCAPE) {
             return false;
         }
 
-        if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
+        if (key == InputConstants.KEY_RETURN) {
             textField.insertText("\n");
             clampScroll();
             ensureCursorVisible();

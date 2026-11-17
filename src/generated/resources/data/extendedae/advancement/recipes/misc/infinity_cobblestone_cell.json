@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:infinity_cobblestone_cell"
+        "recipes": "extendedae:infinity_cobblestone_cell"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

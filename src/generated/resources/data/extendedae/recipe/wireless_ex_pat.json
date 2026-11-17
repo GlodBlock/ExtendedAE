@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "A": "ae2:wireless_receiver",
     "B": "extendedae:ex_pattern_access_part",

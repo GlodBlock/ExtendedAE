@@ -4,15 +4,16 @@ import com.glodblock.github.extendedae.ExtendedAE;
 import com.glodblock.github.extendedae.client.render.tesr.state.VacuumInterfaceState;
 import com.glodblock.github.extendedae.common.tileentities.TileVacuumInterface;
 import com.glodblock.github.glodium.client.render.ColorData;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.CompareOp;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,11 +40,11 @@ public class VacuumInterfaceTESR extends ExBaseTESR<@NotNull TileVacuumInterface
             RenderSetup.builder(RenderPipeline.builder(SNIPPET)
                             .withVertexShader("core/position_color")
                             .withFragmentShader("core/position_color")
-                            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
+                            .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+                            .withPrimitiveTopology(PrimitiveTopology.QUADS)
                             .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                             .withLocation(ExtendedAE.id("vacuum_face_pipeline"))
                             .build())
-                    .bufferSize(256)
                     .createRenderSetup()
     );
     private final RenderType LINE_RENDER = RenderType.create(
@@ -50,11 +52,11 @@ public class VacuumInterfaceTESR extends ExBaseTESR<@NotNull TileVacuumInterface
             RenderSetup.builder(RenderPipeline.builder(SNIPPET)
                             .withVertexShader("core/rendertype_lines")
                             .withFragmentShader("core/rendertype_lines")
-                            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL_LINE_WIDTH, VertexFormat.Mode.LINES)
+                            .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR_NORMAL_LINE_WIDTH)
+                            .withPrimitiveTopology(PrimitiveTopology.LINES)
                             .withColorTargetState(new ColorTargetState(BlendFunction.GLINT))
                             .withLocation(ExtendedAE.id("vacuum_line_pipeline"))
                             .build())
-                    .bufferSize(256)
                     .createRenderSetup()
     );
 

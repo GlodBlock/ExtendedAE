@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:crystal_assembler"
+        "recipes": "extendedae:crystal_assembler"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

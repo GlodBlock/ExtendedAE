@@ -58,7 +58,7 @@ public class SAssemblerMatrixUpdate implements IMessage {
 
     @Override
     public void onMessage(Player player) {
-        if (Minecraft.getInstance().screen instanceof GuiAssemblerMatrix gui) {
+        if (Minecraft.getInstance().gui.screen() instanceof GuiAssemblerMatrix gui) {
             gui.receiveUpdate(this.patternID, this.updateMap);
         }
     }
