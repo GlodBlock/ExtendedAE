@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:insulating_resin"
+        "recipes": "appflux:insulating_resin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

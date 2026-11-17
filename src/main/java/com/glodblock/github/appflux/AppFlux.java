@@ -39,7 +39,7 @@ public class AppFlux {
         if (!container.getModId().equals(MODID)) {
             throw new IllegalArgumentException("Invalid ID: " + MODID);
         }
-        container.registerConfig(ModConfig.Type.COMMON, AFConfig.SPEC);
+        container.registerConfig(ModConfig.Type.LOCAL, AFConfig.SPEC);
         AFRegistryHandler.INSTANCE = new AFRegistryHandler(bus);
         AFSingletons.init(AFRegistryHandler.INSTANCE);
         bus.addListener((RegisterEvent e) -> {

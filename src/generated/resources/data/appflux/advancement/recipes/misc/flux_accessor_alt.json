@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:flux_accessor_alt"
+        "recipes": "appflux:flux_accessor_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

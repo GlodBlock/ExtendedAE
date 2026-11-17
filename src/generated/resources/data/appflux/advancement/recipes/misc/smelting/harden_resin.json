@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:smelting/harden_resin"
+        "recipes": "appflux:smelting/harden_resin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

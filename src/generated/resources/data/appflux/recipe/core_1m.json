@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "D": "#c:dusts/ender_pearl",
     "G": "ae2:quartz_vibrant_glass",

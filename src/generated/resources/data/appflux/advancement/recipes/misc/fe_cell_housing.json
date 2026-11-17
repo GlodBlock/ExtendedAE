@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "appflux:fe_cell_housing"
+        "recipes": "appflux:fe_cell_housing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

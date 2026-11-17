@@ -13,15 +13,15 @@ import appeng.recipes.transform.TransformRecipeBuilder;
 import com.glodblock.github.appflux.AppFlux;
 import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.util.AFTags;
-import net.minecraft.core.HolderLookup;
+
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.FluidTags;
@@ -33,17 +33,18 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.Tags.BlockItems;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class AFRecipeProvider extends RecipeProvider {
 
     static String C = "has_item";
 
-    public AFRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-        super(registries, output);
+    public AFRecipeProvider(BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+        super(recipeOutput, advancementOutput);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class AFRecipeProvider extends RecipeProvider {
                 AppFlux.id("transform/redstone_crystal"),
                 AFSingletons.REDSTONE_CRYSTAL, 2,
                 TransformCircumstance.fluid(FluidTags.WATER),
-                tag(Tags.Items.STORAGE_BLOCKS_REDSTONE),
+                tag(BlockItems.STORAGE_BLOCKS_REDSTONE.item()),
                 tag(ConventionTags.FLUIX_CRYSTAL),
                 tag(ConventionTags.GLOWSTONE)
         );
@@ -409,23 +410,4 @@ public class AFRecipeProvider extends RecipeProvider {
     private static ResourceKey<@NotNull Recipe<?>> key(Identifier id) {
         return ResourceKey.create(Registries.RECIPE, id);
     }
-
-    public static class Runner extends RecipeProvider.Runner {
-
-        public Runner(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-            super(packOutput, registries);
-        }
-
-        @Override
-        protected @NotNull RecipeProvider createRecipeProvider(HolderLookup.@NotNull Provider registries, @NotNull RecipeOutput output) {
-            return new AFRecipeProvider(registries, output);
-        }
-
-        @Override
-        public @NotNull String getName() {
-            return "AppliedFlux Recipes";
-        }
-
-    }
-
 }
