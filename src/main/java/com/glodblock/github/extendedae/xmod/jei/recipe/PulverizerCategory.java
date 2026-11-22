@@ -10,6 +10,7 @@ import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.rendering.IIngredientRenderContext;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.types.IRecipeType;
@@ -87,8 +88,8 @@ public class PulverizerCategory extends EAERecipeCategory<PulverizerRecipe>  {
         }
 
         @Override
-        public void render(@NotNull GuiGraphicsExtractor guiGraphics, @Nullable ItemStack ingredient, int posX, int posY) {
-            super.render(guiGraphics, ingredient, posX, posY);
+        public void render(@NotNull GuiGraphicsExtractor guiGraphics, @Nullable ItemStack ingredient, int posX, int posY, @NotNull IIngredientRenderContext context) {
+            super.render(guiGraphics, ingredient, posX, posY, context);
             var pose = guiGraphics.pose();
             pose.pushMatrix();
             pose.translate(posX, posY);
