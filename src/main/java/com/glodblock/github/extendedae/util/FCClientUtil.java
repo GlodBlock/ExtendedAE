@@ -1,9 +1,12 @@
 package com.glodblock.github.extendedae.util;
 
+import appeng.client.gui.style.PaletteColor;
+import appeng.client.gui.style.ScreenStyle;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodClientUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.Direction;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -34,6 +37,10 @@ public class FCClientUtil {
             }
         }
         return "";
+    }
+
+    public static int getARGBSolid(PaletteColor palette, ScreenStyle style) {
+        return ARGB.opaque(style.getColor(palette).toARGB());
     }
 
 }

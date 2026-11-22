@@ -34,10 +34,7 @@ public class MultilineTextFieldWidget extends AbstractWidget {
     private double scrollAmount;
     private boolean dragging;
 
-    public MultilineTextFieldWidget(Font font,
-                                    int x, int y,
-                                    int w, int h,
-                                    Component placeholder) {
+    public MultilineTextFieldWidget(Font font, int x, int y, int w, int h, Component placeholder) {
         super(x, y, w, h, placeholder);
         this.font = font;
         this.textField = new CachedTextField(font, w - 4);

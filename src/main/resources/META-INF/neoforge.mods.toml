@@ -30,7 +30,7 @@ license="${mod_license}"
 [[dependencies.extendedae]]
     modId="ae2"
     type="REQUIRED"
-    versionRange="[26.1.13-beta,)"
+    versionRange="[26.1.14-beta,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.extendedae]]
@@ -41,7 +41,7 @@ license="${mod_license}"
 [[dependencies.extendedae]]
     modId="jei"
     type="OPTIONAL"
-    versionRange="[29.5.0.26,)"
+    versionRange="[29.54.0.0,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.extendedae]]

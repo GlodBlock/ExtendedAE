@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +50,11 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 ExDriveModel.getSlotOrigin(row, col, slotTranslation);
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col;
-                nodes.submitCustomGeometry(
-                        poseStack,
-                        AERenderTypes.STORAGE_CELL_LEDS,
-                        (pose, consumer) -> CellLedRenderer.renderLed(state.cellColors[slot], consumer, pose)
-                );
+                var color = state.cellColors[slot];
+                if (color != null) {
+                    nodes.submitCustomGeometry(poseStack, AERenderTypes.STORAGE_CELL_LEDS,
+                            (pose, buffer) -> CellLedRenderer.renderLed(color, buffer, pose));
+                }
                 poseStack.popPose();
             }
         }
@@ -69,11 +70,11 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 ExDriveModel.getSlotOrigin(row, col, slotTranslation);
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col + 10;
-                nodes.submitCustomGeometry(
-                        poseStack,
-                        AERenderTypes.STORAGE_CELL_LEDS,
-                        (pose, consumer) -> CellLedRenderer.renderLed(state.cellColors[slot], consumer, pose)
-                );
+                var color = state.cellColors[slot];
+                if (color != null) {
+                    nodes.submitCustomGeometry(poseStack, AERenderTypes.STORAGE_CELL_LEDS,
+                            (pose, buffer) -> CellLedRenderer.renderLed(color, buffer, pose));
+                }
                 poseStack.popPose();
             }
         }

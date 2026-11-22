@@ -107,11 +107,14 @@ repositories {
 }
 
 dependencies {
-    implementation "io.github.glodblock:Glodium:${glodium_version}"
+    //implementation "io.github.glodblock:Glodium:${glodium_version}"
+    implementation files("Glodium-26.3-1.0-neoforge.jar") 
     implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
     implementation "org.appliedenergistics:guideme:${guideme_version}"
     jarJar(implementation ("de.mari_023:ae2wtlib_api:${ae2wtlib_version}") { transitive = false })
     //compileOnly "curse.maven:applied-flux-965012:9025081" TODO
+    compileOnly files("AppliedFlux-26.3-1.0.0-neoforge.jar") 
+
     //compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     //compileOnly "curse.maven:mega-cells-622112:6005043"
     compileOnly "curse.maven:jade-324717:${jade_file_id}"
@@ -120,13 +123,14 @@ dependencies {
     //compileOnly "curse.maven:applied-mekanistics-574300:5978711"
     //compileOnly "curse.maven:kubejs-238086:8235730"
     //compileOnly "dev.latvian.mods:rhino:2101.2.7-build.85"
-    //compileOnly "curse.maven:advancedae-1084104:8236325" TODO
+    compileOnly "curse.maven:advancedae-1084104:8236325" //TODO
     compileOnly "curse.maven:functional-storage-556861:8723367"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
     //compileOnly "curse.maven:appliede-1009940:6500056"
     //compileOnly "curse.maven:projecte-226410:6611984"
     // runtime test
     //runtimeOnly "curse.maven:applied-flux-965012:9025081"
+    runtimeOnly files("AppliedFlux-26.3-1.0.0-neoforge.jar") 
     runtimeOnly ("de.mari_023:ae2wtlib:${ae2wtlib_version}") { transitive = false }
     runtimeOnly "curse.maven:jade-324717:${jade_file_id}"
     //runtimeOnly "curse.maven:mega-cells-622112:6005043"

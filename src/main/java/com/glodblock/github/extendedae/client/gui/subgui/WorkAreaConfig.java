@@ -3,6 +3,7 @@ package com.glodblock.github.extendedae.client.gui.subgui;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.AESubScreen;
 import appeng.client.gui.style.Blitter;
+import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.widgets.TabButton;
 import appeng.core.AppEng;
 import appeng.menu.AEBaseMenu;
@@ -10,6 +11,7 @@ import appeng.util.Icon;
 import com.glodblock.github.extendedae.client.button.EPPButton;
 import com.glodblock.github.extendedae.client.gui.GuiVacuumInterface;
 import com.glodblock.github.extendedae.common.tileentities.TileVacuumInterface;
+import com.glodblock.github.extendedae.util.FCClientUtil;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -50,12 +52,12 @@ public class WorkAreaConfig<C extends AEBaseMenu, P extends AEBaseScreen<C>> ext
         for (int x = 0; x < 3; x++) {
             var text = String.valueOf(this.dataGetter.get(x, true));
             int tw = this.font.width(text) / 2;
-            guiGraphics.text(this.font, text, sx + dx * x - tw, sy, 0xFFFFFFFF, false);
+            guiGraphics.text(this.font, text, sx + dx * x - tw, sy, FCClientUtil.getARGBSolid(PaletteColor.TEXTFIELD_TEXT, this.style), false);
         }
         for (int x = 0; x < 3; x++) {
             var text = String.valueOf(this.dataGetter.get(x, false));
             int tw = this.font.width(text) / 2;
-            guiGraphics.text(this.font, text, sx + dx * x - tw, sy + dy, 0xFFFFFFFF, false);
+            guiGraphics.text(this.font, text, sx + dx * x - tw, sy + dy, FCClientUtil.getARGBSolid(PaletteColor.TEXTFIELD_TEXT, this.style), false);
         }
     }
 

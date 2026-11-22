@@ -30,7 +30,6 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.references.BlockIds;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -835,7 +834,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .output(AFSingletons.DIAMOND_DUST)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/diamond"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.STORAGE_BLOCKS_DIAMOND, this.items)
+                .crush(BlockItems.STORAGE_BLOCKS_DIAMOND.item(), this.items)
                 .output(AFSingletons.DIAMOND_DUST, 9)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/storage_blocks_diamond"));
         PulverizerRecipeBuilder
@@ -843,7 +842,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .output(AFSingletons.EMERALD_DUST)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/emerald"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.STORAGE_BLOCKS_EMERALD, this.items)
+                .crush(BlockItems.STORAGE_BLOCKS_EMERALD.item(), this.items)
                 .output(AFSingletons.EMERALD_DUST, 9)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/storage_blocks_emerald"));
     }
@@ -1137,7 +1136,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .power(2000)
                 .save(this.output, ExtendedAE.id("pulverizer/gilded_blackstone"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.ORES_NETHERITE_SCRAP, this.items)
+                .crush(BlockItems.ORES_NETHERITE_SCRAP.item(), this.items)
                 .output(Items.NETHERITE_SCRAP, 2)
                 .output(Items.NETHERITE_SCRAP, 1, 0.2)
                 .output(Items.NETHERITE_SCRAP, 1, 0.05)
@@ -1171,12 +1170,12 @@ public class EAERecipeProvider extends RecipeProvider {
                 .power(2000)
                 .save(this.output, ExtendedAE.id("pulverizer/prismarine_shard"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.COBBLESTONES, this.items)
+                .crush(BlockItems.COBBLESTONES.item(), this.items)
                 .output(Items.GRAVEL)
                 .output(Items.SAND, 1, 0.1)
                 .save(this.output, ExtendedAE.id("pulverizer/cobblestones"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.GRAVELS, this.items)
+                .crush(BlockItems.GRAVELS.item(), this.items)
                 .output(Items.FLINT)
                 .output(Items.FLINT, 1, 0.1)
                 .power(1500)
