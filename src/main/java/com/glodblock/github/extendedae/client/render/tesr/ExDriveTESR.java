@@ -2,7 +2,6 @@ package com.glodblock.github.extendedae.client.render.tesr;
 
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
-import appeng.client.render.AERenderTypes;
 import appeng.client.renderer.blockentity.CellLedRenderer;
 import appeng.client.renderer.blockentity.ChestOrDriveRenderState;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
@@ -49,11 +48,7 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 ExDriveModel.getSlotOrigin(row, col, slotTranslation);
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col;
-                nodes.submitCustomGeometry(
-                        poseStack,
-                        AERenderTypes.STORAGE_CELL_LEDS,
-                        (pose, consumer) -> CellLedRenderer.renderLed(state.cellColors[slot], consumer, pose)
-                );
+                CellLedRenderer.submitLed(state.cellColors[slot], poseStack, nodes);
                 poseStack.popPose();
             }
         }
@@ -69,11 +64,7 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 ExDriveModel.getSlotOrigin(row, col, slotTranslation);
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col + 10;
-                nodes.submitCustomGeometry(
-                        poseStack,
-                        AERenderTypes.STORAGE_CELL_LEDS,
-                        (pose, consumer) -> CellLedRenderer.renderLed(state.cellColors[slot], consumer, pose)
-                );
+                CellLedRenderer.submitLed(state.cellColors[slot], poseStack, nodes);
                 poseStack.popPose();
             }
         }

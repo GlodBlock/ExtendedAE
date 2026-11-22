@@ -18,6 +18,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -96,8 +98,8 @@ public class PulverizerCategory extends EAERecipeCategory<PulverizerRecipe>  {
         }
 
         @Override
-        public @NotNull List<Component> getTooltip(@NotNull ItemStack ingredient, @NotNull TooltipFlag tooltipFlag) {
-            var tooltip = super.getTooltip(ingredient, tooltipFlag);
+        public @NotNull List<Component> getTooltip(@NotNull ItemStack ingredient, Item.@NotNull TooltipContext tooltipContext, @Nullable Player player, @NotNull TooltipFlag tooltipFlag) {
+            var tooltip = super.getTooltip(ingredient, tooltipContext, player, tooltipFlag);
             tooltip.add(Component.translatable("emi.extendedae.text.output_chance", this.chance).withStyle(ChatFormatting.YELLOW));
             return tooltip;
         }
