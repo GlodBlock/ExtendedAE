@@ -19,6 +19,9 @@ public class Blitters {
     public static final Blitter BIG_BUTTON = Blitter.texture(TEXTURE, 256, 256).src(30, 0, 67, 19);
     public static final Blitter BIG_BUTTON_SELECT = Blitter.texture(TEXTURE, 256, 256).src(30, 19, 67, 19);
     public static final Blitter BIG_BUTTON_HOVER = Blitter.texture(TEXTURE, 256, 256).src(30, 38, 67, 18);
+    public static final Blitter BUTTON = Blitter.texture(TEXTURE, 256, 256).src(127, 0, 56, 19);
+    public static final Blitter BUTTON_SELECT = Blitter.texture(TEXTURE, 256, 256).src(127, 19, 56, 19);
+    public static final Blitter BUTTON_HOVER = Blitter.texture(TEXTURE, 256, 256).src(127, 38, 56, 18);
     public static final Blitter CANCEL = Blitter.texture(TEXTURE, 256, 256).src(97, 0, 15, 16);
     public static final Blitter CANCEL_ON = Blitter.texture(TEXTURE, 256, 256).src(112, 0, 15, 16);
     public static final Blitter CONFIRM = Blitter.texture(TEXTURE, 256, 256).src(97, 16, 15, 16);
