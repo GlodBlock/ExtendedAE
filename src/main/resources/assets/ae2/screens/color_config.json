@@ -38,11 +38,11 @@
     },
     "confirm": {
       "left": 16,
-      "top": 70
+      "top": 69
     },
     "cancel": {
       "left": 78,
-      "top": 70
+      "top": 69
     }
   }
 }

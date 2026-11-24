@@ -3,8 +3,8 @@ package com.glodblock.github.ae2netanalyser.client.gui.sub;
 import appeng.client.gui.AESubScreen;
 import com.glodblock.github.ae2netanalyser.client.gui.GuiAnalyser;
 import com.glodblock.github.ae2netanalyser.client.gui.buttons.ChooseButton;
-import com.glodblock.github.ae2netanalyser.client.gui.buttons.ColorButton;
 import com.glodblock.github.ae2netanalyser.client.gui.buttons.DragBar;
+import com.glodblock.github.ae2netanalyser.client.gui.elements.ColorDisplay;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.glodium.client.render.ColorData;
 
@@ -43,7 +43,7 @@ public class GuiColorConfig extends AESubScreen<ContainerAnalyser, GuiAnalyser> 
             this.alpha = bar.getValue();
             this.updateDisplay();
         }));
-        this.widgets.add("show", new ColorButton(() -> {}, () -> this.display));
+        this.widgets.add("show", new ColorDisplay(() -> this.display));
         this.widgets.add("confirm", new ChooseButton(ChooseButton.Choice.OK, this::save));
         this.widgets.add("cancel", new ChooseButton(ChooseButton.Choice.CANCEL, this::returnToParent));
     }
