@@ -4,5 +4,63 @@
   "background": {
     "texture": "guis/network_analyser.png",
     "srcRect": [0, 0, 251, 168]
+  },
+  "widgets": {
+    "arrow_left1": {
+      "left": 37,
+      "top": 18
+    },
+    "arrow_left2": {
+      "left": 37,
+      "top": 46
+    },
+    "arrow_right1": {
+      "left": 105,
+      "top": 18
+    },
+    "arrow_right2": {
+      "left": 105,
+      "top": 46
+    },
+    "reset_btn": {
+      "left": 145,
+      "top": 141
+    },
+    "color1": {
+      "left": 198,
+      "top": 22,
+      "width": 25,
+      "height": 9
+    },
+    "color2": {
+      "left": 198,
+      "top": 43,
+      "width": 25,
+      "height": 9
+    },
+    "color3": {
+      "left": 198,
+      "top": 64,
+      "width": 25,
+      "height": 9
+    },
+    "color4": {
+      "left": 198,
+      "top": 85,
+      "width": 25,
+      "height": 9
+    },
+    "color5": {
+      "left": 198,
+      "top": 106,
+      "width": 25,
+      "height": 9
+    },
+    "color6": {
+      "left": 198,
+      "top": 127,
+      "width": 25,
+      "height": 9
+    }
   }
 }

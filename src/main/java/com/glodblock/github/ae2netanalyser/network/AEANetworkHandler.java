@@ -5,7 +5,6 @@ import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserConfigSave;
 import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserGeneric;
 import com.glodblock.github.ae2netanalyser.network.packets.CTickConfigSave;
 import com.glodblock.github.ae2netanalyser.network.packets.CTickProfilerRequest;
-import com.glodblock.github.ae2netanalyser.network.packets.SAnalyserConfigInit;
 import com.glodblock.github.ae2netanalyser.network.packets.SNetworkDataUpdate;
 import com.glodblock.github.ae2netanalyser.network.packets.SProfileDataUpdate;
 import com.glodblock.github.ae2netanalyser.network.packets.STickConfigInit;
@@ -20,7 +19,6 @@ public class AEANetworkHandler extends NetworkHandler {
         super(AEAnalyser.MODID);
         registerPacket(SNetworkDataUpdate::new);
         registerPacket(CAnalyserConfigSave::new);
-        registerPacket(SAnalyserConfigInit::new);
         registerPacket(CAnalyserGeneric::new);
         registerPacket(SProfileDataUpdate::new);
         registerPacket(CTickConfigSave::new);
