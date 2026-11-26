@@ -83,7 +83,12 @@ public record GTEUPower(IStorageService storage, IActionSource source, Supplier<
     @Override
     public long getEnergyCapacity() {
         var space = this.storage.getInventory().insert(FluxKey.of(EnergyType.FE), Long.MAX_VALUE - 1, Actionable.SIMULATE, this.source);
-        return FeCompat.toEu(space + this.getEnergyStored(), FeCompat.ratio(false));
+        long freeEu = space > 0 ? FeCompat.toEu(space, FeCompat.ratio(false)) : 0L;
+        long storedEu = this.getEnergyStored();
+        if (storedEu <= 0) {
+            return freeEu;
+        }
+        return freeEu > Long.MAX_VALUE - storedEu ? Long.MAX_VALUE : freeEu + storedEu;
     }
 
     @Override
