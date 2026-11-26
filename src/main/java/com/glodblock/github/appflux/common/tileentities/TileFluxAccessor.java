@@ -17,6 +17,7 @@ import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -70,8 +71,21 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
         return IActionSource.ofMachine(this);
     }
 
+    private boolean hasPotentialOutput() {
+        for (var action : this.actions) {
+            // null is an invalidated direction that still needs to be resolved.
+            if (action != EnergyHandler.SendAction.NOOP) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void distribute() {
+        if (!this.hasPotentialOutput()) {
+            return;
+        }
         var storage = this.getStorage();
         var gird = AFUtil.getGrid(this, null);
         if (storage != null && this.level != null) {
@@ -99,6 +113,21 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
         }
+    }
+
+    @Override
+    public boolean hasFixedLevel() {
+        return true;
+    }
+
+    @Override
+    public @Nullable Level getDistributorLevel() {
+        return this.level;
+    }
+
+    @Override
+    public boolean isInLevel(Level level) {
+        return level != null && this.level == level;
     }
 
     @Override
