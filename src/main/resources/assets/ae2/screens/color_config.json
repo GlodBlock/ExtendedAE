@@ -1,0 +1,48 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json"],
+  "background": {
+    "texture": "guis/color_config.png",
+    "srcRect": [0, 0, 110, 95]
+  },
+  "widgets": {
+    "red": {
+      "left": 8,
+      "top": 9,
+      "width": 93,
+      "height": 7
+    },
+    "green": {
+      "left": 8,
+      "top": 24,
+      "width": 93,
+      "height": 7
+    },
+    "blue": {
+      "left": 8,
+      "top": 39,
+      "width": 93,
+      "height": 7
+    },
+    "alpha": {
+      "left": 8,
+      "top": 54,
+      "width": 93,
+      "height": 7
+    },
+    "show": {
+      "left": 41,
+      "top": 73,
+      "width": 27,
+      "height": 7
+    },
+    "confirm": {
+      "left": 16,
+      "top": 69
+    },
+    "cancel": {
+      "left": 78,
+      "top": 69
+    }
+  }
+}

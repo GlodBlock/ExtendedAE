@@ -3,10 +3,10 @@ package com.glodblock.github.ae2netanalyser.client.gui;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.style.ScreenStyle;
-import com.glodblock.github.ae2netanalyser.client.gui.elements.ClickableArea;
-import com.glodblock.github.ae2netanalyser.client.gui.elements.ColorArea;
-import com.glodblock.github.ae2netanalyser.client.gui.elements.DraggableArea;
-import com.glodblock.github.ae2netanalyser.client.gui.elements.DrawableArea;
+import com.glodblock.github.ae2netanalyser.client.gui.buttons.ArrowButton;
+import com.glodblock.github.ae2netanalyser.client.gui.buttons.ColorButton;
+import com.glodblock.github.ae2netanalyser.client.gui.buttons.TextButton;
+import com.glodblock.github.ae2netanalyser.client.gui.sub.GuiColorConfig;
 import com.glodblock.github.ae2netanalyser.client.gui.textures.Blitters;
 import com.glodblock.github.ae2netanalyser.client.render.NetworkDataHandler;
 import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
@@ -16,63 +16,46 @@ import com.glodblock.github.ae2netanalyser.common.me.netdata.NodeFlag;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserConfigSave;
-import com.glodblock.github.ae2netanalyser.network.packets.CAnalyserGeneric;
 import com.glodblock.github.ae2netanalyser.util.Util;
 import com.glodblock.github.glodium.client.render.ColorData;
 import com.glodblock.github.glodium.util.GlodUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
 
-    private float size = 0.4f;
-    private AnalyserMode mode = AnalyserMode.FULL;
+    private float size;
+    private AnalyserMode mode;
     private final Reference2ObjectMap<Enum<?>, ColorData> colors = new Reference2ObjectOpenHashMap<>();
-    private final Reference2ObjectMap<Enum<?>, ColorArea> colorBtns = new Reference2ObjectOpenHashMap<>();
-    private final ArrayList<ClickableArea> clickables = new ArrayList<>();
-    private final ColorWindow colorWindow;
-    private final DraggableArea colorRed;
-    private final DraggableArea colorGreen;
-    private final DraggableArea colorBlue;
-    private final DraggableArea colorAlpha;
-    private final ColorArea colorShow;
 
     private static final List<Enum<?>> COLOR_ORDER = List.of(
             LinkFlag.NORMAL, LinkFlag.DENSE, LinkFlag.COMPRESSED,
             NodeFlag.NORMAL, NodeFlag.DENSE, NodeFlag.MISSING
-            );
+    );
 
     public GuiAnalyser(ContainerAnalyser menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
-        this.colors.putAll(ItemNetworkAnalyzer.defaultColors);
-        this.clickables.add(new ClickableArea(39, 21, 6, 11, this, () -> this.changeMode(-1)));
-        this.clickables.add(new ClickableArea(107, 21, 6, 11, this, () -> this.changeMode(1)));
-        this.clickables.add(new ClickableArea(39, 49, 6, 11, this, () -> this.changeSize(-0.1f)));
-        this.clickables.add(new ClickableArea(107, 49, 6, 11, this, () -> this.changeSize(0.1f)));
-        this.clickables.add(new ClickableArea(146, 142, 65, 14, this, this::loadDefault));
+        this.colors.putAll(menu.initConfig.colors());
+        this.mode = menu.initConfig.mode();
+        this.size = menu.initConfig.nodeSize();
+        this.widgets.add("arrow_left1", new ArrowButton(ArrowButton.ArrowDirection.LEFT, () -> this.changeMode(-1), () -> true));
+        this.widgets.add("arrow_right1", new ArrowButton(ArrowButton.ArrowDirection.RIGHT, () -> this.changeMode(1), () -> true));
+        this.widgets.add("arrow_left2", new ArrowButton(ArrowButton.ArrowDirection.LEFT, () -> this.changeSize(-0.1f), () -> (int) (this.size * 10) > 1));
+        this.widgets.add("arrow_right2", new ArrowButton(ArrowButton.ArrowDirection.RIGHT, () -> this.changeSize(0.1f), () -> (int) (this.size * 10) < 9));
+        this.widgets.add("reset_btn", new TextButton(
+                new TextButton.Background(Blitters.BIG_BUTTON, Blitters.BIG_BUTTON_HOVER, Blitters.BIG_BUTTON_SELECT),
+                Component.translatable("gui.ae2netanalyser.network_analyser.reset"),
+                this::loadDefault
+        ));
         for (int i = 0; i < COLOR_ORDER.size(); i ++) {
             var mode = COLOR_ORDER.get(i);
-            var btn = new ColorArea(198, 22 + i * 21, 25, 9, this, () -> this.beginColorConfig(mode));
-            this.clickables.add(btn);
-            this.colorBtns.put(mode, btn);
+            this.widgets.add("color" + (i + 1), new ColorButton(() -> this.beginColorConfig(mode), () -> this.colors.get(mode)));
         }
-        this.colorWindow = new ColorWindow(73, 48, 110, 95, this);
-        this.colorWindow.addElement(this.colorRed = new DraggableArea(73 + 8, 48 + 9, 90, 7, this));
-        this.colorWindow.addElement(this.colorGreen = new DraggableArea(73 + 8, 48 + 24, 90, 7, this));
-        this.colorWindow.addElement(this.colorBlue = new DraggableArea(73 + 8, 48 + 39, 90, 7, this));
-        this.colorWindow.addElement(this.colorAlpha = new DraggableArea(73 + 8, 48 + 54, 90, 7, this));
-        this.colorWindow.addElement(this.colorShow = new ColorArea(73 + 41, 48 + 73, 27, 7, this, () -> {}));
-        this.colorWindow.addElement(new ClickableArea(73 + 17, 48 + 70, 13, 13, this, () -> this.closeColorConfig(true)));
-        this.colorWindow.addElement(new ClickableArea(73 + 79, 48 + 70, 13, 13, this, () -> this.closeColorConfig(false)));
-        AEANetworkHandler.INSTANCE.sendToServer(new CAnalyserGeneric("update"));
     }
 
     public void loadConfig(ItemNetworkAnalyzer.AnalyserConfig config) {
@@ -80,97 +63,28 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
         this.size = config.nodeSize();
         this.colors.clear();
         this.colors.putAll(config.colors());
-        for (var entry : this.colors.entrySet()) {
-            var btn = this.colorBtns.get(entry.getKey());
-            btn.setColor(entry.getValue());
-        }
     }
 
     public void loadDefault() {
-        this.colors.clear();
-        this.colors.putAll(ItemNetworkAnalyzer.defaultColors);
-        for (var entry : this.colors.entrySet()) {
-            var btn = this.colorBtns.get(entry.getKey());
-            btn.setColor(entry.getValue());
-        }
-    }
-
-    public void closeColorConfig(boolean save) {
-        if (save) {
-            var colorBtn = this.colorBtns.get(this.colorWindow.configType);
-            var newData = this.colorShow.getColor();
-            colorBtn.setColor(newData);
-            this.colors.put(this.colorWindow.configType, newData);
-        }
-        this.colorWindow.isOn = false;
+        this.loadConfig(ItemNetworkAnalyzer.defaultConfig);
     }
 
     private void beginColorConfig(Enum<?> type) {
-        this.colorWindow.isOn = true;
-        this.colorWindow.configType = type;
-        var color = this.colorBtns.get(type).getColor();
-        this.colorRed.setValue(color.getRf());
-        this.colorGreen.setValue(color.getGf());
-        this.colorBlue.setValue(color.getBf());
-        this.colorAlpha.setValue(color.getAf());
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        RenderSystem.disableDepthTest();
-        for (var c : this.clickables) {
-            if (c instanceof DrawableArea d) {
-                d.draw(guiGraphics);
-            }
-        }
-        if (this.colorWindow.isOn) {
-            this.colorShow.setColor(new ColorData(this.colorAlpha.getValue(), this.colorRed.getValue(), this.colorGreen.getValue(), this.colorBlue.getValue()));
-            this.colorWindow.draw(guiGraphics);
-        }
-        RenderSystem.enableDepthTest();
-    }
-
-    @Override
-    public boolean mouseClicked(double xCoord, double yCoord, int btn) {
-        if (this.colorWindow.isOn) {
-            return this.colorWindow.click(xCoord, yCoord);
-        }
-        for (var c : this.clickables) {
-            if (c.click(xCoord, yCoord)) {
-                return true;
-            }
-        }
-        return super.mouseClicked(xCoord, yCoord, btn);
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (this.colorWindow.isOn) {
-            this.colorWindow.release(mouseX, mouseY);
-            return true;
-        }
-        this.clickables.forEach(c -> c.release(mouseX, mouseY));
-        return super.mouseReleased(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double dragX, double dragY) {
-        if (this.colorWindow.isOn) {
-            this.colorWindow.drag(mouseX, mouseY);
-            return true;
-        }
-        return super.mouseDragged(mouseX, mouseY, mouseButton, dragX, dragY);
+        this.switchToScreen(new GuiColorConfig(
+                this,
+                this.colors.get(type),
+                color -> this.colors.put(type, color)
+        ));
     }
 
     @Override
     public void drawFG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY) {
         var textColor = this.style.getColor(PaletteColor.DEFAULT_TEXT_COLOR).toARGB();
-        drawCenteredText(guiGraphics, this.mode.getTranslatedName(), 76, 27, 0xFFFFFFFF);
+        var fieldColor = this.style.getColor(PaletteColor.TEXTFIELD_TEXT).toARGB();
+        drawCenteredText(guiGraphics, this.mode.getTranslatedName(), 76, 27, fieldColor);
         drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.mode"), 24, 26, textColor);
-        drawCenteredText(guiGraphics, String.valueOf((int) (this.size * 10)), 76, 55, 0xFFFFFFFF);
+        drawCenteredText(guiGraphics, String.valueOf((int) (this.size * 10)), 76, 55, fieldColor);
         drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.node_size"), 24, 54, textColor);
-        drawCenteredText(guiGraphics, Component.translatable("gui.ae2netanalyser.network_analyser.reset"), 179, 149, 0xFFFFFFFF);
         for (int i = 0; i < COLOR_ORDER.size(); i ++) {
             var m = COLOR_ORDER.get(i);
             if (m.getClass() == NodeFlag.class) {
@@ -253,60 +167,6 @@ public class GuiAnalyser extends AEBaseScreen<ContainerAnalyser> {
     public void onClose() {
         AEANetworkHandler.INSTANCE.sendToServer(new CAnalyserConfigSave(new ItemNetworkAnalyzer.AnalyserConfig(this.mode, this.size, this.colors)));
         super.onClose();
-    }
-
-    private static class ColorWindow extends ClickableArea {
-
-        final List<ClickableArea> elements = new ArrayList<>();
-        Enum<?> configType;
-        boolean isOn = false;
-
-        public ColorWindow(int x, int y, int width, int height, AbstractContainerScreen<?> parent) {
-            super(x, y, width, height, parent, () -> {});
-        }
-
-        public void draw(GuiGraphics guiGraphics) {
-            if (this.isOn) {
-                Blitters.COLOR_SUB_MENU.dest(this.x + this.screen.getGuiLeft(), this.y + this.screen.getGuiTop()).blit(guiGraphics);
-                for (var c : this.elements) {
-                    if (c instanceof DrawableArea d) {
-                        d.draw(guiGraphics);
-                    }
-                }
-            }
-        }
-
-        public void addElement(ClickableArea c) {
-            this.elements.add(c);
-        }
-
-        @Override
-        public boolean click(double x, double y) {
-            if (isMouseOver(x, y)) {
-                for (var c : this.elements) {
-                    if (c.click(x, y)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public void release(double x, double y) {
-            for (var c : this.elements) {
-                c.release(x, y);
-            }
-        }
-
-        public void drag(double x, double y) {
-            for (var c : this.elements) {
-                if (c instanceof DraggableArea d) {
-                    d.drag(x, y);
-                }
-            }
-        }
-
     }
 
 }

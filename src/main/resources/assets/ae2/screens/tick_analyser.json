@@ -3,6 +3,46 @@
   "includes": ["common/common.json"],
   "background": {
     "texture": "guis/tick_analyser.png",
-    "srcRect": [0, 0, 207, 131]
+    "srcRect": [0, 0, 208, 131]
+  },
+  "widgets": {
+    "duration": {
+      "left": 87,
+      "top": 21,
+      "width": 34,
+      "height": 10
+    },
+    "range1": {
+      "left": 83,
+      "top": 47,
+      "width": 4,
+      "height": 4
+    },
+    "range2": {
+      "left": 180,
+      "top": 47,
+      "width": 4,
+      "height": 4
+    },
+    "range3": {
+      "left": 83,
+      "top": 76,
+      "width": 4,
+      "height": 4
+    },
+    "range4": {
+      "left": 180,
+      "top": 76,
+      "width": 4,
+      "height": 4
+    },
+    "start": {
+      "left": 15,
+      "top": 98
+    },
+    "abort": {
+      "left": 136,
+      "top": 98
+    }
   }
 }
