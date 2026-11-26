@@ -71,8 +71,21 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
         return IActionSource.ofMachine(this);
     }
 
+    private boolean hasPotentialOutput() {
+        for (var action : this.actions) {
+            // null is an invalidated direction that still needs to be resolved.
+            if (action != EnergyHandler.SendAction.NOOP) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void distribute() {
+        if (!this.hasPotentialOutput()) {
+            return;
+        }
         var storage = this.getStorage();
         var gird = AFUtil.getGrid(this, null);
         if (storage != null && this.level != null) {

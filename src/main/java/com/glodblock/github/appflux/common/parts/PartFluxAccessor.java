@@ -97,6 +97,9 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
 
     @Override
     public void distribute() {
+        if (this.action == EnergyHandler.SendAction.NOOP) {
+            return;
+        }
         var storage = this.getStorage();
         var d = this.getSide();
         var gird = this.getGridNode() == null ? null : this.getGridNode().getGrid();
