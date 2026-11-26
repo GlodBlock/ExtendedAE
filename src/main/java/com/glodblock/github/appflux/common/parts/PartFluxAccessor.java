@@ -130,6 +130,17 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
     }
 
     @Override
+    public boolean hasFixedLevel() {
+        return true;
+    }
+
+    @Override
+    public @Nullable Level getDistributorLevel() {
+        var blockEntity = this.getBlockEntity();
+        return blockEntity == null ? null : blockEntity.getLevel();
+    }
+
+    @Override
     public boolean isInLevel(Level level) {
         var blockEntity = this.getBlockEntity();
         return level != null && blockEntity != null && blockEntity.getLevel() == level;

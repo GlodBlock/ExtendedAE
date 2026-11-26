@@ -116,6 +116,16 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
     }
 
     @Override
+    public boolean hasFixedLevel() {
+        return true;
+    }
+
+    @Override
+    public @Nullable Level getDistributorLevel() {
+        return this.level;
+    }
+
+    @Override
     public boolean isInLevel(Level level) {
         return level != null && this.level == level;
     }
