@@ -7,11 +7,15 @@ import com.glodblock.github.ae2netanalyser.client.render.NetworkRender;
 import com.glodblock.github.ae2netanalyser.client.render.ProfileRender;
 import com.glodblock.github.ae2netanalyser.common.AEASingletons;
 import com.glodblock.github.ae2netanalyser.common.AEARegistryHandler;
+import com.glodblock.github.ae2netanalyser.common.items.ItemNetworkAnalyzer;
 import com.glodblock.github.ae2netanalyser.common.me.ticker.RequestBox;
 import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.container.ContainerProfiler;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
+import com.glodblock.github.ae2netanalyser.xmod.MIPipeNetwork;
+import com.glodblock.github.ae2netanalyser.xmod.ModIDs;
+import com.glodblock.github.glodium.util.GlodUtil;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -56,7 +60,10 @@ public class AEAnalyser {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
-        AEARegistryHandler.INSTANCE.init();
+        event.enqueueWork(AEARegistryHandler.INSTANCE::init);
+        if (GlodUtil.checkMod(ModIDs.MI)) {
+            event.enqueueWork(() -> ItemNetworkAnalyzer.addHandler(MIPipeNetwork.INSTANCE));
+        }
     }
 
     public void guiRegister(RegisterMenuScreensEvent event) {

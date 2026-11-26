@@ -26,6 +26,7 @@ import com.glodblock.github.ae2netanalyser.common.me.tracker.PlayerTracker;
 import com.glodblock.github.ae2netanalyser.container.ContainerAnalyser;
 import com.glodblock.github.ae2netanalyser.network.AEANetworkHandler;
 import com.glodblock.github.ae2netanalyser.network.packets.SNetworkDataUpdate;
+import com.glodblock.github.ae2netanalyser.util.ExternalNetwork;
 import com.glodblock.github.glodium.client.render.ColorData;
 import com.glodblock.github.glodium.util.GlodCodecs;
 import com.mojang.serialization.Codec;
@@ -33,6 +34,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,6 +54,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -60,6 +64,7 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
 
     public static final Reference2ObjectMap<Enum<?>, ColorData> defaultColors = new Reference2ObjectOpenHashMap<>();
     public static final AnalyserConfig defaultConfig;
+    private static final List<ExternalNetwork> HANDLERS = new ArrayList<>();
 
     // default colors
     static {
@@ -74,6 +79,12 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
 
     public ItemNetworkAnalyzer() {
         super(new Properties().stacksTo(1));
+    }
+
+    public static void addHandler(ExternalNetwork handler) {
+        if (handler.isValid()) {
+            HANDLERS.add(handler);
+        }
     }
 
     @Override
@@ -102,36 +113,51 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
             if (stack == player.getMainHandItem() && player.getMainHandItem().getItem() == AEASingletons.ANALYSER) {
                 var pos = stack.get(AEASingletons.GLOBAL_POS);
                 if (pos != null && pos.dimension().equals(world.dimension()) && PlayerTracker.needUpdate(player, pos)) {
-                    var host = GridHelper.getNodeHost(world, pos.pos());
-                    if (host != null) {
-                        var node = host.getGridNode(null);
-                        if (node == null && host instanceof IGridConnectedBlockEntity gct) {
-                            node = gct.getGridNode();
-                        }
-                        if (node != null) {
-                            var connections = new ObjectOpenHashSet<IGridConnection>();
-                            var nodes = extractNodes(node.getGrid(), connections, world);
-                            var links = new ObjectOpenHashSet<NetworkData.ALink>();
-                            for (var c : connections) {
-                                var a = wrapGridNode(c.a());
-                                var b = wrapGridNode(c.b());
-                                if (a != null && b != null && !Objects.equals(a, b)) {
-                                    var state = new State<>(LinkFlag.NORMAL);
-                                    if (c.a().hasFlag(GridFlags.DENSE_CAPACITY) && c.b().hasFlag(GridFlags.DENSE_CAPACITY)) {
-                                        state.set(LinkFlag.DENSE);
-                                    }
-                                    if (c.a().hasFlag(GridFlags.CANNOT_CARRY_COMPRESSED) && c.b().hasFlag(GridFlags.CANNOT_CARRY_COMPRESSED)) {
-                                        state.set(LinkFlag.COMPRESSED);
-                                    }
-                                    links.add(new NetworkData.ALink(a, b, (short) c.getUsedChannels(), state));
+                    var node = this.getGridNode(world, pos.pos());
+                    if (node != null) {
+                        var connections = new ObjectOpenHashSet<IGridConnection>();
+                        var nodes = this.extractNodes(node.getGrid(), connections, world);
+                        var links = new ObjectOpenHashSet<NetworkData.ALink>();
+                        for (var c : connections) {
+                            var a = this.wrapGridNode(c.a());
+                            var b = this.wrapGridNode(c.b());
+                            if (a != null && b != null && !Objects.equals(a, b)) {
+                                var state = new State<>(LinkFlag.NORMAL);
+                                if (c.a().hasFlag(GridFlags.DENSE_CAPACITY) && c.b().hasFlag(GridFlags.DENSE_CAPACITY)) {
+                                    state.set(LinkFlag.DENSE);
                                 }
+                                if (c.a().hasFlag(GridFlags.CANNOT_CARRY_COMPRESSED) && c.b().hasFlag(GridFlags.CANNOT_CARRY_COMPRESSED)) {
+                                    state.set(LinkFlag.COMPRESSED);
+                                }
+                                links.add(new NetworkData.ALink(a, b, (short) c.getUsedChannels(), state));
                             }
-                            AEANetworkHandler.INSTANCE.sendTo(new SNetworkDataUpdate(new NetworkData(nodes.toArray(new NetworkData.ANode[0]), links.toArray(new NetworkData.ALink[0]))), player);
                         }
+                        for (var handler : HANDLERS) {
+                            handler.addExtraInfo(node.getGrid(), nodes, links);
+                        }
+                        AEANetworkHandler.INSTANCE.sendTo(new SNetworkDataUpdate(new NetworkData(nodes.toArray(new NetworkData.ANode[0]), links.toArray(new NetworkData.ALink[0]))), player);
                     }
                 }
             }
         }
+    }
+
+    private IGridNode getGridNode(Level world, BlockPos pos) {
+        var host = GridHelper.getNodeHost(world, pos);
+        if (host != null) {
+            var node = host.getGridNode(null);
+            if (node == null && host instanceof IGridConnectedBlockEntity gct) {
+                return gct.getGridNode();
+            }
+            return node;
+        }
+        for (var handler : HANDLERS) {
+            var node = handler.findGridNode(world, pos);
+            if (node != null) {
+                return node;
+            }
+        }
+        return null;
     }
 
     private Set<NetworkData.ANode> extractNodes(IGrid grid, Set<IGridConnection> connections, Level world) {
@@ -140,10 +166,10 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
             for (var node : grid.getNodes()) {
                 var dim = node.getLevel().dimension();
                 if (dim.equals(world.dimension())) {
-                    var a = wrapGridNode(node);
+                    var a = this.wrapGridNode(node);
                     if (a != null) {
                         connections.addAll(node.getConnections());
-                        nodes.add(wrapGridNode(node));
+                        nodes.add(a);
                     }
                 }
             }
@@ -164,6 +190,12 @@ public class ItemNetworkAnalyzer extends Item implements IMenuItem {
                 state.set(NodeFlag.DENSE);
             }
             return new NetworkData.ANode(pos, state);
+        }
+        for (var handler : HANDLERS) {
+            var dataNode = handler.wrapGridNode(node);
+            if (dataNode != null) {
+                return dataNode;
+            }
         }
         return null;
     }
