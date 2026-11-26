@@ -17,6 +17,7 @@ import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -99,6 +100,11 @@ public class TileFluxAccessor extends AENetworkBlockEntity implements IEnergyDis
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
         }
+    }
+
+    @Override
+    public boolean isInLevel(Level level) {
+        return level != null && this.level == level;
     }
 
     @Override

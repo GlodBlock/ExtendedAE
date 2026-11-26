@@ -24,8 +24,9 @@ public class EnergyDistributeService implements IGridService, IGridServiceProvid
 
     @Override
     public void onLevelEndTick(Level level) {
+        // AE2 calls this service for every server level, even when the grid has no nodes there.
         for (var dis : this.activeNodes) {
-            if (dis.isActive()) {
+            if (dis.isInLevel(level) && dis.isActive()) {
                 dis.distribute();
                 dis.charge();
             }

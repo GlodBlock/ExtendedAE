@@ -21,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
@@ -123,6 +124,12 @@ public class PartFluxAccessor extends AEBasePart implements IEnergyDistributor {
                 EnergyHandler.chargeNetwork(gird.getService(IEnergyService.class), storage, this.getSource());
             }
         }
+    }
+
+    @Override
+    public boolean isInLevel(Level level) {
+        var blockEntity = this.getBlockEntity();
+        return level != null && blockEntity != null && blockEntity.getLevel() == level;
     }
 
     @Override
