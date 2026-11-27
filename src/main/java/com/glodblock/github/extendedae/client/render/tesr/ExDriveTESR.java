@@ -51,10 +51,7 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col;
                 var color = state.cellColors[slot];
-                if (color != null) {
-                    nodes.submitCustomGeometry(poseStack, AERenderTypes.STORAGE_CELL_LEDS,
-                            (pose, buffer) -> CellLedRenderer.renderLed(color, buffer, pose));
-                }
+                CellLedRenderer.submitLed(state.cellColors[slot], poseStack, nodes);
                 poseStack.popPose();
             }
         }
@@ -71,10 +68,7 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col + 10;
                 var color = state.cellColors[slot];
-                if (color != null) {
-                    nodes.submitCustomGeometry(poseStack, AERenderTypes.STORAGE_CELL_LEDS,
-                            (pose, buffer) -> CellLedRenderer.renderLed(color, buffer, pose));
-                }
+                CellLedRenderer.submitLed(state.cellColors[slot], poseStack, nodes);
                 poseStack.popPose();
             }
         }
