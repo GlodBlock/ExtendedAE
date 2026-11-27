@@ -73,7 +73,7 @@ public class ExtendedAE {
                         ContainerWirelessExPAT.TYPE,
                         EAESingletons.WIRELESS_EX_PAT,
                         new Icon(32, 32, 16, 16, TX)
-                ).hotkeyName("wireless_pattern_access_terminal").translationKey("item.extendedae.wireless_ex_pat").addTerminal());
+                ).hotkeyName("wireless_pattern_access_terminal").addTerminal());
             }
         });
         if (FMLEnvironment.dist.isClient()) {
