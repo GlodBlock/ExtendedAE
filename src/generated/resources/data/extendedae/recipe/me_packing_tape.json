@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "F": "#c:dusts/fluix",
     "G": "minecraft:slime_ball",

@@ -1,5 +1,6 @@
 package com.glodblock.github.extendedae.xmod.kjs;
 
+/*
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.registry.RegistryHandler;
 import com.glodblock.github.glodium.xmod.ThirdParty;
@@ -31,3 +32,5 @@ public class KJSLoader implements XModLoader {
     }
 
 }
+
+*/

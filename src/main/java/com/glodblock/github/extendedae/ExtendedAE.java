@@ -54,7 +54,7 @@ public class ExtendedAE {
         MOD_BUS = bus;
         EAERegistryHandler.INSTANCE = new EAERegistryHandler(bus);
         EAESingletons.init(EAERegistryHandler.INSTANCE);
-        container.registerConfig(ModConfig.Type.COMMON, EAEConfig.SPEC);
+        container.registerConfig(ModConfig.Type.LOCAL, EAEConfig.SPEC);
         bus.addListener((RegisterEvent e) -> {
             if (e.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
                 EAERegistryHandler.INSTANCE.registerTab(e.getRegistry(Registries.CREATIVE_MODE_TAB));

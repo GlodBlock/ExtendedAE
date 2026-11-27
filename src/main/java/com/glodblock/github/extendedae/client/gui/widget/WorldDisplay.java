@@ -3,6 +3,8 @@ package com.glodblock.github.extendedae.client.gui.widget;
 import appeng.client.gui.AEBaseScreen;
 import com.glodblock.github.extendedae.util.DisplayServerLevel;
 import com.glodblock.github.glodium.util.GlodUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import guideme.color.LightDarkMode;
 import guideme.document.LytRect;
 import guideme.extensions.ExtensionCollection;
@@ -17,7 +19,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -128,13 +130,13 @@ public class WorldDisplay extends AbstractWidget {
                         DUMMY_SCENE,
                         screenBounds,
                         scissorArea,
-                        (lightDarkMode, _, buffers) -> renderViewport(lightDarkMode, buffers)));
+                        (lightDarkMode, _, buffers) -> renderViewport(lightDarkMode)));
             }
         }
     }
 
-    private void renderViewport(LightDarkMode lightDarkMode, MultiBufferSource.BufferSource buffers) {
-        LEVEL_RENDERER.render(this.scene.getLevel(), this.scene.getCameraSettings(), buffers, List.of(), lightDarkMode);
+    private void renderViewport(LightDarkMode lightDarkMode) {
+        LEVEL_RENDERER.render(this.scene.getLevel(), this.scene.getCameraSettings(), List.of(), lightDarkMode);
     }
 
     @Override

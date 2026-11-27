@@ -20,16 +20,16 @@ import com.glodblock.github.extendedae.recipe.PulverizerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
 import com.glodblock.github.extendedae.xmod.ModConstants;
 import com.glodblock.github.glodium.util.GlodUtil;
+
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -38,26 +38,27 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.Tags.BlockItems;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.CompletableFuture;
-
 public class EAERecipeProvider extends RecipeProvider {
 
     static String C = "has_item";
     protected final HolderGetter<@NotNull Fluid> fluids;
 
-    public EAERecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-        super(registries, output);
-        this.fluids = registries.lookupOrThrow(Registries.FLUID);
+    public EAERecipeProvider(
+                    BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+        super(recipeOutput, advancementOutput);
+        this.fluids = recipeOutput.lookup(Registries.FLUID);
     }
 
     @Override
@@ -469,7 +470,7 @@ public class EAERecipeProvider extends RecipeProvider {
         // Entro Seed
         ShapelessRecipeBuilder
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.ENTRO_SEED, 2)
-                .requires(Tags.Items.SANDS)
+                .requires(BlockItems.SANDS.item())
                 .requires(ConventionTags.ENDER_PEARL_DUST)
                 .requires(ConventionTags.ENDER_PEARL_DUST)
                 .requires(ConventionTags.ENDER_PEARL_DUST)
@@ -729,7 +730,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.QUARTZ_BLEND, 6)
                 .requires(ConventionTags.ALL_QUARTZ_DUST)
                 .requires(Ingredient.of(Items.COAL, Items.CHARCOAL), 2)
-                .requires(Ingredient.of(this.items.getOrThrow(Tags.Items.SANDS)), 6)
+                .requires(Ingredient.of(this.items.getOrThrow(BlockItems.SANDS.item())), 6)
                 .unlockedBy(C, has(ConventionTags.ALL_QUARTZ_DUST))
                 .save(this.output, ExtendedAE.stringId("quartz_blend_normal"));
 
@@ -737,7 +738,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .shapeless(this.items, RecipeCategory.MISC, EAESingletons.QUARTZ_BLEND, 6)
                 .requires(EAETags.QUARTZ_DUST)
                 .requires(Ingredient.of(Items.COAL, Items.CHARCOAL), 2)
-                .requires(Ingredient.of(this.items.getOrThrow(Tags.Items.SANDS)), 6)
+                .requires(Ingredient.of(this.items.getOrThrow(BlockItems.SANDS.item())), 6)
                 .unlockedBy(C, has(EAETags.QUARTZ_DUST))
                 .save(this.output.withConditions(tagCondition(EAETags.QUARTZ_DUST)), ExtendedAE.stringId("quartz_blend_alt"));
 
@@ -808,7 +809,7 @@ public class EAERecipeProvider extends RecipeProvider {
         // Redstone Crystal
         CrystalAssemblerRecipeBuilder
                 .assemble(AFSingletons.REDSTONE_CRYSTAL, 8, this.items, this.fluids)
-                .input(Tags.Items.STORAGE_BLOCKS_REDSTONE, 4)
+                .input(BlockItems.STORAGE_BLOCKS_REDSTONE.item(), 4)
                 .input(ConventionTags.FLUIX_CRYSTAL, 4)
                 .input(ConventionTags.GLOWSTONE, 4)
                 .fluid(Fluids.WATER, 100)
@@ -833,7 +834,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .output(AFSingletons.DIAMOND_DUST)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/diamond"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.STORAGE_BLOCKS_DIAMOND, this.items)
+                .crush(BlockItems.STORAGE_BLOCKS_DIAMOND.item(), this.items)
                 .output(AFSingletons.DIAMOND_DUST, 9)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/storage_blocks_diamond"));
         PulverizerRecipeBuilder
@@ -841,7 +842,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .output(AFSingletons.EMERALD_DUST)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/emerald"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.STORAGE_BLOCKS_EMERALD, this.items)
+                .crush(BlockItems.STORAGE_BLOCKS_EMERALD.item(), this.items)
                 .output(AFSingletons.EMERALD_DUST, 9)
                 .save(this.output.withConditions(mod(ModConstants.APPFLUX)), ExtendedAE.id("pulverizer/storage_blocks_emerald"));
     }
@@ -871,12 +872,12 @@ public class EAERecipeProvider extends RecipeProvider {
         // Four AE Processors
         CircuitCutterRecipeBuilder
                 .cut(AEItems.ENGINEERING_PROCESSOR_PRINT, 9, this.items)
-                .input(Tags.Items.STORAGE_BLOCKS_DIAMOND)
+                .input(BlockItems.STORAGE_BLOCKS_DIAMOND.item())
                 .power(18000)
                 .save(this.output, ExtendedAE.id("cutter/engineering_processor"));
         CircuitCutterRecipeBuilder
                 .cut(AEItems.LOGIC_PROCESSOR_PRINT, 9, this.items)
-                .input(Tags.Items.STORAGE_BLOCKS_GOLD)
+                .input(BlockItems.STORAGE_BLOCKS_GOLD.item())
                 .power(18000)
                 .save(this.output, ExtendedAE.id("cutter/logic_processor"));
         CircuitCutterRecipeBuilder
@@ -1135,7 +1136,7 @@ public class EAERecipeProvider extends RecipeProvider {
                 .power(2000)
                 .save(this.output, ExtendedAE.id("pulverizer/gilded_blackstone"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.ORES_NETHERITE_SCRAP, this.items)
+                .crush(BlockItems.ORES_NETHERITE_SCRAP.item(), this.items)
                 .output(Items.NETHERITE_SCRAP, 2)
                 .output(Items.NETHERITE_SCRAP, 1, 0.2)
                 .output(Items.NETHERITE_SCRAP, 1, 0.05)
@@ -1169,12 +1170,12 @@ public class EAERecipeProvider extends RecipeProvider {
                 .power(2000)
                 .save(this.output, ExtendedAE.id("pulverizer/prismarine_shard"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.COBBLESTONES, this.items)
+                .crush(BlockItems.COBBLESTONES.item(), this.items)
                 .output(Items.GRAVEL)
                 .output(Items.SAND, 1, 0.1)
                 .save(this.output, ExtendedAE.id("pulverizer/cobblestones"));
         PulverizerRecipeBuilder
-                .crush(Tags.Items.GRAVELS, this.items)
+                .crush(BlockItems.GRAVELS.item(), this.items)
                 .output(Items.FLINT)
                 .output(Items.FLINT, 1, 0.1)
                 .power(1500)
@@ -1198,23 +1199,4 @@ public class EAERecipeProvider extends RecipeProvider {
     private ICondition tagCondition(TagKey<@NotNull Item> tag) {
         return new NotCondition(new TagEmptyCondition<>(tag));
     }
-
-    public static class Runner extends RecipeProvider.Runner {
-
-        public Runner(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-            super(packOutput, registries);
-        }
-
-        @Override
-        protected @NotNull RecipeProvider createRecipeProvider(HolderLookup.@NotNull Provider registries, @NotNull RecipeOutput output) {
-            return new EAERecipeProvider(registries, output);
-        }
-
-        @Override
-        public @NotNull String getName() {
-            return "ExtendedAE Recipes";
-        }
-
-    }
-
 }

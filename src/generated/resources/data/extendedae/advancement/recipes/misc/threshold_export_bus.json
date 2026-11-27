@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:threshold_export_bus"
+        "recipes": "extendedae:threshold_export_bus"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "C": "#ae2:glass_cable",
     "K": "ae2:sky_stone_tank",

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "B": "ae2:quartz_glass",
     "F": "#c:gems/fluix",

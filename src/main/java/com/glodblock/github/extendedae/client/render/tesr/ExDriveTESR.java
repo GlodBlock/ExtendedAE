@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.client.render.tesr;
 
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
+import appeng.client.render.AERenderTypes;
 import appeng.client.renderer.blockentity.CellLedRenderer;
 import appeng.client.renderer.blockentity.ChestOrDriveRenderState;
 import com.glodblock.github.extendedae.client.model.ExDriveModel;
@@ -10,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +50,7 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 ExDriveModel.getSlotOrigin(row, col, slotTranslation);
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col;
+                var color = state.cellColors[slot];
                 CellLedRenderer.submitLed(state.cellColors[slot], poseStack, nodes);
                 poseStack.popPose();
             }
@@ -64,6 +67,7 @@ public class ExDriveTESR extends ExBaseTESR<TileExDrive, ChestOrDriveRenderState
                 ExDriveModel.getSlotOrigin(row, col, slotTranslation);
                 poseStack.translate(slotTranslation.x(), slotTranslation.y(), slotTranslation.z());
                 int slot = row * 2 + col + 10;
+                var color = state.cellColors[slot];
                 CellLedRenderer.submitLed(state.cellColors[slot], poseStack, nodes);
                 poseStack.popPose();
             }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:machine_frame_mirror"
+        "recipes": "extendedae:machine_frame_mirror"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

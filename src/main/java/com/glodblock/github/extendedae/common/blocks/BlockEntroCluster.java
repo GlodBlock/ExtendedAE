@@ -131,7 +131,7 @@ public class BlockEntroCluster extends AEBaseBlock implements SimpleWaterloggedB
 
     @Override
     public PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.DESTROY;
+        return PushReaction.POPPED;
     }
 
 }

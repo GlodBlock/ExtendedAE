@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:me_packing_tape"
+        "recipes": "extendedae:me_packing_tape"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

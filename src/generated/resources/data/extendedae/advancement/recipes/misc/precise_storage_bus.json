@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:precise_storage_bus"
+        "recipes": "extendedae:precise_storage_bus"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

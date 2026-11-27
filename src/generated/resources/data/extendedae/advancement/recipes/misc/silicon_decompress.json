@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae:silicon_decompress"
+        "recipes": "extendedae:silicon_decompress"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
