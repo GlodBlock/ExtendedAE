@@ -24,20 +24,28 @@ import appeng.helpers.IConfigInvHost;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.util.ConfigInventory;
 import appeng.util.ConfigManager;
+import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.glodium.util.GlodUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -356,6 +364,47 @@ public class TileVacuumInterface extends AENetworkedBlockEntity implements IConf
     public void clearContent() {
         super.clearContent();
         this.upgrades.clear();
+    }
+
+    @Override
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
+        super.importSettings(mode, input, player);
+        var settings = input.get(EAESingletons.VACUUM_SETTINGS);
+        if (settings != null) {
+            this.setSize(settings.size);
+            this.setOffset(settings.offset);
+            this.setUrgent(settings.urgent);
+        }
+    }
+
+    @Override
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder builder, @Nullable Player player) {
+        super.exportSettings(mode, builder, player);
+        if (mode == SettingsFrom.MEMORY_CARD) {
+            builder.set(EAESingletons.VACUUM_SETTINGS, new VacuumSettings(this.size, this.offset, this.urgent));
+        }
+    }
+
+    public record VacuumSettings(BlockPos size, BlockPos offset, boolean urgent) {
+
+        public static final Codec<VacuumSettings> CODEC = RecordCodecBuilder.create(
+                builder -> builder
+                        .group(
+                                BlockPos.CODEC.fieldOf("size").forGetter(o -> o.size),
+                                BlockPos.CODEC.fieldOf("offset").forGetter(o -> o.offset),
+                                Codec.BOOL.fieldOf("urgent").forGetter(o -> o.urgent)
+                        ).apply(builder, VacuumSettings::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, VacuumSettings> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC,
+                o -> o.size,
+                BlockPos.STREAM_CODEC,
+                o -> o.offset,
+                ByteBufCodecs.BOOL,
+                o -> o.urgent,
+                VacuumSettings::new
+        );
+
     }
 
 }

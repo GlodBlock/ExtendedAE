@@ -114,6 +114,7 @@ public class EAESingletons {
     public static DataComponentType<VoidMode> VOID_MODE;
     public static DataComponentType<Double> VOID_ENERGY;
     public static DataComponentType<ItemConfigModifier.ConfigSettings> MODIFIER_CONFIG_SETTINGS;
+    public static DataComponentType<TileVacuumInterface.VacuumSettings> VACUUM_SETTINGS;
 
     public static CommonItem ENTRO_CRYSTAL;
     public static ItemEntroSeed ENTRO_SEED;
@@ -204,6 +205,7 @@ public class EAESingletons {
         VOID_MODE = GlodUtil.getComponentType(VoidMode.CODEC, VoidMode.STREAM_CODEC);
         VOID_ENERGY = GlodUtil.getComponentType(Codec.DOUBLE, ByteBufCodecs.DOUBLE);
         MODIFIER_CONFIG_SETTINGS = GlodUtil.getComponentType(ItemConfigModifier.ConfigSettings.CODEC, ItemConfigModifier.ConfigSettings.STREAM_CODEC);
+        VACUUM_SETTINGS = GlodUtil.getComponentType(TileVacuumInterface.VacuumSettings.CODEC, TileVacuumInterface.VacuumSettings.STREAM_CODEC);
         ENTRO_CRYSTAL = new CommonItem();
         ENTRO_SEED = new ItemEntroSeed();
         ENTRO_DUST = new CommonItem();
@@ -291,6 +293,7 @@ public class EAESingletons {
         regHandler.comp("void_mode", VOID_MODE);
         regHandler.comp("void_energy", VOID_ENERGY);
         regHandler.comp("modifier_config_settings", MODIFIER_CONFIG_SETTINGS);
+        regHandler.comp("vacuum_settings", VACUUM_SETTINGS);
         regHandler.block("entro_cluster_small", ENTRO_BUD_SMALL);
         regHandler.block("entro_cluster_medium", ENTRO_BUD_MEDIUM);
         regHandler.block("entro_cluster_large", ENTRO_BUD_LARGE);
