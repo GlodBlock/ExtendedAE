@@ -2,6 +2,7 @@ package com.glodblock.github.extendedae.container;
 
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
+import appeng.core.definitions.AEItems;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.UpgradeableMenu;
@@ -96,6 +97,12 @@ public class ContainerVacuumInterface extends UpgradeableMenu<TileVacuumInterfac
     @Override
     protected void setupConfig() {
         this.addExpandableConfigSlots(getHost().getConfig(), 2, 9, 5);
+    }
+
+    @Override
+    public boolean isSlotEnabled(int idx) {
+        final int upgrades = getUpgrades().getInstalledUpgrades(AEItems.CAPACITY_CARD);
+        return upgrades > idx;
     }
 
     @Override
